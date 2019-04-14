@@ -6,7 +6,7 @@ if(${CMAKE_PROJECT_NAME} STREQUAL "Project")
   message(FATAL_ERROR "cmake should be executed not for 'src' subdirectory, but for the top directory of HPhi.")
 endif(${CMAKE_PROJECT_NAME} STREQUAL "Project")
 
-add_library(key2lower STATIC key2lower.c)
+add_library(key2lower STATIC key2lower.cpp)
 add_executable(greenr2k greenr2k.F90)
 add_executable(cTPQ cTPQ.F90)
 add_executable(dynamicalr2k dynamicalr2k.F90)
