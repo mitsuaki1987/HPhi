@@ -21,7 +21,7 @@
 #include "mltplyHubbardCore.hpp"
 #include "mltplyMPIHubbard.hpp"
 #include "mltplyMPIHubbardCore.hpp"
-#ifdef MPI
+#ifdef __MPI
 #include "common/setmemory.hpp"
 #endif
 
@@ -197,7 +197,7 @@ firstprivate(i_max,tmp_trans,Asum,Adiff,ibitsite1,ibitsite2,X,list_1_org,list_1,
   private(j,tmp_sgn,tmp_off,dmv)
         for (j = 1; j <= i_max; j++) {
           tmp_sgn = X_CisAjt(list_1_org[j], X, ibitsite1, ibitsite2, Asum, Adiff, &tmp_off);
-          dmv = tmp_trans * tmp_sgn;
+          dmv = tmp_trans * (std::complex<double>)tmp_sgn;
           zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[tmp_off], &one);
         }
       }
@@ -251,7 +251,7 @@ firstprivate(i_max,is,tmp_trans) private(num1,ibit,dmv)
             for (j = 1; j <= i_max; j++) {
               ibit = list_1[j] & is;
               num1 = (1 - ibit / is);
-              dmv = -tmp_trans * num1;
+              dmv = -tmp_trans * (std::complex<double>)num1;
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
             }
           }
@@ -261,7 +261,7 @@ firstprivate(i_max,is,tmp_trans) private(num1,ibit,dmv)
             for (j = 1; j <= i_max; j++) {
               ibit = list_1[j] & is;
               num1 = ibit / is;
-              dmv = tmp_trans * num1;
+              dmv = tmp_trans * (std::complex<double>)num1;
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
             }
           }

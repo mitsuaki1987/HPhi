@@ -18,14 +18,14 @@ outputmode = "None"
 Restart = "Restart_out"
 EOF
 
-${MPIRUN} ../../src/HPhi -s stan.in
+${MPIRUN} ../../src/HPhi++ -s stan.in
 
 # Check value for Restart_in
 cp ./stan.in stan2.in
 sed -i -e "s/Restart = \"Restart_out\"/Restart = \"Restart_in\"/g" stan2.in
 sed -i -e "s/Lanczos_max = 10/Lanczos_max = 1000/g" stan2.in 
 
-${MPIRUN} ../../src/HPhi -s stan2.in
+${MPIRUN} ../../src/HPhi++ -s stan2.in
 
 cat > reference.dat <<EOF
  0
@@ -47,7 +47,7 @@ cp ./stan.in stan3.in
 sed -i -e "s/Restart = \"Restart_out\"/Restart = \"Restart\"/g" stan3.in
 sed -i -e "s/Lanczos_max = 10/Lanczos_max = 1000/g" stan3.in 
 
-${MPIRUN} ../../src/HPhi -s stan3.in
+${MPIRUN} ../../src/HPhi++ -s stan3.in
 
 cat > reference.dat <<EOF
  0

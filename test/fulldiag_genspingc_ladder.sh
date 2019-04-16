@@ -14,7 +14,7 @@ J1 = 1.0
 2S = 3
 EOF
 
-${MPIRUNFC} ../../src/HPhi -s stan.in
+${MPIRUNFC} ../../src/HPhi++ -s stan.in
 
 # Check value
 

@@ -23,7 +23,7 @@ CalcSpec = "Scratch"
 SpectrumType = "SzSz"
 EOF
 
-${MPIRUN} ../../src/HPhi -s stan2.in
+${MPIRUN} ../../src/HPhi++ -s stan2.in
 
 cat > reference.dat <<EOF
   -412.7076581450 1.0000000000 -0.0263199541 -0.0000664587
@@ -61,7 +61,7 @@ CalcSpec = "Scratch"
 SpectrumType = "S+S-"
 EOF
 
-${MPIRUN} ../../src/HPhi -s stan2.in
+${MPIRUN} ../../src/HPhi++ -s stan2.in
 
 cat > reference.dat <<EOF
   -412.7076581450 1.0000000000 -0.0526399081 -0.0001329174

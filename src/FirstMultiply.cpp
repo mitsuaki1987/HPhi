@@ -42,7 +42,7 @@
 int FirstMultiply(struct BindStruct *X) {
 
   long int i, i_max;
-  std::complex<double> dnorm;
+  double dnorm;
   double Ns;
   long unsigned int u_long_i;
   dsfmt_t dsfmt;
@@ -53,7 +53,7 @@ int FirstMultiply(struct BindStruct *X) {
 
   for (rand_i = 0; rand_i < NumAve; rand_i++) {
 #pragma omp parallel default(none) private(i, mythread, u_long_i, dsfmt) \
-shared(v0, v1, nthreads, myrank, rand_i, X, stdoutMPI, cLogCheckInitComplex, cLogCheckInitReal) \
+shared(I, v0, v1, nthreads, myrank, rand_i, X, stdoutMPI, cLogCheckInitComplex, cLogCheckInitReal) \
 firstprivate(i_max)
   {
 #pragma omp for
@@ -89,12 +89,12 @@ firstprivate(i_max)
     /*
     Normalize v
     */
-    dnorm = 0.0;
-#pragma omp parallel for default(none) private(i) shared(v1, i_max, rand_i) reduction(+: dnorm) 
-    for (i = 1; i <= i_max; i++) {
-      dnorm += conj(v1[i][rand_i])*v1[i][rand_i];
-    }
-    dnorm = SumMPI_dc(dnorm);
+  dnorm = 0.0;
+#pragma omp parallel for default(none) private(i) \
+shared(v1, i_max, rand_i) reduction(+:dnorm)
+      for (i = 1; i <= i_max; i++)
+        dnorm += real(conj(v1[i][rand_i])*v1[i][rand_i]);
+    dnorm = SumMPI_d(dnorm);
     dnorm = sqrt(dnorm);
     global_1st_norm[rand_i] = dnorm;
 #pragma omp parallel for default(none) private(i) shared(v1,rand_i) firstprivate(i_max, dnorm)
@@ -135,11 +135,10 @@ firstprivate(i_max, Ns, LargeValue, myrank)
 
     dnorm = 0.0;
 #pragma omp parallel for default(none) private(i) shared(v0,rand_i) \
-firstprivate(i_max) reduction(+: dnorm)
-    for (i = 1; i <= i_max; i++) {
-      dnorm += conj(v0[i][rand_i])*v0[i][rand_i];
-    }
-    dnorm = SumMPI_dc(dnorm);
+firstprivate(i_max) reduction(+:dnorm)
+    for (i = 1; i <= i_max; i++)
+      dnorm += real(conj(v0[i][rand_i])*v0[i][rand_i]);
+    dnorm = SumMPI_d(dnorm);
     dnorm = sqrt(dnorm);
     global_norm[rand_i] = dnorm;
 #pragma omp parallel for default(none) private(i) shared(v0,rand_i) firstprivate(i_max, dnorm)

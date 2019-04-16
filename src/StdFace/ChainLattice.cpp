@@ -18,11 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /**@file
 @brief Standard mode for the chain lattice
 */
-#include "StdFace_vals.h"
+#include "StdFace_vals.hpp"
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
-#include "StdFace_ModelUtil.h"
+#include "StdFace_ModelUtil.hpp"
 #include <complex>
 #include <cstring>
 
@@ -77,8 +77,8 @@ void StdFace_Chain(
   StdFace_NotUsed_J("J2'", StdI->J2pAll, StdI->J2p);
   StdFace_NotUsed_c("t1", StdI->t1);
   StdFace_NotUsed_c("t2", StdI->t2);
-  StdFace_NotUsed_d("t1'", StdI->t1p);
-  StdFace_NotUsed_d("t2'", StdI->t2p);
+  StdFace_NotUsed_d("t1'", real(StdI->t1p));
+  StdFace_NotUsed_d("t2'", real(StdI->t2p));
   StdFace_NotUsed_d("V1", StdI->V1);
   StdFace_NotUsed_d("V2", StdI->V2);
   StdFace_NotUsed_d("V1'", StdI->V1p);

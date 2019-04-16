@@ -20,7 +20,7 @@ initial_iv = 1
 EigenvecIO = "out"
 EOF
 
-${MPIRUN} ../../src/HPhi -s stan.in
+${MPIRUN} ../../src/HPhi++ -s stan.in
 
 # Check value for Restart_in
 cp ./stan.in stan1.in
@@ -36,7 +36,7 @@ VecPotW = 0.5
 VecPotL = 0.5
 EOF
 
-${MPIRUN} ../../src/HPhi -s stan1.in
+${MPIRUN} ../../src/HPhi++ -s stan1.in
 
 # Check value: Flct
 cat > reference.dat <<EOF

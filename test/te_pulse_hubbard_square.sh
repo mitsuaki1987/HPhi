@@ -27,7 +27,7 @@ VecPotW = 0.5
 VecPotL = 0.5
 EOF
 
-${MPIRUN} ../../src/HPhi -s stan.in
+${MPIRUN} ../../src/HPhi++ -s stan.in
 
 # Check value: Flct
 cat > reference.dat <<EOF

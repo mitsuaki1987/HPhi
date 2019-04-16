@@ -374,7 +374,7 @@ void child_CisAisCisAis_spin_element(
 
   tmp_sgn = X_Spin_CisAis(j, X, isB_up, org_sigma4);
   tmp_sgn *= X_Spin_CisAis(j, X, isA_up, org_sigma2);
-  dmv = tmp_sgn * tmp_V;
+  dmv = (std::complex<double>)tmp_sgn * tmp_V;
   zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
 }/*std::complex<double> child_CisAisCisAis_spin_element*/
 
@@ -405,7 +405,7 @@ void GC_child_CisAisCisAis_spin_element(
   tmp_sgn = X_SpinGC_CisAis(j, X, isB_up, org_sigma4);
   tmp_sgn *= X_SpinGC_CisAis(j, X, isA_up, org_sigma2);
   if (tmp_sgn != 0) {
-    dmv = tmp_sgn * tmp_V;
+    dmv = (std::complex<double>)tmp_sgn * tmp_V;
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
   }
 }/*std::complex<double> GC_child_CisAisCisAis_spin_element*/
@@ -434,7 +434,7 @@ void GC_child_CisAisCitAiu_spin_element(
   if (tmp_sgn != 0) {
     tmp_sgn *= X_SpinGC_CisAis((*tmp_off + 1), X, isA_up, org_sigma2);
     if (tmp_sgn != 0) {
-      dmv = tmp_sgn * tmp_V;
+      dmv = (std::complex<double>)tmp_sgn * tmp_V;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
     }/*if (tmp_sgn != 0)*/
   }/*if (tmp_sgn != 0)*/
@@ -464,7 +464,7 @@ void GC_child_CisAitCiuAiu_spin_element(
   if (tmp_sgn != 0) {
     tmp_sgn *= X_SpinGC_CisAit(j, X, isA_up, org_sigma2, tmp_off);
     if (tmp_sgn != 0) {
-      dmv = tmp_sgn * tmp_V;
+      dmv = (std::complex<double>)tmp_sgn * tmp_V;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
     }/*if (tmp_sgn != 0)*/
   }/*if (tmp_sgn != 0)*/
@@ -495,7 +495,7 @@ void GC_child_CisAitCiuAiv_spin_element(
   if (tmp_sgn != 0) {
     tmp_sgn *= X_SpinGC_CisAit((tmp_off_1 + 1), X, isA_up, org_sigma2, tmp_off_2);
     if (tmp_sgn != 0) {
-      dmv = tmp_sgn * tmp_V;
+      dmv = (std::complex<double>)tmp_sgn * tmp_V;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off_2 + 1][0], &one);
     }/*if (tmp_sgn != 0)*/
   }/*if (tmp_sgn != 0)*/

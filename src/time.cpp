@@ -26,8 +26,8 @@
 #include "FileIO.hpp"
 #include "CalcTime.hpp"
 
-#ifdef MPI
-#include <mpi.hpp>
+#ifdef __MPI
+#include <mpi.h>
 #endif
 /** 
  * 
@@ -37,7 +37,7 @@
  */
 
 void StampTime(FILE *fp, char *str, int num){
-#ifdef MPI
+#ifdef __MPI
   char str1[256];
   sprintf(str1, "%-50s [%04d] %12.5lf\n", str, num, Timer[num]);
   fprintf(fp, "%s", str1);
@@ -51,7 +51,7 @@ void StampTime(FILE *fp, char *str, int num){
  * @version 2.0
  */
 void InitTimer() {
-#ifdef MPI
+#ifdef __MPI
   int i;
   int NTimer=10000;
   Timer       = (double*)malloc((NTimer)*sizeof(double));
@@ -69,7 +69,7 @@ void InitTimer() {
  */
 
 void StartTimer(int n) {
-#ifdef MPI
+#ifdef __MPI
   TimerStart[n]=MPI_Wtime();
 #endif
   return;
@@ -81,7 +81,7 @@ void StartTimer(int n) {
  * @version 2.0
  */
 void StopTimer(int n) {
-#ifdef MPI
+#ifdef __MPI
   Timer[n] += MPI_Wtime() - TimerStart[n];
 #endif
   return;
@@ -94,7 +94,7 @@ void StopTimer(int n) {
  */
 void OutputTimer(struct BindStruct *X) {
 
-#ifdef MPI
+#ifdef __MPI
   char fileName[D_FileNameMax];
   FILE *fp;
   sprintf(fileName, "CalcTimer.dat"); //TBC

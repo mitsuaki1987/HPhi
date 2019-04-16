@@ -34,21 +34,21 @@ void StdFace_Coulomb(struct StdIntList *StdI, double V, int isite, int jsite);
 void StdFace_GeneralJ(struct StdIntList *StdI, double J[3][3],
   int Si2, int Sj2, int isite, int jsite);
 
-void StdFace_PrintVal_d(char* valname, double *val, double val0);
+void StdFace_PrintVal_d(const char* valname, double *val, double val0);
 void StdFace_PrintVal_dd(char* valname, double *val, double val0, double val1);
 void StdFace_PrintVal_c(char* valname, std::complex<double> *val, std::complex<double> val0);
-void StdFace_PrintVal_i(char* valname, int *val, int val0);
+void StdFace_PrintVal_i(const char* valname, int *val, int val0);
 
-void StdFace_NotUsed_d(char* valname, double val);
-void StdFace_NotUsed_i(char* valname, int val);
-void StdFace_NotUsed_c(char* valname, std::complex<double> val);
-void StdFace_NotUsed_J(char* valname, double JAll, double J[3][3]);
+void StdFace_NotUsed_d(const char* valname, double val);
+void StdFace_NotUsed_i(const char* valname, int val);
+void StdFace_NotUsed_c(const char* valname, std::complex<double> val);
+void StdFace_NotUsed_J(const char* valname, double JAll, double J[3][3]);
 
-void StdFace_RequiredVal_i(char* valname, int val);
-void StdFace_InputSpinNN(double J[3][3], double JAll, double J0[3][3], double J0All, char *J0name);
-void StdFace_InputSpin(double Jp[3][3], double JpAll, char *Jpname);
-void StdFace_InputCoulombV(double V, double *V0, char *V0name);
-void StdFace_InputHopp(std::complex<double> t, std::complex<double> *t0, char *t0name);
+void StdFace_RequiredVal_i(const char* valname, int val);
+void StdFace_InputSpinNN(double J[3][3], double JAll, double J0[3][3], double J0All, const char *J0name);
+void StdFace_InputSpin(double Jp[3][3], double JpAll, const char *Jpname);
+void StdFace_InputCoulombV(double V, double *V0, const char *V0name);
+void StdFace_InputHopp(std::complex<double> t, std::complex<double> *t0, const char *t0name);
 
 void StdFace_InitSite(struct StdIntList *StdI, FILE *fp, int dim);
 void StdFace_SetLabel(struct StdIntList *StdI, FILE *fp,

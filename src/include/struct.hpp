@@ -413,8 +413,4 @@ struct TimeKeepStruct {
   time_t tend;/**<@brief End time*/
 };/*struct TimeKeepStruct*/
 
-/*global variables---------------------------------------------*/
-struct EDMainCalStruct X;
-/*-------------------------------------------------------------*/
-
 #endif /* HPHI_STRUCT_H */

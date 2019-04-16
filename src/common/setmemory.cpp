@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Created by Kazuyoshi Yoshimi on 2019-01-09.
 //
 
-#include "setmemory.h"
+#include "setmemory.hpp"
 
 ///
 /// \brief Allocation for A[N]

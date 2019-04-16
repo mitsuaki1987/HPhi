@@ -83,7 +83,7 @@ int MultiplyForTEM
 {
   long int i, i_max;
   int coef;
-  std::complex<double> dnorm = 0.0;
+  double dnorm = 0.0;
   std::complex<double> tmp1 = 1.0;
   std::complex<double> tmp2 = 0.0;
   double dt = X->Def.Param.TimeSlice;
@@ -92,7 +92,8 @@ int MultiplyForTEM
   i_max = X->Check.idim_max;
   // mltply is in expec_energy.c v0=H*v1
   if (dt < pow(10.0, -14)) {
-#pragma omp parallel for default(none) reduction(+: dnorm) private(i) shared(v0, v1, v2) firstprivate(i_max, dt, tmp2)
+#pragma omp parallel for default(none) private(i) \
+shared(I,v0, v1, v2) firstprivate(i_max, dt, tmp2)
     for (i = 1; i <= i_max; i++) {
       tmp2 = v0[i][0];
       v0[i][0] = v1[i][0];  //v0=(1-i*dt*H)*v1
@@ -103,8 +104,8 @@ int MultiplyForTEM
   }
   else {
     tmp1 *= -I * dt;
-#pragma omp parallel for default(none) reduction(+: dnorm) private(i) \
-shared(v0, v1, v2) firstprivate(i_max, dt, tmp1, tmp2)
+#pragma omp parallel for default(none) private(i) \
+shared(v0, v1, v2,I) firstprivate(i_max, dt, tmp1, tmp2)
     for (i = 1; i <= i_max; i++) {
       tmp2 = v0[i][0];
       v0[i][0] = v1[i][0] + tmp1 * tmp2;  //v0=(1-i*dt*H)*v1
@@ -116,7 +117,7 @@ shared(v0, v1, v2) firstprivate(i_max, dt, tmp1, tmp2)
       //v2 = H*v1 = H^coef |psi(t)>
       mltply(X, 1, v2, v1);
 
-#pragma omp parallel for default(none) private(i) shared(v0, v1, v2) \
+#pragma omp parallel for default(none) private(i) shared(I, v0, v1, v2) \
 firstprivate(i_max, tmp1, myrank)
       for (i = 1; i <= i_max; i++) {
         v0[i][0] += tmp1 * v2[i][0];
@@ -129,9 +130,9 @@ firstprivate(i_max, tmp1, myrank)
 #pragma omp parallel for default(none) reduction(+: dnorm) private(i) shared(v0) \
 firstprivate(i_max, dt)
   for (i = 1; i <= i_max; i++) {
-    dnorm += conj(v0[i][0])*v0[i][0];
+    dnorm += real(conj(v0[i][0])*v0[i][0]);
   }
-  dnorm = SumMPI_dc(dnorm);
+  dnorm = SumMPI_d(dnorm);
   dnorm = sqrt(dnorm);
   global_norm[0] = dnorm;
 #pragma omp parallel for default(none) private(i) shared(v0) firstprivate(i_max, dnorm)

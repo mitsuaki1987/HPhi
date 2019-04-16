@@ -37,9 +37,10 @@ The following lattices are supported:
 #include <cstring>
 #include <cctype>
 #include <cmath>
-#include "StdFace_vals.h"
-#include "StdFace_ModelUtil.h"
+#include "StdFace_vals.hpp"
+#include "StdFace_ModelUtil.hpp"
 #include <complex>
+#include <iostream>
 
 #if defined(_HPhi)
 /**
@@ -58,19 +59,19 @@ static void StdFace_LargeValue(struct StdIntList *StdI) {
     LargeValue0 += abs(StdI->intr[kintr]);
   }
   for (kintr = 0; kintr < StdI->NCintra; kintr++) {
-    LargeValue0 += fabs(StdI->Cintra[kintr]);
+    LargeValue0 += abs(StdI->Cintra[kintr]);
   }
   for (kintr = 0; kintr < StdI->NCinter; kintr++) {
-    LargeValue0 += fabs(StdI->Cinter[kintr]);
+    LargeValue0 += abs(StdI->Cinter[kintr]);
   }
   for (kintr = 0; kintr < StdI->NEx; kintr++) {
-    LargeValue0 += 2.0 * fabs(StdI->Ex[kintr]);
+    LargeValue0 += 2.0 * abs(StdI->Ex[kintr]);
   }
   for (kintr = 0; kintr < StdI->NPairLift; kintr++) {
-    LargeValue0 += 2.0 * fabs(StdI->PairLift[kintr]);
+    LargeValue0 += 2.0 * abs(StdI->PairLift[kintr]);
   }
   for (kintr = 0; kintr < StdI->NHund; kintr++) {
-    LargeValue0 += 2.0 * fabs(StdI->Hund[kintr]);
+    LargeValue0 += 2.0 * abs(StdI->Hund[kintr]);
   }
   LargeValue0 /= (double)StdI->nsite;
   StdFace_PrintVal_d("LargeValue", &StdI->LargeValue, LargeValue0);
@@ -1138,7 +1139,7 @@ static void StoreWithCheckDup_d(
   double *value//!<[out]
 )
 {
-  if (isnan(*value) == 0){
+  if (std::isnan(*value) == 0){
     fprintf(stdout, "ERROR !  Keyword %s is duplicated ! \n", keyword);
     StdFace_exit(-1);
   }
@@ -1161,7 +1162,7 @@ static void StoreWithCheckDup_c(
   char *valuestring_r, *valuestring_i;
   double value_r, value_i;
 
-  if (isnan(real(*value)) == 0) {
+  if (std::isnan(real(*value)) == 0) {
     fprintf(stdout, "ERROR !  Keyword %s is duplicated ! \n", keyword);
     StdFace_exit(-1);
   }
@@ -1186,12 +1187,12 @@ static void StoreWithCheckDup_c(
     }
 
     if (valuestring_i == NULL) {
-      *value += I * 0.0;
+      *value += (0.0, 0.0);
     }
     else {
         num = sscanf(valuestring_i, "%lf", &value_i);
-      if (num == 1) *value += I * value_i;
-      else *value += I * 0.0;
+      if (num == 1) *value += (0.0, value_i);
+      else *value += (0.0, 0.0);
     }
   }
 }/*static void StoreWithCheckDup_c*/
@@ -2739,7 +2740,7 @@ If you want to create a new lattice file, the following procedures are needed.
 -# Copy one of lattice files such as Kagome.c 
    (Probably the most similar one) and rename it.
 -# @ref sec_lattice
--# Add the function in the header file, StdFace_ModelUtil.h.
+-# Add the function in the header file, StdFace_ModelUtil.hpp.
 -# Add entry at
    @dontinclude StdFace_main.c
    @skip StdFace\_main
@@ -2811,7 +2812,7 @@ for other type, please refer the above link.
 @section sec_share_standard If it should be shared
 
 If the inputted variable should be shared among routines in Standard mode,
-we have to add it to the list in StdFace_vals.h.
+we have to add it to the list in StdFace_vals.hpp.
 
 Also, the variable should be intialized before it is read.
 This initiallization is performed in the function StdFace_ResetVals().

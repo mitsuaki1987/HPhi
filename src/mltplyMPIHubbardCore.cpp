@@ -410,7 +410,7 @@ firstprivate(idim_max_buf,tmp_V,X,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4)
 #pragma omp for
         for (j = 1; j <= idim_max_buf; j++) {
           if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, X, (j - 1) + org_rankbit, &tmp_off) == TRUE) {
-            dmv = tmp_V * Fsgn;
+            dmv = tmp_V * (std::complex<double>)Fsgn;
             zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[tmp_off + 1][0], &one);
           }
         }/*for (j = 1; j <= idim_max_buf; j++)*/
@@ -575,7 +575,7 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
   shared(v1buf,tmp_v1,tmp_v0,nstate,one)
       for (j = 1; j <= idim_max_buf; j++) {
         if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, X, (j - 1) + org_rankbit, &tmp_off) == TRUE) {
-          dmv = tmp_V * Fsgn;
+          dmv = tmp_V * (std::complex<double>)Fsgn;
           zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[tmp_off + 1][0], &one);
         }
       }/*for (j = 1; j <= idim_max_buf; j++)*/
@@ -839,7 +839,7 @@ org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isit
           {
             if (GetOffComp(list_2_1, list_2_2, tmp_off, X->Large.irght, X->Large.ilft, X->Large.ihfbit, &ioff) == TRUE)
             {
-              dmv = tmp_V * Fsgn;
+              dmv = tmp_V * (std::complex<double>)Fsgn;
               zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
             }
           }
@@ -967,7 +967,7 @@ firstprivate(idim_max_buf,tmp_V,X,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,is
         for (j = 1; j <= idim_max_buf; j++) {
           if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, X,
             list_1buf[j] + org_rankbit, &tmp_off) == TRUE) {
-            dmv = tmp_V * Fsgn;
+            dmv = tmp_V * (std::complex<double>)Fsgn;
             GetOffComp(list_2_1, list_2_2, tmp_off,
               X->Large.irght, X->Large.ilft, X->Large.ihfbit, &ioff);
             zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);

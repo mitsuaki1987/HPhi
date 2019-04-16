@@ -16,7 +16,7 @@ h=0.01
 exct = 3
 EOF
 
-${MPIRUN} ../../src/HPhi -s stan.in
+${MPIRUN} ../../src/HPhi++ -s stan.in
 
 # Check value
 

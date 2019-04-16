@@ -1,5 +1,5 @@
-HΦ
-====
+HPhi++
+======
 
 A numerical solver package for a wide range of quantum lattice models including Hubbard-type itinerant electron hamiltonians, quantum spin models, and Kondo-type hamiltonians for itinerant electrons coupled with quantum spins. The Lanczos algorithm for finding ground states and newly developed Lanczos-based algorithm for finite-temperature properties of these models are implemented for parallel computing (hybrid parallelization with OpenMP and MPI). A broad spectrum of users including experimental researchers is cordially welcome.
 

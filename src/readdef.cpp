@@ -72,7 +72,7 @@ int D_iKWNumDef = sizeof(cKWListOfFileNameList)/sizeof(cKWListOfFileNameList[0])
 /**
  * File Name List in NameListFile.
  **/
-static char (*cFileNameListFile)[D_CharTmpReadDef];
+static char **cFileNameListFile;
 
 int CheckTETransferHermite(struct DefineList *X,
                            const int NTETrans,
@@ -398,7 +398,7 @@ int ReadcalcmodFile(
  **/
 int GetFileName(
                 const char* cFileListNameFile,
-                char cFileNameList[][D_CharTmpReadDef]
+                char **cFileNameList
                 )
 {
   FILE *fplist;
@@ -485,7 +485,9 @@ int ReadDefFileNInt(
   InitializeInteractionNum(X);
   NumAve=1;
   X->Param.ExpecInterval=1;
-  cFileNameListFile = (char*)malloc(sizeof(char)*D_CharTmpReadDef*D_iKWNumDef);
+  cFileNameListFile = (char**)malloc(sizeof(char*)*D_iKWNumDef);
+  for (i=0;i< D_iKWNumDef;i++)
+    cFileNameListFile[i] = (char*)malloc(sizeof(char)*D_CharTmpReadDef);
 
   fprintf(stdoutMPI, cReadFileNamelist, xNameListFile); 
   if(GetFileName(xNameListFile, cFileNameListFile)!=0){
@@ -730,50 +732,50 @@ int ReadDefFileNInt(
         sscanf(ctmp2,"%s %d\n", ctmp, &(X->NLaser));
         break;
 
-      case KWTEOneBody:
-        if(X->iCalcType != TimeEvolution) break;
+      case KWTEOneBody: {
+        if (X->iCalcType != TimeEvolution) break;
         /* Read TEOnebody.def--------------------------------*/
-        fgetsMPI(ctmp, sizeof(ctmp)/sizeof(char), fp);
+        fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
         fgetsMPI(ctmp2, 256, fp);
-        sscanf(ctmp2,"%s %d\n", ctmp, &(X->NTETimeSteps));
+        sscanf(ctmp2, "%s %d\n", ctmp, &(X->NTETimeSteps));
         fgetsMPI(ctmp2, 256, fp);
         fgetsMPI(ctmp2, 256, fp);
         fgetsMPI(ctmp2, 256, fp);
-        int iTETransMax=0;
-        if(X->NTETimeSteps>0) {
+        int iTETransMax = 0;
+        if (X->NTETimeSteps > 0) {
           while (fgetsMPI(ctmp2, 256, fp) != NULL) {
             sscanf(ctmp2, "%lf %d \n", &dtmp, &itmp);
             for (i = 0; i < itmp; ++i) {
               fgetsMPI(ctmp2, 256, fp);
             }
-            if(iTETransMax < itmp) iTETransMax=itmp;
+            if (iTETransMax < itmp) iTETransMax = itmp;
           }
         }
-      X->NTETransferMax=iTETransMax;
-      break;
-
-      case KWTETwoBody:
-        if(X->iCalcType != TimeEvolution) break;
-        /* Read TETwobody.def--------------------------------*/
-        fgetsMPI(ctmp, sizeof(ctmp)/sizeof(char), fp);
-        fgetsMPI(ctmp2, 256, fp);
-        sscanf(ctmp2,"%s %d\n", ctmp, &(X->NTETimeSteps));
-        fgetsMPI(ctmp2, 256, fp);
-        fgetsMPI(ctmp2, 256, fp);
-        fgetsMPI(ctmp2, 256, fp);
-        int iTEInterAllMax=0;
-        if(X->NTETimeSteps>0) {
-          while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-            sscanf(ctmp2, "%lf %d \n", &dtmp, &itmp);
-            for (i = 0; i < itmp; ++i) {
-              fgetsMPI(ctmp2, 256, fp);
-            }
-            if(iTEInterAllMax < itmp) iTEInterAllMax=itmp;
-          }
-        }
-        X->NTEInterAllMax=iTEInterAllMax;
+        X->NTETransferMax = iTETransMax;
         break;
-
+      }
+      case KWTETwoBody: {
+        if (X->iCalcType != TimeEvolution) break;
+        /* Read TETwobody.def--------------------------------*/
+        fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
+        fgetsMPI(ctmp2, 256, fp);
+        sscanf(ctmp2, "%s %d\n", ctmp, &(X->NTETimeSteps));
+        fgetsMPI(ctmp2, 256, fp);
+        fgetsMPI(ctmp2, 256, fp);
+        fgetsMPI(ctmp2, 256, fp);
+        int iTEInterAllMax = 0;
+        if (X->NTETimeSteps > 0) {
+          while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+            sscanf(ctmp2, "%lf %d \n", &dtmp, &itmp);
+            for (i = 0; i < itmp; ++i) {
+              fgetsMPI(ctmp2, 256, fp);
+            }
+            if (iTEInterAllMax < itmp) iTEInterAllMax = itmp;
+          }
+        }
+        X->NTEInterAllMax = iTEInterAllMax;
+        break;
+      }
 
       case KWBoost:
         /* Read boost.def--------------------------------*/
@@ -2575,9 +2577,14 @@ void InitializeInteractionNum
   X->NTransfer=0;
   X->NCoulombIntra=0;
   X->NCoulombInter=0;
+  X->NHundCoupling = 0;
+  X->NExchangeCoupling = 0;
+  X->NPairHopping = 0;
   X->NIsingCoupling=0;
   X->NPairLiftCoupling=0;
   X->NInterAll=0;
+  X->NInterAll_Diagonal = 0;
+  X->NInterAll_OffDiagonal = 0;
   X->NCisAjt=0;
   X->NCisAjtCkuAlvDC=0;
   X->NNSingleExcitationOperator=0;

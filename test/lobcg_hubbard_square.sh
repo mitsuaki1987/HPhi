@@ -16,7 +16,7 @@ nelec = 8
 exct = 3
 EOF
 
-${MPIRUN} ../../src/HPhi -s stan.in
+${MPIRUN} ../../src/HPhi++ -s stan.in
 
 # Check Energy
 

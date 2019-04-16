@@ -18,20 +18,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /**@file
 @brief MPI wrapper for init, finalize, bcast, etc.
 */
-#ifdef MPI
-#include <mpi.hpp>
+#ifdef __MPI
+#include <mpi.h>
 #endif
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include "wrapperMPI.hpp"
 #ifdef _OPENMP
-#include <omp.hpp>
+#include <omp.h>
 #endif
 #include <cmath>
 #include <complex>
 #include "splash.hpp"
 #include "global.hpp"
+#include "common/setmemory.hpp"
 
 /**
 @brief MPI initialization wrapper
@@ -41,7 +42,7 @@ Number of threads (::nthreads), and pointer to the standard output
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void InitializeMPI(int argc, char *argv[]){
-#ifdef MPI
+#ifdef __MPI
   int ierr;
   ierr = MPI_Init(&argc, &argv);
   ierr = MPI_Comm_size(MPI_COMM_WORLD, &nproc);
@@ -71,7 +72,7 @@ void InitializeMPI(int argc, char *argv[]){
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void FinalizeMPI(){
-#ifdef MPI
+#ifdef __MPI
   int ierr;
   ierr = MPI_Finalize();
   if (ierr != 0) fprintf(stderr, "\n  MPI_Finalize() = %d\n\n", ierr);
@@ -87,7 +88,7 @@ void exitMPI(
 )
 {
   fflush(stdout);
-#ifdef MPI
+#ifdef __MPI
   fprintf(stdout,"\n\n #######  [HPhi] You DO NOT have to WORRY about the following MPI-ERROR MESSAGE.  #######\n\n");
   int ierr;
   ierr = MPI_Abort(MPI_COMM_WORLD, errorcode);
@@ -142,7 +143,7 @@ char* fgetsMPI(
       }
     }
   }
-#ifdef MPI
+#ifdef __MPI
   MPI_Bcast(InputString, maxcount, MPI_CHAR, 0, MPI_COMM_WORLD);
   MPI_Bcast(&inull, 1, MPI_INT, 0, MPI_COMM_WORLD);
 #endif
@@ -157,7 +158,7 @@ char* fgetsMPI(
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void BarrierMPI(){
-#ifdef MPI
+#ifdef __MPI
   MPI_Barrier(MPI_COMM_WORLD);
 #endif
 }/*void BarrierMPI()*/
@@ -170,7 +171,7 @@ long integer across processes.
 unsigned long int MaxMPI_li(
   unsigned long int idim//!<[in] Value to be maximized
 ){
-#ifdef MPI
+#ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &idim, 1,
     MPI_UNSIGNED_LONG, MPI_MAX, MPI_COMM_WORLD);
@@ -187,7 +188,7 @@ across processes.
 double MaxMPI_d(
   double dvalue//!<[in] Value to be maximized
 ){
-#ifdef MPI
+#ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &dvalue, 1,
     MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
@@ -204,7 +205,7 @@ complex across processes.
 std::complex<double> SumMPI_dc(
   std::complex<double> norm//!<[in] Value to be summed
 ){
-#ifdef MPI
+#ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &norm, 1,
     MPI_DOUBLE_COMPLEX, MPI_SUM, MPI_COMM_WORLD);
@@ -221,7 +222,7 @@ across processes.
 double SumMPI_d(
   double norm//!<[in] Value to be summed
 ){
-#ifdef MPI
+#ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &norm, 1,
     MPI_DOUBLE_PRECISION, MPI_SUM, MPI_COMM_WORLD);
@@ -238,7 +239,7 @@ void SumMPI_dv(
   int nnorm,
   double *norm//!<[in] Value to be summed
 ) {
-#ifdef MPI
+#ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, norm, nnorm,
     MPI_DOUBLE_PRECISION, MPI_SUM, MPI_COMM_WORLD);
@@ -254,7 +255,7 @@ void SumMPI_cv(
   int nnorm,
   std::complex<double> *norm//!<[in] Value to be summed
 ) {
-#ifdef MPI
+#ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, norm, nnorm,
     MPI_DOUBLE_COMPLEX, MPI_SUM, MPI_COMM_WORLD);
@@ -270,7 +271,7 @@ long integer across processes.
 unsigned long int SumMPI_li(
   unsigned long int idim//!<[in] Value to be summed
 ){
-#ifdef MPI
+#ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &idim, 1,
     MPI_UNSIGNED_LONG, MPI_SUM, MPI_COMM_WORLD);
@@ -287,7 +288,7 @@ integer across processes.
 int SumMPI_i(
   int idim//!<[in] Value to be summed
 ) {
-#ifdef MPI
+#ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &idim, 1,
                        MPI_INT, MPI_SUM, MPI_COMM_WORLD);
@@ -307,7 +308,7 @@ unsigned long int BcastMPI_li(
 ) {
   unsigned long int idim0;
   idim0 = idim;
-#ifdef MPI
+#ifdef __MPI
     MPI_Bcast(&idim0, 1, MPI_UNSIGNED_LONG, root, MPI_COMM_WORLD);
 #endif
   return(idim0);
@@ -321,20 +322,18 @@ double NormMPI_dc(
   unsigned long int idim,//!<[in] Local dimension of vector
   std::complex<double> *_v1//!<[in] [idim] vector to be producted
 ){
-  std::complex<double> cdnorm=0;
   double dnorm =0;
   unsigned long int i;
-  //DEBUG
-#pragma omp parallel for default(none) private(i) firstprivate(myrank) shared(_v1, idim) reduction(+: cdnorm)
-  for(i=1;i<=idim;i++){
-    cdnorm += conj(_v1[i])*_v1[i];
-  }
-#ifdef MPI
-  cdnorm = SumMPI_dc(cdnorm);
-#endif
-  dnorm=real(cdnorm);
-  dnorm=sqrt(dnorm);
 
+  dnorm = 0.0;
+#pragma omp parallel for default(none) private(i) \
+shared(_v1, idim) reduction(+:dnorm)
+    for (i = 1; i <= idim; i++) 
+      dnorm += real(conj(_v1[i])*_v1[i]);
+ 
+#ifdef __MPI
+  dnorm = SumMPI_d(dnorm);
+#endif
   return dnorm;
 }/*double NormMPI_dc*/
 /**
@@ -354,7 +353,7 @@ void NormMPI_dv(
   for (istate = 0; istate < nstate; istate++) dnorm[istate] = 0.0;
   for (idim = 1; idim <= ndim; idim++) {
     for (istate = 0; istate < nstate; istate++) {
-      dnorm[istate] += conj(_v1[idim][istate])*_v1[idim][istate];
+      dnorm[istate] += real(conj(_v1[idim][istate])*_v1[idim][istate]);
     }
   }
   SumMPI_dv(nstate, dnorm);
@@ -371,11 +370,26 @@ std::complex<double> VecProdMPI(
   std::complex<double> *v2//!<[in] [ndim] vector to be producted
 ){
   long unsigned int idim;
-  std::complex<double> prod;
+  std::complex<double> prod, *prod_thr;
+  int mythread;
 
+  prod_thr = cd_1d_allocate(nthreads);
+#pragma omp parallel default(none) shared(v1,v2,ndim,prod,prod_thr) private(idim,mythread)
+  {
+#ifdef _OPENMP
+    mythread = omp_get_thread_num();
+#else
+    mythread = 0;
+#endif
+#pragma omp for
+    for (idim = 1; idim <= ndim; idim++) 
+      prod_thr[mythread] += conj(v1[idim]) * v2[idim];
+  }
   prod = 0.0;
-#pragma omp parallel for default(none) shared(v1,v2,ndim) private(idim) reduction(+: prod)
-  for (idim = 1; idim <= ndim; idim++) prod += conj(v1[idim]) * v2[idim];
+  for (mythread = 0; mythread < nthreads; mythread++)
+    prod += prod_thr[mythread];
+  free_cd_1d_allocate(prod_thr);
+
   prod = SumMPI_dc(prod);
 
   return(prod);
@@ -414,7 +428,7 @@ void SendRecv_cv(
   std::complex<double> *vecs,
   std::complex<double> *vecr
 ) {
-#ifdef MPI
+#ifdef __MPI
   int ierr, two31m1 = 2147483647, modMsg, nMsgS2, nMsgR2;
   unsigned long int nMsg, nnMsg, iMsg, sMsgR, sMsgS;
   MPI_Status statusMPI;
@@ -455,7 +469,7 @@ void SendRecv_iv(
   unsigned long int *vecs,
   unsigned long int *vecr
 ) {
-#ifdef MPI
+#ifdef __MPI
   int ierr, two31m1 = 2147483647, modMsg, nMsgS2, nMsgR2;
   unsigned long int nMsg, nnMsg, iMsg, sMsgR, sMsgS;
   MPI_Status statusMPI;
@@ -491,7 +505,7 @@ unsigned long int SendRecv_i(
   int origin,
   unsigned long int isend
 ) {
-#ifdef MPI
+#ifdef __MPI
   int ierr;
   MPI_Status statusMPI;
   unsigned long int ircv;

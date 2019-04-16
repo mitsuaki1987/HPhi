@@ -415,12 +415,13 @@ int expec_cisajscktalt_SpinHalf(
         is2_up = X->Def.Tpow[org_isite3 - 1];
         num1 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is1_up, org_sigma1);
         num2 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is2_up, org_sigma3);
-        zaxpy_long(i_max*nstate, tmp_V * num1*num2, &vec[1][0], &Xvec[1][0]);
+        zaxpy_long(i_max*nstate, tmp_V * (std::complex<double>)(num1*num2),
+          &vec[1][0], &Xvec[1][0]);
       }
       else if (org_isite1 == org_isite3 && org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) {
         is1_up = X->Def.Tpow[org_isite1 - 1];
         num1 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is1_up, org_sigma1);
-        zaxpy_long(i_max*nstate, tmp_V * num1, &vec[1][0], &Xvec[1][0]);
+        zaxpy_long(i_max*nstate, tmp_V * (std::complex<double>)num1, &vec[1][0], &Xvec[1][0]);
       }
       else if (org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) {//exchange
         X_child_general_int_spin_MPIdouble(
@@ -440,7 +441,7 @@ int expec_cisajscktalt_SpinHalf(
   firstprivate(i_max, tmp_V, is1_up, org_sigma1, X, num2) private(j, num1,dmv)
         for (j = 1; j <= i_max; j++) {
           num1 = X_Spin_CisAis(j, X, is1_up, org_sigma1);
-          dmv = tmp_V * num1*num2;
+          dmv = tmp_V * (std::complex<double>)(num1*num2);
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
         }
       }
@@ -468,7 +469,7 @@ firstprivate(i_max,X,isA_up,isB_up,org_sigma2,org_sigma4,tmp_off, tmp_V)
 #pragma omp parallel for default(none) private(j, dmv) \
   firstprivate(i_max,X,isA_up,org_sigma1, tmp_V) shared(vec, list_1,Xvec,nstate,one)
         for (j = 1; j <= i_max; j++) {
-          dmv = tmp_V * X_Spin_CisAis(j, X, isA_up, org_sigma1);
+          dmv = tmp_V * (std::complex<double>)X_Spin_CisAis(j, X, isA_up, org_sigma1);
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
         }
       }

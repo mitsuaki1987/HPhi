@@ -308,7 +308,7 @@ void X_GC_child_CisAisCjuAju_spin_MPIdouble(
   {
 #pragma omp for
     for (j = 1; j <= X->Check.idim_max; j++) {
-      dmv = num1 * num2 * tmp_J;
+      dmv = (std::complex<double>)(num1 * num2) * tmp_J;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
     }/*for (j = 1; j <= X->Check.idim_max; j++) */
   }/*End of parallel region*/
@@ -343,7 +343,7 @@ void X_GC_child_CisAisCjuAju_spin_MPIsingle(
 #pragma omp for
     for (j = 1; j <= X->Check.idim_max; j++) {
       num1 = X_SpinGC_CisAis(j, X, mask1, org_ispin1);
-      dmv = Jint * num1 * num2;
+      dmv = Jint * (std::complex<double>)(num1 * num2);
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
     }/*for (j = 1; j <= X->Check.idim_max; j++)*/
   }/*End of parallel region*/
@@ -1076,7 +1076,7 @@ firstprivate(X, tmp_V, org_isite1, org_ispin1) private(j, dmv, num1) \
     for (j = 1; j <= X->Check.idim_max; j++) {
       num1 = BitCheckGeneral(j - 1, org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
 
-      dmv = tmp_V * num1;
+      dmv = tmp_V * (std::complex<double>)num1;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
     }/*for (j = 1; j <= X->Check.idim_max; j++)*/
   }/*End of parallel region*/
@@ -1225,7 +1225,7 @@ firstprivate(X, tmp_V, org_isite1, org_ispin1) private(j, dmv, num1) \
     for (j = 1; j <= X->Check.idim_max; j++) {
       num1 = BitCheckGeneral(list_1[j], org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
 
-      dmv = tmp_V * num1;
+      dmv = tmp_V * (std::complex<double>)num1;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
     }/*for (j = 1; j <= X->Check.idim_max; j++)*/
   }/*End of parallel region*/

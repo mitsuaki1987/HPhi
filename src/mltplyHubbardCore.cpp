@@ -245,7 +245,7 @@ void GC_CisAis(
 
   list_1_j = j - 1;
   A_ibit_tmp = (list_1_j & is1_spin) / is1_spin;
-  dmv = tmp_trans * A_ibit_tmp;
+  dmv = tmp_trans * (std::complex<double>)A_ibit_tmp;
   zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
 }/*std::complex<double> GC_CisAis*/
 /**
@@ -267,7 +267,7 @@ void GC_AisCis(
 
   list_1_j = j - 1;
   A_ibit_tmp = (list_1_j & is1_spin) / is1_spin;
-  dmv = tmp_trans * (1 - A_ibit_tmp);
+  dmv = tmp_trans * (std::complex<double>)(1 - A_ibit_tmp);
   zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
 }/*std::complex<double> GC_AisCis*/
 /**
@@ -319,7 +319,7 @@ void CisAjt(
     if(GetOffComp(list_2_1, list_2_2, iexchg, X->Large.irght, X->Large.ilft, X->Large.ihfbit, &off)==FALSE){
       return;
     }
-    dmv = sgn * tmp_V;
+    dmv = (std::complex<double>)sgn * tmp_V;
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[off][0], &one);
   }
   else {
@@ -360,7 +360,7 @@ void GC_CisAjt(
     SgnBit(bit, &sgn); // Fermion sign
     list_1_off = list_1_j ^ sum_spin;
     *tmp_off = list_1_off;
-    dmv = sgn * tmp_V;
+    dmv = (std::complex<double>)sgn * tmp_V;
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off + 1][0], &one);
   }
   else {
@@ -647,7 +647,7 @@ void child_CisAisCisAis_element(
   int one = 1;
   tmp_sgn = X_CisAis(list_1[j], X, isite3);
   tmp_sgn *= X_CisAis(list_1[j], X, isite1);
-  dmv = tmp_V * tmp_sgn;
+  dmv = tmp_V * (std::complex<double>)tmp_sgn;
   zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
 }/*std::complex<double> child_CisAisCisAis_element*/
 /**
@@ -676,7 +676,7 @@ void child_CisAisCjtAku_element(
   if (tmp_sgn != 0) {
     tmp_sgn *= X_CisAis(list_1[*tmp_off], X, isite1);
     if (tmp_sgn != 0) {
-      dmv = tmp_V * tmp_sgn;
+      dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off][0], &one);
     }
   }
@@ -707,7 +707,7 @@ void child_CisAjtCkuAku_element(
   if (tmp_sgn != 0) {
     tmp_sgn *= X_CisAjt(list_1[j], X, isite1, isite2, Asum, Adiff, tmp_off);
     if (tmp_sgn != 0) {
-      dmv = tmp_V * tmp_sgn;
+      dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off][0], &one);
     }
   }
@@ -744,7 +744,7 @@ void child_CisAjtCkuAlv_element(
   if (tmp_sgn != 0) {
     tmp_sgn *= X_CisAjt(tmp_off_1, X, isite1, isite2, Asum, Adiff, tmp_off_2);
     if (tmp_sgn != 0) {
-      dmv = tmp_V * tmp_sgn;
+      dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off_2][0], &one);
     }
   }
@@ -772,7 +772,7 @@ void GC_child_CisAisCisAis_element(
   tmp_sgn = X_CisAis(j - 1, X, isite3);
   tmp_sgn *= X_CisAis(j - 1, X, isite1);
   if (tmp_sgn != 0) {
-    dmv = tmp_V * tmp_sgn;
+    dmv = tmp_V * (std::complex<double>)tmp_sgn;
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
   }
 }/*std::complex<double> GC_child_CisAisCisAis_element*/
@@ -802,7 +802,7 @@ void GC_child_CisAisCjtAku_element(
   if (tmp_sgn != 0) {
     tmp_sgn *= X_CisAis(*tmp_off, X, isite1);
     if (tmp_sgn != 0) {
-      dmv = tmp_V * tmp_sgn;
+      dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
     }
   }
@@ -833,7 +833,7 @@ void GC_child_CisAjtCkuAku_element(
   if (tmp_sgn != 0) {
     tmp_sgn *= X_GC_CisAjt((j - 1), X, isite1, isite2, Asum, Adiff, tmp_off);
     if (tmp_sgn != 0) {
-      dmv = tmp_V * tmp_sgn;
+      dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
     }/*if (tmp_sgn != 0)*/
   }/*if (tmp_sgn != 0)*/
@@ -869,7 +869,7 @@ void GC_child_CisAjtCkuAlv_element(
   if (tmp_sgn != 0) {
     tmp_sgn *= X_GC_CisAjt(tmp_off_1, X, isite1, isite2, Asum, Adiff, tmp_off_2);
     if (tmp_sgn != 0) {
-      dmv = tmp_V * tmp_sgn;
+      dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off_2 + 1][0], &one);
     }
   }
@@ -910,12 +910,12 @@ void GC_Cis(
     bit = list_1_j - (list_1_j & (2 * is1_spin - 1));
     SgnBit(bit, &sgn); // Fermion sign
     ipsgn = 1;
-#ifdef MPI
+#ifdef __MPI
     SgnBit(myrank, &ipsgn); // Fermion sign
 #endif
     list_1_off = list_1_j | is1_spin; // OR
     *tmp_off = list_1_off;
-    dmv = ipsgn * sgn * tmp_V;
+    dmv = (std::complex<double>)(ipsgn * sgn) * tmp_V;
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off + 1][0], &one);
   }
   else {
@@ -956,12 +956,12 @@ void GC_Ajt(
     bit = list_1_j - (list_1_j & (2 * is1_spin - 1));
     SgnBit(bit, &sgn); // Fermion sign
     ipsgn = 1;
-#ifdef MPI
+#ifdef __MPI
     SgnBit(myrank, &ipsgn); // Fermion sign
 #endif
     list_1_off = list_1_j ^ is1_spin;
     *tmp_off = list_1_off;
-    dmv = ipsgn * sgn * tmp_V;
+    dmv = (std::complex<double>)(ipsgn * sgn) * tmp_V;
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off + 1][0], &one);
   }
   else {
@@ -1005,7 +1005,7 @@ int X_Cis(
     bit = list_1_j - (list_1_j & (2 * is1_spin - 1));
     SgnBit(bit, &sgn); // Fermion sign
     ipsgn = 1;
-#ifdef MPI
+#ifdef __MPI
     SgnBit(myrank, &ipsgn); // Fermion sign
 #endif
     list_1_off = list_1_j | is1_spin; // OR
@@ -1058,7 +1058,7 @@ int X_Ajt(
     bit = list_1_j - (list_1_j & (2 * is1_spin - 1));
     SgnBit(bit, &sgn); // Fermion sign
     ipsgn = 1;
-#ifdef MPI
+#ifdef __MPI
     SgnBit(myrank, &ipsgn); // Fermion sign
 #endif
     list_1_off = list_1_j ^ is1_spin;

@@ -181,7 +181,7 @@ int MakeExcitedList(
   if (*iFlgListModifed == TRUE) {
     if (GetlistSize(X) == TRUE) {
       list_1_org = lui_1d_allocate(X->Check.idim_max + 1);
-#ifdef MPI
+#ifdef __MPI
       unsigned long int MAXidim_max;
       MAXidim_max = MaxMPI_li(X->Check.idim_max);
       list_1buf_org = lui_1d_allocate(MAXidim_max + 1);
@@ -312,7 +312,7 @@ int MakeExcitedList(
   if (sz(X, list_1, list_2_1, list_2_2) != 0) {
     return FALSE;
   }
-#ifdef MPI
+#ifdef __MPI
   unsigned long int MAXidim_max, MAXidim_maxOrg;
   MAXidim_max = MaxMPI_li(X->Check.idim_max);
   MAXidim_maxOrg = MaxMPI_li(X->Check.idim_maxOrg);
@@ -453,7 +453,7 @@ int CalcSpectrum(
     v1Org = cd_2d_allocate(X->Bind.Check.idim_max + 1, 1);
     for (i = 1; i <= X->Bind.Check.idim_max; i++) v1Org[i][0] = v1[i][0];
     free_cd_2d_allocate(v1);
-#ifdef MPI
+#ifdef __MPI
     free_lui_1d_allocate(list_1buf);
     free_cd_2d_allocate(v1buf);
 #endif // MPI
@@ -488,7 +488,7 @@ int CalcSpectrum(
   OmegaMax = X->Bind.Def.dcOmegaMax + X->Bind.Def.dcOmegaOrg;
   OmegaMin = X->Bind.Def.dcOmegaMin + X->Bind.Def.dcOmegaOrg;
   for (i = 0; i < Nomega; i++) {
-    dcomega[i] = (OmegaMax - OmegaMin) / Nomega * i + OmegaMin;
+    dcomega[i] = (OmegaMax - OmegaMin) / (std::complex<double>)(Nomega * i) + OmegaMin;
   }
 
   fprintf(stdoutMPI, "\nFrequency range:\n");

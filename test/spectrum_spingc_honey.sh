@@ -30,7 +30,7 @@ CalcSpec = "Scratch"
 SpectrumType = "SzSz"
 EOF
 
-${MPIRUN} ../../src/HPhi -s stan2.in
+${MPIRUN} ../../src/HPhi++ -s stan2.in
 
 cat > reference.dat <<EOF
   -69.4500000000 1.0000000000 -0.0345775841 -0.0005618651
@@ -75,7 +75,7 @@ CalcSpec = "Scratch"
 SpectrumType = "S+S-"
 EOF
 
-${MPIRUN} ../../src/HPhi -s stan2.in
+${MPIRUN} ../../src/HPhi++ -s stan2.in
 
 cat > reference.dat <<EOF
 -69.4500000000 1.0000000000 -0.0781153536 -0.0012671333
@@ -120,7 +120,7 @@ CalcSpec = "Scratch"
 SpectrumType = "Density"
 EOF
 
-${MPIRUN} ../../src/HPhi -s stan2.in
+${MPIRUN} ../../src/HPhi++ -s stan2.in
 
 cat > reference.dat <<EOF
   -69.4500000000 1.0000000000 0.0000000000 0.0000000000

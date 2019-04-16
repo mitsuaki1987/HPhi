@@ -34,16 +34,18 @@
  * 
  */
 
+extern "C" {
 #ifdef SR
-int dsyevd_(char *jobz, char *uplo, int *n, double *a, int *lda, double *w, double *work, int *lwork, int *iwork, int *liwork, int *info);
-int zheevd_(char *jobz, char *uplo, int *n, std::complex<double> *a, int *lda, double *w, std::complex<double> *work, int *lwork, double *rwork, int *iwork, int *liwork, int *info);
+  extern int dsyevd_(char *jobz, char *uplo, int *n, double *a, int *lda, double *w, double *work, int *lwork, int *iwork, int *liwork, int *info);
+  extern int zheevd_(char *jobz, char *uplo, int *n, std::complex<double> *a, int *lda, double *w, std::complex<double> *work, int *lwork, double *rwork, int *iwork, int *liwork, int *info);
 #else
-int zheev_(char *jobz, char *uplo, int *n, std::complex<double> *a, int *lda, double *w, std::complex<double> *work, int *lwork, double *rwork, int *info);
+  extern int zheev_(char *jobz, char *uplo, int *n, std::complex<double> *a, int *lda, double *w, std::complex<double> *work, int *lwork, double *rwork, int *info);
 #endif
 
-int dsyevx_(char *jobz, char *range, char *uplo, int *n, double *a, int *lda, double *vl, double *vu, 
-        int *il, int *iu, double *abstol, int *m, double *w, double *z__, int *ldz, 
-        double *work, int *lwork, int *iwork, int *ifail, int *info);
+  extern int dsyevx_(char *jobz, char *range, char *uplo, int *n, double *a, int *lda, double *vl, double *vu,
+    int *il, int *iu, double *abstol, int *m, double *w, double *z__, int *ldz,
+    double *work, int *lwork, int *iwork, int *ifail, int *info);
+}
 //added by Misawa 130121
 //For complex Hermite matrix
 /** 

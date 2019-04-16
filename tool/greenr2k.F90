@@ -75,14 +75,14 @@ MODULE fourier_routine
   !
   IMPLICIT NONE
   !
-  INTERFACE
-     SUBROUTINE key2lower(key) BIND(c)
-       USE,INTRINSIC :: iso_c_binding
-       CHARACTER(KIND=C_CHAR) :: key(*)
-     END SUBROUTINE key2lower
-  END INTERFACE
-  !
 CONTAINS
+!
+SUBROUTINE key2lower(key)
+  CHARACTER(*),INTENT(INOUT) :: key
+  IF(65 <=IACHAR(key) .AND. IACHAR(key) <= 90) THEN
+     key = ACHAR(IACHAR(key) + 32)
+  END IF
+END SUBROUTINE key2lower
 !
 ! Read from HPhi/mVMC input files
 !

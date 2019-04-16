@@ -83,7 +83,7 @@ private(j,tmp_v02,D,N,Sz,isite1,bit_up,bit_down,bit_D,u_ibit1,l_ibit1, \
 #pragma omp for
     for (j = 1; j <= i_max; j++) {
       for (istate = 0; istate < nstate; istate++)
-        tmp_v02[istate] = conj(tmp_v0[j][istate]) * tmp_v0[j][istate];
+        tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       bit_up = 0;
       bit_down = 0;
       bit_D = 0;
@@ -242,7 +242,7 @@ private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
 #pragma omp for
     for (j = 1; j <= i_max; j++) {
       for (istate = 0; istate < nstate; istate++)
-        tmp_v02[istate] = conj(tmp_v0[j][istate]) * tmp_v0[j][istate];
+        tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       bit_up = 0;
       bit_down = 0;
       bit_D = 0;
@@ -392,7 +392,7 @@ private(j,Sz,ibit1,isite1,tmp_v02,u_ibit1,l_ibit1,mythread,istate)
 #pragma omp for
     for (j = 1; j <= i_max; j++) {
       for (istate = 0; istate < nstate; istate++)
-        tmp_v02[istate] = conj(tmp_v0[j][istate]) * tmp_v0[j][istate];
+        tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       Sz = 0.0;
 
       // isite1 > X->Def.Nsite
@@ -477,7 +477,7 @@ private(j,istate,tmp_v02,Sz,isite1,mythread)
 #pragma omp for
     for (j = 1; j <= i_max; j++) {
       for (istate = 0; istate < nstate; istate++) \
-        tmp_v02[istate] = conj(tmp_v0[j][istate]) * tmp_v0[j][istate];
+        tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       Sz = 0.0;
       for (isite1 = 1; isite1 <= X->Def.NsiteMPI; isite1++) {
         //prefactor 0.5 is added later.
@@ -573,7 +573,7 @@ private(j,Sz,ibit1,isite1,tmp_v02,u_ibit1,l_ibit1, tmp_list_1,mythread,istate)
 #pragma omp for
     for (j = 1; j <= i_max; j++) {
       for (istate = 0; istate < nstate; istate++) \
-        tmp_v02[istate] = conj(tmp_v0[j][istate]) * tmp_v0[j][istate];
+        tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       Sz = 0.0;
       tmp_list_1 = list_1[j];
 
@@ -658,7 +658,7 @@ firstprivate(i_max,X,myrank) private(j,Sz,isite1,tmp_v02, tmp_list1,istate,mythr
 #pragma omp for
     for (j = 1; j <= i_max; j++) {
       for (istate = 0; istate < nstate; istate++)
-        tmp_v02[istate] = conj(tmp_v0[j][istate]) * tmp_v0[j][istate];
+        tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       Sz = 0.0;
       tmp_list1 = list_1[j];
       for (isite1 = 1; isite1 <= X->Def.NsiteMPI; isite1++) {
@@ -831,8 +831,8 @@ shared(tmp_v1,tmp_v0,nstate) firstprivate(i_max)
   }
   for (j = 1; j <= i_max; j++) {
     for (istate = 0; istate < nstate; istate++) {
-      X->Phys.energy[istate] += conj(tmp_v1[j][istate])*tmp_v0[j][istate]; // E   = <v1|H|v1>=<v1|v0>
-      X->Phys.var[istate] += conj(tmp_v0[j][istate])*tmp_v0[j][istate]; // E^2 = <v1|H*H|v1>=<v0|v0>
+      X->Phys.energy[istate] += real(conj(tmp_v1[j][istate])*tmp_v0[j][istate]); // E   = <v1|H|v1>=<v1|v0>
+      X->Phys.var[istate] += real(conj(tmp_v0[j][istate])*tmp_v0[j][istate]); // E^2 = <v1|H*H|v1>=<v0|v0>
     }
   }
   SumMPI_dv(nstate, X->Phys.energy);

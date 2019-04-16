@@ -25,8 +25,8 @@
 #include "mltply.hpp"
 #include "CalcSpectrum.hpp"
 #include "mltplyCommon.hpp"
-#ifdef MPI
-#include <mpi.hpp>
+#ifdef __MPI
+#include <mpi.h>
 #endif
 /**@brief
 Read @f$\alpha, \beta@f$, projected residual for restart

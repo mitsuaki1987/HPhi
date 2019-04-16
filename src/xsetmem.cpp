@@ -18,6 +18,7 @@
 #include "common/setmemory.hpp"
 #include "xsetmem.hpp"
 #include "wrapperMPI.hpp"
+#include <iostream>
 /**
  * @file   xsetmem.c
  *
@@ -184,7 +185,7 @@ int setmem_large
   }
   v0 = cd_2d_allocate(X->Check.idim_max + 1, nstate);
   v1 = cd_2d_allocate(X->Check.idim_max + 1, nstate);
-#ifdef MPI
+#ifdef __MPI
   unsigned long int MAXidim_max;
   MAXidim_max = MaxMPI_li(X->Check.idim_max);
   if (GetlistSize(X) == TRUE) list_1buf = lui_1d_allocate(MAXidim_max + 1);

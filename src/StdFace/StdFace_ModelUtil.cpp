@@ -22,11 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <cstdlib>
 #include <cmath>
 #include <complex>
-#include "StdFace_vals.h"
+#include "StdFace_vals.hpp"
 #include <cstring>
-#ifdef MPI
+#ifdef __MPI
 #include <mpi.h>
 #endif
+#include <iostream>
 
 /**
 @brief MPI Abortation wrapper
@@ -38,7 +39,7 @@ void StdFace_exit(int errorcode//!< [in]
   int ierr = 0;
   fflush(stdout);
   fflush(stderr);
-#ifdef MPI
+#ifdef __MPI
   fprintf(stdout, "\n\n #######  You DO NOT have to WORRY about the following MPI-ERROR MESSAGE.  #######\n\n");
   ierr = MPI_Abort(MPI_COMM_WORLD, errorcode);
   ierr = MPI_Finalize();
@@ -94,7 +95,7 @@ struct StdIntList *StdI,//!<[inout]
     for (it = 0; it < StdI->Lanczos_max; it++) {
       Cphase = 0.0f;
       for (ii = 0; ii < 3; ii++) Cphase += /*2.0*StdI->pi */ StdI->At[it][ii] * dR[ii];
-      coef = cos(Cphase) + I * sin(-Cphase);
+      coef = (cos(Cphase), sin(-Cphase));
       for (ispin = 0; ispin < 2; ispin++) {
         StdI->pump[it][StdI->npump[it]] = coef * trans0;
         StdI->pumpindx[it][StdI->npump[it]][0] = isite;
@@ -324,7 +325,7 @@ struct StdIntList *StdI,//!<[inout]
       @f]
       */
       if ((ispin < Si2 && jspin < Sj2) && ExGeneral == 1) {
-        intr0 = 0.25 * (J[0][0] + J[1][1] + I*(J[0][1] - J[1][0]))
+        intr0 = 0.25 * std::complex<double>(J[0][0] + J[1][1], J[0][1] - J[1][0])
           * sqrt(Si * (Si + 1.0) - Siz * (Siz + 1.0))
           * sqrt(Sj * (Sj + 1.0) - Sjz * (Sjz + 1.0));
         StdFace_intr(StdI, intr0,
@@ -344,7 +345,7 @@ struct StdIntList *StdI,//!<[inout]
       @f]
       */
       if ((ispin < Si2 && jspin < Sj2) && ExGeneral == 1) {
-        intr0 = 0.5 * 0.5 * (J[0][0] - J[1][1] - I*(J[0][1] + J[1][0]))
+        intr0 = 0.5 * 0.5 * std::complex<double>(J[0][0] - J[1][1], - (J[0][1] + J[1][0]))
           * sqrt(Si * (Si + 1.0) - Siz * (Siz + 1.0))
           * sqrt(Sj * (Sj + 1.0) - Sjz * (Sjz + 1.0));
         StdFace_intr(StdI, intr0,
@@ -363,7 +364,7 @@ struct StdIntList *StdI,//!<[inout]
       @f]
       */
       if (ispin < Si2) {
-        intr0 = 0.5 * (J[0][2] - I * J[1][2]) * sqrt(Si * (Si + 1.0) - Siz * (Siz + 1.0)) * Sjz;
+        intr0 = 0.5 * std::complex<double>(J[0][2], - J[1][2]) * sqrt(Si * (Si + 1.0) - Siz * (Siz + 1.0)) * Sjz;
         StdFace_intr(StdI, intr0,
           isite, ispin + 1, isite, ispin, jsite, jspin, jsite, jspin);
         StdFace_intr(StdI, conj(intr0),
@@ -380,7 +381,7 @@ struct StdIntList *StdI,//!<[inout]
        @f]
       */
       if (jspin < Sj2) {
-        intr0 = 0.5 * (J[2][0] - I * J[2][1]) * Siz * sqrt(Sj * (Sj + 1.0) - Sjz * (Sjz + 1.0));
+        intr0 = 0.5 * std::complex<double>(J[2][0], - J[2][1]) * Siz * sqrt(Sj * (Sj + 1.0) - Sjz * (Sjz + 1.0));
         StdFace_intr(StdI, intr0,
           isite, ispin, isite, ispin, jsite, jspin + 1, jsite, jspin);
         StdFace_intr(StdI, conj(intr0),
@@ -414,12 +415,12 @@ set the default value.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_PrintVal_d(
-  char* valname,//!<[in] Name of the valiable
+  const char* valname,//!<[in] Name of the valiable
   double *val,//!<[inout] Valiable to be set 
   double val0//!<[in] The default value
 )
 {
-  if (isnan(*val) == 1) {
+  if (std::isnan(*val) == 1) {
     *val = val0;
     fprintf(stdout, "  %15s = %-10.5f  ######  DEFAULT VALUE IS USED  ######\n", valname, *val);
   }
@@ -438,11 +439,11 @@ void StdFace_PrintVal_dd(
   double val1//!<[in] The secondary default value
 )
 {
-  if (isnan(*val) == 1) {
+  if (std::isnan(*val) == 1) {
     /**@brief
     If the primary default value (val0) is not specified, use secondary default value
     */
-    if (isnan(val0) == 1) *val = val1;
+    if (std::isnan(val0) == 1) *val = val1;
     else *val = val0;
     fprintf(stdout, "  %15s = %-10.5f  ######  DEFAULT VALUE IS USED  ######\n", valname, *val);
   }
@@ -460,7 +461,7 @@ void StdFace_PrintVal_c(
   std::complex<double> val0//!<[in] The default value
 )
 {
-  if (isnan(real(*val)) == 1) {
+  if (std::isnan(real(*val)) == 1) {
     *val = val0;
     fprintf(stdout, "  %15s = %-10.5f %-10.5f  ######  DEFAULT VALUE IS USED  ######\n", valname, real(*val), imag(*val));
   }
@@ -473,7 +474,7 @@ set the default value.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_PrintVal_i(
-  char* valname,//!<[in] Name of the valiable
+  const char* valname,//!<[in] Name of the valiable
   int *val,//!<[inout] Valiable to be set
   int val0//!<[in] The default value
 )
@@ -492,11 +493,11 @@ in the input file (!=NaN).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_NotUsed_d(
-  char* valname,//!<[in] Name of the valiable
+  const char* valname,//!<[in] Name of the valiable
   double val//!<[in]
 )
 {
-  if (isnan(val) == 0) {
+  if (std::isnan(val) == 0) {
     fprintf(stdout, "\n Check !  %s is SPECIFIED but will NOT be USED. \n", valname);
     fprintf(stdout, "            Please COMMENT-OUT this line \n");
     fprintf(stdout, "            or check this input is REALLY APPROPRIATE for your purpose ! \n\n");
@@ -509,11 +510,11 @@ in the input file (!=NaN).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_NotUsed_c(
-  char* valname,//!<[in] Name of the valiable
+  const char* valname,//!<[in] Name of the valiable
   std::complex<double> val//!<[in]
 )
 {
-  if (isnan(real(val)) == 0) {
+  if (std::isnan(real(val)) == 0) {
     fprintf(stdout, "\n Check !  %s is SPECIFIED but will NOT be USED. \n", valname);
     fprintf(stdout, "            Please COMMENT-OUT this line \n");
     fprintf(stdout, "            or check this input is REALLY APPROPRIATE for your purpose ! \n\n");
@@ -526,7 +527,7 @@ in the input file (!=NaN).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_NotUsed_J(
-  char* valname,//!<[in] Name of the valiable*/,
+  const char* valname,//!<[in] Name of the valiable*/,
   double JAll,//!<[in]*/,
   double J[3][3]//!<[in]
 )
@@ -558,7 +559,7 @@ in the input file (!=2147483647, the upper limt of Int).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_NotUsed_i(
-  char* valname,//!<[in] Name of the valiable
+  const char* valname,//!<[in] Name of the valiable
   int val//!<[in]
 )
 {
@@ -577,7 +578,7 @@ is absent in the input file (=2147483647, the upper limt of Int).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_RequiredVal_i(
-  char* valname,//!<[in] Name of the valiable
+  const char* valname,//!<[in] Name of the valiable
   int val//!<[in]
 )
 {
@@ -696,7 +697,7 @@ void StdFace_InitSite(
   */
   if (dim == 2) StdI->phase[2] = 0.0;
   for (ii = 0; ii < 3; ii++) {
-    StdI->ExpPhase[ii] = cos(StdI->pi180 * StdI->phase[ii]) + I*sin(StdI->pi180 * StdI->phase[ii]);
+    StdI->ExpPhase[ii] = std::complex<double>(cos(StdI->pi180 * StdI->phase[ii]), sin(StdI->pi180 * StdI->phase[ii]));
     if (abs(StdI->ExpPhase[ii] + 1.0) < 0.000001) StdI->AntiPeriod[ii] = 1;
     else StdI->AntiPeriod[ii] = 0;
   }
@@ -850,7 +851,7 @@ void StdFace_FindSite(
   jCellV[2] = iH + diH;
   StdFace_FoldSite(StdI, jCellV, nBox, jCellV);
   *Cphase = 1.0;
-  for (ii = 0; ii < 3; ii++) *Cphase *= cpow(StdI->ExpPhase[ii], (double)nBox[ii]);
+  for (ii = 0; ii < 3; ii++) *Cphase *= pow(StdI->ExpPhase[ii], (double)nBox[ii]);
   /**/
   for (kCell = 0; kCell < StdI->NCell; kCell++) {
     if (jCellV[0] == StdI->Cell[kCell][0] &&
@@ -979,7 +980,7 @@ void StdFace_InputSpinNN(
   double JAll,//!<[in] The isotropic interaction
   double J0[3][3],//!<[in] The anisotropic spin interaction
   double J0All,//!<[in] The isotropic interaction
-  char *J0name//!<[in] The name of this spin interaction (e.g. J1)
+  const char *J0name//!<[in] The name of this spin interaction (e.g. J1)
 ) 
 {
   int i1, i2, i3, i4;
@@ -995,27 +996,27 @@ void StdFace_InputSpinNN(
   strcpy(Jname[2][1], "zy\0");
   strcpy(Jname[2][2], "z\0");
 
-  if (isnan(JAll) == 0 && isnan(J0All)  == 0) {
+  if (std::isnan(JAll) == 0 && std::isnan(J0All)  == 0) {
     fprintf(stdout, "\n ERROR! %s conflict !\n\n", J0name);
     StdFace_exit(-1);
   }
   for (i1 = 0; i1 < 3; i1++) {
     for (i2 = 0; i2 < 3; i2++) {
-      if (isnan(JAll) == 0 && isnan(J[i1][i2]) == 0) {
+      if (std::isnan(JAll) == 0 && std::isnan(J[i1][i2]) == 0) {
         fprintf(stdout, "\n ERROR! J%s conflict !\n\n", Jname[i1][i2]);
         StdFace_exit(-1);
       }
-      else if (isnan(J0All) == 0 && isnan(J[i1][i2]) == 0) {
+      else if (std::isnan(J0All) == 0 && std::isnan(J[i1][i2]) == 0) {
         fprintf(stdout, "\n ERROR! %s and J%s conflict !\n\n",
           J0name, Jname[i1][i2]);
         StdFace_exit(-1);
       }
-      else if (isnan(J0All) == 0 && isnan(J0[i1][i2]) == 0) {
+      else if (std::isnan(J0All) == 0 && std::isnan(J0[i1][i2]) == 0) {
         fprintf(stdout, "\n ERROR! %s and %s%s conflict !\n\n", J0name,
           J0name, Jname[i1][i2]);
         StdFace_exit(-1);
       }
-      else if (isnan(J0[i1][i2]) == 0 && isnan(JAll) == 0) {
+      else if (std::isnan(J0[i1][i2]) == 0 && std::isnan(JAll) == 0) {
         fprintf(stdout, "\n ERROR! %s%s conflict !\n\n",
           J0name, Jname[i1][i2]);
         StdFace_exit(-1);
@@ -1027,7 +1028,7 @@ void StdFace_InputSpinNN(
     for (i2 = 0; i2 < 3; i2++) {
       for (i3 = 0; i3 < 3; i3++) {
         for (i4 = 0; i4 < 3; i4++) {
-          if (isnan(J0[i1][i2]) == 0 && isnan(J[i3][i4]) == 0) {
+          if (std::isnan(J0[i1][i2]) == 0 && std::isnan(J[i3][i4]) == 0) {
             fprintf(stdout, "\n ERROR! %s%s and J%s conflict !\n\n", 
               J0name, Jname[i1][i2], Jname[i3][i4]);
             StdFace_exit(-1);
@@ -1039,17 +1040,17 @@ void StdFace_InputSpinNN(
 
   for (i1 = 0; i1 < 3; i1++) {
     for (i2 = 0; i2 < 3; i2++) {
-      if (isnan(J0[i1][i2]) == 0)
+      if (std::isnan(J0[i1][i2]) == 0)
         fprintf(stdout, "  %14s%s = %-10.5f\n", J0name, Jname[i1][i2], J0[i1][i2]);
-      else if (isnan(J[i1][i2]) == 0) {
+      else if (std::isnan(J[i1][i2]) == 0) {
         J0[i1][i2] = J[i1][i2];
         fprintf(stdout, "  %14s%s = %-10.5f\n", J0name, Jname[i1][i2], J0[i1][i2]);
       }
-      else if (i1 == i2 && isnan(J0All) == 0) {
+      else if (i1 == i2 && std::isnan(J0All) == 0) {
         J0[i1][i2] = J0All;
         fprintf(stdout, "  %14s%s = %-10.5f\n", J0name, Jname[i1][i2], J0[i1][i2]);
       }
-      else if (i1 == i2 && isnan(JAll) == 0) {
+      else if (i1 == i2 && std::isnan(JAll) == 0) {
         J0[i1][i2] = JAll;
         fprintf(stdout, "  %14s%s = %-10.5f\n", J0name, Jname[i1][i2], J0[i1][i2]);
       }
@@ -1065,7 +1066,7 @@ void StdFace_InputSpinNN(
 void StdFace_InputSpin(
   double Jp[3][3],//!<[in] Fully anisotropic spin interaction
   double JpAll,//!<[in] The isotropic interaction
-  char *Jpname//!<The name of this spin interaction(e.g.J')
+  const char *Jpname//!<The name of this spin interaction(e.g.J')
 )
 {
   int i1, i2;
@@ -1083,7 +1084,7 @@ void StdFace_InputSpin(
 
   for (i1 = 0; i1 < 3; i1++) {
     for (i2 = 0; i2 < 3; i2++) {
-      if (isnan(JpAll) == 0 && isnan(Jp[i1][i2]) == 0) {
+      if (std::isnan(JpAll) == 0 && std::isnan(Jp[i1][i2]) == 0) {
         fprintf(stdout, "\n ERROR! %s and %s%s conflict !\n\n", Jpname,
           Jpname, Jname[i1][i2]);
         StdFace_exit(-1);
@@ -1093,9 +1094,9 @@ void StdFace_InputSpin(
 
   for (i1 = 0; i1 < 3; i1++) {
     for (i2 = 0; i2 < 3; i2++) {
-      if (isnan(Jp[i1][i2]) == 0)
+      if (std::isnan(Jp[i1][i2]) == 0)
         fprintf(stdout, "  %14s%s = %-10.5f\n", Jpname, Jname[i1][i2], Jp[i1][i2]);
-      else if (i1 == i2 && isnan(JpAll) == 0) {
+      else if (i1 == i2 && std::isnan(JpAll) == 0) {
         Jp[i1][i2] = JpAll;
         fprintf(stdout, "  %14s%s = %-10.5f\n", Jpname, Jname[i1][i2], Jp[i1][i2]);
       }
@@ -1113,16 +1114,16 @@ or the isotropic Coulomb interaction StdIntList::V).
 void StdFace_InputCoulombV(
   double V,//!<[in]
   double *V0,//!<[in]
-  char *V0name//!<[in] E.g. V1
+  const char *V0name//!<[in] E.g. V1
 )
 {
-  if (isnan(V) == 0 && isnan(*V0) == 0) {
+  if (std::isnan(V) == 0 && std::isnan(*V0) == 0) {
     fprintf(stdout, "\n ERROR! %s conflicts !\n\n", V0name);
     StdFace_exit(-1);
   }
-  else if (isnan(*V0) == 0)
+  else if (std::isnan(*V0) == 0)
     fprintf(stdout, "  %15s = %-10.5f\n", V0name, *V0);
-  else if (isnan(V) == 0) {
+  else if (std::isnan(V) == 0) {
     *V0 = V;
     fprintf(stdout, "  %15s = %-10.5f\n", V0name, *V0);
   }
@@ -1138,16 +1139,16 @@ or the isotropic hopping StdIntList::V).
 void StdFace_InputHopp(
   std::complex<double> t,//!<[in]
   std::complex<double> *t0,//!<[in]
-  char *t0name//!<[in] E.g. t1
+  const char *t0name//!<[in] E.g. t1
 )
 {
-  if (isnan(real(t)) == 0 && isnan(real(*t0)) == 0) {
+  if (std::isnan(real(t)) == 0 && std::isnan(real(*t0)) == 0) {
     fprintf(stdout, "\n ERROR! %s conflicts !\n\n", t0name);
     StdFace_exit(-1);
   }
-  else if (isnan(real(*t0)) == 0)
+  else if (std::isnan(real(*t0)) == 0)
     fprintf(stdout, "  %15s = %-10.5f %-10.5f\n", t0name, real(*t0), imag(*t0));
-  else if (isnan(real(t)) == 0) {
+  else if (std::isnan(real(t)) == 0) {
     *t0 = t;
     fprintf(stdout, "  %15s = %-10.5f %-10.5f\n", t0name, real(*t0), imag(*t0));
   }

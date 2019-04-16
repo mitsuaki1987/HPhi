@@ -14,7 +14,7 @@ nelec = 3
 2Sz = 0
 EOF
 
-${MPIRUNFC} ../../src/HPhi -s stan.in
+${MPIRUNFC} ../../src/HPhi++ -s stan.in
 
 # Check value
 

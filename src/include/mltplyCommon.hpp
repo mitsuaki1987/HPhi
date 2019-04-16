@@ -24,7 +24,9 @@
 #define M_TOTALS 4
 #define M_CALCSPEC 4
 
-void zaxpy_(int *n, std::complex<double> *a, std::complex<double> *x, int *incx, std::complex<double> *y, int *incy);
+extern "C" {
+  extern void zaxpy_(int *n, std::complex<double> *a, std::complex<double> *x, int *incx, std::complex<double> *y, int *incy);
+}
 void zaxpy_long(unsigned long int n, std::complex<double> a, std::complex<double> *x, std::complex<double> *y);
 void zswap_long(unsigned long int n,std::complex<double> *x, std::complex<double> *y);
 void zclear(unsigned long int n, std::complex<double> *x);

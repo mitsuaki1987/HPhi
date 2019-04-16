@@ -271,7 +271,7 @@ int mltplyHalfSpin(
       X_child_general_int_spin_MPIsingle(
         X->Def.ExchangeCoupling[i][1], sigma2, sigma1, 
         X->Def.ExchangeCoupling[i][0], sigma1, sigma2, 
-        conj(X->Def.ParaExchangeCoupling[i]), X, nstate, tmp_v0, tmp_v1);
+        X->Def.ParaExchangeCoupling[i], X, nstate, tmp_v0, tmp_v1);
       StopTimer(423);
     }
     else {
@@ -541,7 +541,7 @@ shared(tmp_v0, tmp_v1,one,nstate)
       X_GC_child_CisAitCiuAiv_spin_MPIsingle(
         X->Def.ExchangeCoupling[i][1], sigma2, sigma1,
         X->Def.ExchangeCoupling[i][0], sigma1, sigma2,
-        conj(X->Def.ParaExchangeCoupling[i]), X, nstate, tmp_v0, tmp_v1);
+        X->Def.ParaExchangeCoupling[i], X, nstate, tmp_v0, tmp_v1);
       StopTimer(532);
     }
     else {
@@ -580,7 +580,7 @@ shared(tmp_v0, tmp_v1,one,nstate)
       X_GC_child_CisAitCiuAiv_spin_MPIsingle(
         X->Def.PairLiftCoupling[i][1], sigma1, sigma2,
         X->Def.PairLiftCoupling[i][0], sigma1, sigma2,
-        conj(X->Def.ParaPairLiftCoupling[i]), X, nstate, tmp_v0, tmp_v1);
+        X->Def.ParaPairLiftCoupling[i], X, nstate, tmp_v0, tmp_v1);
       StopTimer(542);
     }
     else {
@@ -865,7 +865,7 @@ shared(tmp_v1, tmp_v0,one,nstate)
   for (j = 1; j <= i_max; j++) {
     tmp_sgn = X_child_exchange_spin_element(j, X, isA_up, isB_up, org_sigma2, org_sigma4, &tmp_off);
     if (tmp_sgn != 0) {
-      dmv = tmp_sgn * tmp_V;
+      dmv = (std::complex<double>)tmp_sgn * tmp_V;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[tmp_off][0], &one);
     }/*if (tmp_sgn != 0)*/
   }/*for (j = 1; j <= i_max; j++)*/

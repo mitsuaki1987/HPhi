@@ -402,13 +402,9 @@ void X_child_CisAjt_MPIsingle(
   int org_ispin2,//!<[in] Spin 2
   std::complex<double> tmp_trans,//!<[in] Hopping integral
   struct BindStruct *X,//!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
-  std::complex<double> **tmp_v1,//!<[in] v0 = H v1
-  std::complex<double> **v1buf,//!<[in] Buffer for sendrecv of wavefunction
-  long unsigned int *list_1_org,//!<[in] Similler to ::list_1
-  long unsigned int *list_1buf_org,//!<[in] Similler to ::list_1buf
-  long unsigned int *list_2_1_target,//!<[in] ???
-  long unsigned int *list_2_2_target//!<[in] ???
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
+  std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   int mask2, state2, origin, bit2diff, Fsgn;
   unsigned long int mask1, state1, idim_max_buf, j, state1check, bit1diff, ioff, jreal;
@@ -445,14 +441,14 @@ void X_child_CisAjt_MPIsingle(
   bit1diff = X->Def.Tpow[2 * X->Def.Nsite - 1] * 2 - mask1 * 2;
 
 #pragma omp parallel for default(none) private(j,dmv,Fsgn,ioff,jreal,state1) \
-  firstprivate(idim_max_buf,trans,X,mask1,state1check,bit1diff,list_2_1_target,list_2_2_target,list_1buf_org,list_1) \
+  firstprivate(idim_max_buf,trans,X,mask1,state1check,bit1diff,list_2_1,list_2_2,list_1buf_org,list_1) \
   shared(v1buf, tmp_v0,nstate,one)
   for (j = 1; j <= idim_max_buf; j++) {
     jreal = list_1buf_org[j];
     state1 = jreal & mask1;
     if (state1 == state1check) {
       SgnBit(jreal & bit1diff, &Fsgn);
-      GetOffComp(list_2_1_target, list_2_2_target, jreal ^ mask1,
+      GetOffComp(list_2_1, list_2_2, jreal ^ mask1,
         X->Large.irght, X->Large.ilft, X->Large.ihfbit, &ioff);
       if (ioff != 0) {
         dmv = (double)Fsgn * trans;

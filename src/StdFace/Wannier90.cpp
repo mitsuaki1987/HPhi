@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /**@file
 @brief Standard mode for wannier90
 */
-#include "StdFace_vals.h"
-#include "StdFace_ModelUtil.h"
+#include "StdFace_vals.hpp"
+#include "StdFace_ModelUtil.hpp"
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
@@ -145,7 +145,7 @@ static void read_W90(
           dtmp[1] = 0.0;
         }
         if (iWan0 <= StdI->NsiteUC && jWan0 <= StdI->NsiteUC)
-          Mat_tot[iWSC][iWan0 - 1][jWan0 - 1] = dtmp[0] + I * dtmp[1];
+          Mat_tot[iWSC][iWan0 - 1][jWan0 - 1] = (dtmp[0], dtmp[1]);
       }
     }
     /**@brief
@@ -277,7 +277,7 @@ static std::complex<double>***** read_density_matrix(
           &iWan0, &jWan0,
           &dtmp[0], &dtmp[1]);
         if (iWan0 <= StdI->NsiteUC && jWan0 <= StdI->NsiteUC)
-          Mat_tot[iWSC][iWan0 - 1][jWan0 - 1] = dtmp[0] + I * dtmp[1];
+          Mat_tot[iWSC][iWan0 - 1][jWan0 - 1] = (dtmp[0], dtmp[1]);
         for (ii = 0; ii < 3; ii++) {
           if (indx_tot[iWSC][ii] < Rmin[ii]) Rmin[ii] = indx_tot[iWSC][ii];
           if (indx_tot[iWSC][ii] > Rmax[ii]) Rmax[ii] = indx_tot[iWSC][ii];
@@ -597,7 +597,7 @@ void StdFace_Wannier90(
           tUJindx[0][it][3], tUJindx[0][it][4], &isite, &jsite, &Cphase, dR);
         if (strcmp(StdI->model, "spin") == 0) {
           for (ii = 0; ii < 3; ii++) 
-            Jtmp[ii][ii] = 2.0 * tUJ[0][it] * conj(tUJ[0][it])
+            Jtmp[ii][ii] = 2.0 * real(tUJ[0][it] * conj(tUJ[0][it]))
             * (1.0 / Uspin[tUJindx[0][it][3]] + 1.0 / Uspin[tUJindx[0][it][4]]);
           StdFace_GeneralJ(StdI, Jtmp, StdI->S2, StdI->S2, isite, jsite);
         }/*if (strcmp(StdI->model, "spin") == 0 )*/

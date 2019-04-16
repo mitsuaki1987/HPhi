@@ -86,11 +86,11 @@ void totalspin_Hubbard(
 
         tmp_spn_z = (num1_up - num1_down) * (num2_up - num2_down);
         for (istate = 0; istate < nstate; istate++)
-          X->Phys.s2[istate] += conj(vec[j][istate]) * vec[j][istate] * tmp_spn_z / 4.0;
+          X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[j][istate] * tmp_spn_z / 4.0);
         if (isite1 == isite2) {
           for (istate = 0; istate < nstate; istate++) {
-            X->Phys.s2[istate] += conj(vec[j][istate]) * vec[j][istate] * (num1_up + num1_down - 2 * num1_up * num1_down) / 2.0;
-            X->Phys.Sz[istate] += conj(vec[j][istate]) * vec[j][istate] * (num1_up - num1_down) / 2.0;
+            X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[j][istate]) * (num1_up + num1_down - 2 * num1_up * num1_down) / 2.0;
+            X->Phys.Sz[istate] += real(conj(vec[j][istate]) * vec[j][istate]) * (num1_up - num1_down) / 2.0;
           }
         }
         else {
@@ -99,14 +99,14 @@ void totalspin_Hubbard(
             iexchg += (is2_up + is1_down);
             GetOffComp(list_2_1, list_2_2, iexchg, irght, ilft, ihfbit, &off);
             for (istate = 0; istate < nstate; istate++)
-              X->Phys.s2[istate] += conj(vec[j][istate]) * vec[off][istate] / 2.0;
+              X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[off][istate]) / 2.0;
           }
           else if (ibit1_up == 0 && ibit1_down != 0 && ibit2_up != 0 && ibit2_down == 0) {
             iexchg = list_1[j] - (is1_down + is2_up);
             iexchg += (is2_down + is1_up);
             GetOffComp(list_2_1, list_2_2, iexchg, irght, ilft, ihfbit, &off);
             for (istate = 0; istate < nstate; istate++)
-              X->Phys.s2[istate] += conj(vec[j][istate]) * vec[off][istate] / 2.0;
+              X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[off][istate]) / 2.0;
           }
         }
       }
@@ -166,10 +166,10 @@ void totalspin_HubbardGC(
 
         tmp_spn_z = (num1_up - num1_down) * (num2_up - num2_down);
         for (istate = 0; istate < nstate; istate++)
-          X->Phys.s2[istate] += conj(vec[j][istate]) * vec[j][istate] * tmp_spn_z / 4.0;
+          X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[j][istate] * tmp_spn_z / 4.0);
         if (isite1 == isite2) {
-          X->Phys.s2[istate] += conj(vec[j][istate]) * vec[j][istate] * (num1_up + num1_down - 2 * num1_up * num1_down) / 2.0;
-          X->Phys.Sz[istate] += conj(vec[j][istate]) * vec[j][istate] * (num1_up - num1_down) / 2.0;
+          X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[j][istate]) * (num1_up + num1_down - 2 * num1_up * num1_down) / 2.0;
+          X->Phys.Sz[istate] += real(conj(vec[j][istate]) * vec[j][istate]) * (num1_up - num1_down) / 2.0;
         }
         else {
           if (ibit1_up != 0 && ibit1_down == 0 && ibit2_up == 0 && ibit2_down != 0) {
@@ -177,14 +177,14 @@ void totalspin_HubbardGC(
             iexchg += (is2_up + is1_down);
             off = iexchg + 1;
             for (istate = 0; istate < nstate; istate++)
-              X->Phys.s2[istate] += conj(vec[j][istate]) * vec[off][istate] / 2.0;
+              X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[off][istate] / 2.0);
           }
           else if (ibit1_up == 0 && ibit1_down != 0 && ibit2_up != 0 && ibit2_down == 0) {
             iexchg = list_1_j - (is1_down + is2_up);
             iexchg += (is2_down + is1_up);
             off = iexchg + 1;
             for (istate = 0; istate < nstate; istate++)
-              X->Phys.s2[istate] += conj(vec[j][istate]) * vec[off][istate] / 2.0;
+              X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[off][istate] / 2.0);
           }
         }
       }
@@ -236,7 +236,7 @@ void totalspin_Spin(
       for (isite2 = 1; isite2 <= X->Def.NsiteMPI; isite2++) {
 
         if (isite1 > X->Def.Nsite && isite2 > X->Def.Nsite) {
-#ifdef MPI
+#ifdef __MPI
           is1_up = X->Def.Tpow[isite1 - 1];
           is2_up = X->Def.Tpow[isite2 - 1];
           is_up = is1_up + is2_up;
@@ -248,12 +248,12 @@ void totalspin_Spin(
 
           for (j = 1; j <= i_max; j++) {
             for (istate = 0; istate < nstate; istate++)
-              X->Phys.s2[istate] += conj(vec[j][istate]) * vec[j][istate] * spn_z / 4.0;
+              X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[j][istate] * spn_z) / 4.0;
           }
           if (isite1 == isite2) {
             for (j = 1; j <= i_max; j++) {
               for (istate = 0; istate < nstate; istate++)
-                X->Phys.s2[istate] += conj(vec[j][istate]) * vec[j][istate] / 2.0;
+                X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[j][istate]) / 2.0;
             }
           }
           else {//off diagonal
@@ -262,7 +262,7 @@ void totalspin_Spin(
 #endif
         }
         else if (isite1 > X->Def.Nsite || isite2 > X->Def.Nsite) {
-#ifdef MPI
+#ifdef __MPI
           if (isite1 < isite2) {
             tmp_isite1 = isite1;
             tmp_isite2 = isite2;
@@ -284,7 +284,7 @@ void totalspin_Spin(
             num1_down = 1 - num1_up;
             spn_z = (num1_up - num1_down) * (num2_up - num2_down);
             for (istate = 0; istate < nstate; istate++)
-              X->Phys.s2[istate] += conj(vec[j][istate]) * vec[j][istate] * spn_z / 4.0;
+              X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[j][istate] * spn_z) / 4.0;
           }
           if (isite1 < isite2) {
             //debug spn += X_child_general_int_spin_MPIsingle(isite1 - 1, 0, 1, isite2 - 1, 1, 0, 1.0, X, nstate, vec, vec);
@@ -309,11 +309,11 @@ void totalspin_Spin(
 
             spn_z = (num1_up - num1_down) * (num2_up - num2_down);
             for (istate = 0; istate < nstate; istate++)
-              X->Phys.s2[istate] += conj(vec[j][istate]) * vec[j][istate] * spn_z / 4.0;
+              X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[j][istate] * spn_z) / 4.0;
 
             if (isite1 == isite2) {
               for (istate = 0; istate < nstate; istate++)
-                X->Phys.s2[istate] += conj(vec[j][istate]) * vec[j][istate] / 2.0;
+                X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[j][istate]) / 2.0;
             }
             else {
               ibit_tmp = (num1_up) ^ (num2_up);
@@ -321,7 +321,7 @@ void totalspin_Spin(
                 iexchg = list_1[j] ^ (is_up);
                 GetOffComp(list_2_1, list_2_2, iexchg, irght, ilft, ihfbit, &off);
                 for (istate = 0; istate < nstate; istate++)
-                  X->Phys.s2[istate] += conj(vec[j][istate]) * vec[off][istate] / 2.0;
+                  X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[off][istate]) / 2.0;
               }
             }
           }// j
@@ -340,8 +340,8 @@ void totalspin_Spin(
           for (j = 1; j <= i_max; j++) {
             spn_z1 = 0.5 * GetLocal2Sz(isite1, list_1[j], X->Def.SiteToBit, X->Def.Tpow);
             for (istate = 0; istate < nstate; istate++) {
-              X->Phys.s2[istate] += conj(vec[j][istate]) * vec[j][istate] * S1 * (S1 + 1.0);
-              X->Phys.Sz[istate] += conj(vec[j][istate]) * vec[j][istate] * spn_z1;
+              X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[j][istate]) * S1 * (S1 + 1.0);
+              X->Phys.Sz[istate] += real(conj(vec[j][istate]) * vec[j][istate] * spn_z1);
             }
           }
         }
@@ -350,7 +350,7 @@ void totalspin_Spin(
             spn_z1 = 0.5 * GetLocal2Sz(isite1, list_1[j], X->Def.SiteToBit, X->Def.Tpow);
             spn_z2 = 0.5 * GetLocal2Sz(isite2, list_1[j], X->Def.SiteToBit, X->Def.Tpow);
             for (istate = 0; istate < nstate; istate++)
-              X->Phys.s2[istate] += conj(vec[j][istate]) * vec[j][istate] * spn_z1 * spn_z2;
+              X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[j][istate] * spn_z1 * spn_z2);
 
             sigma_1 = GetBitGeneral(isite1, list_1[j], X->Def.SiteToBit, X->Def.Tpow);
             sigma_2 = GetBitGeneral(isite2, list_1[j], X->Def.SiteToBit, X->Def.Tpow);
@@ -363,9 +363,9 @@ void totalspin_Spin(
               if (ibit_tmp == TRUE) {
                 ConvertToList1GeneralSpin(off_2, X->Check.sdim, &off);
                 for (istate = 0; istate < nstate; istate++)
-                  X->Phys.s2[istate] += conj(vec[j][istate]) * vec[off][istate]
-                  * sqrt(S2 * (S2 + 1) - spn_z2 * (spn_z2 + 1)) 
-                  * sqrt(S1 * (S1 + 1) - spn_z1 * (spn_z1 - 1)) / 2.0;
+                  X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[off][istate])
+                  * sqrt(S2 * (S2 + 1) - real(spn_z2) * (real(spn_z2) + 1)) 
+                  * sqrt(S1 * (S1 + 1) - real(spn_z1) * (real(spn_z1) - 1)) / 2.0;
               }
             }
 
@@ -377,9 +377,9 @@ void totalspin_Spin(
               if (ibit_tmp == TRUE) {
                 ConvertToList1GeneralSpin(off_2, X->Check.sdim, &off);
                 for (istate = 0; istate < nstate; istate++)
-                  X->Phys.s2[istate] += conj(vec[j][istate]) * vec[off][istate]
-                  * sqrt(S2 * (S2 + 1) - spn_z2 * (spn_z2 - 1.0)) 
-                  * sqrt(S1 * (S1 + 1) - spn_z1 * (spn_z1 + 1)) / 2.0;
+                  X->Phys.s2[istate] += real(conj(vec[j][istate]) * vec[off][istate])
+                  * sqrt(S2 * (S2 + 1) - real(spn_z2) * (real(spn_z2) - 1.0)) 
+                  * sqrt(S1 * (S1 + 1) - real(spn_z1) * (real(spn_z1) + 1)) / 2.0;
               }
             }
           }
@@ -434,7 +434,7 @@ void totalspin_SpinGC(
         num1_down = 1 - num1_up;
         for (j = 1; j <= i_max; j++) {
           for (istate = 0; istate < nstate; istate++)
-            X->Phys.Sz[istate] += conj(vec[j][istate])*vec[j][istate] * (num1_up - num1_down) / 2.0;
+            X->Phys.Sz[istate] += real(conj(vec[j][istate])*vec[j][istate]) * (num1_up - num1_down) / 2.0;
         }
       }
       else {
@@ -445,7 +445,7 @@ void totalspin_SpinGC(
           num1_up = ibit1_up / is1_up;
           num1_down = 1 - num1_up;
           for (istate = 0; istate < nstate; istate++)
-            X->Phys.Sz[istate] += conj(vec[j][istate])*vec[j][istate] * (num1_up - num1_down) / 2.0;
+            X->Phys.Sz[istate] += real(conj(vec[j][istate])*vec[j][istate]) * (num1_up - num1_down) / 2.0;
         }
       }
       for (isite2 = 1; isite2 <= X->Def.NsiteMPI; isite2++) {
@@ -460,12 +460,12 @@ void totalspin_SpinGC(
           spn_z2 = (num1_up - num1_down)*(num2_up - num2_down) / 4.0;
           for (j = 1; j <= i_max; j++) {
             for (istate = 0; istate < nstate; istate++)
-              X->Phys.s2[istate] += conj(vec[j][istate])*vec[j][istate] * spn_z2;
+              X->Phys.s2[istate] += real(conj(vec[j][istate])*vec[j][istate] * spn_z2);
           }
           if (isite1 == isite2) {
             for (j = 1; j <= i_max; j++) {
               for (istate = 0; istate < nstate; istate++)
-                X->Phys.s2[istate] += conj(vec[j][istate])*vec[j][istate] / 2.0;
+                X->Phys.s2[istate] += real(conj(vec[j][istate])*vec[j][istate]) / 2.0;
             }
           }//isite1 = isite2
           else {//off diagonal
@@ -494,7 +494,7 @@ void totalspin_SpinGC(
             num1_down = 1 - num1_up;
             spn_z2 = (num1_up - num1_down)*(num2_up - num2_down);
             for (istate = 0; istate < nstate; istate++)
-              X->Phys.s2[istate] += conj(vec[j][istate])*vec[j][istate] * spn_z2 / 4.0;
+              X->Phys.s2[istate] += real(conj(vec[j][istate])*vec[j][istate] * spn_z2) / 4.0;
           }
           if (isite1 < isite2) {
             //debug spn += X_GC_child_CisAitCiuAiv_spin_MPIsingle(isite1 - 1, 0, 1, isite2 - 1, 1, 0, 1.0, X, nstate, vec, vec) / 2.0;
@@ -517,11 +517,11 @@ void totalspin_SpinGC(
 
             spn_z2 = (num1_up - num1_down)*(num2_up - num2_down);
             for (istate = 0; istate < nstate; istate++)
-              X->Phys.s2[istate] += conj(vec[j][istate])*vec[j][istate] * spn_z2 / 4.0;
+              X->Phys.s2[istate] += real(conj(vec[j][istate])*vec[j][istate] * spn_z2) / 4.0;
 
             if (isite1 == isite2) {
               for (istate = 0; istate < nstate; istate++)
-                X->Phys.s2[istate] += conj(vec[j][istate])*vec[j][istate] / 2.0;
+                X->Phys.s2[istate] += real(conj(vec[j][istate])*vec[j][istate]) / 2.0;
             }
             else {
               ibit_tmp = (num1_up) ^ (num2_up);
@@ -529,7 +529,7 @@ void totalspin_SpinGC(
                 iexchg = list_1_j ^ (is_up);
                 off = iexchg + 1;
                 for (istate = 0; istate < nstate; istate++)
-                  X->Phys.s2[istate] += conj(vec[j][istate])*vec[off][istate] / 2.0;
+                  X->Phys.s2[istate] += real(conj(vec[j][istate])*vec[off][istate]) / 2.0;
               }
             }
           }//j  
@@ -546,8 +546,8 @@ void totalspin_SpinGC(
         spn_z1 = 0.5*GetLocal2Sz(isite1, (unsigned long int) myrank, X->Def.SiteToBit, X->Def.Tpow);
         for (j = 1; j <= i_max; j++) {
           for (istate = 0; istate < nstate; istate++) {
-            X->Phys.s2[istate] += conj(vec[j][istate])*vec[j][istate] * S1*(S1 + 1.0);
-            X->Phys.Sz[istate] += conj(vec[j][istate])*vec[j][istate] * spn_z1;
+            X->Phys.s2[istate] += real(conj(vec[j][istate])*vec[j][istate]) * S1*(S1 + 1.0);
+            X->Phys.Sz[istate] += real(conj(vec[j][istate])*vec[j][istate] * spn_z1);
           }
         }
       }
@@ -555,8 +555,8 @@ void totalspin_SpinGC(
         for (j = 1; j <= i_max; j++) {
           spn_z1 = 0.5*GetLocal2Sz(isite1, j - 1, X->Def.SiteToBit, X->Def.Tpow);
           for (istate = 0; istate < nstate; istate++) {
-            X->Phys.s2[istate] += conj(vec[j][istate])*vec[j][istate] * S1*(S1 + 1.0);
-            X->Phys.Sz[istate] += conj(vec[j][istate])*vec[j][istate] * spn_z1;
+            X->Phys.s2[istate] += real(conj(vec[j][istate])*vec[j][istate]) * S1*(S1 + 1.0);
+            X->Phys.Sz[istate] += real(conj(vec[j][istate])*vec[j][istate] * spn_z1);
           }
         }
       }
@@ -572,7 +572,7 @@ void totalspin_SpinGC(
             spn_z1 = 0.5*GetLocal2Sz(isite1, j - 1, X->Def.SiteToBit, X->Def.Tpow);
             spn_z2 = 0.5*GetLocal2Sz(isite2, j - 1, X->Def.SiteToBit, X->Def.Tpow);
             for (istate = 0; istate < nstate; istate++)
-              X->Phys.s2[istate] += conj(vec[j][istate])*vec[j][istate] * spn_z1*spn_z2;
+              X->Phys.s2[istate] += real(conj(vec[j][istate])*vec[j][istate] * spn_z1*spn_z2);
 
             sigma_1 = GetBitGeneral(isite1, j - 1, X->Def.SiteToBit, X->Def.Tpow);
             sigma_2 = GetBitGeneral(isite2, j - 1, X->Def.SiteToBit, X->Def.Tpow);
@@ -582,9 +582,9 @@ void totalspin_SpinGC(
               ibit_tmp = GetOffCompGeneralSpin(off, isite1, sigma_1, sigma_1 - 1, &off_2, X->Def.SiteToBit, X->Def.Tpow);
               if (ibit_tmp != 0) {
                 for (istate = 0; istate < nstate; istate++)
-                  X->Phys.s2[istate] += conj(vec[j][istate])*vec[off_2 + 1][istate]
-                  * sqrt(S2*(S2 + 1) - spn_z2 * (spn_z2 + 1))
-                  * sqrt(S1*(S1 + 1) - spn_z1 * (spn_z1 - 1)) / 2.0;
+                  X->Phys.s2[istate] += real(conj(vec[j][istate])*vec[off_2 + 1][istate])
+                  * sqrt(S2*(S2 + 1) - real(spn_z2) * (real(spn_z2) + 1))
+                  * sqrt(S1*(S1 + 1) - real(spn_z1) * (real(spn_z1) - 1)) / 2.0;
               }
             }
             ibit_tmp = GetOffCompGeneralSpin(j - 1, isite2, sigma_2, sigma_2 - 1, &off, X->Def.SiteToBit, X->Def.Tpow);
@@ -592,9 +592,9 @@ void totalspin_SpinGC(
               ibit_tmp = GetOffCompGeneralSpin(off, isite1, sigma_1, sigma_1 + 1, &off_2, X->Def.SiteToBit, X->Def.Tpow);
               if (ibit_tmp != 0) {
                 for (istate = 0; istate < nstate; istate++)
-                  X->Phys.s2[istate] += conj(vec[j][istate])*vec[off_2 + 1][istate]
-                  * sqrt(S2*(S2 + 1) - spn_z2 * (spn_z2 - 1.0))
-                  * sqrt(S1*(S1 + 1) - spn_z1 * (spn_z1 + 1)) / 2.0;
+                  X->Phys.s2[istate] += real(conj(vec[j][istate])*vec[off_2 + 1][istate])
+                  * sqrt(S2*(S2 + 1) - real(spn_z2) * (real(spn_z2) - 1.0))
+                  * sqrt(S1*(S1 + 1) - real(spn_z1) * (real(spn_z1) + 1)) / 2.0;
               }
             }
           }//j  

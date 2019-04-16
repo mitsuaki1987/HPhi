@@ -19,8 +19,8 @@
 #include "mltplyHubbardCore.hpp"
 #include "mltplyMPIHubbardCore.hpp"
 #include "mltplyCommon.hpp"
-#ifdef MPI
-#include "mpi.hpp"
+#ifdef __MPI
+#include "mpi.h"
 #endif
 /**@file
 @brief Functions to compute singly excited state in Hubbard model
@@ -71,7 +71,7 @@ private(j,  isgn,tmp_off,dmv)
         for (j = 1; j <= idim_max; j++) {//idim_max -> original dimension
           isgn = X_Cis(j, is1_spin, &tmp_off, list_1_org, list_2_1, list_2_2,
             X->Large.irght, X->Large.ilft, X->Large.ihfbit);
-          dmv = isgn * tmpphi;
+          dmv = (std::complex<double>)isgn * tmpphi;
           zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[tmp_off], &one);
         }
       }
@@ -88,7 +88,7 @@ private(j, isgn, tmp_off,dmv)
         for (j = 1; j <= idim_max; j++) {//idim_max -> original dimension
           isgn = X_Ajt(j, is1_spin, &tmp_off, list_1_org, list_2_1, list_2_2, 
             X->Large.irght, X->Large.ilft, X->Large.ihfbit);
-          dmv = isgn * tmpphi;
+          dmv = (std::complex<double>)isgn * tmpphi;
           zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[tmp_off], &one);
         }
       }

@@ -38,8 +38,10 @@ void debug_print(int num, std::complex<double> *var){
   }
 }
 
-void zheevd_(char *jobz, char *uplo, int *n, std::complex<double> *a, int *lda, double *w, std::complex<double> *work, int *lwork, double *rwork, int * lrwork, int *iwork, int *liwork, int *info);
-void zgemm_(char *transa, char *transb, int *m, int *n, int *k, std::complex<double> *alpha, std::complex<double> *a, int *lda, std::complex<double> *b, int *ldb, std::complex<double> *beta, std::complex<double> *c, int *ldc);
+extern "C" {
+  extern void zheevd_(char *jobz, char *uplo, int *n, std::complex<double> *a, int *lda, double *w, std::complex<double> *work, int *lwork, double *rwork, int * lrwork, int *iwork, int *liwork, int *info);
+  extern void zgemm_(char *transa, char *transb, int *m, int *n, int *k, std::complex<double> *alpha, std::complex<double> *a, int *lda, std::complex<double> *b, int *ldb, std::complex<double> *beta, std::complex<double> *c, int *ldc);
+}
 /**
 @brief Solve the generalized eigenvalue problem
 @f[
@@ -267,7 +269,7 @@ static void Initialize_wave(
     fprintf(stdoutMPI, "  initial_mode=%d (random): iv = %ld i_max=%ld k_exct =%d\n\n",
       initial_mode, iv, i_max, X->Def.k_exct);
 #pragma omp parallel default(none) private(idim, u_long_i, mythread, dsfmt, ie) \
-              shared(wave, iv, X, nthreads, myrank, i_max)
+              shared(wave, iv, X, nthreads, myrank, i_max,I)
     {
       /*
        Initialise MT
@@ -399,7 +401,7 @@ int LOBPCG_Main(
     for (ie = 0; ie < X->Def.k_exct; ie++) {
       wxp[2][idim][ie] = 0.0;
       hwxp[2][idim][ie] = 0.0;
-      eig[ie] += conj(wxp[1][idim][ie]) * hwxp[1][idim][ie];
+      eig[ie] += real(conj(wxp[1][idim][ie]) * hwxp[1][idim][ie]);
     }
   }
   SumMPI_dv(X->Def.k_exct, eig);

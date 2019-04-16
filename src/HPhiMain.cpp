@@ -178,6 +178,7 @@ int main(int argc, char* argv[]){
 
   int mode=0;
   char cFileListName[D_FileNameMax];
+  struct EDMainCalStruct X;
 
   stdoutMPI = stdout;
   if(JudgeDefType(argc, argv, &mode)!=0){

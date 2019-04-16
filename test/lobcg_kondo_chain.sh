@@ -15,7 +15,7 @@ nelec = 4
 exct = 2
 EOF
 
-${MPIRUN} ../../src/HPhi -s stan.in
+${MPIRUN} ../../src/HPhi++ -s stan.in
 
 # Check value
 

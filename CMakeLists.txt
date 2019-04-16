@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.0 FATAL_ERROR)
 enable_testing()
 
-project(HPhi NONE)
+project(HPhi++ NONE)
 option(USE_SCALAPACK "Use Scalapack" OFF)
 
 if(CONFIG)
@@ -43,7 +43,7 @@ if(ENABLE_MPI)
   find_package(MPI)
   if(MPI_FOUND)
     include_directories(${MPI_CXX_INCLUDE_PATH})
-    add_definitions(-DMPI)
+    add_definitions(-D__MPI)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${MPI_CXX_LINK_FLAGS}")
   endif(MPI_FOUND)
 endif(ENABLE_MPI)

@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /**@file
 @brief Standard mode for the triangular lattice
 */
-#include "StdFace_vals.h"
-#include "StdFace_ModelUtil.h"
+#include "StdFace_vals.hpp"
+#include "StdFace_ModelUtil.hpp"
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>

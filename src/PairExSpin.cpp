@@ -20,7 +20,7 @@
 #include "mltplyMPISpinCore.hpp"
 #include "mltplySpinCore.hpp"
 #include "mltplyCommon.hpp"
-#ifdef MPI
+#ifdef __MPI
 #include "common/setmemory.hpp"
 #endif
 /// Calculation of pair excited state for Half Spin Grand canonical system
@@ -87,7 +87,7 @@ int GetPairExcitedStateHalfSpinGC(
 #pragma omp parallel for default(none) private(j, tmp_sgn,dmv)             \
   firstprivate(i_max, isite1, org_sigma1, X,tmp_trans) shared(tmp_v0, tmp_v1,one,nstate)
             for (j = 1; j <= i_max; j++) {
-              dmv = X_SpinGC_CisAis(j, X, isite1, org_sigma1)* tmp_trans;
+              dmv = (std::complex<double>)X_SpinGC_CisAis(j, X, isite1, org_sigma1)* tmp_trans;
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
             }
           }
@@ -178,7 +178,7 @@ firstprivate(i_max,org_isite1,org_sigma1,X,tmp_trans) shared(tmp_v0,tmp_v1,one,n
   firstprivate(i_max,org_isite1,org_sigma1,X,tmp_trans) shared(tmp_v0,tmp_v1,one,nstate)
             for (j = 1; j <= i_max; j++) {
               num1 = BitCheckGeneral(j - 1, org_isite1, org_sigma1, X->Def.SiteToBit, X->Def.Tpow);
-              dmv = tmp_trans * num1;
+              dmv = tmp_trans * (std::complex<double>)num1;
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
             }
           }
@@ -191,7 +191,7 @@ shared(tmp_v0,tmp_v1,one,nstate)
           for (j = 1; j <= i_max; j++) {
             num1 = GetOffCompGeneralSpin(j - 1, org_isite1, org_sigma2, org_sigma1, &tmp_off, X->Def.SiteToBit, X->Def.Tpow);
             if (num1 != 0) {
-              dmv = tmp_trans * num1;
+              dmv = tmp_trans * (std::complex<double>)num1;
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[tmp_off + 1], &one);
             }
           }
@@ -302,7 +302,7 @@ firstprivate(i_max,isite1,org_sigma1,X,tmp_trans) shared(tmp_v0,tmp_v1,one,nstat
 #pragma omp parallel for default(none) private(j,dmv) \
 firstprivate(i_max,isite1,org_sigma1,X,tmp_trans) shared(tmp_v0,tmp_v1,one,nstate)
             for (j = 1; j <= i_max; j++) {
-              dmv = X_Spin_CisAis(j, X, isite1, org_sigma1) * tmp_trans;
+              dmv = (std::complex<double>)X_Spin_CisAis(j, X, isite1, org_sigma1) * tmp_trans;
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
             }
           }
@@ -417,7 +417,7 @@ int GetPairExcitedStateGeneralSpin(
   shared(tmp_v0, tmp_v1, list_1,one,nstate)
             for (j = 1; j <= i_max; j++) {
               num1 = BitCheckGeneral(list_1[j], org_isite1, org_sigma1, X->Def.SiteToBit, X->Def.Tpow);
-              dmv = tmp_trans * num1;
+              dmv = tmp_trans * (std::complex<double>)num1;
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
             }
           }
