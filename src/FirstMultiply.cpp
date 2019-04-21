@@ -44,7 +44,7 @@ int FirstMultiply(struct BindStruct *X) {
   long int i, i_max;
   double dnorm;
   double Ns;
-  long unsigned int u_long_i;
+  long int u_long_i;
   dsfmt_t dsfmt;
   int mythread, rand_i, iret;
 

@@ -30,7 +30,7 @@ int CalcByFullDiag(
 )
 {
   int iret=0;
-  unsigned long int idim;
+  long int idim;
 
   fprintf(stdoutMPI, "%s", cLogFullDiag_SetHam_Start);
   StartTimer(5100);

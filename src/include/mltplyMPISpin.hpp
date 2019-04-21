@@ -23,7 +23,7 @@
 
 void child_general_int_spin_MPIdouble
 (
- unsigned long int i_int,
+ long int i_int,
  struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
@@ -55,7 +55,7 @@ void X_child_general_int_spin_TotalS_MPIdouble
 
 void child_general_int_spin_MPIsingle
 (
- unsigned long int i_int,
+ long int i_int,
  struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
@@ -77,7 +77,7 @@ void X_child_general_int_spin_MPIsingle
 
 void GC_child_general_int_spin_MPIdouble
 (
- unsigned long int i_int,
+ long int i_int,
  struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
@@ -85,7 +85,7 @@ void GC_child_general_int_spin_MPIdouble
 
 void GC_child_general_int_spin_MPIsingle
 (
- unsigned long int i_int,
+ long int i_int,
  struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
@@ -93,7 +93,7 @@ void GC_child_general_int_spin_MPIsingle
 
 void GC_child_general_int_GeneralSpin_MPIdouble
 (
- unsigned long int i_int,
+ long int i_int,
  struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
@@ -101,7 +101,7 @@ void GC_child_general_int_GeneralSpin_MPIdouble
 
 void GC_child_general_int_GeneralSpin_MPIsingle
 (
- unsigned long int i_int,
+ long int i_int,
  struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
@@ -109,7 +109,7 @@ void GC_child_general_int_GeneralSpin_MPIsingle
 
 void child_general_int_GeneralSpin_MPIdouble
 (
- unsigned long int i_int,
+ long int i_int,
  struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
@@ -117,7 +117,7 @@ void child_general_int_GeneralSpin_MPIdouble
 
 void child_general_int_GeneralSpin_MPIsingle
 (
- unsigned long int i_int,
+ long int i_int,
  struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1

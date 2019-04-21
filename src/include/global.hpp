@@ -37,16 +37,16 @@ extern std::complex<double> **v1;  /**< A vector before multiplying Hamiltonian,
 extern std::complex<double> **v1buf; /**< A temporary vector for MPI. */
 
 extern double *list_Diagonal; /**< list for diagonal components.*/
-extern long unsigned int *list_1; /**< list of getting real-space configuration for canonical state*/
-extern long unsigned int *list_1buf;/**< list of getting real-space configuration for canonical state across processes*/
-extern long unsigned int *list_2_1;/**< list to get index of list_1*/
-extern long unsigned int *list_2_2;/**< list to get index of list_1*/
+extern long int *list_1; /**< list of getting real-space configuration for canonical state*/
+extern long int *list_1buf;/**< list of getting real-space configuration for canonical state across processes*/
+extern long int *list_2_1;/**< list to get index of list_1*/
+extern long int *list_2_2;/**< list to get index of list_1*/
 
 /*[s] For Spectrum */
-extern long unsigned int *list_1_org; /**< list of getting real-space configuration for canonical state before excitation*/
-extern long unsigned int *list_1buf_org;/**< list of getting real-space configuration for canonical state before excitation across processes*/
-extern long unsigned int *list_2_1_org;/**< list to get index of list_1_org*/
-extern long unsigned int *list_2_2_org;/**< list to get index of list_1_org*/
+extern long int *list_1_org; /**< list of getting real-space configuration for canonical state before excitation*/
+extern long int *list_1buf_org;/**< list of getting real-space configuration for canonical state before excitation across processes*/
+extern long int *list_2_1_org;/**< list to get index of list_1_org*/
+extern long int *list_2_2_org;/**< list to get index of list_1_org*/
 /*[e] For Spectrum */
 
 /*[s] For Lanczos */

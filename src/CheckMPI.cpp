@@ -26,8 +26,9 @@
 */
 int CheckMPI(struct BindStruct *X/**< [inout] */)
 {
-  unsigned int isite;
-  int NDimInterPE, SmallDim, SpinNum, ipivot, ishift, isiteMax, isiteMax0;
+  int isite;
+  int NDimInterPE, SmallDim, SpinNum, ishift;
+  int ipivot, isiteMax, isiteMax0;
 
   /**@brief
   Branch for each model
@@ -310,8 +311,9 @@ Modify Definelist::Tpow in the inter process region
 */
 void CheckMPI_Summary(struct BindStruct *X/**< [inout] */) {
 
-  int isite, iproc, SmallDim, SpinNum, Nelec;
-  unsigned long int idimMPI;
+  int iproc, SmallDim, SpinNum, Nelec;
+  int isite;
+  long int idimMPI;
 
   if(X->Def.iFlgScaLAPACK == 0) {
     fprintf(stdoutMPI, "\n\n######  MPI site separation summary  ######\n\n");

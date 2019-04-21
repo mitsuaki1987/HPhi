@@ -227,7 +227,8 @@ int main(int argc, char* argv[]){
 
   if (X.Bind.Def.nvec < X.Bind.Def.k_exct){
     fprintf(stdoutMPI, "%s", cErrnvec);
-    fprintf(stdoutMPI, cErrnvecShow, X.Bind.Def.nvec, X.Bind.Def.k_exct);
+    fprintf(stdoutMPI, "Error: nvec = %d, exct=%d.\n",
+            X.Bind.Def.nvec, X.Bind.Def.k_exct);
     exitMPI(-1);
   }
   fprintf(stdoutMPI, "%s", cProFinishDefFiles);
@@ -239,7 +240,8 @@ int main(int argc, char* argv[]){
   /*Read Def files.*/
   TimeKeeper(&(X.Bind), cFileNameTimeKeep, cReadDefStart, "w");
   if(ReadDefFileIdxPara(&(X.Bind.Def), &(X.Bind.Boost))!=0){
-    fprintf(stdoutMPI, "%s", cErrIndices);
+    fprintf(stdoutMPI,
+            "Error: Indices and Parameters of Definition files(*.def) are incomplete.\n");
     exitMPI(-1);
   }
   TimeKeeper(&(X.Bind), cFileNameTimeKeep, cReadDefFinish, "a");

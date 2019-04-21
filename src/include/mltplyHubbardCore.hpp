@@ -21,264 +21,220 @@
 
 void child_pairhopp_element
 (
- long unsigned int j,
+ long int j,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
  struct BindStruct *X,
- long unsigned int *tmp_off
+ long int *tmp_off
  );
 
 void GC_child_exchange_element
 (
- long unsigned int j,
+ long int j,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
  struct BindStruct *X,
- long unsigned int *tmp_off
+ long int *tmp_off
  );
 
 void GC_child_pairhopp_element
 (
- long unsigned int j,
+ long int j,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
  struct BindStruct *X,
- long unsigned int *tmp_off
+ long int *tmp_off
  );
 
 void child_exchange_element
 (
- long unsigned int j,
+ long int j,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
  struct BindStruct *X,
- long unsigned int *tmp_off
+ long int *tmp_off
  );
 
 void child_CisAisCisAis_element
 (
- long unsigned int j,
- long unsigned int isite1,
- long unsigned int isite3,
+ long int j,
+ long int isite1,
+ long int isite3,
  std::complex<double> tmp_V,
  int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- struct BindStruct *X,
- long unsigned int *tmp_off
+ std::complex<double> **tmp_v1
  );
 
 void child_CisAisCjtAku_element
         (
-                long unsigned int j,
-                long unsigned int isite1,
-                long unsigned int isite3,
-                long unsigned int isite4,
-                long unsigned int Bsum,
-                long unsigned int Bdiff,
+                long int j,
+                long int isite1,
+                long int isite3,
+                long int isite4,
+                long int Bsum,
+                long int Bdiff,
                 std::complex<double> tmp_V,
                 int nstate, std::complex<double> **tmp_v0,
                 std::complex<double> **tmp_v1,
                 struct BindStruct *X,
-                long unsigned int *tmp_off
+                long int *tmp_off
         );
 
 void child_CisAjtCkuAku_element
         (
-                long unsigned int j,
-                long unsigned int isite1,
-                long unsigned int isite2,
-                long unsigned int isite3,
-                long unsigned int Asum,
-                long unsigned int Adiff,
+                long int j,
+                long int isite1,
+                long int isite2,
+                long int isite3,
+                long int Asum,
+                long int Adiff,
                 std::complex<double> tmp_V,
                 int nstate, std::complex<double> **tmp_v0,
                 std::complex<double> **tmp_v1,
                 struct BindStruct *X,
-                long unsigned int *tmp_off
+                long int *tmp_off
         );
 
 void child_CisAjtCkuAlv_element
         (
-                long unsigned int j,
-                long unsigned int isite1,
-                long unsigned int isite2,
-                long unsigned int isite3,
-                long unsigned int isite4,
-                long unsigned int Asum,
-                long unsigned int Adiff,
-                long unsigned int Bsum,
-                long unsigned int Bdiff,
+                long int j,
+                long int isite1,
+                long int isite2,
+                long int isite3,
+                long int isite4,
+                long int Asum,
+                long int Adiff,
+                long int Bsum,
+                long int Bdiff,
                 std::complex<double> tmp_V,
                 int nstate, std::complex<double> **tmp_v0,
                 std::complex<double> **tmp_v1,
                 struct BindStruct *X,
-                long unsigned int *tmp_off_2
+                long int *tmp_off_2
         );
 //[s]Grand canonical
-void GC_child_CisAisCisAis_element
-        (
-                long unsigned int j,
-                long unsigned int isite1,
-                long unsigned int isite3,
-                std::complex<double> tmp_V,
-                int nstate, std::complex<double> **tmp_v0,
-                std::complex<double> **tmp_v1,
-                struct BindStruct *X,
-                long unsigned int *tmp_off
-        );
+void GC_child_CisAisCisAis_element(
+  long int j, long int isite1, long int isite3,
+  std::complex<double> tmp_V, int nstate, std::complex<double> **tmp_v0,
+  std::complex<double> **tmp_v1);
 
-void GC_child_CisAisCjtAku_element
-        (
-                long unsigned int j,
-                long unsigned int isite1,
-                long unsigned int isite3,
-                long unsigned int isite4,
-                long unsigned int Bsum,
-                long unsigned int Bdiff,
-                std::complex<double> tmp_V,
-                int nstate, std::complex<double> **tmp_v0,
-                std::complex<double> **tmp_v1,
-                struct BindStruct *X,
-                long unsigned int *tmp_off
-        );
+void GC_child_CisAisCjtAku_element(
+  long int j, long int isite1, long int isite3, long int isite4,
+  long int Bsum, long int Bdiff, std::complex<double> tmp_V,
+  int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1,
+  long int *tmp_off);
 
-void GC_child_CisAjtCkuAku_element
-        (
-                long unsigned int j,
-                long unsigned int isite1,
-                long unsigned int isite2,
-                long unsigned int isite3,
-                long unsigned int Asum,
-                long unsigned int Adiff,
-                std::complex<double> tmp_V,
-                int nstate, std::complex<double> **tmp_v0,
-                std::complex<double> **tmp_v1,
-                struct BindStruct *X,
-                long unsigned int *tmp_off
-        );
+void GC_child_CisAjtCkuAku_element(
+  long int j, long int isite1, long int isite2, long int isite3,
+  long int Asum, long int Adiff, std::complex<double> tmp_V,
+  int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1,
+  long int *tmp_off);
 
-void GC_child_CisAjtCkuAlv_element
-        (
-                long unsigned int j,
-                long unsigned int isite1,
-                long unsigned int isite2,
-                long unsigned int isite3,
-                long unsigned int isite4,
-                long unsigned int Asum,
-                long unsigned int Adiff,
-                long unsigned int Bsum,
-                long unsigned int Bdiff,
-                std::complex<double> tmp_V,
-                int nstate, std::complex<double> **tmp_v0,
-                std::complex<double> **tmp_v1,
-                struct BindStruct *X,
-                long unsigned int *tmp_off_2
-        );
+void GC_child_CisAjtCkuAlv_element(
+  long int j, long int isite1, long int isite2, long int isite3,
+  long int isite4, long int Asum, long int Adiff, long int Bsum,
+  long int Bdiff, std::complex<double> tmp_V,
+  int nstate, std::complex<double> **tmp_v0,
+  std::complex<double> **tmp_v1, long int *tmp_off_2);
 //[e]Grand canonical
 
 void GC_CisAis
 (
- long unsigned int j,
+ long int j,
  int nstate,
  std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- struct BindStruct *X,
- long unsigned int is1_spin,
+ long int is1_spin,
  std::complex<double> tmp_trans
 );
 
 void GC_AisCis(
-        long unsigned int j,
+        long int j,
         int nstate, std::complex<double> **tmp_v0,
         std::complex<double> **tmp_v1,
-        struct BindStruct *X,
-        long unsigned int is1_spin,
+        long int is1_spin,
         std::complex<double> tmp_trans
 );
 
 int X_CisAis
 (
- long unsigned int list_1_j,
- struct BindStruct *X,
- long unsigned int is1_spin
+ long int list_1_j,
+ long int is1_spin
  );
 
 int X_CisAjt
 (
- long unsigned int list_1_j,
+ long int list_1_j,
  struct BindStruct *X,
- long unsigned int is1_spin,
- long unsigned int is2_spin,
- long unsigned int sum_spin,
- long unsigned int diff_spin,
- long unsigned int *tmp_off
+ long int is1_spin,
+ long int is2_spin,
+ long int sum_spin,
+ long int diff_spin,
+ long int *tmp_off
  );
 
 
 int X_GC_CisAjt
 (
- long unsigned int list_1_j,
- struct BindStruct *X,
- long unsigned int is1_spin,
- long unsigned int is2_spin,
- long unsigned int sum_spin,
- long unsigned int diff_spin,
- long unsigned int *tmp_off
+ long int list_1_j,
+ long int is1_spin,
+ long int is2_spin,
+ long int sum_spin,
+ long int diff_spin,
+ long int *tmp_off
  );
 
 
 void CisAjt
 (
- long unsigned int j,
+ long int j,
  int nstate, 
  std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
  struct BindStruct *X,
- long unsigned int is1_spin,
- long unsigned int is2_spin,
- long unsigned int sum_spin,
- long unsigned int diff_spin,
+ long int is1_spin,
+ long int is2_spin,
+ long int sum_spin,
+ long int diff_spin,
  std::complex<double> tmp_V
  );
 
 
 void GC_CisAjt
 (
- long unsigned int j,
+ long int j,
  int nstate, 
  std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- struct BindStruct *X,
- long unsigned int is1_spin,
- long unsigned int is2_spin,
- long unsigned int sum_spin,
- long unsigned int diff_spin,
+ long int is1_spin,
+ long int is2_spin,
+ long int sum_spin,
+ long int diff_spin,
  std::complex<double> tmp_V,
- long unsigned int *tmp_off
+ long int *tmp_off
 );
 
 
 int child_general_hopp_GetInfo
 (
  struct BindStruct *X,
- unsigned long int isite1,
- unsigned long int isite2,
- unsigned long int sigma1,
- unsigned long int sigma2
+ long int isite1,
+ long int isite2,
+ long int sigma1,
+ long int sigma2
  );
 
 int child_general_int_GetInfo
 (
- int iInterAll,
  struct BindStruct *X,
- long unsigned int isite1,
- long unsigned int isite2,
- long unsigned int isite3,
- long unsigned int isite4,
- long unsigned int sigma1,
- long unsigned int sigma2,
- long unsigned int sigma3,
- long unsigned int sigma4,
+ long int isite1,
+ long int isite2,
+ long int isite3,
+ long int isite4,
+ long int sigma1,
+ long int sigma2,
+ long int sigma3,
+ long int sigma4,
  std::complex<double> tmp_V
  );
 
@@ -298,62 +254,62 @@ int child_exchange_GetInfo
 
 void GC_Ajt
 (
- long unsigned int j,
+ long int j,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- long unsigned int is1_spin,
+ long int is1_spin,
  std::complex<double> tmp_V,
- long unsigned int *tmp_off
+ long int *tmp_off
  );
 
 void GC_Cis
 (
- long unsigned int j,
+ long int j,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- long unsigned int is1_spin,
+ long int is1_spin,
  std::complex<double> tmp_V,
- long unsigned int *tmp_off
+ long int *tmp_off
  );
 
 
 
 void GC_Ajt
 (
- long unsigned int j,
+ long int j,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- long unsigned int is1_spin,
+ long int is1_spin,
  std::complex<double> tmp_V,
- long unsigned int *tmp_off
+ long int *tmp_off
  );
 
 int X_Cis
 (
- long unsigned int j,
- long unsigned int is1_spin,
- long unsigned int *tmp_off,
- long unsigned int *list_1_org,
- long unsigned int *list_2_1_target,
- long unsigned int *list_2_2_target,
- long unsigned int _irght,
- long unsigned int _ilft,
- long unsigned int _ihfbit
+ long int j,
+ long int is1_spin,
+ long int *tmp_off,
+ long int *list_1_org,
+ long int *list_2_1_target,
+ long int *list_2_2_target,
+ long int _irght,
+ long int _ilft,
+ long int _ihfbit
  );
 
 
 
 int X_Ajt
 (
- long unsigned int j,
- long unsigned int is1_spin,
- long unsigned int *tmp_off,
- long unsigned int *list_1_org,
- long unsigned int *list_2_1_target,
- long unsigned int *list_2_2_target,
- long unsigned int _irght,
- long unsigned int _ilft,
- long unsigned int _ihfbit
+ long int j,
+ long int is1_spin,
+ long int *tmp_off,
+ long int *list_1_org,
+ long int *list_2_1_target,
+ long int *list_2_2_target,
+ long int _irght,
+ long int _ilft,
+ long int _ihfbit
  );
 
 #endif

@@ -46,14 +46,14 @@
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
 void phys(struct BindStruct *X, //!<[inout]
-          unsigned long int neig //!<[in]
+          long int neig //!<[in]
 ) {
-  long unsigned int i;
+  long int i;
   double tmp_N;
 #ifdef _SCALAPACK
   std::complex<double> *vec_tmp;
   int ictxt, ierr, rank;
-  long unsigned int j, i_max;
+  long int j, i_max;
 
   i_max = X->Check.idim_max;
 

@@ -456,7 +456,7 @@ set the default value.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_PrintVal_c(
-  char* valname,//!<[in] Name of the valiable
+  const char* valname,//!<[in] Name of the valiable
   std::complex<double> *val,//!<[inout] Valiable to be set
   std::complex<double> val0//!<[in] The default value
 )

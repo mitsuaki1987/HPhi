@@ -39,13 +39,13 @@ int GetSingleExcitedStateHubbard(
   std::complex<double> **tmp_v1,//!<[in] v0 = H v1
   int iEx
 ) {
-  long unsigned int idim_max;
-  long unsigned int i, j;
-  long unsigned int org_isite, ispin, itype;
-  long unsigned int is1_spin;
+  long int idim_max;
+  long int i, j;
+  long int org_isite, ispin, itype;
+  long int is1_spin;
   int isgn = 1, one = 1;
   std::complex<double> tmpphi, dmv;
-  long unsigned int tmp_off = 0;
+  long int tmp_off = 0;
   //tmp_v0
   if (X->Def.NSingleExcitationOperator[iEx] == 0) {
     return TRUE;
@@ -110,12 +110,12 @@ int GetSingleExcitedStateHubbardGC(
   std::complex<double> **tmp_v1,//!<[in] v0 = H v1
   int iEx
 ) {
-  long unsigned int idim_max;
-  long unsigned int i, j;
-  long unsigned int org_isite, ispin, itype;
-  long unsigned int is1_spin;
+  long int idim_max;
+  long int i, j;
+  long int org_isite, ispin, itype;
+  long int is1_spin;
   std::complex<double> tmpphi;
-  long unsigned int tmp_off = 0;
+  long int tmp_off = 0;
   //idim_max = X->Check.idim_max;
   idim_max = X->Check.idim_maxOrg;
   //tmp_v0

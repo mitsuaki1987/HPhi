@@ -51,16 +51,17 @@
 int check(struct BindStruct *X){
     
   FILE *fp;
-  long unsigned int i,tmp_sdim;
-  int NLocSpn,NCond,Nup,Ndown;
-  long unsigned int u_tmp;
-  long unsigned int tmp;
-  long unsigned int Ns,comb_1,comb_2,comb_3,comb_sum, comb_up, comb_down;
-  unsigned int u_loc;
+  long int i,tmp_sdim;
+  int NLocSpn, NCond;
+  int Nup, Ndown;
+  long int u_tmp;
+  long int tmp;
+  long int Ns,comb_1,comb_2,comb_3,comb_sum, comb_up, comb_down;
+  int u_loc;
   long int **comb;    
-  long unsigned int idimmax=0;
-  long unsigned int idim=0;
-  long unsigned int isite=0;
+  long int idimmax=0;
+  long int idim=0;
+  long int isite=0;
   int tmp_sz=0;
   int iMinup=0;
   if(X->Def.iCalcModel ==Spin ||X->Def.iCalcModel ==SpinGC )
@@ -68,7 +69,7 @@ int check(struct BindStruct *X){
     X->Def.Ne=X->Def.Nup;
   }
 
-  unsigned int iAllup=X->Def.Ne;
+  int iAllup=X->Def.Ne;
 
   if(X->Def.iFlgScaLAPACK == 0) {
     /*
@@ -246,7 +247,7 @@ int check(struct BindStruct *X){
 
   //fprintf(stdoutMPI, "  MAX DIMENSION idim_max=%ld \n",X->Check.idim_max);
   //fprintf(stdoutMPI, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",X->Check.max_mem);
-  unsigned long int li_dim_max=MaxMPI_li(X->Check.idim_max);
+  long int li_dim_max=MaxMPI_li(X->Check.idim_max);
   fprintf(stdoutMPI, "  MAX DIMENSION idim_max=%ld \n",li_dim_max);
   double dmax_mem=MaxMPI_d(X->Check.max_mem);
   fprintf(stdoutMPI, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",dmax_mem);

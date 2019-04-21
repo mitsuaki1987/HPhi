@@ -33,10 +33,10 @@
 */
 int child_general_hopp_GetInfo(
   struct BindStruct *X,//!<[inout]
-  unsigned long int isite1,//!<[in] Site index
-  unsigned long int isite2,//!<[in] Site index
-  unsigned long int sigma1,//!<[in] Spin index
-  unsigned long int sigma2//!<[in] Spin index
+  long int isite1,//!<[in] Site index
+  long int isite2,//!<[in] Site index
+  long int sigma1,//!<[in] Spin index
+  long int sigma2//!<[in] Spin index
 ) {
   /**
   Compute mask for checking occupations of @f$(i_1,\sigma_1)@f$ (LargeList::is1_spin)
@@ -74,21 +74,20 @@ int child_general_hopp_GetInfo(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int child_general_int_GetInfo(
-  int iInterAll,//!<[in] It is not used
   struct BindStruct *X,//!<[inout]
-  long unsigned int isite1,//!<[in] Site index
-  long unsigned int isite2,//!<[in] Site index
-  long unsigned int isite3,//!<[in] Site index
-  long unsigned int isite4,//!<[in] Site index
-  long unsigned int sigma1,//!<[in] Spin index
-  long unsigned int sigma2,//!<[in] Spin index
-  long unsigned int sigma3,//!<[in] Spin index
-  long unsigned int sigma4,//!<[in] Spin index
+  long int isite1,//!<[in] Site index
+  long int isite2,//!<[in] Site index
+  long int isite3,//!<[in] Site index
+  long int isite4,//!<[in] Site index
+  long int sigma1,//!<[in] Spin index
+  long int sigma2,//!<[in] Spin index
+  long int sigma3,//!<[in] Spin index
+  long int sigma4,//!<[in] Spin index
   std::complex<double> tmp_V//!<[in] Coupling constant
 ) {
-  long unsigned int is1_spin, is2_spin, is3_spin, is4_spin;
-  long unsigned int A_spin, B_spin;
-  long unsigned int isA_spin, isB_spin;
+  long int is1_spin, is2_spin, is3_spin, is4_spin;
+  long int A_spin, B_spin;
+  long int isA_spin, isB_spin;
   /**
   Compute mask for checking occupations of @f$(i_1,\sigma_1)@f$ (LargeList::is1_spin)
   and @f$(i_2,\sigma_2)@f$ (LargeList::is2_spin)
@@ -230,16 +229,15 @@ int child_exchange_GetInfo(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
 void GC_CisAis(
-  long unsigned int j,//!<[in] Index of element of wavefunction
+  long int j,//!<[in] Index of element of wavefunction
   int nstate, 
   std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1,//!<[in] Input producted vector
-  struct BindStruct *X,//!<[inout]
-  long unsigned int is1_spin,//!<[in] Mask for occupation of @f$(i \sigma)@f$
+  long int is1_spin,//!<[in] Mask for occupation of @f$(i \sigma)@f$
   std::complex<double> tmp_trans//!<[in] Transfer integral
 ) {
-  long unsigned int A_ibit_tmp;
-  long unsigned int list_1_j;
+  long int A_ibit_tmp;
+  long int list_1_j;
   std::complex<double> dmv;
   int one = 1;
 
@@ -253,15 +251,14 @@ void GC_CisAis(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void GC_AisCis(
-  long unsigned int j,//!<[in] Index of element of wavefunction
+  long int j,//!<[in] Index of element of wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1,//!<[in] Input producted vector
-  struct BindStruct *X,//!<[inout]
-  long unsigned int is1_spin,//!<[in] Mask for occupation of @f$(i \sigma)@f$
+  long int is1_spin,//!<[in] Mask for occupation of @f$(i \sigma)@f$
   std::complex<double> tmp_trans//!<[in] Transfer integral
 ) {
-  long unsigned int A_ibit_tmp;
-  long unsigned int list_1_j;
+  long int A_ibit_tmp;
+  long int list_1_j;
   std::complex<double> dmv;
   int one = 1;
 
@@ -277,9 +274,8 @@ void GC_AisCis(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int X_CisAis(
-  long unsigned int list_1_j,
-  struct BindStruct *X,
-  long unsigned int is1_spin
+  long int list_1_j,
+  long int is1_spin
 ) {
   int A_ibit_tmp;
 
@@ -293,18 +289,18 @@ int X_CisAis(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void CisAjt(
-  long unsigned int j,//!<[in] Index of wavefunction
+  long int j,//!<[in] Index of wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f$v_0 = H v_1@f$
   std::complex<double> **tmp_v1,//!<[in] Vector to be producted
   struct BindStruct *X,//!<[inout]
-  long unsigned int is1_spin,//!<[in] Mask for occupation of (is)
-  long unsigned int is2_spin,//!<[in] Mask for occupation of (jt)
-  long unsigned int sum_spin,//!<[in] Mask for hopping
-  long unsigned int diff_spin,//!<[in] Mask for Fermion sign
+  long int is1_spin,//!<[in] Mask for occupation of (is)
+  long int is2_spin,//!<[in] Mask for occupation of (jt)
+  long int sum_spin,//!<[in] Mask for hopping
+  long int diff_spin,//!<[in] Mask for Fermion sign
   std::complex<double> tmp_V//!<[in] Hopping integral
 ) {
-  long unsigned int ibit_tmp_1, ibit_tmp_2;
-  long unsigned int bit, iexchg, off;
+  long int ibit_tmp_1, ibit_tmp_2;
+  long int bit, iexchg, off;
   int sgn;
   std::complex<double> dmv;
   int one = 1;
@@ -332,20 +328,19 @@ void CisAjt(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void GC_CisAjt(
-  long unsigned int j,//!<[in] Index of wavefunction
+  long int j,//!<[in] Index of wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[in] @f$v_0 = H v_1@f$
   std::complex<double> **tmp_v1,//!<[in]Vector to be producted
-  struct BindStruct *X,//!<[inout]
-  long unsigned int is1_spin,//!<[in] Mask for occupation of (is)
-  long unsigned int is2_spin,//!<[in] Mask for occupation of (jt)
-  long unsigned int sum_spin,//!<[in] Mask for hopping
-  long unsigned int diff_spin,//!<[in] Mask for Fermion sign
+  long int is1_spin,//!<[in] Mask for occupation of (is)
+  long int is2_spin,//!<[in] Mask for occupation of (jt)
+  long int sum_spin,//!<[in] Mask for hopping
+  long int diff_spin,//!<[in] Mask for Fermion sign
   std::complex<double> tmp_V,//!<[in] Hopping
-  long unsigned int *tmp_off//!<[in] Index of wavefunction of final state
+  long int *tmp_off//!<[in] Index of wavefunction of final state
 ) {
-  long unsigned int list_1_j, list_1_off;
-  long unsigned int ibit_tmp_1, ibit_tmp_2;
-  long unsigned int bit;
+  long int list_1_j, list_1_off;
+  long int ibit_tmp_1, ibit_tmp_2;
+  long int bit;
   int sgn;
   std::complex<double> dmv;
 
@@ -374,18 +369,18 @@ void GC_CisAjt(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int X_CisAjt(
-  long unsigned int list_1_j,//!<[in] Similer to ::list_1 ?
+  long int list_1_j,//!<[in] Similer to ::list_1 ?
   struct BindStruct *X,//!<[in]
-  long unsigned int is1_spin,//!<[in] Mask for occupation of (is)
-  long unsigned int is2_spin,//!<[in] Mask for occupation of (jt)
-  long unsigned int sum_spin,//!<[in] Mask for hopping
-  long unsigned int diff_spin,//!<[in] Mask for Fermion sign
-  long unsigned int *tmp_off//!<[in] Index of wavefunction of final state
+  long int is1_spin,//!<[in] Mask for occupation of (is)
+  long int is2_spin,//!<[in] Mask for occupation of (jt)
+  long int sum_spin,//!<[in] Mask for hopping
+  long int diff_spin,//!<[in] Mask for Fermion sign
+  long int *tmp_off//!<[in] Index of wavefunction of final state
 ) {
-  long unsigned int off;
+  long int off;
   int sgn = 1;
 
-  sgn = X_GC_CisAjt(list_1_j, X, is1_spin, is2_spin, sum_spin, diff_spin, tmp_off);
+  sgn = X_GC_CisAjt(list_1_j, is1_spin, is2_spin, sum_spin, diff_spin, tmp_off);
   if (sgn != 0) {
     if(GetOffComp(list_2_1, list_2_2, *tmp_off, X->Large.irght, X->Large.ilft, X->Large.ihfbit, &off)!=TRUE){
       *tmp_off = 0;
@@ -406,16 +401,15 @@ int X_CisAjt(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int X_GC_CisAjt(
-  long unsigned int list_1_j,//!<[in] ::list_1 ?
-  struct BindStruct *X,//!<[in]
-  long unsigned int is1_spin,//!<[in] Mask for occupation of (is)
-  long unsigned int is2_spin,//!<[in] Mask for occupation of (jt)
-  long unsigned int sum_spin,//!<[in] Mask for hopping
-  long unsigned int diff_spin,//!<[in] Mask for Fermion sign
-  long unsigned int *tmp_off//!<[out] Index of wavefunction of final state
+  long int list_1_j,//!<[in] ::list_1 ?
+  long int is1_spin,//!<[in] Mask for occupation of (is)
+  long int is2_spin,//!<[in] Mask for occupation of (jt)
+  long int sum_spin,//!<[in] Mask for hopping
+  long int diff_spin,//!<[in] Mask for Fermion sign
+  long int *tmp_off//!<[out] Index of wavefunction of final state
 ) {
-  long unsigned int ibit_tmp_1, ibit_tmp_2;
-  long unsigned int bit, off;
+  long int ibit_tmp_1, ibit_tmp_2;
+  long int bit, off;
   int sgn = 1;
 
   ibit_tmp_1 = (list_1_j & is1_spin);
@@ -446,23 +440,23 @@ int X_GC_CisAjt(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void child_exchange_element(
-  long unsigned int j,//!<[in] Index of initial wavefunction
+  long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f$v_0 = H v_1@f$
   std::complex<double> **tmp_v1,//!<[in] Vector to be producted
   struct BindStruct *X,//!<[inout]
-  long unsigned int *tmp_off//!<[off] Index of wavefunction of final state
+  long int *tmp_off//!<[off] Index of wavefunction of final state
 ) {
-  long unsigned int off;
-  long unsigned int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
+  long int off;
+  long int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
   std::complex<double> dmv;
-  long unsigned int iexchg;
-  long unsigned int is1_up = X->Large.is1_up;
-  long unsigned int is2_up = X->Large.is2_up;
-  long unsigned int is1_down = X->Large.is1_down;
-  long unsigned int is2_down = X->Large.is2_down;
-  long unsigned int irght = X->Large.irght;
-  long unsigned int ilft = X->Large.ilft;
-  long unsigned int ihfbit = X->Large.ihfbit;
+  long int iexchg;
+  long int is1_up = X->Large.is1_up;
+  long int is2_up = X->Large.is2_up;
+  long int is1_down = X->Large.is1_down;
+  long int is2_down = X->Large.is2_down;
+  long int irght = X->Large.irght;
+  long int ilft = X->Large.ilft;
+  long int ihfbit = X->Large.ihfbit;
   std::complex<double> tmp_J = X->Large.tmp_J;
   int one = 1;
 
@@ -498,23 +492,23 @@ void child_exchange_element(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void child_pairhopp_element(
-  long unsigned int j,//!<[in] Index of initial wavefunction
+  long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   struct BindStruct *X,//!<[inout]
-  long unsigned int *tmp_off//!<[out] Index of final wavefunction
+  long int *tmp_off//!<[out] Index of final wavefunction
 ) {
-  long unsigned int off;
-  long unsigned int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
+  long int off;
+  long int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
   std::complex<double> dmv;
-  long unsigned int iexchg;
-  long unsigned int is1_up = X->Large.is1_up;
-  long unsigned int is2_up = X->Large.is2_up;
-  long unsigned int is1_down = X->Large.is1_down;
-  long unsigned int is2_down = X->Large.is2_down;
-  long unsigned int irght = X->Large.irght;
-  long unsigned int ilft = X->Large.ilft;
-  long unsigned int ihfbit = X->Large.ihfbit;
+  long int iexchg;
+  long int is1_up = X->Large.is1_up;
+  long int is2_up = X->Large.is2_up;
+  long int is1_down = X->Large.is1_down;
+  long int is2_down = X->Large.is2_down;
+  long int irght = X->Large.irght;
+  long int ilft = X->Large.ilft;
+  long int ihfbit = X->Large.ihfbit;
   std::complex<double> tmp_J = X->Large.tmp_J;
   int one = 1;
 
@@ -541,20 +535,20 @@ void child_pairhopp_element(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void GC_child_exchange_element(
-  long unsigned int j,//!<[in] Index of initial wavefunction
+  long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   struct BindStruct *X,//!<[inout]
-  long unsigned int *tmp_off//!<[out] Index of final wavefunction
+  long int *tmp_off//!<[out] Index of final wavefunction
 ) {
-  long unsigned int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
+  long int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
   std::complex<double> dmv;
-  long unsigned int iexchg;
-  long unsigned int is1_up = X->Large.is1_up;
-  long unsigned int is2_up = X->Large.is2_up;
-  long unsigned int is1_down = X->Large.is1_down;
-  long unsigned int is2_down = X->Large.is2_down;
-  long unsigned int list_1_j, list_1_off;
+  long int iexchg;
+  long int is1_up = X->Large.is1_up;
+  long int is2_up = X->Large.is2_up;
+  long int is1_down = X->Large.is1_down;
+  long int is2_down = X->Large.is2_down;
+  long int list_1_j, list_1_off;
   std::complex<double> tmp_J = X->Large.tmp_J;
   int one = 1;
 
@@ -590,20 +584,20 @@ void GC_child_exchange_element(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void GC_child_pairhopp_element(
-  long unsigned int j,//!<[in] Index of initial wavefunction
+  long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   struct BindStruct *X,//!<[inout]
-  long unsigned int *tmp_off//!<[out] Index of final wavefunction
+  long int *tmp_off//!<[out] Index of final wavefunction
 ) {
-  long unsigned int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
+  long int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
   std::complex<double> dmv;
-  long unsigned int iexchg;
-  long unsigned int is1_up = X->Large.is1_up;
-  long unsigned int is2_up = X->Large.is2_up;
-  long unsigned int is1_down = X->Large.is1_down;
-  long unsigned int is2_down = X->Large.is2_down;
-  long unsigned int list_1_j, list_1_off;
+  long int iexchg;
+  long int is1_up = X->Large.is1_up;
+  long int is2_up = X->Large.is2_up;
+  long int is1_down = X->Large.is1_down;
+  long int is2_down = X->Large.is2_down;
+  long int list_1_j, list_1_off;
   std::complex<double> tmp_J = X->Large.tmp_J;
   int one = 1;
 
@@ -633,20 +627,18 @@ term of canonical Hubbard system
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void child_CisAisCisAis_element(
-  long unsigned int j,//!<[in] Index of initial wavefunction
-  long unsigned int isite1,//!<[in] Site 1
-  long unsigned int isite3,//!<[in] Site 3
+  long int j,//!<[in] Index of initial wavefunction
+  long int isite1,//!<[in] Site 1
+  long int isite3,//!<[in] Site 3
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
-  std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
-  long unsigned int *tmp_off//!<[out] Index of final wavefunction
+  std::complex<double> **tmp_v1//!<[in] Wavefunction to be multiplied
 ) {
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = X_CisAis(list_1[j], X, isite3);
-  tmp_sgn *= X_CisAis(list_1[j], X, isite1);
+  tmp_sgn = X_CisAis(list_1[j], isite3);
+  tmp_sgn *= X_CisAis(list_1[j], isite1);
   dmv = tmp_V * (std::complex<double>)tmp_sgn;
   zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
 }/*std::complex<double> child_CisAisCisAis_element*/
@@ -657,24 +649,24 @@ term of canonical Hubbard system
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void child_CisAisCjtAku_element(
-  long unsigned int j,//!<[in] Index of initial wavefunction
-  long unsigned int isite1,//!<[in] Site 1
-  long unsigned int isite3,//!<[in] Site 3
-  long unsigned int isite4,//!<[in] Site 4
-  long unsigned int Bsum,//!<[in] Bit mask for hopping
-  long unsigned int Bdiff,//!<[in] Bit mask for Fermion sign
+  long int j,//!<[in] Index of initial wavefunction
+  long int isite1,//!<[in] Site 1
+  long int isite3,//!<[in] Site 3
+  long int isite4,//!<[in] Site 4
+  long int Bsum,//!<[in] Bit mask for hopping
+  long int Bdiff,//!<[in] Bit mask for Fermion sign
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   struct BindStruct *X,//!<[inout]
-  long unsigned int *tmp_off//!<[out] Index of final wavefunction
+  long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
   tmp_sgn = X_CisAjt(list_1[j], X, isite3, isite4, Bsum, Bdiff, tmp_off);
   if (tmp_sgn != 0) {
-    tmp_sgn *= X_CisAis(list_1[*tmp_off], X, isite1);
+    tmp_sgn *= X_CisAis(list_1[*tmp_off], isite1);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off][0], &one);
@@ -688,22 +680,22 @@ term of canonical Hubbard system
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void child_CisAjtCkuAku_element(
-  long unsigned int j,//!<[in] Index of initial wavefunction
-  long unsigned int isite1,//!<[in] Site 1
-  long unsigned int isite2,//!<[in] Site 2
-  long unsigned int isite3,//!<[in] Site 3
-  long unsigned int Asum,//!<[in] Bit mask for hopping
-  long unsigned int Adiff,//!<[in] Bit mask for Fermion sign
+  long int j,//!<[in] Index of initial wavefunction
+  long int isite1,//!<[in] Site 1
+  long int isite2,//!<[in] Site 2
+  long int isite3,//!<[in] Site 3
+  long int Asum,//!<[in] Bit mask for hopping
+  long int Adiff,//!<[in] Bit mask for Fermion sign
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   struct BindStruct *X,//!<[inout]
-  long unsigned int *tmp_off//!<[out] Index of final wavefunction
+  long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = X_CisAis(list_1[j], X, isite3);
+  tmp_sgn = X_CisAis(list_1[j], isite3);
   if (tmp_sgn != 0) {
     tmp_sgn *= X_CisAjt(list_1[j], X, isite1, isite2, Asum, Adiff, tmp_off);
     if (tmp_sgn != 0) {
@@ -719,27 +711,27 @@ term of canonical Hubbard system
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void child_CisAjtCkuAlv_element(
-  long unsigned int j,//!<[in] Index of initial wavefunction
-  long unsigned int isite1,//!<[in] Site 1
-  long unsigned int isite2,//!<[in] Site 2
-  long unsigned int isite3,//!<[in] Site 3
-  long unsigned int isite4,//!<[in] Site 4
-  long unsigned int Asum,//!<[in] Bit mask for hopping
-  long unsigned int Adiff,//!<[in] Bit mask for Fermion sign
-  long unsigned int Bsum,//!<[in] Bit mask for hopping
-  long unsigned int Bdiff,//!<[in] Bit mask for Fermion sign
+  long int j,//!<[in] Index of initial wavefunction
+  long int isite1,//!<[in] Site 1
+  long int isite2,//!<[in] Site 2
+  long int isite3,//!<[in] Site 3
+  long int isite4,//!<[in] Site 4
+  long int Asum,//!<[in] Bit mask for hopping
+  long int Adiff,//!<[in] Bit mask for Fermion sign
+  long int Bsum,//!<[in] Bit mask for hopping
+  long int Bdiff,//!<[in] Bit mask for Fermion sign
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   struct BindStruct *X,//!<[inout]
-  long unsigned int *tmp_off_2//!<[out] Index of final wavefunction
+  long int *tmp_off_2//!<[out] Index of final wavefunction
 ) {
   int tmp_sgn;
-  long unsigned int tmp_off_1;
+  long int tmp_off_1;
   int one = 1;
 
   std::complex<double> dmv;
-  tmp_sgn = X_GC_CisAjt(list_1[j], X, isite3, isite4, Bsum, Bdiff, &tmp_off_1);
+  tmp_sgn = X_GC_CisAjt(list_1[j], isite3, isite4, Bsum, Bdiff, &tmp_off_1);
 
   if (tmp_sgn != 0) {
     tmp_sgn *= X_CisAjt(tmp_off_1, X, isite1, isite2, Asum, Adiff, tmp_off_2);
@@ -757,20 +749,18 @@ term of grandcanonical Hubbard system
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void GC_child_CisAisCisAis_element(
-  long unsigned int j,//!<[in] Index of initial wavefunction
-  long unsigned int isite1,//!<[in] Site 1
-  long unsigned int isite3,//!<[in] Site 3
+  long int j,//!<[in] Index of initial wavefunction
+  long int isite1,//!<[in] Site 1
+  long int isite3,//!<[in] Site 3
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
-  std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
-  long unsigned int *tmp_off//!<[out] Index of final wavefunction
+  std::complex<double> **tmp_v1//!<[in] Wavefunction to be multiplied
 ) {
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = X_CisAis(j - 1, X, isite3);
-  tmp_sgn *= X_CisAis(j - 1, X, isite1);
+  tmp_sgn = X_CisAis(j - 1, isite3);
+  tmp_sgn *= X_CisAis(j - 1, isite1);
   if (tmp_sgn != 0) {
     dmv = tmp_V * (std::complex<double>)tmp_sgn;
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
@@ -783,24 +773,23 @@ term of grandcanonical Hubbard system
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void GC_child_CisAisCjtAku_element(
-  long unsigned int j,//!<[in] Index of initial wavefunction
-  long unsigned int isite1,//!<[in] Site 1
-  long unsigned int isite3,//!<[in] Site 3
-  long unsigned int isite4,//!<[in] Site 4
-  long unsigned int Bsum,//!<[in] Bit mask for hopping
-  long unsigned int Bdiff,//!<[in] Bit mask for Fermion sign
+  long int j,//!<[in] Index of initial wavefunction
+  long int isite1,//!<[in] Site 1
+  long int isite3,//!<[in] Site 3
+  long int isite4,//!<[in] Site 4
+  long int Bsum,//!<[in] Bit mask for hopping
+  long int Bdiff,//!<[in] Bit mask for Fermion sign
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
-  long unsigned int *tmp_off//!<[out] Index of final wavefunction
+  long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = X_GC_CisAjt((j - 1), X, isite3, isite4, Bsum, Bdiff, tmp_off);
+  tmp_sgn = X_GC_CisAjt((j - 1), isite3, isite4, Bsum, Bdiff, tmp_off);
   if (tmp_sgn != 0) {
-    tmp_sgn *= X_CisAis(*tmp_off, X, isite1);
+    tmp_sgn *= X_CisAis(*tmp_off, isite1);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
@@ -814,24 +803,23 @@ term of grandcanonical Hubbard system
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void GC_child_CisAjtCkuAku_element(
-  long unsigned int j,//!<[in] Index of initial wavefunction
-  long unsigned int isite1,//!<[in] Site 1
-  long unsigned int isite2,//!<[in] Site 2
-  long unsigned int isite3,//!<[in] Site 3
-  long unsigned int Asum,//!<[in] Bit mask for hopping
-  long unsigned int Adiff,//!<[in] Bit mask for Fermion sign
+  long int j,//!<[in] Index of initial wavefunction
+  long int isite1,//!<[in] Site 1
+  long int isite2,//!<[in] Site 2
+  long int isite3,//!<[in] Site 3
+  long int Asum,//!<[in] Bit mask for hopping
+  long int Adiff,//!<[in] Bit mask for Fermion sign
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
-  long unsigned int *tmp_off//!<[out] Index of final wavefunction
+  long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = X_CisAis((j - 1), X, isite3);
+  tmp_sgn = X_CisAis(j - 1, isite3);
   if (tmp_sgn != 0) {
-    tmp_sgn *= X_GC_CisAjt((j - 1), X, isite1, isite2, Asum, Adiff, tmp_off);
+    tmp_sgn *= X_GC_CisAjt(j - 1, isite1, isite2, Asum, Adiff, tmp_off);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
@@ -845,29 +833,28 @@ term of grandcanonical Hubbard system
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void GC_child_CisAjtCkuAlv_element(
-  long unsigned int j,//!<[in] Index of initial wavefunction
-  long unsigned int isite1,//!<[in] Site 1
-  long unsigned int isite2,//!<[in] Site 2
-  long unsigned int isite3,//!<[in] Site 3
-  long unsigned int isite4,//!<[in] Site 4
-  long unsigned int Asum,//!<[in] Bit mask for hopping
-  long unsigned int Adiff,//!<[in] Bit mask for Fermion sign
-  long unsigned int Bsum,//!<[in] Bit mask for hopping
-  long unsigned int Bdiff,//!<[in] Bit mask for Fermion sign
+  long int j,//!<[in] Index of initial wavefunction
+  long int isite1,//!<[in] Site 1
+  long int isite2,//!<[in] Site 2
+  long int isite3,//!<[in] Site 3
+  long int isite4,//!<[in] Site 4
+  long int Asum,//!<[in] Bit mask for hopping
+  long int Adiff,//!<[in] Bit mask for Fermion sign
+  long int Bsum,//!<[in] Bit mask for hopping
+  long int Bdiff,//!<[in] Bit mask for Fermion sign
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
-  long unsigned int *tmp_off_2//!<[out] Index of final wavefunction
+  long int *tmp_off_2//!<[out] Index of final wavefunction
 ) {
   int tmp_sgn;
-  long unsigned int tmp_off_1;
+  long int tmp_off_1;
   std::complex<double> dmv;
   int one = 1;
 
-  tmp_sgn = X_GC_CisAjt((j - 1), X, isite3, isite4, Bsum, Bdiff, &tmp_off_1);
+  tmp_sgn = X_GC_CisAjt(j - 1, isite3, isite4, Bsum, Bdiff, &tmp_off_1);
   if (tmp_sgn != 0) {
-    tmp_sgn *= X_GC_CisAjt(tmp_off_1, X, isite1, isite2, Asum, Adiff, tmp_off_2);
+    tmp_sgn *= X_GC_CisAjt(tmp_off_1, isite1, isite2, Asum, Adiff, tmp_off_2);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off_2 + 1][0], &one);
@@ -883,16 +870,16 @@ term of grandcanonical Hubbard system
 @author Youhei Yamaji (The University of Tokyo)
 */
 void GC_Cis(
-  long unsigned int j,//!<[in] Index of initial wavefunction
+  long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  long unsigned int is1_spin,//!<[in] Bit mask 
+  long int is1_spin,//!<[in] Bit mask 
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  long unsigned int *tmp_off//!<[in] Index of final wavefunction
+  long int *tmp_off//!<[in] Index of final wavefunction
 ) {
-  long unsigned int list_1_j, list_1_off;
-  long unsigned int ibit_tmp_1;
-  long unsigned int bit;
+  long int list_1_j, list_1_off;
+  long int ibit_tmp_1;
+  long int bit;
   int sgn, ipsgn;
   std::complex<double> dmv;
   int one = 1;
@@ -930,16 +917,16 @@ term of grandcanonical Hubbard system
 @author Youhei Yamaji (The University of Tokyo)
 */
 void GC_Ajt(
-  long unsigned int j,//!<[in] Index of initial wavefunction
+  long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  long unsigned int is1_spin,//!<[in] Bit mask
+  long int is1_spin,//!<[in] Bit mask
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  long unsigned int *tmp_off//!<[in] Index of final wavefunction
+  long int *tmp_off//!<[in] Index of final wavefunction
 ) {
-  long unsigned int list_1_j, list_1_off;
-  long unsigned int ibit_tmp_1;
-  long unsigned int bit;
+  long int list_1_j, list_1_off;
+  long int ibit_tmp_1;
+  long int bit;
   int sgn, ipsgn;
   std::complex<double> dmv;
   int one = 1;
@@ -977,19 +964,19 @@ term of canonical Hubbard system
 @author Youhei Yamaji (The University of Tokyo)
 */
 int X_Cis(
-  long unsigned int j,//!<[in] Index of initial wavefunction
-  long unsigned int is1_spin,//!<[in] Bit mask
-  long unsigned int *tmp_off,//!<[out] Index of final wavefunction
-  long unsigned int *list_1_org,//!<[in] Similar to ::list_1
-  long unsigned int *list_2_1_target,//!<[in] Similar to ::list_2_1
-  long unsigned int *list_2_2_target,//!<[in] Similar to ::list_2_2
-  long unsigned int _irght,//!<[in] Similar to LargeList::irght
-  long unsigned int _ilft,//!<[in] Similar to LargeList::ilft
-  long unsigned int _ihfbit//!<[in] Similar to LargeList::ihfbit
+  long int j,//!<[in] Index of initial wavefunction
+  long int is1_spin,//!<[in] Bit mask
+  long int *tmp_off,//!<[out] Index of final wavefunction
+  long int *list_1_org,//!<[in] Similar to ::list_1
+  long int *list_2_1_target,//!<[in] Similar to ::list_2_1
+  long int *list_2_2_target,//!<[in] Similar to ::list_2_2
+  long int _irght,//!<[in] Similar to LargeList::irght
+  long int _ilft,//!<[in] Similar to LargeList::ilft
+  long int _ihfbit//!<[in] Similar to LargeList::ihfbit
 ) {
-  long unsigned int list_1_j, list_1_off;
-  long unsigned int ibit_tmp_1;
-  long unsigned int bit;
+  long int list_1_j, list_1_off;
+  long int ibit_tmp_1;
+  long int bit;
   int sgn, ipsgn;
 
   list_1_j = list_1_org[j];
@@ -1031,19 +1018,19 @@ term of canonical Hubbard system
 @author Youhei Yamaji (The University of Tokyo)
 */
 int X_Ajt(
-  long unsigned int j,//!<[in] Index of initial wavefunction
-  long unsigned int is1_spin,//!<[in] Bit mask
-  long unsigned int *tmp_off,//!<[out] Index of final wavefunction
-  long unsigned int *list_1_org,//!<[in] Similar to ::list_1
-  long unsigned int *list_2_1_target,//!<[in] Similar to ::list_2_1
-  long unsigned int *list_2_2_target,//!<[in] Similar to ::list_2_2
-  long unsigned int _irght,//!<[in] Similar to LargeList::irght
-  long unsigned int _ilft,//!<[in] Similar to LargeList::ilft
-  long unsigned int _ihfbit//!<[in] Similar to LargeList::ihfbit
+  long int j,//!<[in] Index of initial wavefunction
+  long int is1_spin,//!<[in] Bit mask
+  long int *tmp_off,//!<[out] Index of final wavefunction
+  long int *list_1_org,//!<[in] Similar to ::list_1
+  long int *list_2_1_target,//!<[in] Similar to ::list_2_1
+  long int *list_2_2_target,//!<[in] Similar to ::list_2_2
+  long int _irght,//!<[in] Similar to LargeList::irght
+  long int _ilft,//!<[in] Similar to LargeList::ilft
+  long int _ihfbit//!<[in] Similar to LargeList::ihfbit
 ) {
-  long unsigned int list_1_j, list_1_off;
-  long unsigned int ibit_tmp_1;
-  long unsigned int bit;
+  long int list_1_j, list_1_off;
+  long int ibit_tmp_1;
+  long int bit;
   int sgn, ipsgn;
 
   list_1_j = list_1_org[j];

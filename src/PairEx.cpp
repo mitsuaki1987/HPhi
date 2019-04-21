@@ -52,7 +52,7 @@ int GetPairExcitedState
 )
 {
   int iret;
-  long unsigned int irght, ilft, ihfbit;
+  long int irght, ilft, ihfbit;
 
   //  i_max = X->Check.idim_max;
   if (X->Def.iFlgGeneralSpin == FALSE) {

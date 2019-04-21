@@ -55,28 +55,28 @@
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
 int SetDiagonalTEInterAll(
-  long unsigned int isite1,
-  long unsigned int isite2,
-  long unsigned int isigma1,
-  long unsigned int isigma2,
+  long int isite1,
+  long int isite2,
+  long int isigma1,
+  long int isigma2,
   double dtmp_V,
   struct BindStruct *X,
   std::complex<double> *tmp_v0,
   std::complex<double> *tmp_v1
 ) {
-  long unsigned int is1_spin;
-  long unsigned int is2_spin;
-  long unsigned int is1_up;
-  long unsigned int is2_up;
+  long int is1_spin;
+  long int is2_spin;
+  long int is1_up;
+  long int is2_up;
 
-  long unsigned int ibit1_spin;
-  long unsigned int ibit2_spin;
+  long int ibit1_spin;
+  long int ibit2_spin;
 
-  long unsigned int num1;
-  long unsigned int num2;
+  long int num1;
+  long int num2;
 
-  long unsigned int j;
-  long unsigned int i_max = X->Check.idim_max;
+  long int j;
+  long int i_max = X->Check.idim_max;
   /*
   Forse isite1 <= isite2
   */
@@ -102,10 +102,10 @@ int SetDiagonalTEInterAll(
       is1_spin = X->Def.Tpow[2 * isite1 - 2 + isigma1];
       is2_spin = X->Def.Tpow[2 * isite2 - 2 + isigma2];
       num1 = 0;
-      ibit1_spin = (unsigned long int)myrank&is1_spin;
+      ibit1_spin = (long int)myrank&is1_spin;
       num1 += ibit1_spin / is1_spin;
       num2 = 0;
-      ibit2_spin = (unsigned long int)myrank&is2_spin;
+      ibit2_spin = (long int)myrank&is2_spin;
       num2 += ibit2_spin / is2_spin;
       break;/*case HubbardGC, KondoGC, Hubbard, Kondo:*/
 
@@ -114,13 +114,13 @@ int SetDiagonalTEInterAll(
       if (X->Def.iFlgGeneralSpin == FALSE) {
         is1_up = X->Def.Tpow[isite1 - 1];
         is2_up = X->Def.Tpow[isite2 - 1];
-        num1 = X_SpinGC_CisAis((unsigned long int) myrank + 1, X, is1_up, isigma1);
-        num2 = X_SpinGC_CisAis((unsigned long int) myrank + 1, X, is2_up, isigma2);
+        num1 = X_SpinGC_CisAis((long int) myrank + 1, is1_up, isigma1);
+        num2 = X_SpinGC_CisAis((long int) myrank + 1, is2_up, isigma2);
       }/*if (X->Def.iFlgGeneralSpin == FALSE)*/
       else {//start:generalspin
-        num1 = BitCheckGeneral((unsigned long int) myrank, isite1, isigma1,
+        num1 = BitCheckGeneral((long int) myrank, isite1, isigma1,
           X->Def.SiteToBit, X->Def.Tpow);
-        num2 = BitCheckGeneral((unsigned long int) myrank, isite2, isigma2,
+        num2 = BitCheckGeneral((long int) myrank, isite2, isigma2,
           X->Def.SiteToBit, X->Def.Tpow);
       }
       break;/*case SpinGC, Spin:*/
@@ -149,7 +149,7 @@ firstprivate(i_max, dtmp_V) private(j)
       is2_spin = X->Def.Tpow[2 * isite2 - 2 + isigma2];
 
       num2 = 0;
-      ibit2_spin = (unsigned long int)myrank&is2_spin;
+      ibit2_spin = (long int)myrank&is2_spin;
       num2 += ibit2_spin / is2_spin;
       if (num2 != 0) {
 #pragma omp parallel for default(none) shared(tmp_v0, tmp_v1)\
@@ -171,7 +171,7 @@ firstprivate(i_max, dtmp_V) private(j)
       is2_spin = X->Def.Tpow[2 * isite2 - 2 + isigma2];
 
       num2 = 0;
-      ibit2_spin = (unsigned long int)myrank&is2_spin;
+      ibit2_spin = (long int)myrank&is2_spin;
       num2 += ibit2_spin / is2_spin;
       if (num2 != 0) {
 #pragma omp parallel for default(none) shared(tmp_v0, tmp_v1, list_1)\
@@ -190,19 +190,19 @@ firstprivate(i_max, dtmp_V) private(j)
       if (X->Def.iFlgGeneralSpin == FALSE) {
         is1_up = X->Def.Tpow[isite1 - 1];
         is2_up = X->Def.Tpow[isite2 - 1];
-        num2 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is2_up, isigma2);
+        num2 = X_SpinGC_CisAis((long int)myrank + 1, is2_up, isigma2);
 
         if (num2 != 0) {
 #pragma omp parallel for default(none) shared(tmp_v0, tmp_v1)\
                      firstprivate(i_max, dtmp_V, is1_up, isigma1, X) private(num1, j)
           for (j = 1; j <= i_max; j++) {
-            num1 = X_SpinGC_CisAis(j, X, is1_up, isigma1);
+            num1 = X_SpinGC_CisAis(j, is1_up, isigma1);
             tmp_v0[j] += dtmp_V * num1 * tmp_v1[j];
           }
         }
       }/* if (X->Def.iFlgGeneralSpin == FALSE)*/
       else {//start:generalspin
-        num2 = BitCheckGeneral((unsigned long int)myrank, isite2, isigma2,
+        num2 = BitCheckGeneral((long int)myrank, isite2, isigma2,
           X->Def.SiteToBit, X->Def.Tpow);
         if (num2 != 0) {
 #pragma omp parallel for default(none) shared(tmp_v0, tmp_v1) \
@@ -221,19 +221,19 @@ firstprivate(i_max, dtmp_V, isite1, isigma1, X) private(j, num1)
       if (X->Def.iFlgGeneralSpin == FALSE) {
         is1_up = X->Def.Tpow[isite1 - 1];
         is2_up = X->Def.Tpow[isite2 - 1];
-        num2 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is2_up, isigma2);
+        num2 = X_SpinGC_CisAis((long int)myrank + 1, is2_up, isigma2);
 
         if (num2 != 0) {
 #pragma omp parallel for default(none) shared(tmp_v0, tmp_v1) \
 firstprivate(i_max, dtmp_V, is1_up, isigma1, X, num2) private(j, num1)
           for (j = 1; j <= i_max; j++) {
-            num1 = X_Spin_CisAis(j, X, is1_up, isigma1);
+            num1 = X_Spin_CisAis(j, is1_up, isigma1);
             tmp_v0[j] += dtmp_V * num1 * tmp_v1[j];
           }
         }
       }/* if (X->Def.iFlgGeneralSpin == FALSE)*/
       else /* if (X->Def.iFlgGeneralSpin == TRUE)*/ {
-        num2 = BitCheckGeneral((unsigned long int)myrank, isite2, isigma2, \
+        num2 = BitCheckGeneral((long int)myrank, isite2, isigma2, \
           X->Def.SiteToBit, X->Def.Tpow);
         if (num2 != 0) {
 #pragma omp parallel for default(none) shared(tmp_v0, tmp_v1, list_1)\
@@ -301,8 +301,8 @@ private(num1, ibit1_spin, num2, ibit2_spin)
 shared(tmp_v0, tmp_v1)  firstprivate(i_max, dtmp_V, is1_up, is2_up, isigma1, isigma2, X) \
 private(j, num1, num2)
       for (j = 1; j <= i_max; j++) {
-        num1 = X_Spin_CisAis(j, X, is1_up, isigma1);
-        num2 = X_Spin_CisAis(j, X, is2_up, isigma2);
+        num1 = X_Spin_CisAis(j, is1_up, isigma1);
+        num2 = X_Spin_CisAis(j, is2_up, isigma2);
         tmp_v0[j] += dtmp_V * num1*num2*tmp_v1[j];
       }
     }
@@ -329,8 +329,8 @@ private(j, num1)
 shared(tmp_v0, tmp_v1) firstprivate(i_max, dtmp_V, is1_up, is2_up, isigma1, isigma2, X) \
 private(j, num1, num2)
       for (j = 1; j <= i_max; j++) {
-        num1 = X_SpinGC_CisAis(j, X, is1_up, isigma1);
-        num2 = X_SpinGC_CisAis(j, X, is2_up, isigma2);
+        num1 = X_SpinGC_CisAis(j, is1_up, isigma1);
+        num2 = X_SpinGC_CisAis(j, is2_up, isigma2);
         tmp_v0[j] += dtmp_V * num1*num2*tmp_v1[j];
       }
     }
@@ -372,20 +372,20 @@ private(j, num1)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
 int SetDiagonalTEChemi(
-  long unsigned int isite1,
-  long unsigned int spin,
+  long int isite1,
+  long int spin,
   double dtmp_V,
   struct BindStruct *X,
   std::complex<double> *tmp_v0,
   std::complex<double> *tmp_v1
 ) {
-  long unsigned int is1_up;
-  long unsigned int num1;
-  long unsigned int isigma1 = spin;
-  long unsigned int is1, ibit1;
+  long int is1_up;
+  long int num1;
+  long int isigma1 = spin;
+  long int is1, ibit1;
 
-  long unsigned int j;
-  long unsigned int i_max = X->Check.idim_max;
+  long int j;
+  long int i_max = X->Check.idim_max;
 
   /*
     When isite1 is in the inter process region
@@ -405,7 +405,7 @@ int SetDiagonalTEChemi(
       else {
         is1 = X->Def.Tpow[2 * isite1 - 1];
       }
-      ibit1 = (unsigned long int)myrank & is1;
+      ibit1 = (long int)myrank & is1;
       num1 = ibit1 / is1;
       break;/*case HubbardGC, case KondoGC, Hubbard, Kondo:*/
 
@@ -414,10 +414,10 @@ int SetDiagonalTEChemi(
 
       if (X->Def.iFlgGeneralSpin == FALSE) {
         is1_up = X->Def.Tpow[isite1 - 1];
-        num1 = (((unsigned long int)myrank& is1_up) / is1_up) ^ (1 - spin);
+        num1 = (((long int)myrank& is1_up) / is1_up) ^ (1 - spin);
       } /*if (X->Def.iFlgGeneralSpin == FALSE)*/
       else /*if (X->Def.iFlgGeneralSpin == TRUE)*/ {
-        num1 = BitCheckGeneral((unsigned long int)myrank,
+        num1 = BitCheckGeneral((long int)myrank,
           isite1, isigma1, X->Def.SiteToBit, X->Def.Tpow);
       }/*if (X->Def.iFlgGeneralSpin == TRUE)*/
       break;/*case SpinGC, Spin:*/
@@ -542,21 +542,21 @@ shared(tmp_v0, tmp_v1, list_1) firstprivate(i_max, dtmp_V, isite1, isigma1, X) p
  */
 int SetDiagonalTETransfer
 (
-  long unsigned int isite1,
+  long int isite1,
   double dtmp_V,
-  long unsigned int spin,
+  long int spin,
   struct BindStruct *X,
   std::complex<double> *tmp_v0,
   std::complex<double> *tmp_v1
 ) {
-  long unsigned int is1_up;
-  long unsigned int ibit1_up;
-  long unsigned int num1;
-  long unsigned int isigma1 = spin;
-  long unsigned int is1, ibit1;
+  long int is1_up;
+  long int ibit1_up;
+  long int num1;
+  long int isigma1 = spin;
+  long int is1, ibit1;
 
-  long unsigned int j;
-  long unsigned int i_max = X->Check.idim_max;
+  long int j;
+  long int i_max = X->Check.idim_max;
 
   /*
     When isite1 is in the inter process region
@@ -575,7 +575,7 @@ int SetDiagonalTETransfer
       else {
         is1 = X->Def.Tpow[2 * isite1 - 1];
       }
-      ibit1 = (unsigned long int)myrank & is1;
+      ibit1 = (long int)myrank & is1;
       num1 = ibit1 / is1;
       break;/*case HubbardGC, case KondoGC, Hubbard, Kondo:*/
 
@@ -583,10 +583,10 @@ int SetDiagonalTETransfer
     case Spin:
       if (X->Def.iFlgGeneralSpin == FALSE) {
         is1_up = X->Def.Tpow[isite1 - 1];
-        num1 = (((unsigned long int)myrank& is1_up) / is1_up) ^ (1 - spin);
+        num1 = (((long int)myrank& is1_up) / is1_up) ^ (1 - spin);
       } /*if (X->Def.iFlgGeneralSpin == FALSE)*/
       else /*if (X->Def.iFlgGeneralSpin == TRUE)*/ {
-        num1 = BitCheckGeneral((unsigned long int)myrank,
+        num1 = BitCheckGeneral((long int)myrank,
           isite1, isigma1, X->Def.SiteToBit, X->Def.Tpow);
       }/*if (X->Def.iFlgGeneralSpin == TRUE)*/
       break;/*case SpinGC, Spin:*/
@@ -706,9 +706,9 @@ int diagonalcalcForTE
   std::complex<double> *tmp_v1
 ) {
 
-  long unsigned int i;
-  long unsigned int isite1, isite2;
-  long unsigned int A_spin, B_spin;
+  long int i;
+  long int isite1, isite2;
+  long int A_spin, B_spin;
   double tmp_V;
 
   if (X->Def.NTETransferDiagonal[_istep] > 0) {
@@ -760,16 +760,16 @@ int diagonalcalcForTE
  */
 int SetDiagonalCoulombIntra
 (
-  long unsigned int isite1,
+  long int isite1,
   double dtmp_V,
   struct BindStruct *X
 ) {
-  long unsigned int is;
-  long unsigned int ibit;
-  long unsigned int is1_up, is1_down;
+  long int is;
+  long int ibit;
+  long int is1_up, is1_down;
 
-  long unsigned int j;
-  long unsigned int i_max = X->Check.idim_max;
+  long int j;
+  long int i_max = X->Check.idim_max;
 
   /*
    When isite1 is in the inter process region
@@ -786,7 +786,7 @@ int SetDiagonalCoulombIntra
       is1_up = X->Def.Tpow[2 * isite1 - 2];
       is1_down = X->Def.Tpow[2 * isite1 - 1];
       is = is1_up + is1_down;
-      ibit = (unsigned long int)myrank & is;
+      ibit = (long int)myrank & is;
       if (ibit == is) {
 #pragma omp parallel for default(none) shared(list_Diagonal) \
                                        firstprivate(i_max, dtmp_V) private(j) 
@@ -869,19 +869,19 @@ int SetDiagonalCoulombIntra
  */
 int SetDiagonalChemi
 (
-  long unsigned int isite1,
+  long int isite1,
   double dtmp_V,
-  long unsigned int spin,
+  long int spin,
   struct BindStruct *X
 ) {
-  long unsigned int is1_up;
-  long unsigned int ibit1_up;
-  long unsigned int num1;
-  long unsigned int isigma1 = spin;
-  long unsigned int is1, ibit1;
+  long int is1_up;
+  long int ibit1_up;
+  long int num1;
+  long int isigma1 = spin;
+  long int is1, ibit1;
 
-  long unsigned int j;
-  long unsigned int i_max = X->Check.idim_max;
+  long int j;
+  long int i_max = X->Check.idim_max;
 
   /*
     When isite1 is in the inter process region
@@ -901,7 +901,7 @@ int SetDiagonalChemi
       else {
         is1 = X->Def.Tpow[2 * isite1 - 1];
       }
-      ibit1 = (unsigned long int)myrank & is1;
+      ibit1 = (long int)myrank & is1;
       num1 = ibit1 / is1;
 #pragma omp parallel for default(none) shared(list_Diagonal) \
                      firstprivate(i_max, dtmp_V, num1) private(j)
@@ -914,13 +914,13 @@ int SetDiagonalChemi
 
       if (X->Def.iFlgGeneralSpin == FALSE) {
         is1_up = X->Def.Tpow[isite1 - 1];
-        ibit1_up = (((unsigned long int)myrank& is1_up) / is1_up) ^ (1 - spin);
+        ibit1_up = (((long int)myrank& is1_up) / is1_up) ^ (1 - spin);
 #pragma omp parallel for default(none) shared(list_Diagonal) \
 firstprivate(i_max, dtmp_V, ibit1_up) private(j)
         for (j = 1; j <= i_max; j++) list_Diagonal[j] += dtmp_V * ibit1_up;
       } /*if (X->Def.iFlgGeneralSpin == FALSE)*/
       else /*if (X->Def.iFlgGeneralSpin == TRUE)*/ {
-        num1 = BitCheckGeneral((unsigned long int)myrank,
+        num1 = BitCheckGeneral((long int)myrank,
           isite1, isigma1, X->Def.SiteToBit, X->Def.Tpow);
         if (num1 != 0) {
 #pragma omp parallel for default(none) shared(list_Diagonal) \
@@ -1039,20 +1039,20 @@ firstprivate(i_max, dtmp_V) private(j)
  */
 int SetDiagonalCoulombInter
 (
-  long unsigned int isite1,
-  long unsigned int isite2,
+  long int isite1,
+  long int isite2,
   double dtmp_V,
   struct BindStruct *X
 ) {
-  long unsigned int is1_up, is1_down;
-  long unsigned int ibit1_up, ibit1_down;
-  long unsigned int num1;
-  long unsigned int is2_up, is2_down;
-  long unsigned int ibit2_up, ibit2_down;
-  long unsigned int num2;
+  long int is1_up, is1_down;
+  long int ibit1_up, ibit1_down;
+  long int num1;
+  long int is2_up, is2_down;
+  long int ibit2_up, ibit2_down;
+  long int num2;
 
-  long unsigned int j;
-  long unsigned int i_max = X->Check.idim_max;
+  long int j;
+  long int i_max = X->Check.idim_max;
 
   /*
    Force isite1 <= isite2
@@ -1082,14 +1082,14 @@ int SetDiagonalCoulombInter
       num1 = 0;
       num2 = 0;
 
-      ibit1_up = (unsigned long int)myrank&is1_up;
+      ibit1_up = (long int)myrank&is1_up;
       num1 += ibit1_up / is1_up;
-      ibit1_down = (unsigned long int)myrank&is1_down;
+      ibit1_down = (long int)myrank&is1_down;
       num1 += ibit1_down / is1_down;
 
-      ibit2_up = (unsigned long int)myrank&is2_up;
+      ibit2_up = (long int)myrank&is2_up;
       num2 += ibit2_up / is2_up;
-      ibit2_down = (unsigned long int)myrank&is2_down;
+      ibit2_down = (long int)myrank&is2_down;
       num2 += ibit2_down / is2_down;
 
 #pragma omp parallel for default(none) shared(list_Diagonal) \
@@ -1127,9 +1127,9 @@ int SetDiagonalCoulombInter
       is2_up = X->Def.Tpow[2 * isite2 - 2];
       is2_down = X->Def.Tpow[2 * isite2 - 1];
       num2 = 0;
-      ibit2_up = (unsigned long int)myrank&is2_up;
+      ibit2_up = (long int)myrank&is2_up;
       num2 += ibit2_up / is2_up;
-      ibit2_down = (unsigned long int)myrank&is2_down;
+      ibit2_down = (long int)myrank&is2_down;
       num2 += ibit2_down / is2_down;
       break;
 
@@ -1276,23 +1276,23 @@ private(num1, ibit1_up, ibit1_down, j)
  */
 int SetDiagonalHund
 (
-  long unsigned int isite1,
-  long unsigned int isite2,
+  long int isite1,
+  long int isite2,
   double dtmp_V,
   struct BindStruct *X
 ) {
 
-  long unsigned int is1_up, is1_down;
-  long unsigned int ibit1_up, ibit1_down;
-  long unsigned int num1_up, num1_down;
-  long unsigned int is2_up, is2_down;
-  long unsigned int ibit2_up, ibit2_down;
-  long unsigned int num2_up, num2_down;
+  long int is1_up, is1_down;
+  long int ibit1_up, ibit1_down;
+  long int num1_up, num1_down;
+  long int is2_up, is2_down;
+  long int ibit2_up, ibit2_down;
+  long int num2_up, num2_down;
 
-  long unsigned int is_up;
-  long unsigned int ibit;
-  long unsigned int j;
-  long unsigned int i_max = X->Check.idim_max;
+  long int is_up;
+  long int ibit;
+  long int j;
+  long int i_max = X->Check.idim_max;
   /*
   Force isite1 <= isite2
   */
@@ -1323,14 +1323,14 @@ int SetDiagonalHund
       num2_up = 0;
       num2_down = 0;
 
-      ibit1_up = (unsigned long int)myrank &is1_up;
+      ibit1_up = (long int)myrank &is1_up;
       num1_up = ibit1_up / is1_up;
-      ibit1_down = (unsigned long int)myrank &is1_down;
+      ibit1_down = (long int)myrank &is1_down;
       num1_down = ibit1_down / is1_down;
 
-      ibit2_up = (unsigned long int)myrank &is2_up;
+      ibit2_up = (long int)myrank &is2_up;
       num2_up = ibit2_up / is2_up;
-      ibit2_down = (unsigned long int)myrank &is2_down;
+      ibit2_down = (long int)myrank &is2_down;
       num2_down = ibit2_down / is2_down;
 
 #pragma omp parallel for default(none) shared(list_Diagonal) \
@@ -1346,7 +1346,7 @@ int SetDiagonalHund
       is1_up = X->Def.Tpow[isite1 - 1];
       is2_up = X->Def.Tpow[isite2 - 1];
       is_up = is1_up + is2_up;
-      ibit = (unsigned long int)myrank & is_up;
+      ibit = (long int)myrank & is_up;
       if (ibit == 0 || ibit == is_up) {
 #pragma omp parallel for default(none) shared(list_Diagonal) \
 firstprivate(i_max, dtmp_V) private(j) 
@@ -1376,9 +1376,9 @@ firstprivate(i_max, dtmp_V) private(j)
       num2_up = 0;
       num2_down = 0;
 
-      ibit2_up = (unsigned long int)myrank &is2_up;
+      ibit2_up = (long int)myrank &is2_up;
       num2_up = ibit2_up / is2_up;
-      ibit2_down = (unsigned long int)myrank &is2_down;
+      ibit2_down = (long int)myrank &is2_down;
       num2_down = ibit2_down / is2_down;
 
 #pragma omp parallel for default(none) shared( list_Diagonal) \
@@ -1409,9 +1409,9 @@ private(num1_up, num1_down, ibit1_up, ibit1_down, j)
       num2_up = 0;
       num2_down = 0;
 
-      ibit2_up = (unsigned long int)myrank&is2_up;
+      ibit2_up = (long int)myrank&is2_up;
       num2_up = ibit2_up / is2_up;
-      ibit2_down = (unsigned long int)myrank&is2_down;
+      ibit2_down = (long int)myrank&is2_down;
       num2_down = ibit2_down / is2_down;
 
 #pragma omp parallel for default(none) shared(list_1, list_Diagonal) \
@@ -1433,7 +1433,7 @@ private(num1_up, num1_down, ibit1_up, ibit1_down, j)
     case SpinGC:
       is1_up = X->Def.Tpow[isite1 - 1];
       is2_up = X->Def.Tpow[isite2 - 1];
-      ibit2_up = (unsigned long int)myrank & is2_up;
+      ibit2_up = (long int)myrank & is2_up;
 
       if (ibit2_up == is2_up) {
 #pragma omp parallel for default(none) shared(list_Diagonal) \
@@ -1460,7 +1460,7 @@ firstprivate(i_max, dtmp_V, is1_up) private(j, ibit1_up)
     case Spin:
       is1_up = X->Def.Tpow[isite1 - 1];
       is2_up = X->Def.Tpow[isite2 - 1];
-      ibit2_up = (unsigned long int)myrank & is2_up;
+      ibit2_up = (long int)myrank & is2_up;
 
       if (ibit2_up == is2_up) {
 #pragma omp parallel for default(none) shared(list_1, list_Diagonal) \
@@ -1599,27 +1599,27 @@ firstprivate(i_max, dtmp_V, is1_up) private(j, ibit1_up)
  */
 int SetDiagonalInterAll
 (
-  long unsigned int isite1,
-  long unsigned int isite2,
-  long unsigned int isigma1,
-  long unsigned int isigma2,
+  long int isite1,
+  long int isite2,
+  long int isigma1,
+  long int isigma2,
   double dtmp_V,
   struct BindStruct *X
 )
 {
-  long unsigned int is1_spin;
-  long unsigned int is2_spin;
-  long unsigned int is1_up;
-  long unsigned int is2_up;
+  long int is1_spin;
+  long int is2_spin;
+  long int is1_up;
+  long int is2_up;
 
-  long unsigned int ibit1_spin;
-  long unsigned int ibit2_spin;
+  long int ibit1_spin;
+  long int ibit2_spin;
 
-  long unsigned int num1;
-  long unsigned int num2;
+  long int num1;
+  long int num2;
 
-  long unsigned int j;
-  long unsigned int i_max = X->Check.idim_max;
+  long int j;
+  long int i_max = X->Check.idim_max;
 
   /*
   Forse isite1 <= isite2
@@ -1648,11 +1648,11 @@ int SetDiagonalInterAll
       is2_spin = X->Def.Tpow[2 * isite2 - 2 + isigma2];
 
       num1 = 0;
-      ibit1_spin = (unsigned long int)myrank&is1_spin;
+      ibit1_spin = (long int)myrank&is1_spin;
       num1 += ibit1_spin / is1_spin;
 
       num2 = 0;
-      ibit2_spin = (unsigned long int)myrank&is2_spin;
+      ibit2_spin = (long int)myrank&is2_spin;
       num2 += ibit2_spin / is2_spin;
 
 #pragma omp parallel for default(none) shared(list_Diagonal) \
@@ -1667,8 +1667,8 @@ firstprivate(i_max, dtmp_V, num2, num1) private(ibit1_spin, j)
       if (X->Def.iFlgGeneralSpin == FALSE) {
         is1_up = X->Def.Tpow[isite1 - 1];
         is2_up = X->Def.Tpow[isite2 - 1];
-        num1 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is1_up, isigma1);
-        num2 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is2_up, isigma2);
+        num1 = X_SpinGC_CisAis((long int)myrank + 1, is1_up, isigma1);
+        num2 = X_SpinGC_CisAis((long int)myrank + 1, is2_up, isigma2);
 
 #pragma omp parallel for default(none) shared(list_Diagonal) \
 firstprivate(i_max, dtmp_V, is1_up, isigma1, X, num1, num2) private(j)
@@ -1677,9 +1677,9 @@ firstprivate(i_max, dtmp_V, is1_up, isigma1, X, num1, num2) private(j)
         }
       }/*if (X->Def.iFlgGeneralSpin == FALSE)*/
       else {//start:generalspin
-        num1 = BitCheckGeneral((unsigned long int)myrank, isite1, isigma1,
+        num1 = BitCheckGeneral((long int)myrank, isite1, isigma1,
           X->Def.SiteToBit, X->Def.Tpow);
-        num2 = BitCheckGeneral((unsigned long int)myrank, isite2, isigma2,
+        num2 = BitCheckGeneral((long int)myrank, isite2, isigma2,
           X->Def.SiteToBit, X->Def.Tpow);
         if (num1 != 0 && num2 != 0) {
 #pragma omp parallel for default(none) shared(list_Diagonal) \
@@ -1709,7 +1709,7 @@ firstprivate(i_max, dtmp_V, num1, X) private(j)
       is2_spin = X->Def.Tpow[2 * isite2 - 2 + isigma2];
 
       num2 = 0;
-      ibit2_spin = (unsigned long int)myrank&is2_spin;
+      ibit2_spin = (long int)myrank&is2_spin;
       num2 += ibit2_spin / is2_spin;
 
 #pragma omp parallel for default(none) shared(list_Diagonal) \
@@ -1730,7 +1730,7 @@ firstprivate(i_max, dtmp_V, is1_spin, num2) private(num1, ibit1_spin, j)
       is2_spin = X->Def.Tpow[2 * isite2 - 2 + isigma2];
 
       num2 = 0;
-      ibit2_spin = (unsigned long int)myrank&is2_spin;
+      ibit2_spin = (long int)myrank&is2_spin;
       num2 += ibit2_spin / is2_spin;
 
 #pragma omp parallel for default(none) shared(list_Diagonal, list_1) \
@@ -1748,17 +1748,17 @@ firstprivate(i_max, dtmp_V, is1_spin, num2) private(num1, ibit1_spin, j)
       if (X->Def.iFlgGeneralSpin == FALSE) {
         is1_up = X->Def.Tpow[isite1 - 1];
         is2_up = X->Def.Tpow[isite2 - 1];
-        num2 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is2_up, isigma2);
+        num2 = X_SpinGC_CisAis((long int)myrank + 1, is2_up, isigma2);
 
 #pragma omp parallel for default(none) shared(list_Diagonal) \
 firstprivate(i_max, dtmp_V, is1_up, isigma1, X, num2) private(j, num1)
         for (j = 1; j <= i_max; j++) {
-          num1 = X_SpinGC_CisAis(j, X, is1_up, isigma1);
+          num1 = X_SpinGC_CisAis(j, is1_up, isigma1);
           list_Diagonal[j] += num1 * num2*dtmp_V;
         }
       }/* if (X->Def.iFlgGeneralSpin == FALSE)*/
       else {//start:generalspin
-        num2 = BitCheckGeneral((unsigned long int)myrank, isite2, isigma2,
+        num2 = BitCheckGeneral((long int)myrank, isite2, isigma2,
           X->Def.SiteToBit, X->Def.Tpow);
         if (num2 != 0) {
 #pragma omp parallel for default(none) shared(list_Diagonal) \
@@ -1777,17 +1777,17 @@ firstprivate(i_max, dtmp_V, isite1, isigma1, X) private(j, num1)
       if (X->Def.iFlgGeneralSpin == FALSE) {
         is1_up = X->Def.Tpow[isite1 - 1];
         is2_up = X->Def.Tpow[isite2 - 1];
-        num2 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is2_up, isigma2);
+        num2 = X_SpinGC_CisAis((long int)myrank + 1, is2_up, isigma2);
 
 #pragma omp parallel for default(none) shared(list_Diagonal) \
 firstprivate(i_max, dtmp_V, is1_up, isigma1, X, num2) private(j, num1)
         for (j = 1; j <= i_max; j++) {
-          num1 = X_Spin_CisAis(j, X, is1_up, isigma1);
+          num1 = X_Spin_CisAis(j, is1_up, isigma1);
           list_Diagonal[j] += num1 * num2*dtmp_V;
         }
       }/* if (X->Def.iFlgGeneralSpin == FALSE)*/
       else /* if (X->Def.iFlgGeneralSpin == TRUE)*/ {
-        num2 = BitCheckGeneral((unsigned long int)myrank, isite2, isigma2, \
+        num2 = BitCheckGeneral((long int)myrank, isite2, isigma2, \
           X->Def.SiteToBit, X->Def.Tpow);
         if (num2 != 0) {
 #pragma omp parallel for default(none) shared(list_Diagonal, list_1) \
@@ -1851,8 +1851,8 @@ firstprivate(i_max, dtmp_V, isite1, isigma1, X) private(j, num1)
       is2_up = X->Def.Tpow[isite2 - 1];
 #pragma omp parallel for default(none) shared(list_Diagonal) firstprivate(i_max, dtmp_V, is1_up, is2_up, isigma1, isigma2, X) private(j, num1, num2)
       for (j = 1; j <= i_max; j++) {
-        num1 = X_Spin_CisAis(j, X, is1_up, isigma1);
-        num2 = X_Spin_CisAis(j, X, is2_up, isigma2);
+        num1 = X_Spin_CisAis(j, is1_up, isigma1);
+        num2 = X_Spin_CisAis(j, is2_up, isigma2);
         list_Diagonal[j] += num1 * num2*dtmp_V;
       }
     }
@@ -1875,8 +1875,8 @@ firstprivate(i_max, dtmp_V, isite1, isigma1, X) private(j, num1)
       is2_up = X->Def.Tpow[isite2 - 1];
 #pragma omp parallel for default(none) shared(list_Diagonal) firstprivate(i_max, dtmp_V, is1_up, is2_up, isigma1, isigma2, X) private(j, num1, num2)
       for (j = 1; j <= i_max; j++) {
-        num1 = X_SpinGC_CisAis(j, X, is1_up, isigma1);
-        num2 = X_SpinGC_CisAis(j, X, is2_up, isigma2);
+        num1 = X_SpinGC_CisAis(j, is1_up, isigma1);
+        num2 = X_SpinGC_CisAis(j, is2_up, isigma2);
         list_Diagonal[j] += num1 * num2*dtmp_V;
       }
     }
@@ -1914,15 +1914,15 @@ int diagonalcalc
 ) {
 
   FILE *fp;
-  long unsigned int i, j;
-  long unsigned int isite1, isite2;
-  long unsigned int spin;
+  long int i, j;
+  long int isite1, isite2;
+  long int spin;
   double tmp_V;
 
   /*[s] For InterAll*/
-  long unsigned int A_spin, B_spin;
+  long int A_spin, B_spin;
   /*[e] For InterAll*/
-  long unsigned int i_max = X->Check.idim_max;
+  long int i_max = X->Check.idim_max;
 
   fprintf(stdoutMPI, "%s", cProStartCalcDiag);
   TimeKeeper(X, cFileNameTimeKeep, cDiagonalCalcStart, "a");

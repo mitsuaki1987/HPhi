@@ -28,7 +28,7 @@ When both site1 and site2 are in the inter process region.
 */
 void GC_child_general_hopp_MPIdouble
 (
- unsigned long int itrans,//!<[in] Transfer ID
+ long int itrans,//!<[in] Transfer ID
  struct BindStruct *X,//!<[inout]
  int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
  std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -55,7 +55,7 @@ void X_GC_child_general_hopp_MPIdouble(
   std::complex<double> **tmp_v1 //!< [in] v0 = H v1
 ) {
   int mask1, mask2, state1, state2, origin, bitdiff, Fsgn;
-  unsigned long int idim_max_buf;
+  long int idim_max_buf;
   std::complex<double> trans;
 
   mask1 = (int)X->Def.Tpow[2 * org_isite1 + org_ispin1];
@@ -67,7 +67,7 @@ void X_GC_child_general_hopp_MPIdouble(
   state1 = origin & mask1;
   state2 = origin & mask2;
 
-  SgnBit((unsigned long int) (origin & bitdiff), &Fsgn); // Fermion sign
+  SgnBit((long int) (origin & bitdiff), &Fsgn); // Fermion sign
 
   if (state1 == 0 && state2 == mask2) {
     trans = -(double)Fsgn * tmp_trans;
@@ -100,7 +100,7 @@ void X_child_CisAjt_MPIdouble(
   std::complex<double> **tmp_v1//!< [in] v0 = H v1
 ) {
   int mask1, mask2, state1, state2, origin, bitdiff, Fsgn;
-  unsigned long int idim_max_buf, j, ioff;
+  long int idim_max_buf, j, ioff;
   std::complex<double> trans;
   int one = 1;
 
@@ -113,7 +113,7 @@ void X_child_CisAjt_MPIdouble(
   state1 = origin & mask1;
   state2 = origin & mask2;
 
-  SgnBit((unsigned long int) (origin & bitdiff), &Fsgn); // Fermion sign
+  SgnBit((long int) (origin & bitdiff), &Fsgn); // Fermion sign
 
   if (state1 == 0 && state2 == mask2) {
     trans = -(double) Fsgn * tmp_trans;
@@ -145,7 +145,7 @@ void X_child_CisAjt_MPIdouble(
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void GC_child_general_hopp_MPIsingle(
-  unsigned long int itrans,//!<[in] Transfer ID
+  long int itrans,//!<[in] Transfer ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -172,7 +172,7 @@ void X_GC_child_general_hopp_MPIsingle(
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ) {
   int mask2, state1, state2, origin, bit2diff, Fsgn;
-  unsigned long int idim_max_buf, j, mask1, state1check, bit1diff, ioff;
+  long int idim_max_buf, j, mask1, state1check, bit1diff, ioff;
   std::complex<double> trans, dmv;
   int one = 1;
   /*
@@ -183,7 +183,7 @@ void X_GC_child_general_hopp_MPIsingle(
   origin = myrank ^ mask2;
   state2 = origin & mask2;
 
-  SgnBit((unsigned long int) (origin & bit2diff), &Fsgn); // Fermion sign
+  SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
 
   idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
 
@@ -234,7 +234,7 @@ void X_GC_child_general_hopp_MPIsingle(
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void child_general_hopp_MPIdouble(
-  unsigned long int itrans,//!<[in] Transfer ID
+  long int itrans,//!<[in] Transfer ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -260,7 +260,7 @@ void X_child_general_hopp_MPIdouble(
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ) {
   int mask1, mask2, state1, state2, origin, bitdiff, Fsgn;
-  unsigned long int idim_max_buf, j, ioff;
+  long int idim_max_buf, j, ioff;
   std::complex<double> trans;
   int one = 1;
 
@@ -274,7 +274,7 @@ void X_child_general_hopp_MPIdouble(
   state1 = origin & mask1;
   state2 = origin & mask2;
 
-  SgnBit((unsigned long int) (origin & bitdiff), &Fsgn); // Fermion sign
+  SgnBit((long int) (origin & bitdiff), &Fsgn); // Fermion sign
 
   if (state1 == 0 && state2 == mask2) {
     trans = -(double) Fsgn * tmp_trans;
@@ -307,7 +307,7 @@ void X_child_general_hopp_MPIdouble(
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void child_general_hopp_MPIsingle(
-  unsigned long int itrans,//!<[in] Transfer ID
+  long int itrans,//!<[in] Transfer ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -333,7 +333,7 @@ void X_child_general_hopp_MPIsingle(
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ) {
   int mask2, state2, origin, bit2diff, Fsgn;
-  unsigned long int mask1, state1, idim_max_buf, j, state1check, bit1diff, ioff, jreal;
+  long int mask1, state1, idim_max_buf, j, state1check, bit1diff, ioff, jreal;
   std::complex<double> trans, dmv;
   int one = 1;
   /*
@@ -345,7 +345,7 @@ void X_child_general_hopp_MPIsingle(
 
   state2 = origin & mask2;
 
-  SgnBit((unsigned long int) (origin & bit2diff), &Fsgn); // Fermion sign
+  SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
 
   idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
   SendRecv_iv(origin, X->Check.idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
@@ -407,7 +407,7 @@ void X_child_CisAjt_MPIsingle(
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   int mask2, state2, origin, bit2diff, Fsgn;
-  unsigned long int mask1, state1, idim_max_buf, j, state1check, bit1diff, ioff, jreal;
+  long int mask1, state1, idim_max_buf, j, state1check, bit1diff, ioff, jreal;
   std::complex<double> trans, dmv;
   int one = 1;
   /*
@@ -419,7 +419,7 @@ void X_child_CisAjt_MPIsingle(
 
   state2 = origin & mask2;
 
-  SgnBit((unsigned long int) (origin & bit2diff), &Fsgn); // Fermion sign
+  SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
 
   idim_max_buf = SendRecv_i(origin, X->Check.idim_maxOrg);
   SendRecv_iv(origin, X->Check.idim_maxOrg + 1, idim_max_buf + 1, list_1_org, list_1buf_org);

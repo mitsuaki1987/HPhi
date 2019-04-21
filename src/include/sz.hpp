@@ -17,79 +17,79 @@
 #include "Common.hpp"
 
 int child_omp_sz(
-                 long unsigned int ib, 
-                 long unsigned int ihfbit,
+                 long int ib, 
+                 long int ihfbit,
                  struct BindStruct *X,
-         long unsigned int *list_1_,
-         long unsigned int *list_2_1_,
-         long unsigned int *list_2_2_,
-         long unsigned int *list_jb_
+         long int *list_1_,
+         long int *list_2_1_,
+         long int *list_2_2_,
+         long int *list_jb_
                  );
 
 int child_omp_sz_hacker(
-                 long unsigned int ib, 
-                 long unsigned int ihfbit,
+                 long int ib, 
+                 long int ihfbit,
                  struct BindStruct *X,
-         long unsigned int *list_1_,
-         long unsigned int *list_2_1_,
-         long unsigned int *list_2_2_,
-         long unsigned int *list_jb_
+         long int *list_1_,
+         long int *list_2_1_,
+         long int *list_2_2_,
+         long int *list_jb_
                  );
 
 int child_omp_sz_Kondo(
-                      long unsigned int ib, 
-                      long unsigned int ihfbit,
+                      long int ib, 
+                      long int ihfbit,
                       struct BindStruct *X,
-              long unsigned int *list_1_,
-              long unsigned int *list_2_1_,
-              long unsigned int *list_2_2_,
-              long unsigned int *list_jb_              
+              long int *list_1_,
+              long int *list_2_1_,
+              long int *list_2_2_,
+              long int *list_jb_              
                       );
 
 int child_omp_sz_KondoGC(
-                      long unsigned int ib, 
-                      long unsigned int ihfbit,
+                      long int ib, 
+                      long int ihfbit,
                       struct BindStruct *X,
-              long unsigned int *list_1_,
-              long unsigned int *list_2_1_,
-              long unsigned int *list_2_2_,
-              long unsigned int *list_jb_
+              long int *list_1_,
+              long int *list_2_1_,
+              long int *list_2_2_,
+              long int *list_jb_
                          );
 
 int child_omp_sz_spin(
-                      long unsigned int ib, 
-                      long unsigned int ihfbit,
-                      unsigned int N, 
+                      long int ib, 
+                      long int ihfbit,
+                      int N, 
                       struct BindStruct *X,
-              long unsigned int *list_1_,
-              long unsigned int *list_2_1_,
-              long unsigned int *list_2_2_,
-              long unsigned int *list_jb_
+              long int *list_1_,
+              long int *list_2_1_,
+              long int *list_2_2_,
+              long int *list_jb_
                       );
 
 int child_omp_sz_spin_hacker(
-                      long unsigned int ib, 
-                      long unsigned int ihfbit,
-                      unsigned int N, 
+                      long int ib, 
+                      long int ihfbit,
+                      int N, 
                       struct BindStruct *X,
-              long unsigned int *list_1_,
-              long unsigned int *list_2_1_,
-              long unsigned int *list_2_2_,
-              long unsigned int *list_jb_      
+              long int *list_1_,
+              long int *list_2_1_,
+              long int *list_2_2_,
+              long int *list_jb_      
                       );
 
 
 
 int child_omp_sz_GeneralSpin(
-              long unsigned int ib, 
-              long unsigned int ihfbit,
+              long int ib, 
+              long int ihfbit,
               struct BindStruct *X,
-              long unsigned int *list_1_,
-              long unsigned int *list_2_1_,
-              long unsigned int *list_2_2_,
+              long int *list_1_,
+              long int *list_2_1_,
+              long int *list_2_2_,
               long int *list_2_1_Sz_,
               long int *list_2_2_Sz_,
-              long unsigned int *list_jb_
+              long int *list_jb_
               );
 
 long int Binomial(
@@ -101,16 +101,16 @@ long int Binomial(
 
 int sz(
        struct BindStruct *X,
-       long unsigned int *list_1_,
-       long unsigned int *list_2_1_,
-       long unsigned int *list_2_2_
+       long int *list_1_,
+       long int *list_2_1_,
+       long int *list_2_2_
        );
 
 int Read_sz
 (
  struct BindStruct *X,
- const long unsigned int irght,
- const long unsigned int ilft,
- const long unsigned int ihfbit,
- long unsigned int *i_max
+ const long int irght,
+ const long int ilft,
+ const long int ihfbit,
+ long int *i_max
  );

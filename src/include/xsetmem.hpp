@@ -15,36 +15,7 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #pragma once
 
-//static unsigned long int mfint[7];/*for malloc*/
-
-void setmem_HEAD
-(
- struct BindStruct *X
- );
-
-void setmem_def
-(
- struct BindStruct *X,
- struct BoostList *xBoost
-);
-
-int setmem_large
-(
- struct BindStruct *X
-);
-
-
-int GetlistSize
-        (
-         struct BindStruct *X
-        );
-
-
-void setmem_IntAll_Diagonal
-(
-        int **InterAllOffDiagonal,
-        std::complex<double> *ParaInterAllOffDiagonal,
-        int **InterAllDiagonal,
-        double *ParaInterAllDiagonal,
-        const int NInterAll
-);
+void setmem_HEAD(struct BindStruct *X);
+void setmem_def(struct BindStruct *X, struct BoostList *xBoost);
+int setmem_large( struct BindStruct *X);
+int GetlistSize(struct BindStruct *X);

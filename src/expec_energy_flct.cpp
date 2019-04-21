@@ -31,16 +31,16 @@ int expec_energy_flct_HubbardGC(
   int nstate,
   std::complex<double> **tmp_v0
 ) {
-  long unsigned int j;
-  long unsigned int isite1;
-  long unsigned int is1_up_a, is1_up_b;
-  long unsigned int is1_down_a, is1_down_b;
+  long int j;
+  long int isite1;
+  long int is1_up_a, is1_up_b;
+  long int is1_down_a, is1_down_b;
   int bit_up, bit_down, bit_D, istate, mythread;
-  long unsigned int ibit_up, ibit_down, ibit_D;
+  long int ibit_up, ibit_down, ibit_D;
   double D, N, Sz;
   double *tmp_v02;
-  long unsigned int i_max;
-  unsigned int l_ibit1, u_ibit1, i_32;
+  long int i_max;
+  int l_ibit1, u_ibit1, i_32;
   double **doublon_t, **doublon2_t, **num_t, **num2_t, **Sz_t, **Sz2_t;
 
   i_max = X->Check.idim_max;
@@ -88,13 +88,13 @@ private(j,tmp_v02,D,N,Sz,isite1,bit_up,bit_down,bit_D,u_ibit1,l_ibit1, \
       bit_down = 0;
       bit_D = 0;
       // isite1 > X->Def.Nsite
-      ibit_up = (unsigned long int) myrank & is1_up_a;
+      ibit_up = (long int) myrank & is1_up_a;
       u_ibit1 = ibit_up >> 32;
       l_ibit1 = ibit_up & i_32;
       bit_up += pop(u_ibit1);
       bit_up += pop(l_ibit1);
 
-      ibit_down = (unsigned long int) myrank & is1_down_a;
+      ibit_down = (long int) myrank & is1_down_a;
       u_ibit1 = ibit_down >> 32;
       l_ibit1 = ibit_down & i_32;
       bit_down += pop(u_ibit1);
@@ -107,13 +107,13 @@ private(j,tmp_v02,D,N,Sz,isite1,bit_up,bit_down,bit_D,u_ibit1,l_ibit1, \
       bit_D += pop(l_ibit1);
 
       // isite1 <= X->Def.Nsite
-      ibit_up = (unsigned long int) (j - 1) & is1_up_b;
+      ibit_up = (long int) (j - 1) & is1_up_b;
       u_ibit1 = ibit_up >> 32;
       l_ibit1 = ibit_up & i_32;
       bit_up += pop(u_ibit1);
       bit_up += pop(l_ibit1);
 
-      ibit_down = (unsigned long int) (j - 1) & is1_down_b;
+      ibit_down = (long int) (j - 1) & is1_down_b;
       u_ibit1 = ibit_down >> 32;
       l_ibit1 = ibit_down & i_32;
       bit_down += pop(u_ibit1);
@@ -189,17 +189,17 @@ int expec_energy_flct_Hubbard(
   int nstate,
   std::complex<double> **tmp_v0
 ) {
-  long unsigned int j;
-  long unsigned int isite1;
-  long unsigned int is1_up_a, is1_up_b;
-  long unsigned int is1_down_a, is1_down_b;
+  long int j;
+  long int isite1;
+  long int is1_up_a, is1_up_b;
+  long int is1_down_a, is1_down_b;
   int bit_up, bit_down, bit_D, istate, mythread;
-  long unsigned int ibit_up, ibit_down, ibit_D;
+  long int ibit_up, ibit_down, ibit_D;
   double **doublon_t, **doublon2_t, **num_t, **num2_t, **Sz_t, **Sz2_t;
   double D, N, Sz;
   double *tmp_v02;
-  long unsigned int i_max, tmp_list_1;
-  unsigned int l_ibit1, u_ibit1, i_32;
+  long int i_max, tmp_list_1;
+  int l_ibit1, u_ibit1, i_32;
 
   i_max = X->Check.idim_max;
 
@@ -209,7 +209,7 @@ int expec_energy_flct_Hubbard(
   num2_t = d_2d_allocate(nthreads, nstate);
   Sz_t = d_2d_allocate(nthreads, nstate);
   Sz2_t = d_2d_allocate(nthreads, nstate);
-  i_32 = (unsigned int)(pow(2, 32) - 1);
+  i_32 = (int)(pow(2, 32) - 1);
 
   //[s] for bit count
   is1_up_a = 0;
@@ -248,13 +248,13 @@ private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
       bit_D = 0;
       tmp_list_1 = list_1[j];
       // isite1 > X->Def.Nsite
-      ibit_up = (unsigned long int) myrank & is1_up_a;
+      ibit_up = (long int) myrank & is1_up_a;
       u_ibit1 = ibit_up >> 32;
       l_ibit1 = ibit_up & i_32;
       bit_up += pop(u_ibit1);
       bit_up += pop(l_ibit1);
 
-      ibit_down = (unsigned long int) myrank & is1_down_a;
+      ibit_down = (long int) myrank & is1_down_a;
       u_ibit1 = ibit_down >> 32;
       l_ibit1 = ibit_down & i_32;
       bit_down += pop(u_ibit1);
@@ -267,13 +267,13 @@ private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
       bit_D += pop(l_ibit1);
 
       // isite1 <= X->Def.Nsite
-      ibit_up = (unsigned long int) tmp_list_1 & is1_up_b;
+      ibit_up = (long int) tmp_list_1 & is1_up_b;
       u_ibit1 = ibit_up >> 32;
       l_ibit1 = ibit_up & i_32;
       bit_up += pop(u_ibit1);
       bit_up += pop(l_ibit1);
 
-      ibit_down = (unsigned long int) tmp_list_1 & is1_down_b;
+      ibit_down = (long int) tmp_list_1 & is1_down_b;
       u_ibit1 = ibit_down >> 32;
       l_ibit1 = ibit_down & i_32;
       bit_down += pop(u_ibit1);
@@ -349,15 +349,15 @@ int expec_energy_flct_HalfSpinGC(
   int nstate,
   std::complex<double> **tmp_v0
 ) {
-  long unsigned int j;
-  long unsigned int isite1;
-  long unsigned int is1_up_a, is1_up_b;
+  long int j;
+  long int isite1;
+  long int is1_up_a, is1_up_b;
 
-  long unsigned int ibit1;
+  long int ibit1;
   double Sz;
   double *tmp_v02;
-  long unsigned int i_max;
-  unsigned int l_ibit1, u_ibit1, i_32;
+  long int i_max;
+  int l_ibit1, u_ibit1, i_32;
   int istate, mythread;
   double **Sz_t, **Sz2_t;
 
@@ -396,13 +396,13 @@ private(j,Sz,ibit1,isite1,tmp_v02,u_ibit1,l_ibit1,mythread,istate)
       Sz = 0.0;
 
       // isite1 > X->Def.Nsite
-      ibit1 = (unsigned long int) myrank & is1_up_a;
+      ibit1 = (long int) myrank & is1_up_a;
       u_ibit1 = ibit1 >> 32;
       l_ibit1 = ibit1 & i_32;
       Sz += pop(u_ibit1);
       Sz += pop(l_ibit1);
       // isite1 <= X->Def.Nsite
-      ibit1 = (unsigned long int) (j - 1)&is1_up_b;
+      ibit1 = (long int) (j - 1)&is1_up_b;
       u_ibit1 = ibit1 >> 32;
       l_ibit1 = ibit1 & i_32;
       Sz += pop(u_ibit1);
@@ -452,12 +452,12 @@ int expec_energy_flct_GeneralSpinGC(
   int nstate,
   std::complex<double> **tmp_v0
 ) {
-  long unsigned int j;
-  long unsigned int isite1;
+  long int j;
+  long int isite1;
   int istate, mythread;
   double Sz;
   double *tmp_v02;
-  long unsigned int i_max;
+  long int i_max;
   double **Sz_t, **Sz2_t;
 
   Sz_t = d_2d_allocate(nthreads, nstate);
@@ -531,15 +531,15 @@ int expec_energy_flct_HalfSpin(
   int nstate,
   std::complex<double> **tmp_v0
 ) {
-  long unsigned int j;
-  long unsigned int isite1;
-  long unsigned int is1_up_a, is1_up_b;
+  long int j;
+  long int isite1;
+  long int is1_up_a, is1_up_b;
 
-  long unsigned int ibit1;
+  long int ibit1;
   double Sz;
   double *tmp_v02;
-  long unsigned int i_max, tmp_list_1;
-  unsigned int l_ibit1, u_ibit1, i_32;
+  long int i_max, tmp_list_1;
+  int l_ibit1, u_ibit1, i_32;
   int istate, mythread;
   double **Sz_t, **Sz2_t;
 
@@ -578,13 +578,13 @@ private(j,Sz,ibit1,isite1,tmp_v02,u_ibit1,l_ibit1, tmp_list_1,mythread,istate)
       tmp_list_1 = list_1[j];
 
       // isite1 > X->Def.Nsite
-      ibit1 = (unsigned long int) myrank & is1_up_a;
+      ibit1 = (long int) myrank & is1_up_a;
       u_ibit1 = ibit1 >> 32;
       l_ibit1 = ibit1 & i_32;
       Sz += pop(u_ibit1);
       Sz += pop(l_ibit1);
       // isite1 <= X->Def.Nsite
-      ibit1 = (unsigned long int) tmp_list_1 &is1_up_b;
+      ibit1 = (long int) tmp_list_1 &is1_up_b;
       u_ibit1 = ibit1 >> 32;
       l_ibit1 = ibit1 & i_32;
       Sz += pop(u_ibit1);
@@ -634,12 +634,12 @@ int expec_energy_flct_GeneralSpin(
   int nstate,
   std::complex<double> **tmp_v0
 ) {
-  long unsigned int j;
-  long unsigned int isite1;
+  long int j;
+  long int isite1;
   int istate, mythread;
   double Sz;
   double *tmp_v02;
-  long unsigned int i_max, tmp_list1;
+  long int i_max, tmp_list1;
   double **Sz_t, **Sz2_t;
 
   Sz_t = d_2d_allocate(nthreads, nstate);
@@ -720,9 +720,9 @@ int expec_energy_flct(
   std::complex<double> **tmp_v1
 ) {
 
-  long unsigned int i, j;
-  long unsigned int irght, ilft, ihfbit;
-  long unsigned int i_max;
+  long int i, j;
+  long int irght, ilft, ihfbit;
+  long int i_max;
   int istate;
 
   switch (X->Def.iCalcType) {

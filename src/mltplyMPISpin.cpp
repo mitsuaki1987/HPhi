@@ -30,7 +30,7 @@
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void child_general_int_spin_MPIdouble(
-  unsigned long int i_int,//!<[in] Interaction ID
+  long int i_int,//!<[in] Interaction ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -59,7 +59,7 @@ void X_child_general_int_spin_MPIdouble(
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
   int mask1, mask2, state1, state2, origin;
-  unsigned long int idim_max_buf, j, ioff;
+  long int idim_max_buf, j, ioff;
   std::complex<double> Jint;
   int one = 1;
 
@@ -106,7 +106,7 @@ void X_child_general_int_spin_TotalS_MPIdouble(
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ){
   int mask1, mask2, num1_up, num2_up, origin, one = 1;
-  unsigned long int idim_max_buf, j, ioff, ibit_tmp;
+  long int idim_max_buf, j, ioff, ibit_tmp;
   std::complex<double> dmv;
 
   mask1 = (int)X->Def.Tpow[org_isite1];
@@ -139,7 +139,7 @@ void X_child_general_int_spin_TotalS_MPIdouble(
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void child_general_int_spin_MPIsingle(
-  unsigned long int i_int,//!<[in] Interaction ID
+  long int i_int,//!<[in] Interaction ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -168,7 +168,7 @@ void X_child_general_int_spin_MPIsingle(
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
   int mask2, state2, origin;
-  unsigned long int mask1, idim_max_buf, j, ioff, state1, jreal, state1check;
+  long int mask1, idim_max_buf, j, ioff, state1, jreal, state1check;
   std::complex<double> Jint;
   int one = 1;
   /*
@@ -179,11 +179,11 @@ void X_child_general_int_spin_MPIsingle(
   state2 = (origin & mask2) / mask2;
 
   if (state2 == org_ispin4) {
-    state1check = (unsigned long int) org_ispin2;
+    state1check = (long int) org_ispin2;
     Jint = tmp_J;
   }
   else if (state2 == org_ispin3) {
-    state1check = (unsigned long int) org_ispin1;
+    state1check = (long int) org_ispin1;
     Jint = conj(tmp_J);
     if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) {
       Jint = 0;
@@ -220,7 +220,7 @@ shared(list_2_1, list_2_2, list_1buf, v1buf, tmp_v1, tmp_v0,nstate,one)
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void GC_child_general_int_spin_MPIdouble(
-  unsigned long int i_int,//!<[in] Interaction ID
+  long int i_int,//!<[in] Interaction ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -243,7 +243,7 @@ void GC_child_general_int_spin_MPIdouble(
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void GC_child_general_int_spin_MPIsingle(
-  unsigned long int i_int,//!<[in] Interaction ID
+  long int i_int,//!<[in] Interaction ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -266,7 +266,7 @@ void GC_child_general_int_spin_MPIsingle(
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void GC_child_general_int_GeneralSpin_MPIdouble(
-  unsigned long int i_int,//!<[in] Interaction ID
+  long int i_int,//!<[in] Interaction ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -300,7 +300,7 @@ void GC_child_general_int_GeneralSpin_MPIdouble(
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void GC_child_general_int_GeneralSpin_MPIsingle(
-  unsigned long int i_int,//!<[in] Interaction ID
+  long int i_int,//!<[in] Interaction ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -335,7 +335,7 @@ void GC_child_general_int_GeneralSpin_MPIsingle(
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void child_general_int_GeneralSpin_MPIdouble(
-  unsigned long int i_int,//!<[in] Interaction ID
+  long int i_int,//!<[in] Interaction ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -353,7 +353,7 @@ void child_general_int_GeneralSpin_MPIdouble(
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void child_general_int_GeneralSpin_MPIsingle(
-  unsigned long int i_int,//!<[in] Interaction ID
+  long int i_int,//!<[in] Interaction ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1

@@ -145,7 +145,7 @@ static void read_W90(
           dtmp[1] = 0.0;
         }
         if (iWan0 <= StdI->NsiteUC && jWan0 <= StdI->NsiteUC)
-          Mat_tot[iWSC][iWan0 - 1][jWan0 - 1] = (dtmp[0], dtmp[1]);
+          Mat_tot[iWSC][iWan0 - 1][jWan0 - 1] = std::complex<double>(dtmp[0], dtmp[1]);
       }
     }
     /**@brief
@@ -277,7 +277,7 @@ static std::complex<double>***** read_density_matrix(
           &iWan0, &jWan0,
           &dtmp[0], &dtmp[1]);
         if (iWan0 <= StdI->NsiteUC && jWan0 <= StdI->NsiteUC)
-          Mat_tot[iWSC][iWan0 - 1][jWan0 - 1] = (dtmp[0], dtmp[1]);
+          Mat_tot[iWSC][iWan0 - 1][jWan0 - 1] = std::complex<double>(dtmp[0], dtmp[1]);
         for (ii = 0; ii < 3; ii++) {
           if (indx_tot[iWSC][ii] < Rmin[ii]) Rmin[ii] = indx_tot[iWSC][ii];
           if (indx_tot[iWSC][ii] > Rmax[ii]) Rmax[ii] = indx_tot[iWSC][ii];
@@ -333,7 +333,6 @@ static std::complex<double>***** read_density_matrix(
 static void PrintUHFinitial(
   struct StdIntList *StdI,
   int *NtUJ,
-  std::complex<double> **tUJ,
   std::complex<double> *****DenMat,
   int ***tUJindx
 ) {
@@ -757,7 +756,7 @@ void StdFace_Wannier90(
   }/*for (kCell = 0; kCell < StdI->NCell; kCell++)*/
 
   fclose(fp);
-  PrintUHFinitial(StdI, NtUJ, tUJ, DenMat, tUJindx);
+  PrintUHFinitial(StdI, NtUJ, DenMat, tUJindx);
   StdFace_PrintXSF(StdI);
   StdFace_PrintGeometry(StdI);
 

@@ -26,16 +26,16 @@ int CheckPE
 
 int CheckBit_Cis
 (
- long unsigned int is1_spin,
- long unsigned int orgbit,
- long unsigned int *offbit
+ long int is1_spin,
+ long int orgbit,
+ long int *offbit
  );
 
 int CheckBit_Ajt
 (
- long unsigned int is1_spin,
- long unsigned int orgbit,
- long unsigned int *offbit
+ long int is1_spin,
+ long int orgbit,
+ long int *offbit
  );
 
 int CheckBit_InterAllPE
@@ -49,8 +49,8 @@ int CheckBit_InterAllPE
  int isite4,
  int isigma4,
  struct BindStruct *X,
- unsigned long int orgbit,
- unsigned long int *offbit
+ long int orgbit,
+ long int *offbit
  );
 
 int CheckBit_PairPE
@@ -60,19 +60,19 @@ int CheckBit_PairPE
  int isite3,
  int isigma3,
  struct BindStruct *X,
- unsigned long int orgbit
+ long int orgbit
  );
 
 int GetSgnInterAll
 (
- unsigned long int isite1,
- unsigned long int isite2,
- unsigned long int isite3,
- unsigned long int isite4,
+ long int isite1,
+ long int isite2,
+ long int isite3,
+ long int isite4,
  int *Fsgn,
  struct BindStruct *X,
- unsigned long int orgbit,
- unsigned long int *offbit
+ long int orgbit,
+ long int *offbit
  );
 
 void X_GC_child_CisAisCjtAjt_Hubbard_MPI
@@ -252,8 +252,8 @@ void X_GC_Cis_MPI
  std::complex<double> tmp_trans,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- unsigned long int idim_max,
- unsigned long int *Tpow
+ long int idim_max,
+ long int *Tpow
  );
 
 void X_GC_Ajt_MPI
@@ -264,34 +264,34 @@ void X_GC_Ajt_MPI
  int nstate, 
   std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- unsigned long int idim_max,
- long unsigned int *Tpow
+ long int idim_max,
+ long int *Tpow
  );
 
 void X_Cis_MPI
 (
  int org_isite,
- unsigned int org_ispin,
+ int org_ispin,
  std::complex<double> tmp_trans,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- unsigned long int idim_max,
- long unsigned int *Tpow,
- long unsigned int _irght,
- long unsigned int _ilft,
- long unsigned int _ihfbit
+ long int idim_max,
+ long int *Tpow,
+ long int _irght,
+ long int _ilft,
+ long int _ihfbit
  );
 
 void X_Ajt_MPI
 (
  int org_isite,
- unsigned int org_ispin,
+ int org_ispin,
  std::complex<double> tmp_trans,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- unsigned long int idim_max,
- long unsigned int *Tpow,
- long unsigned int _irght,
- long unsigned int _ilft,
- long unsigned int _ihfbit
+ long int idim_max,
+ long int *Tpow,
+ long int _irght,
+ long int _ilft,
+ long int _ihfbit
  );

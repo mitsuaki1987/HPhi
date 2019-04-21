@@ -166,7 +166,7 @@ void X_child_CisAit_GeneralSpin_MPIdouble
  struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- unsigned long int idim_max
+ long int idim_max
  );
 
 
@@ -325,7 +325,7 @@ void X_child_CisAit_spin_MPIdouble
  int nstate, 
  std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/, 
  std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
- unsigned long int idim_max
+ long int idim_max
  );
 
 void X_child_CisAisCjuAju_GeneralSpin_MPIdouble
@@ -383,7 +383,7 @@ void X_child_CisAitCjuAjv_GeneralSpin_MPIsingle
 
 void GC_child_CisAisCjuAjv_spin_MPIdouble
 (
- unsigned long int i_int /**< [in] Interaction ID*/,
+ long int i_int /**< [in] Interaction ID*/,
  struct BindStruct *X /**< [inout]*/,
  int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
  std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
@@ -391,7 +391,7 @@ void GC_child_CisAisCjuAjv_spin_MPIdouble
 
 void GC_child_CisAitCjuAju_spin_MPIdouble
 (
- unsigned long int i_int /**< [in] Interaction ID*/,
+ long int i_int /**< [in] Interaction ID*/,
  struct BindStruct *X /**< [inout]*/,
  int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
  std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
@@ -399,7 +399,7 @@ void GC_child_CisAitCjuAju_spin_MPIdouble
 
 void GC_child_CisAitCiuAiv_spin_MPIdouble
 (
- unsigned long int i_int /**< [in] Interaction ID*/,
+ long int i_int /**< [in] Interaction ID*/,
  struct BindStruct *X /**< [inout]*/,
  int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
  std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
@@ -407,7 +407,7 @@ void GC_child_CisAitCiuAiv_spin_MPIdouble
 
 void GC_child_CisAisCjuAjv_spin_MPIsingle
 (
- unsigned long int i_int /**< [in] Interaction ID*/,
+ long int i_int /**< [in] Interaction ID*/,
  struct BindStruct *X /**< [inout]*/,
  int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
  std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
@@ -415,7 +415,7 @@ void GC_child_CisAisCjuAjv_spin_MPIsingle
 
 void GC_child_CisAitCjuAju_spin_MPIsingle
 (
- unsigned long int i_int /**< [in] Interaction ID*/,
+ long int i_int /**< [in] Interaction ID*/,
  struct BindStruct *X /**< [inout]*/,
  int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
  std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
@@ -423,7 +423,7 @@ void GC_child_CisAitCjuAju_spin_MPIsingle
 
 void GC_child_CisAitCiuAiv_spin_MPIsingle
 (
- unsigned long int i_int /**< [in] Interaction ID*/,
+ long int i_int /**< [in] Interaction ID*/,
  struct BindStruct *X /**< [inout]*/,
  int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
  std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/

@@ -55,14 +55,14 @@
  */
 int mltply(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1) {
   int one = 1;
-  long unsigned int j=0;
-  long unsigned int irght=0;
-  long unsigned int ilft=0;
-  long unsigned int ihfbit=0;
+  long int j=0;
+  long int irght=0;
+  long int ilft=0;
+  long int ihfbit=0;
   std::complex<double> dmv;
 
 
-  long unsigned int i_max;
+  long int i_max;
 
   StartTimer(1);
   i_max = X->Check.idim_max;
@@ -126,12 +126,12 @@ int mltply(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::
 @brief Wrapper of zaxpy.
 */
 void zaxpy_long(
-  unsigned long int n, 
+  long int n, 
   std::complex<double> a, 
   std::complex<double> *x, 
   std::complex<double> *y
 ) {
-  unsigned long int i;
+  long int i;
 
 #pragma omp parallel for default(none) private(i) shared(n, a, x, y)
   for (i = 0; i < n; i++) 
@@ -141,10 +141,10 @@ void zaxpy_long(
 @brief clear std::complex<double> array.
 */
 void zclear(
-  unsigned long int n,
+  long int n,
   std::complex<double> *x
 ) {
-  unsigned long int i;
+  long int i;
 
 #pragma omp parallel for default(none) private(i) shared(n, x)
   for (i = 0; i < n; i++) 

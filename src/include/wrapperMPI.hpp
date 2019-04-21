@@ -28,22 +28,22 @@ void exitMPI(int errorcode);
 FILE* fopenMPI(const char* FileName, const char* mode);
 char* fgetsMPI(char* InputString, int maxcount,FILE* fp);
 void BarrierMPI();
-unsigned long int MaxMPI_li(unsigned long int idim);
+long int MaxMPI_li(long int idim);
 double MaxMPI_d(double dvalue);
 std::complex<double> SumMPI_dc(std::complex<double> norm);
 double SumMPI_d(double norm);
 void SumMPI_dv(int nnorm, double *norm);
 void SumMPI_cv(int nnorm, std::complex<double> *norm);
-unsigned long int SumMPI_li(unsigned long int idim);
+long int SumMPI_li(long int idim);
 int SumMPI_i(int idim);
-unsigned long int BcastMPI_li(int root, unsigned long int idim);
-double NormMPI_dc(unsigned long int idim, std::complex<double> *_v1);
-void NormMPI_dv(unsigned long int ndim, int nstate, std::complex<double> **_v1, double *dnorm);
-std::complex<double> VecProdMPI(long unsigned int ndim, std::complex<double> *v1, std::complex<double> *v2);
-void MultiVecProdMPI(long unsigned int ndim, int nstate, std::complex<double> **v1, std::complex<double> **v2, std::complex<double> *prod);
-void SendRecv_cv(int origin, unsigned long int nMsgS, unsigned long int nMsgR,
+long int BcastMPI_li(int root, long int idim);
+double NormMPI_dc(long int idim, std::complex<double> *_v1);
+void NormMPI_dv(long int ndim, int nstate, std::complex<double> **_v1, double *dnorm);
+std::complex<double> VecProdMPI(long int ndim, std::complex<double> *v1, std::complex<double> *v2);
+void MultiVecProdMPI(long int ndim, int nstate, std::complex<double> **v1, std::complex<double> **v2, std::complex<double> *prod);
+void SendRecv_cv(int origin, long int nMsgS, long int nMsgR,
   std::complex<double> *vecs, std::complex<double> *vecr);
-void SendRecv_iv(int origin, unsigned long int nMsgS, unsigned long int nMsgR,
-  unsigned long int *vecs, unsigned long int *vecr);
-unsigned long int SendRecv_i(int origin, unsigned long int isend);
+void SendRecv_iv(int origin, long int nMsgS, long int nMsgR,
+  long int *vecs, long int *vecr);
+long int SendRecv_i(int origin, long int isend);
 #endif

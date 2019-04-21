@@ -53,11 +53,11 @@ int expec_cisajs_HubbardGC(
   std::complex<double> **vec, 
   std::complex<double> **prod
 ){
-  long unsigned int i;
-  long unsigned int org_isite1, org_isite2, org_sigma1, org_sigma2;
-  long unsigned int i_max;
-  long unsigned int ibit;
-  long unsigned int is;
+  long int i;
+  long int org_isite1, org_isite2, org_sigma1, org_sigma2;
+  long int i_max;
+  long int ibit;
+  long int is;
   std::complex<double> tmp_OneGreen = 1.0;
   int complex_conj, istate;
 
@@ -79,7 +79,7 @@ int expec_cisajs_HubbardGC(
         else {
           is = X->Def.Tpow[2 * org_isite1 - 1];
         }
-        ibit = (unsigned long int)myrank & is;
+        ibit = (long int)myrank & is;
         if (ibit == is) {
           zaxpy_long(i_max*nstate, tmp_OneGreen, &vec[1][0], &Xvec[1][0]);
         }
@@ -129,12 +129,12 @@ int expec_cisajs_Hubbard(
   std::complex<double> **vec, 
   std::complex<double> **prod
 ) {
-  long unsigned int i, j;
-  long unsigned int org_isite1, org_isite2, org_sigma1, org_sigma2;
-  long unsigned int i_max;
+  long int i, j;
+  long int org_isite1, org_isite2, org_sigma1, org_sigma2;
+  long int i_max;
   int num1, one = 1, complex_conj, istate;
-  long unsigned int ibit;
-  long unsigned int is;
+  long int ibit;
+  long int is;
   std::complex<double> tmp_OneGreen = 1.0, dmv;
 
   i_max = X->Check.idim_max;
@@ -167,7 +167,7 @@ int expec_cisajs_Hubbard(
       org_isite2 > X->Def.Nsite) {
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {//diagonal
         is = X->Def.Tpow[2 * org_isite1 - 2 + org_sigma1];
-        ibit = (unsigned long int)myrank & is;
+        ibit = (long int)myrank & is;
         if (ibit == is) {
           zaxpy_long(i_max*nstate, tmp_OneGreen, &vec[1][0], &Xvec[1][0]);
         }
@@ -230,13 +230,13 @@ int expec_cisajs_SpinHalf(
   std::complex<double> **vec, 
   std::complex<double> **prod
 ) {
-  long unsigned int i, j;
-  long unsigned int isite1;
-  long unsigned int org_isite1, org_isite2, org_sigma1, org_sigma2;
+  long int i, j;
+  long int isite1;
+  long int org_isite1, org_isite2, org_sigma1, org_sigma2;
   std::complex<double> dmv;
-  long unsigned int i_max;
+  long int i_max;
   long int ibit1;
-  long unsigned int is1_up;
+  long int is1_up;
   int one = 1;
 
   i_max = X->Check.idim_max;
@@ -252,7 +252,7 @@ int expec_cisajs_SpinHalf(
       if (org_isite1 == org_isite2) {
         if (org_isite1 > X->Def.Nsite) {
           is1_up = X->Def.Tpow[org_isite1 - 1];
-          ibit1 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is1_up, org_sigma1);
+          ibit1 = X_SpinGC_CisAis((long int)myrank + 1, is1_up, org_sigma1);
           if (ibit1 != 0) {
             zaxpy_long(i_max*nstate, 1.0, &vec[1][0], &Xvec[1][0]);
           }
@@ -262,7 +262,7 @@ int expec_cisajs_SpinHalf(
 #pragma omp parallel for default(none) private(j,dmv)  \
   firstprivate(i_max, isite1, org_sigma1, X) shared(vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
-            dmv = X_Spin_CisAis(j, X, isite1, org_sigma1);
+            dmv = X_Spin_CisAis(j, isite1, org_sigma1);
             zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
           }
         }
@@ -288,10 +288,10 @@ int expec_cisajs_SpinGeneral(
   std::complex<double> **vec, 
   std::complex<double> **prod
 ) {
-  long unsigned int i, j;
-  long unsigned int org_isite1, org_isite2, org_sigma1, org_sigma2;
+  long int i, j;
+  long int org_isite1, org_isite2, org_sigma1, org_sigma2;
   std::complex<double> dmv;
-  long unsigned int i_max;
+  long int i_max;
   int num1, one = 1;
   i_max = X->Check.idim_max;
 
@@ -306,7 +306,7 @@ int expec_cisajs_SpinGeneral(
       if (org_isite1 > X->Def.Nsite) {
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
-          num1 = BitCheckGeneral((unsigned long int)myrank,
+          num1 = BitCheckGeneral((long int)myrank,
                                            org_isite1, org_sigma1, X->Def.SiteToBit, X->Def.Tpow);
           if (num1 != 0) {
             zaxpy_long(i_max*nstate, 1.0, &vec[1][0], &Xvec[1][0]);
@@ -345,13 +345,13 @@ int expec_cisajs_SpinGCHalf(
   std::complex<double> **vec, 
     std::complex<double> **prod
 ) {
-  long unsigned int i, j;
-  long unsigned int isite1;
-  long unsigned int org_isite1, org_isite2, org_sigma1, org_sigma2;
+  long int i, j;
+  long int isite1;
+  long int org_isite1, org_isite2, org_sigma1, org_sigma2;
   std::complex<double> dmv;
-  long unsigned int i_max;
+  long int i_max;
   int tmp_sgn, one = 1;
-  long unsigned int tmp_off = 0;
+  long int tmp_off = 0;
 
   i_max = X->Check.idim_max;
 
@@ -379,7 +379,7 @@ int expec_cisajs_SpinGCHalf(
 #pragma omp parallel for default(none) private(j, tmp_sgn,dmv) \
   firstprivate(i_max, isite1, org_sigma1, X) shared(vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
-            dmv = X_SpinGC_CisAis(j, X, isite1, org_sigma1);
+            dmv = X_SpinGC_CisAis(j, isite1, org_sigma1);
             zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
           }
         }
@@ -388,7 +388,7 @@ int expec_cisajs_SpinGCHalf(
 #pragma omp parallel for default(none) private(j, tmp_sgn, tmp_off,dmv) \
   firstprivate(i_max, isite1, org_sigma2, X) shared(vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
-            tmp_sgn = X_SpinGC_CisAit(j, X, isite1, org_sigma2, &tmp_off);
+            tmp_sgn = X_SpinGC_CisAit(j, isite1, org_sigma2, &tmp_off);
             if (tmp_sgn != 0) {
               dmv = (std::complex<double>)tmp_sgn;
               zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[tmp_off + 1][0], &one);
@@ -417,11 +417,11 @@ int expec_cisajs_SpinGCGeneral(
   std::complex<double> **vec,
   std::complex<double> **prod
 ) {
-  long unsigned int i, j;
-  long unsigned int org_isite1, org_isite2, org_sigma1, org_sigma2;
+  long int i, j;
+  long int org_isite1, org_isite2, org_sigma1, org_sigma2;
   std::complex<double> dmv;
-  long unsigned int i_max;
-  long unsigned int tmp_off = 0;
+  long int i_max;
+  long int tmp_off = 0;
   int num1, one = 1;
 
   i_max = X->Check.idim_max;
@@ -550,8 +550,8 @@ int expec_cisajs(
   FILE *fp;
   char sdt[D_FileNameMax];
   std::complex<double> **prod;
-  long unsigned int irght, ilft, ihfbit, ica;
-  long unsigned int i_max;
+  long int irght, ilft, ihfbit, ica;
+  long int i_max;
   //For TPQ
   int step = 0, rand_i = 0, istate;
 

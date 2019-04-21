@@ -37,13 +37,13 @@
  */
 
 int child_omp_sz_Kondo_hacker(
-        long unsigned int ib,
-        long unsigned int ihfbit,
+        long int ib,
+        long int ihfbit,
         struct BindStruct *X,
-        long unsigned int *list_1_,
-        long unsigned int *list_2_1_,
-        long unsigned int *list_2_2_,
-        long unsigned int *list_jb_
+        long int *list_1_,
+        long int *list_2_1_,
+        long int *list_2_2_,
+        long int *list_jb_
 );
 
 /** 
@@ -62,40 +62,40 @@ int child_omp_sz_Kondo_hacker(
 int sz
 (
  struct BindStruct *X,
- long unsigned int *list_1_,
- long unsigned int *list_2_1_,
- long unsigned int *list_2_2_
+ long int *list_1_,
+ long int *list_2_1_,
+ long int *list_2_2_
  )
 {
   FILE *fp,*fp_err;
   char sdt[D_FileNameMax],sdt_err[D_FileNameMax];
-  long unsigned int *HilbertNumToSz;
-  long unsigned int i,icnt; 
-  long unsigned int ib,jb;
+  long int *HilbertNumToSz;
+  long int i,icnt; 
+  long int ib,jb;
     
-  long unsigned int j;
-  long unsigned int div;
-  long unsigned int num_up,num_down;
-  long unsigned int irght,ilft,ihfbit;
+  long int j;
+  long int div;
+  long int num_up,num_down;
+  long int irght,ilft,ihfbit;
 
   //*[s] for omp parall
-  unsigned int  all_up,all_down,tmp_res,num_threads;
-  long unsigned int tmp_1,tmp_2,tmp_3;
+  int  all_up,all_down,tmp_res,num_threads;
+  long int tmp_1,tmp_2,tmp_3;
   long int **comb;
   //*[e] for omp parall
 
   // [s] for Kondo
-  unsigned int N_all_up, N_all_down;
-  unsigned int all_loc;
-  long unsigned int num_loc, div_down;
-  unsigned int num_loc_up;
+  int N_all_up, N_all_down;
+  int all_loc;
+  long int num_loc, div_down;
+  int num_loc_up;
   int icheck_loc;
   int ihfSpinDown=0;
   // [e] for Kondo
     
-  long unsigned int i_max=0;
+  long int i_max=0;
   double idim=0.0;
-  long unsigned int div_up;
+  long int div_up;
 
   // [s] for general spin
   long int *list_2_1_Sz;
@@ -112,22 +112,22 @@ int sz
   }
   // [e] for general spin
 
-  long unsigned int *list_jb;
-  list_jb = lui_1d_allocate(X->Large.SizeOflistjb);
-  for(i=0; i<X->Large.SizeOflistjb; i++){
-    list_jb[i]=0;
+  long int *list_jb;
+  list_jb = li_1d_allocate(X->Large.SizeOflistjb);
+  for (i = 0; i < X->Large.SizeOflistjb; i++) {
+    list_jb[i] = 0;
   }
 
 //hacker
   int hacker;
-  long unsigned int tmp_i,tmp_j,tmp_pow,max_tmp_i;
-  long unsigned int ia,ja;
-  long unsigned int ibpatn=0;
+  long int tmp_i,tmp_j,tmp_pow,max_tmp_i;
+  long int ia,ja;
+  long int ibpatn=0;
 //hacker
 
   int iSpnup, iMinup,iAllup;
-  unsigned int N2=0;
-  unsigned int N=0;
+  int N2=0;
+  int N=0;
   fprintf(stdoutMPI, "%s", cProStartCalcSz);
   TimeKeeper(X, cFileNameSzTimeKeep, cInitalSz, "w");
   TimeKeeper(X, cFileNameTimeKeep, cInitalSz, "a");
@@ -652,9 +652,9 @@ int sz
           return -1;
         }
       }else{
-        unsigned int Max2Sz=0;
-        unsigned int irghtsite=1;
-        long unsigned int itmpSize=1;
+        int Max2Sz=0;
+        int irghtsite=1;
+        long int itmpSize=1;
         int i2Sz=0;
         for(j=0; j<X->Def.Nsite; j++){
           itmpSize *= X->Def.SiteToBit[j];
@@ -667,7 +667,7 @@ int sz
           Max2Sz += X->Def.LocSpn[j];
         }
 
-        HilbertNumToSz = lui_1d_allocate(2*Max2Sz+1);
+        HilbertNumToSz = li_1d_allocate(2*Max2Sz+1);
         for(ib=0; ib<2*Max2Sz+1; ib++){
           HilbertNumToSz[ib]=0;
         }
@@ -681,7 +681,7 @@ int sz
           HilbertNumToSz[i2Sz+Max2Sz]++;
         }
         jb = 0;
-        long unsigned int ilftdim=(X->Def.Tpow[X->Def.Nsite-1]*X->Def.SiteToBit[X->Def.Nsite-1])/ihfbit;
+        long int ilftdim=(X->Def.Tpow[X->Def.Nsite-1]*X->Def.SiteToBit[X->Def.Nsite-1])/ihfbit;
         for(ib=0;ib<ilftdim;ib++){
           list_jb[ib]=jb;
           i2Sz=0;
@@ -703,7 +703,7 @@ int sz
           icnt+=child_omp_sz_GeneralSpin(ib,ihfbit,X, list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb);
         }
 
-        free_lui_1d_allocate(HilbertNumToSz);
+        free_li_1d_allocate(HilbertNumToSz);
       }
       
       break;
@@ -728,12 +728,12 @@ int sz
   //i_max=i_max+1;
   if(i_max!=X->Check.idim_max){
     fprintf(stderr, "%s", cErrSz);
-    fprintf(stderr, cErrSz_ShowDim, i_max, X->Check.idim_max);
+    fprintf(stderr, "imax = %ld, Check.idim_max=%ld \n", i_max, X->Check.idim_max);
     strcpy(sdt_err,cFileNameErrorSz);
     if(childfopenMPI(sdt_err,"a",&fp_err)!=0){
       exitMPI(-1);
     }
-    fprintf(fp_err, "%s",cErrSz_OutFile);
+    fprintf(fp_err, "%s","Caution!!  Error in sz !!!! idim_max is not correct \n");
     fclose(fp_err);
     exitMPI(-1);
   }
@@ -814,20 +814,20 @@ long int Binomial(int n,int k,long int **comb,int Nsite){
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
 int child_omp_sz(
-                 long unsigned int ib,    //!<[in]
-                 long unsigned int ihfbit, //!<[in]
+                 long int ib,    //!<[in]
+                 long int ihfbit, //!<[in]
                  struct BindStruct *X,     //!<[in]
-                 long unsigned int *list_1_, //!<[out]
-                 long unsigned int *list_2_1_,//!<[out]
-                 long unsigned int *list_2_2_,//!<[out]
-                 long unsigned int *list_jb_ //!<[in]
+                 long int *list_1_, //!<[out]
+                 long int *list_2_1_,//!<[out]
+                 long int *list_2_2_,//!<[out]
+                 long int *list_jb_ //!<[in]
                  )
 {
-  long unsigned int i,j; 
-  long unsigned int ia,ja,jb;
-  long unsigned int div_down, div_up;
-  long unsigned int num_up,num_down;
-  long unsigned int tmp_num_up,tmp_num_down;
+  long int i,j; 
+  long int ia,ja,jb;
+  long int div_down, div_up;
+  long int num_up,num_down;
+  long int tmp_num_up,tmp_num_down;
     
   jb = list_jb_[ib];
   i  = ib*ihfbit;
@@ -909,20 +909,20 @@ int child_omp_sz(
  * @return 
  * @author Takahiro Misawa (The University of Tokyo)
  */
-int child_omp_sz_hacker(long unsigned int ib,
-                        long unsigned int ihfbit,
+int child_omp_sz_hacker(long int ib,
+                        long int ihfbit,
                         struct BindStruct *X,
-                        long unsigned int *list_1_,
-                        long unsigned int *list_2_1_,
-                        long unsigned int *list_2_2_,
-                        long unsigned int *list_jb_
+                        long int *list_1_,
+                        long int *list_2_1_,
+                        long int *list_2_2_,
+                        long int *list_jb_
                         )
 {
-  long unsigned int i,j; 
-  long unsigned int ia,ja,jb;
-  long unsigned int div_down, div_up;
-  long unsigned int num_up,num_down;
-  long unsigned int tmp_num_up,tmp_num_down;
+  long int i,j; 
+  long int ia,ja,jb;
+  long int div_down, div_up;
+  long int num_up,num_down;
+  long int tmp_num_up,tmp_num_down;
     
   jb = list_jb_[ib];
   i  = ib*ihfbit;
@@ -1027,20 +1027,20 @@ int child_omp_sz_hacker(long unsigned int ib,
  * @author Takahiro Misawa (The University of Tokyo)
  */
 int child_omp_sz_Kondo(
-                       long unsigned int ib,        //[in]
-                       long unsigned int ihfbit,    //[in]
+                       long int ib,        //[in]
+                       long int ihfbit,    //[in]
                        struct BindStruct *X,        //[in]
-                       long unsigned int *list_1_,  //[out]
-                       long unsigned int *list_2_1_,//[out]
-                       long unsigned int *list_2_2_,//[out]
-                       long unsigned int *list_jb_  //[in]
+                       long int *list_1_,  //[out]
+                       long int *list_2_1_,//[out]
+                       long int *list_2_2_,//[out]
+                       long int *list_jb_  //[in]
                        )
 {
-  long unsigned int i,j; 
-  long unsigned int ia,ja,jb;
-  long unsigned int div_down, div_up;
-  long unsigned int num_up,num_down;
-  long unsigned int tmp_num_up,tmp_num_down;
+  long int i,j; 
+  long int ia,ja,jb;
+  long int div_down, div_up;
+  long int num_up,num_down;
+  long int tmp_num_up,tmp_num_down;
   int icheck_loc;
     
   jb = list_jb_[ib];
@@ -1139,20 +1139,20 @@ int child_omp_sz_Kondo(
  * @author Takahiro Misawa (The University of Tokyo)
  */
 int child_omp_sz_Kondo_hacker(
-                       long unsigned int ib,
-                       long unsigned int ihfbit,
+                       long int ib,
+                       long int ihfbit,
                        struct BindStruct *X,
-                       long unsigned int *list_1_,
-                       long unsigned int *list_2_1_,
-                       long unsigned int *list_2_2_,
-                       long unsigned int *list_jb_
+                       long int *list_1_,
+                       long int *list_2_1_,
+                       long int *list_2_2_,
+                       long int *list_jb_
                        )
 {
-  long unsigned int i,j; 
-  long unsigned int ia,ja,jb;
-  long unsigned int div_down, div_up;
-  long unsigned int num_up,num_down;
-  long unsigned int tmp_num_up,tmp_num_down;
+  long int i,j; 
+  long int ia,ja,jb;
+  long int div_down, div_up;
+  long int num_up,num_down;
+  long int tmp_num_up,tmp_num_down;
   int icheck_loc;
     
   jb = list_jb_[ib];
@@ -1259,18 +1259,18 @@ int child_omp_sz_Kondo_hacker(
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
 int child_omp_sz_KondoGC(
-                         long unsigned int ib,  //!<[in]
-                         long unsigned int ihfbit,//!<[in]
+                         long int ib,  //!<[in]
+                         long int ihfbit,//!<[in]
                          struct BindStruct *X,    //!<[in]
-                         long unsigned int *list_1_, //!<[out]
-                         long unsigned int *list_2_1_,//!<[out]
-                         long unsigned int *list_2_2_,//!<[out]
-                         long unsigned int *list_jb_//!<[in]
+                         long int *list_1_, //!<[out]
+                         long int *list_2_1_,//!<[out]
+                         long int *list_2_2_,//!<[out]
+                         long int *list_jb_//!<[in]
                          )
 {
-  long unsigned int i,j; 
-  long unsigned int ia,ja,jb;
-  long unsigned int div_down, div_up;
+  long int i,j; 
+  long int ia,ja,jb;
+  long int div_down, div_up;
   int icheck_loc;
     
   jb = list_jb_[ib];
@@ -1348,20 +1348,20 @@ int child_omp_sz_KondoGC(
  * @author Takahiro Misawa (The University of Tokyo)
  */
 int child_omp_sz_spin(
-                      long unsigned int ib, 
-                      long unsigned int ihfbit,
-                      unsigned int N,
+                      long int ib, 
+                      long int ihfbit,
+                      int N,
                       struct BindStruct *X,
-                      long unsigned int *list_1_,
-                      long unsigned int *list_2_1_,
-                      long unsigned int *list_2_2_,
-                      long unsigned int *list_jb_
+                      long int *list_1_,
+                      long int *list_2_1_,
+                      long int *list_2_2_,
+                      long int *list_jb_
                       )
 {
-  long unsigned int i,j,div; 
-  long unsigned int ia,ja,jb;
-  long unsigned int num_up;
-  unsigned int tmp_num_up;
+  long int i,j,div; 
+  long int ia,ja,jb;
+  long int num_up;
+  int tmp_num_up;
   
   jb = list_jb_[ib];
   i  = ib*ihfbit;
@@ -1412,20 +1412,20 @@ int child_omp_sz_spin(
  * @author Takahiro Misawa (The University of Tokyo)
  */
 int child_omp_sz_spin_hacker(
-                             long unsigned int ib, 
-                             long unsigned int ihfbit,
-                             unsigned int N,
+                             long int ib, 
+                             long int ihfbit,
+                             int N,
                              struct BindStruct *X,
-                             long unsigned int *list_1_,
-                             long unsigned int *list_2_1_,
-                             long unsigned int *list_2_2_,
-                             long unsigned int *list_jb_
+                             long int *list_1_,
+                             long int *list_2_1_,
+                             long int *list_2_2_,
+                             long int *list_jb_
                              )
 {
-  long unsigned int i,j,div; 
-  long unsigned int ia,ja,jb;
-  long unsigned int num_up;
-  unsigned int tmp_num_up;
+  long int i,j,div; 
+  long int ia,ja,jb;
+  long int num_up;
+  int tmp_num_up;
   
   jb = list_jb_[ib];
   i  = ib*ihfbit;
@@ -1481,18 +1481,18 @@ int child_omp_sz_spin_hacker(
  * @author Takahiro Misawa (The University of Tokyo)
  */
 int child_omp_sz_GeneralSpin(
-                             long unsigned int ib, 
-                             long unsigned int ihfbit,
+                             long int ib, 
+                             long int ihfbit,
                              struct BindStruct *X,
-                             long unsigned int *list_1_,
-                             long unsigned int *list_2_1_,
-                             long unsigned int *list_2_2_,
+                             long int *list_1_,
+                             long int *list_2_1_,
+                             long int *list_2_2_,
                              long int *list_2_1_Sz_,
                              long int *list_2_2_Sz_,
-                             long unsigned int *list_jb_
+                             long int *list_jb_
                              )
 {
-  long unsigned int ia,ja,jb;  
+  long int ia,ja,jb;  
   int list_2_2_Sz_ib=0;
   int tmp_2Sz=0;
   jb = list_jb_[ib];
@@ -1527,22 +1527,22 @@ int child_omp_sz_GeneralSpin(
 int Read_sz
 (
  struct BindStruct *X,
- const long unsigned int irght,
- const long unsigned int ilft,
- const long unsigned int ihfbit,
- long unsigned int *i_max
+ const long int irght,
+ const long int ilft,
+ const long int ihfbit,
+ long int *i_max
  )
 {
   FILE *fp,*fp_err;
   char sdt[D_FileNameMax];
   char buf[D_FileNameMax];
     
-  long unsigned int icnt=0; 
-  long unsigned int ia,ib;
-  long unsigned int ja=0;
-  long unsigned int jb=0;
-  long unsigned int ibpatn=0;
-  long unsigned int dam; 
+  long int icnt=0; 
+  long int ia,ib;
+  long int ja=0;
+  long int jb=0;
+  long int ibpatn=0;
+  long int dam; 
 
   TimeKeeper(X,cFileNameSzTimeKeep,cReadSzStart, "a");
   TimeKeeper(X,cFileNameTimeKeep,cReadSzStart, "a");

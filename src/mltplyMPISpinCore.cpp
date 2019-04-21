@@ -74,7 +74,7 @@ General two body term:
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void GC_child_CisAitCiuAiv_spin_MPIdouble(
-  unsigned long int i_int /**< [in] Interaction ID*/,
+  long int i_int /**< [in] Interaction ID*/,
   struct BindStruct *X /**< [inout]*/,
   int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
   std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/)
@@ -105,7 +105,7 @@ void X_GC_child_CisAitCiuAiv_spin_MPIdouble(
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
   int mask1, mask2, state1, state2, origin;
-  unsigned long int idim_max_buf;
+  long int idim_max_buf;
   std::complex<double> Jint;
 
   mask1 = (int)X->Def.Tpow[org_isite1];
@@ -150,7 +150,7 @@ void X_GC_child_CisAitCiuAiv_spin_MPIdouble(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void GC_child_CisAisCjuAjv_spin_MPIdouble(
-  unsigned long int i_int /**< [in] Interaction ID*/,
+  long int i_int /**< [in] Interaction ID*/,
   struct BindStruct *X /**< [inout]*/,
   int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
   std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
@@ -178,7 +178,7 @@ void X_GC_child_CisAisCjuAjv_spin_MPIdouble(
 ) {
   int mask1, mask2, state2;
   long int origin, num1;
-  unsigned long int idim_max_buf;
+  long int idim_max_buf;
   std::complex<double> Jint;
 
   if (org_isite1 == org_isite3 && org_ispin1 == org_ispin4) {//CisAisCitAis
@@ -189,11 +189,11 @@ void X_GC_child_CisAisCjuAjv_spin_MPIdouble(
   mask2 = (int)X->Def.Tpow[org_isite3];
   origin = myrank ^ mask2;
   state2 = (origin & mask2) / mask2;
-  num1 = X_SpinGC_CisAis((unsigned long int) myrank + 1, X, mask1, org_ispin1);
+  num1 = X_SpinGC_CisAis((long int) myrank + 1, mask1, org_ispin1);
   if (num1 != 0 && state2 == org_ispin4) {
     Jint = tmp_J;
   }
-  else if (X_SpinGC_CisAis(origin + 1, X, mask1, org_ispin1) == TRUE && state2 == org_ispin3) {
+  else if (X_SpinGC_CisAis(origin + 1, mask1, org_ispin1) == TRUE && state2 == org_ispin3) {
     Jint = conj(tmp_J);
     if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) Jint = 0;
   }
@@ -212,7 +212,7 @@ void X_GC_child_CisAisCjuAjv_spin_MPIdouble(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void GC_child_CisAitCjuAju_spin_MPIdouble(
-  unsigned long int i_int,//!<[in] Interaction ID
+  long int i_int,//!<[in] Interaction ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -241,7 +241,7 @@ void X_GC_child_CisAitCjuAju_spin_MPIdouble(
 ) {
   int mask1, mask2, state1, num1;
   long int origin;
-  unsigned long int idim_max_buf;
+  long int idim_max_buf;
   std::complex<double> Jint;
 
   if (org_isite1 == org_isite3 && org_ispin1 == org_ispin3) {//cisaitcisais
@@ -252,7 +252,7 @@ void X_GC_child_CisAitCjuAju_spin_MPIdouble(
   origin = myrank ^ mask1;
   state1 = (origin & mask1) / mask1;
   mask2 = (int)X->Def.Tpow[org_isite3];
-  num1 = X_SpinGC_CisAis(origin + 1, X, mask2, org_ispin3);
+  num1 = X_SpinGC_CisAis(origin + 1, mask2, org_ispin3);
   if (state1 == org_ispin2) {
     if (num1 != 0) {
       Jint = tmp_J;
@@ -262,7 +262,7 @@ void X_GC_child_CisAitCjuAju_spin_MPIdouble(
     }
   }/*if (state1 == org_ispin2)*/
   else {//state1 = org_ispin1
-    num1 = X_SpinGC_CisAis((unsigned long int) myrank + 1, X, mask2, org_ispin3);
+    num1 = X_SpinGC_CisAis((long int) myrank + 1, mask2, org_ispin3);
     if (num1 != 0) {
       Jint = conj(tmp_J);
       if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) {
@@ -294,14 +294,14 @@ void X_GC_child_CisAisCjuAju_spin_MPIdouble(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ){
-  long unsigned int mask1, mask2, num1,num2;
-  unsigned long int  j;
+  long int mask1, mask2, num1,num2;
+  long int  j;
   std::complex<double> dmv;
   int one = 1;
   mask1 = (int)X->Def.Tpow[org_isite1];
   mask2 = (int)X->Def.Tpow[org_isite3];
-  num1 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, mask1, org_ispin1);
-  num2 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, mask2, org_ispin3);
+  num1 = X_SpinGC_CisAis((long int)myrank + 1, mask1, org_ispin1);
+  num2 = X_SpinGC_CisAis((long int)myrank + 1, mask2, org_ispin3);
   
 #pragma omp parallel default(none)  private(j, dmv) \
   firstprivate(tmp_J, X, num1, num2) shared(tmp_v1, tmp_v0,nstate,one)
@@ -328,21 +328,21 @@ void X_GC_child_CisAisCjuAju_spin_MPIsingle(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
-  long unsigned int mask1, mask2, num1, num2;
-  unsigned long int j;
+  long int mask1, mask2, num1, num2;
+  long int j;
   std::complex<double> Jint, dmv;
   int one = 1;
   Jint = tmp_J;
   mask1 = (int)X->Def.Tpow[org_isite1];
   mask2 = (int)X->Def.Tpow[org_isite3];
-  num2 = X_SpinGC_CisAis((unsigned long int) myrank + 1, X, mask2, org_ispin3);
+  num2 = X_SpinGC_CisAis((long int) myrank + 1, mask2, org_ispin3);
 
 #pragma omp parallel default(none)  private(j, dmv, num1) \
   firstprivate(Jint, X, num2, mask1, org_ispin1) shared(tmp_v1, tmp_v0,nstate,one)
   {
 #pragma omp for
     for (j = 1; j <= X->Check.idim_max; j++) {
-      num1 = X_SpinGC_CisAis(j, X, mask1, org_ispin1);
+      num1 = X_SpinGC_CisAis(j, mask1, org_ispin1);
       dmv = Jint * (std::complex<double>)(num1 * num2);
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
     }/*for (j = 1; j <= X->Check.idim_max; j++)*/
@@ -354,7 +354,7 @@ void X_GC_child_CisAisCjuAju_spin_MPIsingle(
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void GC_child_CisAitCiuAiv_spin_MPIsingle(
-  unsigned long int i_int,//!<[in] Interaction ID
+  long int i_int,//!<[in] Interaction ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -383,7 +383,7 @@ void X_GC_child_CisAitCiuAiv_spin_MPIsingle(
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
   int mask2, state2, origin;
-  unsigned long int mask1, idim_max_buf, j, ioff, state1, state1check;
+  long int mask1, idim_max_buf, j, ioff, state1, state1check;
   std::complex<double> Jint;
   int one = 1;
   /*
@@ -394,11 +394,11 @@ void X_GC_child_CisAitCiuAiv_spin_MPIsingle(
   state2 = (origin & mask2) / mask2;
 
   if (state2 == org_ispin4) {
-    state1check = (unsigned long int) org_ispin2;
+    state1check = (long int) org_ispin2;
     Jint = tmp_J;
   }
   else if (state2 == org_ispin3) {
-    state1check = (unsigned long int) org_ispin1;
+    state1check = (long int) org_ispin1;
     Jint = conj(tmp_J);
     if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) {
       Jint = 0;
@@ -419,7 +419,7 @@ void X_GC_child_CisAitCiuAiv_spin_MPIsingle(
   {
 #pragma omp for
     for (j = 0; j < idim_max_buf; j++) {
-      state1 = X_SpinGC_CisAit(j + 1, X, mask1, state1check, &ioff);
+      state1 = X_SpinGC_CisAit(j + 1, mask1, state1check, &ioff);
       if (state1 != 0) {
         zaxpy_(&nstate, &Jint, &v1buf[j + 1][0], &one, &tmp_v0[ioff + 1][0], &one);
       }/*if (state1 != 0)*/
@@ -432,7 +432,7 @@ void X_GC_child_CisAitCiuAiv_spin_MPIsingle(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void GC_child_CisAisCjuAjv_spin_MPIsingle(
-  unsigned long int i_int,//!<[in] Interaction ID
+  long int i_int,//!<[in] Interaction ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -459,7 +459,7 @@ void X_GC_child_CisAisCjuAjv_spin_MPIsingle(
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
   int mask2, state2, origin;
-  unsigned long int mask1, idim_max_buf, j, state1, state1check;
+  long int mask1, idim_max_buf, j, state1, state1check;
   std::complex<double> Jint;
   int one = 1;
   /*
@@ -469,11 +469,11 @@ void X_GC_child_CisAisCjuAjv_spin_MPIsingle(
   origin = myrank ^ mask2;
   state2 = (origin & mask2) / mask2;
   if (state2 == org_ispin4) {
-    state1check = (unsigned long int) org_ispin1;
+    state1check = (long int) org_ispin1;
     Jint = tmp_J;
   }
   else if (state2 == org_ispin3) {
-    state1check = (unsigned long int) org_ispin1;
+    state1check = (long int) org_ispin1;
     Jint = conj(tmp_J);
     if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) {
       Jint = 0;
@@ -507,7 +507,7 @@ void X_GC_child_CisAisCjuAjv_spin_MPIsingle(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void GC_child_CisAitCjuAju_spin_MPIsingle(
-  unsigned long int i_int,//!<[in] Interaction ID
+  long int i_int,//!<[in] Interaction ID
   struct BindStruct *X,//!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -533,7 +533,7 @@ void X_GC_child_CisAitCjuAju_spin_MPIsingle(
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
   int mask2, state2;
-  unsigned long int mask1, j, ioff, state1, state1check;
+  long int mask1, j, ioff, state1, state1check;
   std::complex<double> Jint, dmv;
   int one = 1;
   /*
@@ -585,7 +585,7 @@ void X_GC_child_CisAisCjuAjv_GeneralSpin_MPIdouble(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
-  unsigned long int off;
+  long int off;
   int origin;
   std::complex<double> tmp_V;
   if (org_isite1 == org_isite3 && org_ispin1 == org_ispin4) {//cisaisciuais=0 && cisaiucisais=0
@@ -593,14 +593,14 @@ void X_GC_child_CisAisCjuAjv_GeneralSpin_MPIdouble(
   }
 
   if (BitCheckGeneral(myrank, org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow) == TRUE
-    && GetOffCompGeneralSpin((unsigned long int) myrank, org_isite3 + 1, org_ispin3, org_ispin4,
+    && GetOffCompGeneralSpin((long int) myrank, org_isite3 + 1, org_ispin3, org_ispin4,
       &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
     tmp_V = tmp_J;
   else {
-    if (GetOffCompGeneralSpin((unsigned long int) myrank, org_isite3 + 1, org_ispin4, org_ispin3,
+    if (GetOffCompGeneralSpin((long int) myrank, org_isite3 + 1, org_ispin4, org_ispin3,
       &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
     {
-      if (BitCheckGeneral((unsigned long int)off, org_isite1 + 1, org_ispin1, X->Def.SiteToBit,
+      if (BitCheckGeneral((long int)off, org_isite1 + 1, org_ispin1, X->Def.SiteToBit,
         X->Def.Tpow) == TRUE)
       {
         tmp_V = conj(tmp_J);
@@ -630,7 +630,7 @@ void X_GC_child_CisAitCjuAju_GeneralSpin_MPIdouble(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
-  unsigned long int off;
+  long int off;
   int origin;
   std::complex<double> tmp_V;
 
@@ -639,16 +639,16 @@ void X_GC_child_CisAitCjuAju_GeneralSpin_MPIdouble(
   }
 
   if (BitCheckGeneral(myrank, org_isite3 + 1, org_ispin3, X->Def.SiteToBit, X->Def.Tpow) == TRUE
-    && GetOffCompGeneralSpin((unsigned long int) myrank, org_isite1 + 1, org_ispin2, org_ispin1, &off,
+    && GetOffCompGeneralSpin((long int) myrank, org_isite1 + 1, org_ispin2, org_ispin1, &off,
       X->Def.SiteToBit, X->Def.Tpow) == TRUE)
   {
     tmp_V = conj(tmp_J);
     if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) tmp_V = 0.0;
   }
-  else if (GetOffCompGeneralSpin((unsigned long int) myrank, org_isite1 + 1, org_ispin1, org_ispin2,
+  else if (GetOffCompGeneralSpin((long int) myrank, org_isite1 + 1, org_ispin1, org_ispin2,
     &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
   {
-    if (BitCheckGeneral((unsigned long int)off, org_isite3 + 1, org_ispin3,
+    if (BitCheckGeneral((long int)off, org_isite3 + 1, org_ispin3,
       X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
       tmp_V = tmp_J;
     }
@@ -678,7 +678,7 @@ void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIdouble(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ) {
-  unsigned long int tmp_off, off;
+  long int tmp_off, off;
   int origin, ihermite;
   std::complex<double> tmp_V;
 
@@ -690,7 +690,7 @@ void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIdouble(
     return;
   }
   //cisaitcisait
-  if (GetOffCompGeneralSpin((unsigned long int) myrank, org_isite1 + 1, org_ispin1, org_ispin2,
+  if (GetOffCompGeneralSpin((long int) myrank, org_isite1 + 1, org_ispin1, org_ispin2,
     &tmp_off, X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
 
     if (GetOffCompGeneralSpin(tmp_off, org_isite3 + 1, org_ispin3, org_ispin4,
@@ -705,7 +705,7 @@ void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIdouble(
   }
 
   if (ihermite == FALSE) {
-    if (GetOffCompGeneralSpin((unsigned long int) myrank, org_isite3 + 1, org_ispin4, org_ispin3, &tmp_off,
+    if (GetOffCompGeneralSpin((long int) myrank, org_isite3 + 1, org_ispin4, org_ispin3, &tmp_off,
       X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
 
       if (GetOffCompGeneralSpin(tmp_off, org_isite1 + 1, org_ispin2, org_ispin1, &off, X->Def.SiteToBit,
@@ -738,13 +738,13 @@ void X_GC_child_CisAisCjuAju_GeneralSpin_MPIdouble(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ) {
-  unsigned long int num1;
+  long int num1;
   std::complex<double> tmp_V;
 
-  num1 = BitCheckGeneral((unsigned long int) myrank, org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
+  num1 = BitCheckGeneral((long int) myrank, org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
 
   if (num1 == TRUE) {
-    num1 = BitCheckGeneral((unsigned long int) myrank, org_isite3 + 1, org_ispin3, X->Def.SiteToBit, X->Def.Tpow);
+    num1 = BitCheckGeneral((long int) myrank, org_isite3 + 1, org_ispin3, X->Def.SiteToBit, X->Def.Tpow);
     if (num1 == TRUE) {
       tmp_V = tmp_J;
     }
@@ -767,15 +767,15 @@ void X_GC_child_CisAit_GeneralSpin_MPIdouble(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ) {
-  unsigned long int off;
+  long int off;
   int origin;
   std::complex<double> tmp_V;
 
-  if (GetOffCompGeneralSpin((unsigned long int) myrank, org_isite1 + 1, org_ispin1, org_ispin2,
+  if (GetOffCompGeneralSpin((long int) myrank, org_isite1 + 1, org_ispin1, org_ispin2,
     &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
     tmp_V = tmp_trans;
   }
-  else if (GetOffCompGeneralSpin((unsigned long int) myrank,
+  else if (GetOffCompGeneralSpin((long int) myrank,
     org_isite1 + 1, org_ispin2, org_ispin1, &off,
     X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
     tmp_V = conj(tmp_trans);
@@ -801,10 +801,10 @@ void X_GC_child_CisAis_GeneralSpin_MPIdouble(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ) {
-  unsigned long int num1;
+  long int num1;
   std::complex<double> tmp_V;
 
-  num1 = BitCheckGeneral((unsigned long int) myrank,
+  num1 = BitCheckGeneral((long int) myrank,
     org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
   if (num1 != 0) {
     tmp_V = tmp_trans;
@@ -825,10 +825,10 @@ void X_GC_child_AisCis_GeneralSpin_MPIdouble(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ) {
-  unsigned long int num1;
+  long int num1;
   std::complex<double> tmp_V;
 
-  num1 = BitCheckGeneral((unsigned long int) myrank,
+  num1 = BitCheckGeneral((long int) myrank,
     org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
   if (num1 == 0) {
     tmp_V = tmp_trans;
@@ -850,18 +850,18 @@ void X_child_CisAit_GeneralSpin_MPIdouble(
   int nstate, 
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Input wavefunction
-  unsigned long int idim_max//!<[in] Similar to CheckList::idim_max
+  long int idim_max//!<[in] Similar to CheckList::idim_max
 )
 {
-  unsigned long int off, j, tmp_off,idim_max_buf;
+  long int off, j, tmp_off,idim_max_buf;
   int origin, one = 1;
   std::complex<double> tmp_V;
   
-  if (GetOffCompGeneralSpin((unsigned long int) myrank, org_isite1 + 1, org_ispin1, org_ispin2,
+  if (GetOffCompGeneralSpin((long int) myrank, org_isite1 + 1, org_ispin1, org_ispin2,
                             &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
     tmp_V = tmp_trans;
   }
-  else if (GetOffCompGeneralSpin((unsigned long int) myrank,
+  else if (GetOffCompGeneralSpin((long int) myrank,
                                  org_isite1 + 1, org_ispin2, org_ispin1, &off,
                                  X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
     tmp_V = conj(tmp_trans);
@@ -898,11 +898,11 @@ void X_GC_child_CisAisCjuAjv_GeneralSpin_MPIsingle(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ){
-  unsigned long int off, j, num1;
+  long int off, j, num1;
   int origin, isite, IniSpin, one = 1;
   std::complex<double> tmp_V;
 
-  if (GetOffCompGeneralSpin((unsigned long int)myrank,
+  if (GetOffCompGeneralSpin((long int)myrank,
     org_isite3 + 1, org_ispin3, org_ispin4, &off,
     X->Def.SiteToBit, X->Def.Tpow) == TRUE)
   {
@@ -910,7 +910,7 @@ void X_GC_child_CisAisCjuAjv_GeneralSpin_MPIsingle(
     isite = org_isite1 + 1;
     IniSpin = org_ispin1;
   }
-  else if (GetOffCompGeneralSpin((unsigned long int)myrank,
+  else if (GetOffCompGeneralSpin((long int)myrank,
     org_isite3 + 1, org_ispin4, org_ispin3, &off,
     X->Def.SiteToBit, X->Def.Tpow) == TRUE)
   {
@@ -950,11 +950,11 @@ void X_GC_child_CisAitCjuAju_GeneralSpin_MPIsingle(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ){
-  unsigned long int num1, j, off;
+  long int num1, j, off;
   int isite, IniSpin, FinSpin, one = 1;
   std::complex<double> tmp_V, dmv;
 
-  num1 = BitCheckGeneral((unsigned long int)myrank, 
+  num1 = BitCheckGeneral((long int)myrank, 
     org_isite3+1, org_ispin3, X->Def.SiteToBit, X->Def.Tpow);
   if(num1 != 0){
     tmp_V = tmp_J;
@@ -1001,11 +1001,11 @@ void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIsingle(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ){
-  unsigned long int off, j;
+  long int off, j;
   int origin, isite, IniSpin, FinSpin, one = 1;
   std::complex<double> tmp_V;
 
-  if (GetOffCompGeneralSpin((unsigned long int)myrank,
+  if (GetOffCompGeneralSpin((long int)myrank,
     org_isite3 + 1, org_ispin3, org_ispin4, &off,
     X->Def.SiteToBit, X->Def.Tpow) == TRUE)
   {
@@ -1014,7 +1014,7 @@ void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIsingle(
     IniSpin = org_ispin2;
     FinSpin = org_ispin1;
   }
-  else if (GetOffCompGeneralSpin((unsigned long int)myrank,
+  else if (GetOffCompGeneralSpin((long int)myrank,
     org_isite3 + 1, org_ispin4, org_ispin3, &off,
     X->Def.SiteToBit, X->Def.Tpow) == TRUE)
   {
@@ -1058,11 +1058,11 @@ void X_GC_child_CisAisCjuAju_GeneralSpin_MPIsingle(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ){
-  unsigned long int j, num1;
+  long int j, num1;
   std::complex<double> tmp_V, dmv;
   int one = 1;
 
-  num1 = BitCheckGeneral((unsigned long int)myrank, org_isite3+1, org_ispin3, X->Def.SiteToBit, X->Def.Tpow);
+  num1 = BitCheckGeneral((long int)myrank, org_isite3+1, org_ispin3, X->Def.SiteToBit, X->Def.Tpow);
   if (num1 != FALSE) {
     tmp_V = tmp_J;
   }
@@ -1097,12 +1097,12 @@ void X_child_CisAitCjuAjv_GeneralSpin_MPIdouble(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ){
-  unsigned long int tmp_off, off, j, idim_max_buf;
+  long int tmp_off, off, j, idim_max_buf;
   int origin, one = 1;
   std::complex<double> tmp_V;
   int ihermite=TRUE;
 
-  if (GetOffCompGeneralSpin((unsigned long int)myrank, org_isite1 + 1, org_ispin1, org_ispin2, &tmp_off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+  if (GetOffCompGeneralSpin((long int)myrank, org_isite1 + 1, org_ispin1, org_ispin2, &tmp_off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
   {
     if (GetOffCompGeneralSpin(tmp_off, org_isite3 + 1, org_ispin3, org_ispin4, &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
     {
@@ -1117,7 +1117,7 @@ void X_child_CisAitCjuAjv_GeneralSpin_MPIdouble(
   }
   
   if (ihermite == FALSE) {
-    if (GetOffCompGeneralSpin((unsigned long int)myrank, org_isite3 + 1, org_ispin4, org_ispin3, &tmp_off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+    if (GetOffCompGeneralSpin((long int)myrank, org_isite3 + 1, org_ispin4, org_ispin3, &tmp_off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
     {
       if (GetOffCompGeneralSpin(tmp_off, org_isite1 + 1, org_ispin2, org_ispin1, &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
       {
@@ -1161,11 +1161,11 @@ void X_child_CisAisCjuAju_GeneralSpin_MPIdouble(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ) {
-  unsigned long int num1;
+  long int num1;
   std::complex<double> tmp_V;
 
   if (org_isite1 == org_isite3 && org_ispin1 == org_ispin3) {
-    num1 = BitCheckGeneral((unsigned long int) myrank, org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
+    num1 = BitCheckGeneral((long int) myrank, org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
     if (num1 != FALSE) {
       tmp_V = tmp_J;
     }
@@ -1174,9 +1174,9 @@ void X_child_CisAisCjuAju_GeneralSpin_MPIdouble(
     }
   }
   else {
-    num1 = BitCheckGeneral((unsigned long int) myrank, org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
+    num1 = BitCheckGeneral((long int) myrank, org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
     if (num1 != FALSE) {
-      num1 = BitCheckGeneral((unsigned long int) myrank, org_isite3 + 1, org_ispin3, X->Def.SiteToBit,
+      num1 = BitCheckGeneral((long int) myrank, org_isite3 + 1, org_ispin3, X->Def.SiteToBit,
         X->Def.Tpow);
       if (num1 != FALSE) {
         tmp_V = tmp_J;
@@ -1207,11 +1207,11 @@ void X_child_CisAisCjuAju_GeneralSpin_MPIsingle(
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 )
 {
-  unsigned long int j, num1;
+  long int j, num1;
   std::complex<double> tmp_V, dmv;
   int one = 1;
 
-  num1 = BitCheckGeneral((unsigned long int) myrank, org_isite3 + 1, org_ispin3, X->Def.SiteToBit, X->Def.Tpow);
+  num1 = BitCheckGeneral((long int) myrank, org_isite3 + 1, org_ispin3, X->Def.SiteToBit, X->Def.Tpow);
   if (num1 != FALSE) {
     tmp_V = tmp_J;
   }
@@ -1246,11 +1246,11 @@ void X_child_CisAitCjuAjv_GeneralSpin_MPIsingle(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ){
-  unsigned long int tmp_off, off, j, idim_max_buf;
+  long int tmp_off, off, j, idim_max_buf;
   int origin, isite, IniSpin, FinSpin, one = 1;
   std::complex<double> tmp_V;
   
-  if (GetOffCompGeneralSpin((unsigned long int)myrank,
+  if (GetOffCompGeneralSpin((long int)myrank,
     org_isite3 + 1, org_ispin3, org_ispin4, &off,
     X->Def.SiteToBit, X->Def.Tpow) == TRUE)
   {
@@ -1259,7 +1259,7 @@ void X_child_CisAitCjuAjv_GeneralSpin_MPIsingle(
     IniSpin = org_ispin2;
     FinSpin = org_ispin1;
   }
-  else if (GetOffCompGeneralSpin((unsigned long int)myrank,
+  else if (GetOffCompGeneralSpin((long int)myrank,
     org_isite3 + 1, org_ispin4, org_ispin3, &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
   {
     tmp_V = conj(tmp_J);
@@ -1307,7 +1307,7 @@ void X_GC_child_CisAit_spin_MPIdouble(
   std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/)
 {
   int mask1, state1, origin;
-  unsigned long int idim_max_buf;
+  long int idim_max_buf;
   std::complex<double> trans;
   
   mask1 = (int)X->Def.Tpow[org_isite1];
@@ -1345,11 +1345,11 @@ void X_child_CisAit_spin_MPIdouble(
   int nstate, 
   std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
-  unsigned long int idim_max//!<[in] Similar to CheckList::idim_max
+  long int idim_max//!<[in] Similar to CheckList::idim_max
 ){
   int mask1, state1, origin, one = 1;
-  unsigned long int idim_max_buf, j;
-  unsigned long int tmp_off;
+  long int idim_max_buf, j;
+  long int tmp_off;
   std::complex<double> trans;
   
   mask1 = (int)X->Def.Tpow[org_isite1];
@@ -1392,7 +1392,7 @@ void X_GC_child_CisAis_spin_MPIdouble(
 ){
   int mask1, ibit1;
   mask1 = (int)X->Def.Tpow[org_isite1];
-  ibit1 = (((unsigned long int)myrank& mask1)/mask1)^(1-org_ispin1);
+  ibit1 = (((long int)myrank& mask1)/mask1)^(1-org_ispin1);
   if (ibit1 != 0) 
     zaxpy_long(X->Check.idim_max*nstate, tmp_trans, &tmp_v1[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_GC_child_CisAis_spin_MPIdouble*/
@@ -1412,7 +1412,7 @@ void X_GC_child_AisCis_spin_MPIdouble(
   int mask1;
   int ibit1;
   mask1 = (int)X->Def.Tpow[org_isite1];
-  ibit1 = (((unsigned long int)myrank& mask1) / mask1) ^ (1 - org_ispin1);
+  ibit1 = (((long int)myrank& mask1) / mask1) ^ (1 - org_ispin1);
 
   if (ibit1 == 0) {
     zaxpy_long(X->Check.idim_max*nstate, tmp_trans, &tmp_v1[1][0], &tmp_v0[1][0]);

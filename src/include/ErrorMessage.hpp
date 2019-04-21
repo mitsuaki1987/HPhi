@@ -20,99 +20,84 @@
 //! Error Message in HPhiMain.c
 extern int iErrCodeMem;
 
-extern char *cErrNameList;
-extern char *cErrOutput;
-extern char *cErrDefFile;
-extern char *cErrNvec;
-extern char *cErrnvec;
-extern char *cErrnvecShow;
-extern char *cErrIndices;
-extern char *cErrArgv;
+extern const char *cErrOutput;
+extern const char *cErrDefFile;
+extern const char *cErrnvec;
 
 //! Error Message in HPhiTrans.c
-extern char *cErrTransfer;
-extern char *cErrDoubleCounting;
-extern char *cErrChemicalPotential;
-extern char *cErrLargeMem;
+extern const char *cErrLargeMem;
 
 
 //! Error Message in readdef.c
-extern char *cErrReadDefFile;
-extern char *cErrDefFileFormat;
-extern char *cErrNLoc;
-extern char *cErrDefFileParam;
-extern char *cErrCalcType;
-extern char *cErrOutputMode;
-extern char *cErrCalcModel;
-extern char *cErrCalcEigenVec;
-extern char *cErrSetIniVec;
-extern char *cErrOutputHam;
-extern char *cErrInputHam;
-extern char *cErrInputOutputHam;
-extern char *cErrOutputHamForFullDiag;
-extern char *cErrRestart;
-extern char *cErrFiniteTemp;
-extern char *cErrCUDA;
-extern char *cErrScaLAPACK;
+extern const char *cErrReadDefFile;
+extern const char *cErrDefFileFormat;
+extern const char *cErrNLoc;
+extern const char *cErrDefFileParam;
+extern const char *cErrCalcType;
+extern const char *cErrOutputMode;
+extern const char *cErrCalcModel;
+extern const char *cErrCalcEigenVec;
+extern const char *cErrSetIniVec;
+extern const char *cErrOutputHam;
+extern const char *cErrInputHam;
+extern const char *cErrRestart;
+extern const char *cErrCUDA;
+extern const char *cErrScaLAPACK;
 
-extern char *cErrKW;
-extern char *cErrKW_ShowList;
-extern char *cErrKW_Same;
-extern char *cErrKW_InCorPair;
+extern const char *cErrKW;
+extern const char *cErrKW_ShowList;
+extern const char *cErrKW_Same;
+extern const char *cErrKW_InCorPair;
 
-extern char *cErrNsite;
-extern char *cErrNcond;
-extern char *cErrNumAve;
-extern char *cErrExpecInterval;
-extern char *cErrLanczos_max;
-extern char *cErrLanczos_eps;
-extern char *cErrLanczosTarget;
-extern char *cErrLanczosExct;
+extern const char *cErrNsite;
+extern const char *cErrNcond;
+extern const char *cErrNumAve;
+extern const char *cErrExpecInterval;
+extern const char *cErrLanczos_max;
+extern const char *cErrLanczos_eps;
+extern const char *cErrLanczosTarget;
+extern const char *cErrLanczosExct;
 
-extern char *cErrMakeDef;
-extern char *cErrIncorrectDef;
-extern char *cErrNonHermiteTrans;
-extern char *cErrNonHermiteTransForAll;
-extern char *cErrNonHermiteInterAll;
-extern char *cErrNonConservedInterAll;
-extern char *cErrNonHermiteInterAllForAll;
-extern char *cErrIncorrectFormatForKondoInt;
-extern char *cErrIncorrectFormatForKondoTrans;
-extern char *cErrIncorrectFormatInter;
-extern char *cErrIncorrectSpinIndexForInter;
-extern char *cErrIncorrectSpinIndexForTrans;
+extern const char *cErrMakeDef;
+extern const char *cErrIncorrectDef;
+extern const char *cErrNonHermiteTrans;
+extern const char *cErrNonHermiteTransForAll;
+extern const char *cErrNonHermiteInterAll;
+extern const char *cErrNonConservedInterAll;
+extern const char *cErrNonHermiteInterAllForAll;
+extern const char *cErrIncorrectFormatForKondoInt;
+extern const char *cErrIncorrectFormatForKondoTrans;
+extern const char *cErrIncorrectFormatInter;
+extern const char *cErrIncorrectSpinIndexForInter;
+extern const char *cErrIncorrectSpinIndexForTrans;
 
-extern char *cErrIncorrectFormatForSpinTrans;
-extern char *cWarningIncorrectFormatForSpin;
-extern char *cWarningIncorrectFormatForSpin2;
+extern const char *cErrIncorrectFormatForSpinTrans;
+extern const char *cWarningIncorrectFormatForSpin2;
 
 
 //! Error Message in CheckMPI.c
-extern char *cErrNProcNumberHubbard;
-extern char *cErrNProcNumberSpin;
-extern char *cErrNProcNumberGneralSpin;
-extern char *cErrNProcNumber;
-extern char *cErrNProcNumberSet;
+extern const char *cErrNProcNumberHubbard;
+extern const char *cErrNProcNumberSpin;
+extern const char *cErrNProcNumberGneralSpin;
+extern const char *cErrNProcNumber;
+extern const char *cErrNProcNumberSet;
 
 //! Error Message in diagonal calc.c
-extern char *cErrNoModel;
-extern char *cErrNoHilbertSpace;
+extern const char *cErrNoModel;
+extern const char *cErrNoHilbertSpace;
 
 //! Error Message in bitcalc.c
-extern char *cErrSiteNumber;
+extern const char *cErrSiteNumber;
 
 //! Error Message in mltiply.c
-extern char *cErrMltiply;
 
 
 //! Error Message in FileIO.c
-extern char *cErrFIOpen;
+extern const char *cErrFIOpen;
 
 //! Error Message in sz.c
-extern char* cErrSz;
-extern char* cErrSz_NoFile;
-extern char* cErrSz_NoFile_Show;
-extern char* cErrSz_ShowDim;
-extern char* cErrSz_OutFile;
+extern const char* cErrSz;
+extern const char* cErrSz_NoFile;
+extern const char* cErrSz_NoFile_Show;
 
 #endif /* HPHI_ERRORMESSAGE_H */

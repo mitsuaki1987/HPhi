@@ -41,14 +41,14 @@ int GetPairExcitedStateHubbardGC(
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
   int iEx
 ) {
-  long unsigned int i, j;
-  long unsigned int isite1;
-  long unsigned int org_isite1, org_isite2, org_sigma1, org_sigma2;
+  long int i, j;
+  long int isite1;
+  long int org_isite1, org_isite2, org_sigma1, org_sigma2;
 
   std::complex<double> tmp_trans = 0;
-  long unsigned int i_max;
-  long unsigned int ibit;
-  long unsigned int is;
+  long int i_max;
+  long int ibit;
+  long int is;
   i_max = X->Check.idim_maxOrg;
   for (i = 0; i < X->Def.NPairExcitationOperator[iEx]; i++) {
     org_isite1 = X->Def.PairExcitationOperator[iEx][i][0] + 1;
@@ -67,7 +67,7 @@ int GetPairExcitedStateHubbardGC(
           else {
             is = X->Def.Tpow[2 * org_isite1 - 1];
           }
-          ibit = (unsigned long int) myrank & is;
+          ibit = (long int) myrank & is;
           if (ibit != is) {
             //minus sign comes from negative tmp_trans due to readdef
             zaxpy_long(i_max*nstate, -tmp_trans, &tmp_v1[1][0], &tmp_v0[1][0]);
@@ -80,7 +80,7 @@ int GetPairExcitedStateHubbardGC(
           else {
             is = X->Def.Tpow[2 * org_isite1 - 1];
           }
-          ibit = (unsigned long int) myrank & is;
+          ibit = (long int) myrank & is;
           if (ibit == is) {
             zaxpy_long(i_max*nstate, tmp_trans, &tmp_v1[1][0], &tmp_v0[1][0]);
           }
@@ -108,7 +108,7 @@ int GetPairExcitedStateHubbardGC(
 #pragma omp parallel for default(none) private(j) \
 firstprivate(i_max,X,isite1, tmp_trans) shared(tmp_v0,tmp_v1,nstate)
         for (j = 1; j <= i_max; j++) {
-          GC_AisCis(j, nstate, tmp_v0, tmp_v1, X, isite1, -tmp_trans);
+          GC_AisCis(j, nstate, tmp_v0, tmp_v1, isite1, -tmp_trans);
         }
       }
       else {
@@ -136,17 +136,17 @@ int GetPairExcitedStateHubbard(
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
   int iEx
 ) {
-  long unsigned int i, j;
-  long unsigned int irght, ilft, ihfbit;
-  long unsigned int org_isite1, org_isite2, org_sigma1, org_sigma2;
-  long unsigned int tmp_off = 0;
+  long int i, j;
+  long int irght, ilft, ihfbit;
+  long int org_isite1, org_isite2, org_sigma1, org_sigma2;
+  long int tmp_off = 0;
 
   std::complex<double> tmp_trans = 0, dmv;
-  long unsigned int i_max;
+  long int i_max;
   int tmp_sgn, num1, one = 1;
-  long unsigned int ibit;
-  long unsigned int is, Asum, Adiff;
-  long unsigned int ibitsite1, ibitsite2;
+  long int ibit;
+  long int is, Asum, Adiff;
+  long int ibitsite1, ibitsite2;
 
   //  i_max = X->Check.idim_max;
   i_max = X->Check.idim_maxOrg;
@@ -207,7 +207,7 @@ firstprivate(i_max,tmp_trans,Asum,Adiff,ibitsite1,ibitsite2,X,list_1_org,list_1,
         org_isite2 > X->Def.Nsite) {
         if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {//diagonal
           is = X->Def.Tpow[2 * org_isite1 - 2 + org_sigma1];
-          ibit = (unsigned long int) myrank & is;
+          ibit = (long int) myrank & is;
           if (X->Def.PairExcitationOperator[iEx][i][4] == 0) {
             if (ibit != is) {
               dmv = -tmp_trans;

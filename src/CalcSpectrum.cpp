@@ -52,8 +52,8 @@ int SetOmega
   char sdt[D_FileNameMax], ctmp[256];
   int istp = 4;
   double E1, E2, E3, E4, Emax;
-  long unsigned int iline_countMax = 2;
-  long unsigned int iline_count = 2;
+  long int iline_countMax = 2;
+  long int iline_count = 2;
 
 
   if (X->iFlgSpecOmegaMax == TRUE && X->iFlgSpecOmegaMin == TRUE) {
@@ -180,14 +180,14 @@ int MakeExcitedList(
 
   if (*iFlgListModifed == TRUE) {
     if (GetlistSize(X) == TRUE) {
-      list_1_org = lui_1d_allocate(X->Check.idim_max + 1);
+      list_1_org = li_1d_allocate(X->Check.idim_max + 1);
 #ifdef __MPI
-      unsigned long int MAXidim_max;
+      long int MAXidim_max;
       MAXidim_max = MaxMPI_li(X->Check.idim_max);
-      list_1buf_org = lui_1d_allocate(MAXidim_max + 1);
+      list_1buf_org = li_1d_allocate(MAXidim_max + 1);
 #endif // MPI
-      list_2_1_org = lui_1d_allocate(X->Large.SizeOflist_2_1);
-      list_2_2_org = lui_1d_allocate(X->Large.SizeOflist_2_2);
+      list_2_1_org = li_1d_allocate(X->Large.SizeOflist_2_1);
+      list_2_2_org = li_1d_allocate(X->Large.SizeOflist_2_2);
       if (list_1_org == NULL
         || list_2_1_org == NULL
         || list_2_2_org == NULL
@@ -313,7 +313,7 @@ int MakeExcitedList(
     return FALSE;
   }
 #ifdef __MPI
-  unsigned long int MAXidim_max, MAXidim_maxOrg;
+  long int MAXidim_max, MAXidim_maxOrg;
   MAXidim_max = MaxMPI_li(X->Check.idim_max);
   MAXidim_maxOrg = MaxMPI_li(X->Check.idim_maxOrg);
   if (MAXidim_max < MAXidim_maxOrg) {
@@ -423,8 +423,8 @@ int CalcSpectrum(
 ) {
   char sdt[D_FileNameMax];
   char *defname;
-  unsigned long int i;
-  unsigned long int i_max = 0;
+  long int i;
+  long int i_max = 0;
   int i_stp, NdcSpectrum;
   int iFlagListModified = FALSE;
   FILE *fp;
@@ -444,9 +444,9 @@ int CalcSpectrum(
     X->Bind.Def.Nup = X->Bind.Def.NupMPI;
     X->Bind.Def.Ndown = X->Bind.Def.NdownMPI;
     if (GetlistSize(&(X->Bind)) == TRUE) {
-      free_lui_1d_allocate(list_1);
-      free_lui_1d_allocate(list_2_1);
-      free_lui_1d_allocate(list_2_2);
+      free_li_1d_allocate(list_1);
+      free_li_1d_allocate(list_2_1);
+      free_li_1d_allocate(list_2_2);
     }
     free_d_1d_allocate(list_Diagonal);
     free_cd_2d_allocate(v0);
@@ -454,7 +454,7 @@ int CalcSpectrum(
     for (i = 1; i <= X->Bind.Check.idim_max; i++) v1Org[i][0] = v1[i][0];
     free_cd_2d_allocate(v1);
 #ifdef __MPI
-    free_lui_1d_allocate(list_1buf);
+    free_li_1d_allocate(list_1buf);
     free_cd_2d_allocate(v1buf);
 #endif // MPI
     free_d_1d_allocate(X->Bind.Phys.num_down);

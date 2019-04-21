@@ -168,17 +168,17 @@ long integer across processes.
 @return Maximum value across processes.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-unsigned long int MaxMPI_li(
-  unsigned long int idim//!<[in] Value to be maximized
+long int MaxMPI_li(
+  long int idim//!<[in] Value to be maximized
 ){
 #ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &idim, 1,
-    MPI_UNSIGNED_LONG, MPI_MAX, MPI_COMM_WORLD);
+    MPI_LONG, MPI_MAX, MPI_COMM_WORLD);
   if(ierr != 0) exitMPI(-1);
 #endif
   return(idim);
-}/*unsigned long int MaxMPI_li*/
+}/*long int MaxMPI_li*/
 /**
 @brief MPI wrapper function to obtain maximum Double
 across processes.
@@ -268,17 +268,17 @@ long integer across processes.
 @return Sumed value across processes.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-unsigned long int SumMPI_li(
-  unsigned long int idim//!<[in] Value to be summed
+long int SumMPI_li(
+  long int idim//!<[in] Value to be summed
 ){
 #ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &idim, 1,
-    MPI_UNSIGNED_LONG, MPI_SUM, MPI_COMM_WORLD);
+    MPI_LONG, MPI_SUM, MPI_COMM_WORLD);
   if(ierr != 0) exitMPI(-1);
 #endif
   return(idim);
-}/*unsigned long int SumMPI_li*/
+}/*long int SumMPI_li*/
 /**
 @brief MPI wrapper function to obtain sum of
 integer across processes.
@@ -297,33 +297,33 @@ int SumMPI_i(
   return(idim);
 }/*int SumMPI_i*/
 /**
-@brief MPI wrapper function to broadcast unsigned long
+@brief MPI wrapper function to broadcast long
 integer across processes.
 @return Broadcasted value across processes.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-unsigned long int BcastMPI_li(
+long int BcastMPI_li(
   int root,//!<[in] The source process of the broadcast
-  unsigned long int idim//!<[in] Value to be broadcasted
+  long int idim//!<[in] Value to be broadcasted
 ) {
-  unsigned long int idim0;
+  long int idim0;
   idim0 = idim;
 #ifdef __MPI
-    MPI_Bcast(&idim0, 1, MPI_UNSIGNED_LONG, root, MPI_COMM_WORLD);
+    MPI_Bcast(&idim0, 1, MPI_LONG, root, MPI_COMM_WORLD);
 #endif
   return(idim0);
-}/*unsigned long int BcastMPI_li*/
+}/*long int BcastMPI_li*/
 /**
 @brief Compute norm of process-distributed vector
 @f$|{\bf v}_1|^2@f$
 @return Norm @f$|{\bf v}_1|^2@f$
 */
 double NormMPI_dc(
-  unsigned long int idim,//!<[in] Local dimension of vector
+  long int idim,//!<[in] Local dimension of vector
   std::complex<double> *_v1//!<[in] [idim] vector to be producted
 ){
   double dnorm =0;
-  unsigned long int i;
+  long int i;
 
   dnorm = 0.0;
 #pragma omp parallel for default(none) private(i) \
@@ -342,12 +342,12 @@ shared(_v1, idim) reduction(+:dnorm)
 @return Norm @f$|{\bf v}_1|^2@f$
 */
 void NormMPI_dv(
-  unsigned long int ndim,//!<[in] Local dimension of vector
+  long int ndim,//!<[in] Local dimension of vector
   int nstate,
   std::complex<double> **_v1,//!<[in] [idim] vector to be producted
   double *dnorm
 ) {
-  unsigned long int idim;
+  long int idim;
   int istate;
 
   for (istate = 0; istate < nstate; istate++) dnorm[istate] = 0.0;
@@ -365,11 +365,11 @@ void NormMPI_dv(
 @return Conjugate scaler product @f${\bf v}_1^* \cdot {\bf v}_2@f$
 */
 std::complex<double> VecProdMPI(
-  long unsigned int ndim,//!<[in] Local dimension of vector
+  long int ndim,//!<[in] Local dimension of vector
   std::complex<double> *v1,//!<[in] [ndim] vector to be producted
   std::complex<double> *v2//!<[in] [ndim] vector to be producted
 ){
-  long unsigned int idim;
+  long int idim;
   std::complex<double> prod, *prod_thr;
   int mythread;
 
@@ -399,13 +399,13 @@ std::complex<double> VecProdMPI(
 @f${\bf v}_1^* \cdot {\bf v}_2@f$
 */
 void MultiVecProdMPI(
-  long unsigned int ndim,//!<[in] Local dimension of vector
+  long int ndim,//!<[in] Local dimension of vector
   int nstate,
   std::complex<double> **v1,//!<[in] [ndim] vector to be producted
   std::complex<double> **v2,//!<[in] [ndim] vector to be producted
   std::complex<double> *prod
 ) {
-  long unsigned int idim;
+  long int idim;
   int istate;
 
   for (istate = 0; istate < nstate; istate++) prod[istate] = 0.0;
@@ -423,14 +423,14 @@ When we pass a message longer than 2^31-1
 */
 void SendRecv_cv(
   int origin,
-  unsigned long int nMsgS,
-  unsigned long int nMsgR,
+  long int nMsgS,
+  long int nMsgR,
   std::complex<double> *vecs,
   std::complex<double> *vecr
 ) {
 #ifdef __MPI
   int ierr, two31m1 = 2147483647, modMsg, nMsgS2, nMsgR2;
-  unsigned long int nMsg, nnMsg, iMsg, sMsgR, sMsgS;
+  long int nMsg, nnMsg, iMsg, sMsgR, sMsgS;
   MPI_Status statusMPI;
 
   if (nMsgS > nMsgR) nMsg = nMsgS;
@@ -458,20 +458,20 @@ void SendRecv_cv(
 #endif
 }/*void SendRecv_cv*/
 /**
-@brief Wrapper of MPI_Sendrecv for long unsigned integer number.
+@brief Wrapper of MPI_Sendrecv for long integer number.
 When we pass a message longer than 2^31-1
 (max of int: 2147483647), we need to divide it.
 */
 void SendRecv_iv(
   int origin,
-  unsigned long int nMsgS,
-  unsigned long int nMsgR,
-  unsigned long int *vecs,
-  unsigned long int *vecr
+  long int nMsgS,
+  long int nMsgR,
+  long int *vecs,
+  long int *vecr
 ) {
 #ifdef __MPI
   int ierr, two31m1 = 2147483647, modMsg, nMsgS2, nMsgR2;
-  unsigned long int nMsg, nnMsg, iMsg, sMsgR, sMsgS;
+  long int nMsg, nnMsg, iMsg, sMsgR, sMsgS;
   MPI_Status statusMPI;
 
   if (nMsgS > nMsgR) nMsg = nMsgS;
@@ -488,8 +488,8 @@ void SendRecv_iv(
     if (iMsg < nMsgS % nnMsg) nMsgS2 += 1;
     if (iMsg < nMsgR % nnMsg) nMsgR2 += 1;
 
-    ierr = MPI_Sendrecv(&vecs[sMsgS], nMsgS2, MPI_UNSIGNED_LONG, origin, 0,
-                        &vecr[sMsgR], nMsgR2, MPI_UNSIGNED_LONG, origin, 0,
+    ierr = MPI_Sendrecv(&vecs[sMsgS], nMsgS2, MPI_LONG, origin, 0,
+                        &vecr[sMsgR], nMsgR2, MPI_LONG, origin, 0,
                         MPI_COMM_WORLD, &statusMPI);
     if (ierr != 0) exitMPI(-1);
 
@@ -499,18 +499,18 @@ void SendRecv_iv(
 #endif
 }/*void SendRecv_iv*/
 /**
-@brief Wrapper of MPI_Sendrecv for long unsigned integer number.
+@brief Wrapper of MPI_Sendrecv for long integer number.
 */
-unsigned long int SendRecv_i(
+long int SendRecv_i(
   int origin,
-  unsigned long int isend
+  long int isend
 ) {
 #ifdef __MPI
   int ierr;
   MPI_Status statusMPI;
-  unsigned long int ircv;
-  ierr = MPI_Sendrecv(&isend, 1, MPI_UNSIGNED_LONG, origin, 0,
-                      &ircv,  1, MPI_UNSIGNED_LONG, origin, 0,
+  long int ircv;
+  ierr = MPI_Sendrecv(&isend, 1, MPI_LONG, origin, 0,
+                      &ircv,  1, MPI_LONG, origin, 0,
                       MPI_COMM_WORLD, &statusMPI);
   if (ierr != 0) exitMPI(ierr);
   return ircv;

@@ -23,7 +23,7 @@
 
 void GC_child_general_hopp_MPIdouble
 (
- unsigned long int itrans,
+ long int itrans,
  struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
@@ -43,7 +43,7 @@ void X_GC_child_general_hopp_MPIdouble
 
 void GC_child_general_hopp_MPIsingle
 (
- unsigned long int itrans,
+ long int itrans,
  struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
@@ -64,7 +64,7 @@ void X_GC_child_general_hopp_MPIsingle
 
 void child_general_hopp_MPIdouble
 (
- unsigned long int itrans,
+ long int itrans,
  struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
@@ -84,7 +84,7 @@ void X_child_general_hopp_MPIdouble
 
 void child_general_hopp_MPIsingle
 (
- unsigned long int itrans,
+ long int itrans,
  struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1

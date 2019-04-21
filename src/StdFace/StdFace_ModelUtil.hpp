@@ -36,7 +36,7 @@ void StdFace_GeneralJ(struct StdIntList *StdI, double J[3][3],
 
 void StdFace_PrintVal_d(const char* valname, double *val, double val0);
 void StdFace_PrintVal_dd(char* valname, double *val, double val0, double val1);
-void StdFace_PrintVal_c(char* valname, std::complex<double> *val, std::complex<double> val0);
+void StdFace_PrintVal_c(const char* valname, std::complex<double> *val, std::complex<double> val0);
 void StdFace_PrintVal_i(const char* valname, int *val, int val0);
 
 void StdFace_NotUsed_d(const char* valname, double val);

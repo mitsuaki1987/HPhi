@@ -192,9 +192,9 @@ int mltplyHalfSpin(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
-  long unsigned int i;
-  long unsigned int isite1, isite2, sigma1, sigma2;
-  long unsigned int sigma3, sigma4;
+  long int i;
+  long int isite1, isite2, sigma1, sigma2;
+  long int sigma3, sigma4;
 
   /*[s] For InterAll */
   std::complex<double> tmp_V;
@@ -296,14 +296,14 @@ int mltplyGeneralSpin(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ){
-  long unsigned int j;
-  long unsigned int i;
-  long unsigned int off = 0;
-  long unsigned int tmp_off = 0;
-  long unsigned int tmp_off2 = 0;
-  long unsigned int ihfbit=0;
-  long unsigned int isite1, isite2, sigma1, sigma2;
-  long unsigned int sigma3, sigma4;
+  long int j;
+  long int i;
+  long int off = 0;
+  long int tmp_off = 0;
+  long int tmp_off2 = 0;
+  long int ihfbit=0;
+  long int isite1, isite2, sigma1, sigma2;
+  long int sigma3, sigma4;
 
   long int tmp_sgn;
   /*[s] For InterAll */
@@ -311,7 +311,7 @@ int mltplyGeneralSpin(
   int one = 1;
   /*[e] For InterAll */
 
-  long unsigned int i_max;
+  long int i_max;
   i_max = X->Check.idim_max;
   int ihermite=0;
   int idx=0;
@@ -403,12 +403,12 @@ int mltplyHalfSpinGC(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
-  long unsigned int j;
-  long unsigned int i;
-  long unsigned int off = 0;
-  long unsigned int is1_spin = 0;
-  long unsigned int isite1, isite2, sigma1, sigma2;
-  long unsigned int sigma3, sigma4;
+  long int j;
+  long int i;
+  long int off = 0;
+  long int is1_spin = 0;
+  long int isite1, isite2, sigma1, sigma2;
+  long int sigma3, sigma4;
   std::complex<double> tmp_trans;
   long int tmp_sgn;
   /*[s] For InterAll */
@@ -416,7 +416,7 @@ int mltplyHalfSpinGC(
   int one = 1;
   /*[e] For InterAll */
 
-  long unsigned int i_max;
+  long int i_max;
   i_max = X->Check.idim_max;
 
   int ihermite=0;
@@ -463,7 +463,7 @@ int mltplyHalfSpinGC(
 private(j, tmp_sgn) firstprivate(i_max, is1_spin, sigma2, X,off, tmp_trans) \
 shared(tmp_v0, tmp_v1,one,nstate)
           for (j = 1; j <= i_max; j++) {
-            tmp_sgn = X_SpinGC_CisAit(j, X, is1_spin, sigma2, &off);
+            tmp_sgn = X_SpinGC_CisAit(j, is1_spin, sigma2, &off);
             if(tmp_sgn !=0){
               zaxpy_(&nstate, &tmp_trans, &tmp_v1[j][0], &one, &tmp_v0[off + 1][0], &one);
             }/*if(tmp_sgn !=0)*/
@@ -605,12 +605,12 @@ int mltplyGeneralSpinGC(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
-  long unsigned int j;
-  long unsigned int i;
-  long unsigned int off = 0;
-  long unsigned int tmp_off = 0;
-  long unsigned int isite1, isite2, sigma1, sigma2;
-  long unsigned int sigma3, sigma4;
+  long int j;
+  long int i;
+  long int off = 0;
+  long int tmp_off = 0;
+  long int isite1, isite2, sigma1, sigma2;
+  long int sigma3, sigma4;
   std::complex<double> tmp_trans;
   long int tmp_sgn;
   double num1 = 0;
@@ -619,7 +619,7 @@ int mltplyGeneralSpinGC(
   int one = 1;
   /*[e] For InterAll */
 
-  long unsigned int i_max;
+  long int i_max;
   i_max = X->Check.idim_max;
 
   int ihermite=0;
@@ -787,9 +787,9 @@ void child_exchange_spin(
   std::complex<double> **tmp_v1,//!<[in] Input producted vector
   struct BindStruct *X//!<[inout]
 ) {
-  long unsigned int j;
-  long unsigned int i_max = X->Large.i_max;
-  long unsigned int off = 0;
+  long int j;
+  long int i_max = X->Large.i_max;
+  long int off = 0;
 
 #pragma omp parallel for default(none) \
   firstprivate(i_max, X,off) private(j) shared(tmp_v0, tmp_v1,nstate)
@@ -806,9 +806,9 @@ void GC_child_exchange_spin(
   std::complex<double> **tmp_v1,//!<[in] Input producted vector
   struct BindStruct *X//!<[inout]
 ) {
-  long unsigned int j;
-  long unsigned int i_max = X->Large.i_max;
-  long unsigned int off = 0;
+  long int j;
+  long int i_max = X->Large.i_max;
+  long int off = 0;
 
 #pragma omp parallel for default(none) \
   firstprivate(i_max, X,off) private(j) shared(tmp_v0, tmp_v1,nstate)
@@ -826,8 +826,8 @@ void GC_child_pairlift_spin(
   struct BindStruct *X//!<[inout]
 ) {
   long int j;
-  long unsigned int i_max = X->Large.i_max;
-  long unsigned int off = 0;
+  long int i_max = X->Large.i_max;
+  long int off = 0;
 
 #pragma omp parallel for default(none) \
   firstprivate(i_max, X,off) private(j) shared(tmp_v0, tmp_v1,nstate)
@@ -845,10 +845,10 @@ void child_general_int_spin(
   struct BindStruct *X//!<[inout]
 ) {
   std::complex<double> tmp_V, dmv;
-  long unsigned int j, i_max;
-  long unsigned int org_sigma2, org_sigma4;
-  long unsigned int isA_up, isB_up;
-  long unsigned int tmp_off = 0;
+  long int j, i_max;
+  long int org_sigma2, org_sigma4;
+  long int isA_up, isB_up;
+  long int tmp_off = 0;
   int tmp_sgn;
   int one = 1;
 
@@ -881,11 +881,11 @@ void GC_child_general_int_spin(
   struct BindStruct *X//!<[inout]
 ) {
   std::complex<double> tmp_V;
-  long unsigned int j, i_max;
-  long unsigned int org_isite1, org_isite2;
-  long unsigned int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
-  long unsigned int isA_up, isB_up;
-  long unsigned int tmp_off = 0;
+  long int j, i_max;
+  long int org_isite1, org_isite2;
+  long int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
+  long int isA_up, isB_up;
+  long int tmp_off = 0;
 
   i_max = X->Large.i_max;
   org_isite1 = X->Large.isite1;
@@ -906,25 +906,25 @@ firstprivate(i_max,X,isA_up,isB_up,org_sigma1,org_sigma2,org_sigma3,org_sigma4,t
 #pragma omp for
       for (j = 1; j <= i_max; j++)
         GC_child_CisAisCisAis_spin_element(
-          j, isA_up, isB_up, org_sigma2, org_sigma4, tmp_V, nstate, tmp_v0, tmp_v1, X);
+          j, isA_up, isB_up, org_sigma2, org_sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
     }
     else if (org_sigma1 == org_sigma2 && org_sigma3 != org_sigma4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
         GC_child_CisAisCitAiu_spin_element(
-          j, org_sigma2, org_sigma4, isA_up, isB_up, tmp_V, nstate, tmp_v0, tmp_v1, X, &tmp_off);
+          j, org_sigma2, org_sigma4, isA_up, isB_up, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }
     else if (org_sigma1 != org_sigma2 && org_sigma3 == org_sigma4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
         GC_child_CisAitCiuAiu_spin_element(
-          j, org_sigma2, org_sigma4, isA_up, isB_up, tmp_V, nstate, tmp_v0, tmp_v1, X, &tmp_off);
+          j, org_sigma2, org_sigma4, isA_up, isB_up, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }
     else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
         GC_child_CisAitCiuAiv_spin_element(
-          j, org_sigma2, org_sigma4, isA_up, isB_up, tmp_V, nstate, tmp_v0, tmp_v1, X, &tmp_off);
+          j, org_sigma2, org_sigma4, isA_up, isB_up, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }
   }/*End of parallel region*/
 }/*std::complex<double> GC_child_general_int_spin*/

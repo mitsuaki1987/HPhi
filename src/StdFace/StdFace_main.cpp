@@ -1187,12 +1187,12 @@ static void StoreWithCheckDup_c(
     }
 
     if (valuestring_i == NULL) {
-      *value += (0.0, 0.0);
+      *value += std::complex<double>(0.0, 0.0);
     }
     else {
         num = sscanf(valuestring_i, "%lf", &value_i);
-      if (num == 1) *value += (0.0, value_i);
-      else *value += (0.0, 0.0);
+      if (num == 1) *value += std::complex<double>(0.0, value_i);
+      else *value += std::complex<double>(0.0, 0.0);
     }
   }
 }/*static void StoreWithCheckDup_c*/

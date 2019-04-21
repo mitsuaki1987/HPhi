@@ -46,7 +46,7 @@ void ReadTMComponents_BiCG(
   char ctmp[256];
 
   int status[3], idim_max2int, max_step, iter_old;
-  unsigned long int idx;
+  long int idx;
   std::complex<double> *alphaCG, *betaCG, *res_save, z_seed;
   double z_seed_r, z_seed_i, alpha_r, alpha_i, beta_r, beta_i, res_r, res_i;
   FILE *fp;
@@ -123,7 +123,7 @@ int OutputTMComponents_BiCG(
 )
 {
   char sdt[D_FileNameMax];
-  unsigned long int stp;
+  long int stp;
   FILE *fp;
   std::complex<double> *alphaCG, *betaCG, *res_save, z_seed;
 
@@ -174,13 +174,14 @@ int CalcSpectrumByBiCG(
 )
 {
   char sdt[D_FileNameMax];
-  unsigned long int idim, i_max;
+  long int idim, i_max;
   FILE *fp;
   size_t byte_size;
   int idcSpectrum;
-  unsigned long int liLanczosStp_vec = 0;
+  long int liLanczosStp_vec = 0;
   std::complex<double> **vL, **v12, **v14, *res_proj;
-  int stp, status[3], iomega;
+  int status[3], iomega;
+  int stp;
   double *resz;
 
   fprintf(stdoutMPI, "#####  Spectrum calculation with BiCG  #####\n\n");

@@ -43,9 +43,7 @@ int CalcSpectrumByFullDiag(
   std::complex<double> **v1Org
 )
 {
-  int idim, jdim, iomega;
-  int idim_max_int;
-  int idcSpectrum;
+  int idim, jdim, iomega, idim_max_int, idcSpectrum;
   std::complex<double> **vR, **vL, vRv, vLv, *vLvvRv;
   /**
   <ul>

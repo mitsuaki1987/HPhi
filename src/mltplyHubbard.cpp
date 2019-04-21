@@ -152,10 +152,10 @@ int mltplyHubbard(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ){
-  long unsigned int i;
-  long unsigned int isite1, isite2, sigma1, sigma2;
-  long unsigned int isite3, isite4, sigma3, sigma4;
-  long unsigned int ibitsite1, ibitsite2, ibitsite3, ibitsite4;
+  long int i;
+  long int isite1, isite2, sigma1, sigma2;
+  long int isite3, isite4, sigma3, sigma4;
+  long int ibitsite1, ibitsite2, ibitsite3, ibitsite4;
 
   std::complex<double> tmp_trans;
   /*[s] For InterAll */
@@ -263,7 +263,7 @@ int mltplyHubbard(
         sigma4 = X->Def.InterAll_OffDiagonal[idx][7];
         tmp_V = X->Def.ParaInterAll_OffDiagonal[idx];
 
-        child_general_int_GetInfo(i, X, isite1, isite2, isite3, isite4, 
+        child_general_int_GetInfo(X, isite1, isite2, isite3, isite4, 
           sigma1, sigma2, sigma3, sigma4, tmp_V);
 
         child_general_int(nstate, tmp_v0, tmp_v1, X);
@@ -341,10 +341,10 @@ int mltplyHubbardGC(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ){
-  long unsigned int i;
-  long unsigned int isite1, isite2, sigma1, sigma2;
-  long unsigned int isite3, isite4, sigma3, sigma4;
-  long unsigned int ibitsite1, ibitsite2, ibitsite3, ibitsite4;
+  long int i;
+  long int isite1, isite2, sigma1, sigma2;
+  long int isite3, isite4, sigma3, sigma4;
+  long int ibitsite1, ibitsite2, ibitsite3, ibitsite4;
 
   std::complex<double> tmp_trans;
   /*[s] For InterAll */
@@ -445,7 +445,7 @@ int mltplyHubbardGC(
         sigma4 = X->Def.InterAll_OffDiagonal[idx][7];
         tmp_V = X->Def.ParaInterAll_OffDiagonal[idx];
           
-        child_general_int_GetInfo(i, X, isite1, isite2, isite3, isite4, 
+        child_general_int_GetInfo(X, isite1, isite2, isite3, isite4, 
                                         sigma1, sigma2, sigma3, sigma4, tmp_V); 
         GC_child_general_int(nstate, tmp_v0, tmp_v1, X);
       }/*for(ihermite=0; ihermite<2; ihermite++)*/
@@ -526,8 +526,8 @@ void child_pairhopp(
   struct BindStruct *X//!<[inout]
 ) {
   long int j;
-  long unsigned int i_max = X->Large.i_max;
-  long unsigned int off = 0;
+  long int i_max = X->Large.i_max;
+  long int off = 0;
 
 #pragma omp parallel for default(none) \
   firstprivate(i_max, X,off) private(j) shared(tmp_v0, tmp_v1,nstate)
@@ -546,8 +546,8 @@ void child_exchange(
   struct BindStruct *X//!<[inout]
 ) {
   long int j;
-  long unsigned int i_max = X->Large.i_max;
-  long unsigned int off = 0;
+  long int i_max = X->Large.i_max;
+  long int off = 0;
 
 #pragma omp parallel for default(none) \
   firstprivate(i_max, X,off) private(j) shared(tmp_v0, tmp_v1,nstate)
@@ -567,8 +567,8 @@ void child_general_hopp(
   struct BindStruct *X,//!<[inout]
   std::complex<double> trans//!<[in] Hopping integral
 ) {
-  long unsigned int j, isite1, isite2, Asum, Adiff;
-  long unsigned int i_max = X->Large.i_max;
+  long int j, isite1, isite2, Asum, Adiff;
+  long int i_max = X->Large.i_max;
 
   isite1 = X->Large.is1_spin;
   isite2 = X->Large.is2_spin;
@@ -591,9 +591,9 @@ void GC_child_general_hopp(
   struct BindStruct *X,//!<[inout]
   std::complex<double> trans//!<[in] Hopping integral
 ) {
-  long unsigned int j, isite1, isite2, Asum, Adiff;
-  long unsigned int tmp_off;
-  long unsigned int i_max = X->Large.i_max;
+  long int j, isite1, isite2, Asum, Adiff;
+  long int tmp_off;
+  long int i_max = X->Large.i_max;
 
   isite1 = X->Large.is1_spin;
   isite2 = X->Large.is2_spin;
@@ -604,13 +604,13 @@ void GC_child_general_hopp(
 #pragma omp parallel for default(none)  \
   private(j) firstprivate(i_max,X,isite1, trans) shared(tmp_v0, tmp_v1,nstate)
     for (j = 1; j <= i_max; j++)
-      GC_CisAis(j, nstate, tmp_v0, tmp_v1, X, isite1, trans);
+      GC_CisAis(j, nstate, tmp_v0, tmp_v1, isite1, trans);
   }/*if (isite1 == isite2)*/
   else {
 #pragma omp parallel for default(none) private(j,tmp_off) shared(tmp_v0,tmp_v1,nstate) \
 firstprivate(i_max,X,Asum,Adiff,isite1,isite2,trans)
     for (j = 1; j <= i_max; j++) 
-      GC_CisAjt(j, nstate, tmp_v0, tmp_v1, X, isite1, isite2, Asum, Adiff, trans, &tmp_off);
+      GC_CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, trans, &tmp_off);
   }
   return;
 }/*std::complex<double> GC_child_general_hopp*/
@@ -625,11 +625,11 @@ void child_general_int(
   struct BindStruct *X//!<[inout]
 ) {
   std::complex<double> tmp_V;
-  long unsigned int j, i_max;
-  long unsigned int isite1, isite2, isite3, isite4;
-  long unsigned int Asum, Bsum, Adiff, Bdiff;
-  long unsigned int tmp_off = 0;
-  long unsigned int tmp_off_2 = 0;
+  long int j, i_max;
+  long int isite1, isite2, isite3, isite4;
+  long int Asum, Bsum, Adiff, Bdiff;
+  long int tmp_off = 0;
+  long int tmp_off_2 = 0;
 
   //note: this site is labeled for not only site but site with spin.
   i_max = X->Large.i_max;
@@ -653,7 +653,7 @@ firstprivate(i_max, X, isite1, isite2, isite3, isite4, Asum, Bsum, Adiff, Bdiff,
     if (isite1 == isite2 && isite3 == isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        child_CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, tmp_v0, tmp_v1, X, &tmp_off);
+        child_CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, tmp_v0, tmp_v1);
     }/*if (isite1 == isite2 && isite3 == isite4)*/
     else if (isite1 == isite2 && isite3 != isite4) {
 #pragma omp for
@@ -686,11 +686,11 @@ void GC_child_general_int(
   struct BindStruct *X//!<[inout]
 ) {
   std::complex<double> tmp_V;
-  long unsigned int j, i_max;
-  long unsigned int isite1, isite2, isite3, isite4;
-  long unsigned int Asum, Bsum, Adiff, Bdiff;
-  long unsigned int tmp_off = 0;
-  long unsigned int tmp_off_2 = 0;
+  long int j, i_max;
+  long int isite1, isite2, isite3, isite4;
+  long int Asum, Bsum, Adiff, Bdiff;
+  long int tmp_off = 0;
+  long int tmp_off_2 = 0;
 
   i_max = X->Large.i_max;
   isite1 = X->Large.is1_spin;
@@ -712,24 +712,25 @@ shared(tmp_v0, tmp_v1,nstate)
     if (isite1 == isite2 && isite3 == isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        GC_child_CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, tmp_v0, tmp_v1, X, &tmp_off);
+        GC_child_CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, tmp_v0, tmp_v1);
     }/*if (isite1 == isite2 && isite3 == isite4)*/
     else if (isite1 == isite2 && isite3 != isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        GC_child_CisAisCjtAku_element(j, isite1, isite3, isite4, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, X, &tmp_off);
+        GC_child_CisAisCjtAku_element(j, isite1, isite3, isite4, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 == isite2 && isite3 != isite4)*/
     else if (isite1 != isite2 && isite3 == isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
         GC_child_CisAjtCkuAku_element(
-          j, isite1, isite2, isite3, Asum, Adiff, tmp_V, nstate, tmp_v0, tmp_v1, X, &tmp_off);
+          j, isite1, isite2, isite3, Asum, Adiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 != isite2 && isite3 == isite4)*/
     else if (isite1 != isite2 && isite3 != isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
         GC_child_CisAjtCkuAlv_element(
-          j, isite1, isite2, isite3, isite4, Asum, Adiff, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, X, &tmp_off_2);
+          j, isite1, isite2, isite3, isite4, Asum, Adiff, Bsum, Bdiff, tmp_V, 
+          nstate, tmp_v0, tmp_v1, &tmp_off_2);
     }/*if (isite1 != isite2 && isite3 != isite4)*/
   }/*End of parallel region*/
   return;
@@ -745,8 +746,8 @@ void GC_child_pairhopp(
   struct BindStruct *X//!<[inout]
 ) {
   long int j;
-  long unsigned int i_max = X->Large.i_max;
-  long unsigned int off = 0;
+  long int i_max = X->Large.i_max;
+  long int off = 0;
 
 #pragma omp parallel for default(none) \
 firstprivate(i_max,X,off) private(j) shared(tmp_v0, tmp_v1,nstate)
@@ -766,8 +767,8 @@ void GC_child_exchange(
   struct BindStruct *X
 ) {
   long int j;
-  long unsigned int i_max = X->Large.i_max;
-  long unsigned int off = 0;
+  long int i_max = X->Large.i_max;
+  long int off = 0;
 
 #pragma omp parallel for default(none) \
  firstprivate(i_max, X,off) private(j) shared(tmp_v0, tmp_v1,nstate)

@@ -56,20 +56,20 @@
 /// \return -1 unnormally finished
 int Rearray_Interactions(
                          int i,
-                         long unsigned int *org_isite1,
-                         long unsigned int *org_isite2,
-                         long unsigned int *org_isite3,
-                         long unsigned int *org_isite4,
-                         long unsigned int *org_sigma1,
-                         long unsigned int *org_sigma2,
-                         long unsigned int *org_sigma3,
-                         long unsigned int *org_sigma4,
+                         long int *org_isite1,
+                         long int *org_isite2,
+                         long int *org_isite3,
+                         long int *org_isite4,
+                         long int *org_sigma1,
+                         long int *org_sigma2,
+                         long int *org_sigma3,
+                         long int *org_sigma4,
                          std::complex<double> *tmp_V,
                          struct BindStruct *X
                          )
 {
-  long unsigned int tmp_org_isite1,tmp_org_isite2,tmp_org_isite3,tmp_org_isite4;
-  long unsigned int tmp_org_sigma1,tmp_org_sigma2,tmp_org_sigma3,tmp_org_sigma4;
+  long int tmp_org_isite1,tmp_org_isite2,tmp_org_isite3,tmp_org_isite4;
+  long int tmp_org_sigma1,tmp_org_sigma2,tmp_org_sigma3,tmp_org_sigma4;
 
   tmp_org_isite1   = X->Def.CisAjtCkuAlvDC[i][0]+1;
   tmp_org_sigma1   = X->Def.CisAjtCkuAlvDC[i][1];
@@ -149,15 +149,15 @@ int expec_cisajscktalt_HubbardGC(
   std::complex<double> **vec, 
   std::complex<double> **prod
 ) {
-  long unsigned int i, j;
-  long unsigned int isite1, isite2, isite3, isite4;
-  long unsigned int org_isite1, org_isite2, org_isite3, org_isite4;
-  long unsigned int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
-  long unsigned int Asum, Bsum, Adiff, Bdiff;
-  long unsigned int tmp_off = 0;
-  long unsigned int tmp_off_2 = 0;
+  long int i, j;
+  long int isite1, isite2, isite3, isite4;
+  long int org_isite1, org_isite2, org_isite3, org_isite4;
+  long int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
+  long int Asum, Bsum, Adiff, Bdiff;
+  long int tmp_off = 0;
+  long int tmp_off_2 = 0;
   std::complex<double> tmp_V = 1.0 + 0.0*I;
-  long unsigned int i_max;
+  long int i_max;
 
   for (i = 0; i < X->Def.NCisAjtCkuAlvDC; i++) {
     zclear(X->Large.i_max*nstate, &Xvec[1][0]);
@@ -195,7 +195,7 @@ int expec_cisajscktalt_HubbardGC(
       }
     }//InterPE
     else {
-      child_general_int_GetInfo(i, X, org_isite1, org_isite2, org_isite3, org_isite4,
+      child_general_int_GetInfo(X, org_isite1, org_isite2, org_isite3, org_isite4,
         org_sigma1, org_sigma2, org_sigma3, org_sigma4, tmp_V);
 
       i_max = X->Large.i_max;
@@ -213,7 +213,7 @@ int expec_cisajscktalt_HubbardGC(
 #pragma omp parallel for default(none) private(j) shared(vec,Xvec,nstate)     \
 firstprivate(i_max,X,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_off,tmp_off_2,tmp_V)
         for (j = 1; j <= i_max; j++) {
-          GC_child_CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, Xvec, vec, X, &tmp_off);
+          GC_child_CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, Xvec, vec);
         }
       }
       else if (isite1 == isite2 && isite3 != isite4) {
@@ -221,7 +221,7 @@ firstprivate(i_max,X,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_off,t
 firstprivate(i_max,X,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_off,tmp_off_2,tmp_V)
         for (j = 1; j <= i_max; j++) {
           GC_child_CisAisCjtAku_element(j, isite1, isite3, isite4, Bsum, Bdiff, 
-            tmp_V, nstate, Xvec, vec, X, &tmp_off);
+            tmp_V, nstate, Xvec, vec, &tmp_off);
         }
       }
       else if (isite1 != isite2 && isite3 == isite4) {
@@ -229,7 +229,7 @@ firstprivate(i_max,X,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_off,t
 firstprivate(i_max,X,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_off,tmp_off_2,tmp_V) 
         for (j = 1; j <= i_max; j++) {
           GC_child_CisAjtCkuAku_element(j, isite1, isite2, isite3, Asum, Adiff, 
-            tmp_V, nstate, Xvec, vec, X, &tmp_off);
+            tmp_V, nstate, Xvec, vec, &tmp_off);
         }
       }
       else if (isite1 != isite2 && isite3 != isite4) {
@@ -237,7 +237,7 @@ firstprivate(i_max,X,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_off,t
 firstprivate(i_max,X,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_off,tmp_off_2,tmp_V) 
         for (j = 1; j <= i_max; j++) {
           GC_child_CisAjtCkuAlv_element(j, isite1, isite2, isite3, isite4, Asum, Adiff, Bsum, Bdiff, 
-            tmp_V, nstate, Xvec, vec, X, &tmp_off_2);
+            tmp_V, nstate, Xvec, vec, &tmp_off_2);
         }
       }
     }
@@ -262,15 +262,15 @@ int expec_cisajscktalt_Hubbard(
   std::complex<double> **vec,
   std::complex<double> **prod
 ){
-  long unsigned int i, j;
-  long unsigned int isite1, isite2, isite3, isite4;
-  long unsigned int org_isite1, org_isite2, org_isite3, org_isite4;
-  long unsigned int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
-  long unsigned int Asum, Bsum, Adiff, Bdiff;
-  long unsigned int tmp_off = 0;
-  long unsigned int tmp_off_2 = 0;
+  long int i, j;
+  long int isite1, isite2, isite3, isite4;
+  long int org_isite1, org_isite2, org_isite3, org_isite4;
+  long int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
+  long int Asum, Bsum, Adiff, Bdiff;
+  long int tmp_off = 0;
+  long int tmp_off_2 = 0;
   std::complex<double> tmp_V;
-  long unsigned int i_max;
+  long int i_max;
 
   for (i = 0; i < X->Def.NCisAjtCkuAlvDC; i++) {
     zclear(X->Large.i_max*nstate, &Xvec[1][0]);
@@ -318,7 +318,7 @@ int expec_cisajscktalt_Hubbard(
     }//InterPE
     else {
       child_general_int_GetInfo(
-        i, X, org_isite1, org_isite2, org_isite3, org_isite4,
+        X, org_isite1, org_isite2, org_isite3, org_isite4,
         org_sigma1, org_sigma2, org_sigma3, org_sigma4, tmp_V
       );
 
@@ -338,7 +338,7 @@ int expec_cisajscktalt_Hubbard(
 #pragma omp parallel for default(none) private(j) shared(vec,tmp_V,Xvec,nstate) \
 firstprivate(i_max,X,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_off,tmp_off_2)
         for (j = 1; j <= i_max; j++) {
-          child_CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, Xvec, vec, X, &tmp_off);
+          child_CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, Xvec, vec);
         }
       }
       else if (isite1 == isite2 && isite3 != isite4) {
@@ -387,15 +387,15 @@ int expec_cisajscktalt_SpinHalf(
   std::complex<double> **vec,
   std::complex<double> **prod
 ){
-  long unsigned int i, j;
-  long unsigned int org_isite1, org_isite2, org_isite3, org_isite4;
-  long unsigned int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
-  long unsigned int isA_up, isB_up;
-  long unsigned int is1_up, is2_up;
-  long unsigned int tmp_off = 0;
+  long int i, j;
+  long int org_isite1, org_isite2, org_isite3, org_isite4;
+  long int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
+  long int isA_up, isB_up;
+  long int is1_up, is2_up;
+  long int tmp_off = 0;
   int tmp_sgn, num1, num2, one = 1;
   std::complex<double> tmp_V;
-  long unsigned int i_max;
+  long int i_max;
   std::complex<double> dmv;
 
   i_max = X->Check.idim_max;
@@ -413,14 +413,14 @@ int expec_cisajscktalt_SpinHalf(
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
         is1_up = X->Def.Tpow[org_isite1 - 1];
         is2_up = X->Def.Tpow[org_isite3 - 1];
-        num1 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is1_up, org_sigma1);
-        num2 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is2_up, org_sigma3);
+        num1 = X_SpinGC_CisAis((long int)myrank + 1, is1_up, org_sigma1);
+        num2 = X_SpinGC_CisAis((long int)myrank + 1, is2_up, org_sigma3);
         zaxpy_long(i_max*nstate, tmp_V * (std::complex<double>)(num1*num2),
           &vec[1][0], &Xvec[1][0]);
       }
       else if (org_isite1 == org_isite3 && org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) {
         is1_up = X->Def.Tpow[org_isite1 - 1];
-        num1 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is1_up, org_sigma1);
+        num1 = X_SpinGC_CisAis((long int)myrank + 1, is1_up, org_sigma1);
         zaxpy_long(i_max*nstate, tmp_V * (std::complex<double>)num1, &vec[1][0], &Xvec[1][0]);
       }
       else if (org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) {//exchange
@@ -436,11 +436,11 @@ int expec_cisajscktalt_SpinHalf(
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
         is1_up = X->Def.Tpow[org_isite1 - 1];
         is2_up = X->Def.Tpow[org_isite3 - 1];
-        num2 = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is2_up, org_sigma3);
+        num2 = X_SpinGC_CisAis((long int)myrank + 1, is2_up, org_sigma3);
 #pragma omp parallel for default(none)shared(vec,Xvec,nstate,one)      \
   firstprivate(i_max, tmp_V, is1_up, org_sigma1, X, num2) private(j, num1,dmv)
         for (j = 1; j <= i_max; j++) {
-          num1 = X_Spin_CisAis(j, X, is1_up, org_sigma1);
+          num1 = X_Spin_CisAis(j, is1_up, org_sigma1);
           dmv = tmp_V * (std::complex<double>)(num1*num2);
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
         }
@@ -462,14 +462,14 @@ int expec_cisajscktalt_SpinHalf(
 firstprivate(i_max,X,isA_up,isB_up,org_sigma2,org_sigma4,tmp_off, tmp_V)
         for (j = 1; j <= i_max; j++) {
           child_CisAisCisAis_spin_element(j, isA_up, isB_up, org_sigma2, org_sigma4,
-            tmp_V, nstate, Xvec, vec, X);
+            tmp_V, nstate, Xvec, vec);
         }
       }
       else if (org_isite1 == org_isite3 && org_sigma1 == org_sigma4 && org_sigma3 == org_sigma2) {
 #pragma omp parallel for default(none) private(j, dmv) \
   firstprivate(i_max,X,isA_up,org_sigma1, tmp_V) shared(vec, list_1,Xvec,nstate,one)
         for (j = 1; j <= i_max; j++) {
-          dmv = tmp_V * (std::complex<double>)X_Spin_CisAis(j, X, isA_up, org_sigma1);
+          dmv = tmp_V * (std::complex<double>)X_Spin_CisAis(j, isA_up, org_sigma1);
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
         }
       }
@@ -507,17 +507,17 @@ int expec_cisajscktalt_SpinGeneral(
   std::complex<double> **vec, 
   std::complex<double> **prod
 ){
-  long unsigned int i, j;
-  long unsigned int org_isite1, org_isite2, org_isite3, org_isite4;
-  long unsigned int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
-  long unsigned int tmp_off = 0;
-  long unsigned int tmp_off_2 = 0;
-  long unsigned int list1_off = 0;
+  long int i, j;
+  long int org_isite1, org_isite2, org_isite3, org_isite4;
+  long int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
+  long int tmp_off = 0;
+  long int tmp_off_2 = 0;
+  long int list1_off = 0;
   int num1, one = 1;
   std::complex<double> tmp_V;
-  long unsigned int i_max;
+  long int i_max;
   int tmp_Sz;
-  long unsigned int tmp_org = 0;
+  long int tmp_org = 0;
   i_max = X->Check.idim_max;
   X->Large.mode = M_CORR;
 
@@ -620,13 +620,13 @@ int expec_cisajscktalt_SpinGCHalf(
   std::complex<double> **vec, 
   std::complex<double> **prod
 ){
-  long unsigned int i, j;
-  long unsigned int org_isite1, org_isite2, org_isite3, org_isite4;
-  long unsigned int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
-  long unsigned int isA_up, isB_up;
-  long unsigned int tmp_off = 0;
+  long int i, j;
+  long int org_isite1, org_isite2, org_isite3, org_isite4;
+  long int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
+  long int isA_up, isB_up;
+  long int tmp_off = 0;
   std::complex<double> tmp_V;
-  long unsigned int i_max;
+  long int i_max;
   i_max = X->Check.idim_max;
 
   for (i = 0; i < X->Def.NCisAjtCkuAlvDC; i++) {
@@ -696,7 +696,7 @@ int expec_cisajscktalt_SpinGCHalf(
 firstprivate(i_max,X,isA_up,isB_up,org_sigma2,org_sigma4,tmp_off,tmp_V)
           for (j = 1; j <= i_max; j++) {
             GC_child_CisAisCisAis_spin_element(j, isA_up, isB_up, org_sigma2, org_sigma4,
-              tmp_V, nstate, Xvec, vec, X);
+              tmp_V, nstate, Xvec, vec);
           }
         }
         else if (org_sigma1 == org_sigma2 && org_sigma3 != org_sigma4) {
@@ -704,7 +704,7 @@ firstprivate(i_max,X,isA_up,isB_up,org_sigma2,org_sigma4,tmp_off,tmp_V)
 firstprivate(i_max,X,isA_up,isB_up,org_sigma2,org_sigma4,tmp_off,tmp_V)
           for (j = 1; j <= i_max; j++) {
             GC_child_CisAisCitAiu_spin_element(j, org_sigma2, org_sigma4, isA_up, isB_up,
-              tmp_V, nstate, Xvec, vec, X, &tmp_off);
+              tmp_V, nstate, Xvec, vec, &tmp_off);
           }
         }
         else if (org_sigma1 != org_sigma2 && org_sigma3 == org_sigma4) {
@@ -712,7 +712,7 @@ firstprivate(i_max,X,isA_up,isB_up,org_sigma2,org_sigma4,tmp_off,tmp_V)
 firstprivate(i_max,X,isA_up,isB_up,org_sigma2,org_sigma4,tmp_off,tmp_V)
           for (j = 1; j <= i_max; j++) {
             GC_child_CisAitCiuAiu_spin_element(j, org_sigma2, org_sigma4, isA_up, isB_up, 
-              tmp_V, nstate, Xvec, vec, X, &tmp_off);
+              tmp_V, nstate, Xvec, vec, &tmp_off);
           }
         }
         else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
@@ -720,7 +720,7 @@ firstprivate(i_max,X,isA_up,isB_up,org_sigma2,org_sigma4,tmp_off,tmp_V)
 firstprivate(i_max,X,isA_up,isB_up,org_sigma2,org_sigma4,tmp_off,tmp_V)
           for (j = 1; j <= i_max; j++) {
             GC_child_CisAitCiuAiv_spin_element(j, org_sigma2, org_sigma4, isA_up, isB_up,
-              tmp_V, nstate, Xvec, vec, X, &tmp_off);
+              tmp_V, nstate, Xvec, vec, &tmp_off);
           }
         }
       }
@@ -746,14 +746,14 @@ int expec_cisajscktalt_SpinGCGeneral(
   std::complex<double> **vec, 
   std::complex<double> **prod
 ){
-  long unsigned int i, j;
-  long unsigned int org_isite1, org_isite2, org_isite3, org_isite4;
-  long unsigned int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
-  long unsigned int tmp_off = 0;
-  long unsigned int tmp_off_2 = 0;
+  long int i, j;
+  long int org_isite1, org_isite2, org_isite3, org_isite4;
+  long int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
+  long int tmp_off = 0;
+  long int tmp_off_2 = 0;
   int  num1, one = 1;
   std::complex<double> tmp_V;
-  long unsigned int i_max;
+  long int i_max;
   i_max = X->Check.idim_max;
   X->Large.mode = M_CORR;
 
@@ -949,7 +949,7 @@ int expec_cisajscktaltdc
 ) {
   FILE *fp;
   char sdt[D_FileNameMax];
-  long unsigned int irght, ilft, ihfbit, icaca;
+  long int irght, ilft, ihfbit, icaca;
   std::complex<double> **prod;
   //For TPQ
   int step = 0, rand_i = 0, istate;

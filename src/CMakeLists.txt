@@ -10,7 +10,7 @@ include_directories(include)
 add_definitions(-D_HPhi)
 add_definitions(-DDSFMT_MEXP=19937)
 
-set(SOURCES FileIO.cpp HPhiMain.cpp HPhiTrans.cpp bitcalc.cpp check.cpp CheckMPI.cpp dSFMT.cpp diagonalcalc.cpp global.cpp log.cpp input.cpp output.cpp output_list.cpp readdef.cpp sz.cpp xsetmem.cpp ErrorMessage.cpp LogMessage.cpp ProgressMessage.cpp wrapperMPI.cpp splash.cpp time.cpp eigenIO.cpp)
+set(SOURCES FileIO.cpp HPhiMain.cpp HPhiTrans.cpp bitcalc.cpp check.cpp CheckMPI.cpp dSFMT.cpp diagonalcalc.cpp global.cpp log.cpp input.cpp output.cpp output_list.cpp readdef.cpp sz.cpp xsetmem.cpp ErrorMessage.cpp LogMessage.cpp ProgressMessage.cpp wrapperMPI.cpp splash.cpp time.cpp)
 
 set(SOURCES_MLTPLY Multiply.cpp mltply.cpp mltplySpin.cpp mltplyHubbard.cpp mltplyMPIHubbard.cpp mltplyMPISpin.cpp mltplyHubbardCore.cpp mltplySpinCore.cpp mltplyMPIHubbardCore.cpp mltplyMPISpinCore.cpp)
 set(SOURCES_CG CalcByLOBPCG.cpp )

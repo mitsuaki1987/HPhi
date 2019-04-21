@@ -53,7 +53,7 @@ int CalcByTPQ(
   char sdt[D_FileNameMax];
   char **sdt_phys, **sdt_norm, **sdt_flct;
   int rand_i, iret;
-  unsigned long int i_max;
+  long int i_max;
   int step_iO = 0;
   FILE *fp;
   double *inv_temp, Ns;

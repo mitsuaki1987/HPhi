@@ -26,166 +26,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <cstring>
 #include <complex>
 
-///
-/// \brief Allocation for A[N]
-/// \param N [in] The size of the array A
-/// \param A [in,out] Array to allocate
-/// \return A Pointer to array A
-/// \author Kazuyoshi Yoshimi (University of Tokyo)
-unsigned int *ui_1d_allocate(const long unsigned int N);
 
-///
-/// \brief Function to free 1d array (int)
-/// \param A Pointer of 1d array A
-void free_ui_1d_allocate(unsigned int *A);
-
-///
-/// \brief Allocation for A[N]
-/// \param N [in] The size of the array A
-/// \param A [in,out] Array to allocate
-/// \return A Pointer to array A
-/// \author Kazuyoshi Yoshimi (University of Tokyo)
-long int *li_1d_allocate(const long unsigned int N);
-
-///
-/// \brief Function to free 1d array (int)
-/// \param A Pointer of 1d array A
-void free_li_1d_allocate(long int *A);
-
-///
-/// \brief Allocation for A[N][M]
-/// \param N [in] The size of the array A
-/// \param M [in] The size of the array M
-/// \return A Pointer to array A
-/// \author Kazuyoshi Yoshimi (University of Tokyo)
-long int **li_2d_allocate(const long unsigned int N, const long unsigned int M);
-///
-/// \brief Function to free 2d array (int)
-/// \param A Pointer of 2d array A
-void free_li_2d_allocate(long int **A);
-
-
-///
-/// \brief Allocation for A[N]
-/// \param N [in] The size of the array A
-/// \param A [in,out] Array to allocate
-/// \return A Pointer to array A
-/// \author Kazuyoshi Yoshimi (University of Tokyo)
-long unsigned int *lui_1d_allocate(const long unsigned int N);
-
-///
-/// \brief Function to free 1d array (int)
-/// \param A Pointer of 1d array A
-void free_lui_1d_allocate(long unsigned int *A);
-
-///
-/// \brief Allocation for A[N]
-/// \param N [in] The size of the array A
-/// \param A [in,out] Array to allocate
-/// \return A Pointer to array A
-/// \author Kazuyoshi Yoshimi (University of Tokyo)
-int *i_1d_allocate(const long unsigned int N);
-
-///
-/// \brief Function to free 1d array (int)
-/// \param A Pointer of 1d array A
+int *i_1d_allocate(const long int N);
 void free_i_1d_allocate(int *A);
-
-
-///
-/// \brief Allocation for A[N][M]
-/// \param N [in] The size of the array A
-/// \param M [in] The size of the array M
-/// \return A Pointer to array A
-/// \author Kazuyoshi Yoshimi (University of Tokyo)
-int **i_2d_allocate(const long unsigned int N, const long unsigned int M);
-unsigned int **ui_2d_allocate(const long unsigned int N, const long unsigned int M);
-///
-/// \brief Function to free 2d array (int)
-/// \param A Pointer of 2d array A
+long int *li_1d_allocate(const long int N);
+void free_li_1d_allocate(long int *A);
+long int **li_2d_allocate(const long int N, const long int M);
+void free_li_2d_allocate(long int **A);
+void free_li_1d_allocate(long int *A);
+int **i_2d_allocate(const long int N, const long int M);
 void free_i_2d_allocate(int **A);
-
-
-///
-/// \brief Allocation for A[N][M][L]
-/// \param N [in] The size of the array A
-/// \param M [in] The size of the array A
-/// \param L [in] The size of the array A
-/// \return A Pointer to array A
-/// \author Kazuyoshi Yoshimi (University of Tokyo)
-int ***i_3d_allocate(const long unsigned int N, const long unsigned int M, const long unsigned int L);
-unsigned int ***ui_3d_allocate(const long unsigned int N, const long unsigned int M, const long unsigned int L);
-///
-/// \brief Function to free 3d array (int)
-/// \param A Pointer of 3d array A
+int ***i_3d_allocate(const long int N, const long int M, const long int L);
 void free_i_3d_allocate(int ***A);
-
-///
-/// \brief Allocation for A[N]
-/// \param N [in] The size of the array A
-/// \param A [in,out] Array to allocate
-/// \return A Pointer to array A
-/// \author Kazuyoshi Yoshimi (University of Tokyo)
-double *d_1d_allocate(const long unsigned int N);
-
-///
-/// \brief Function to free 1d array (double)
-/// \param A Pointer of 1d array A
+double *d_1d_allocate(const long int N);
 void free_d_1d_allocate(double *A);
-
-
-///
-/// \brief Allocation for A[N][M]
-/// \param N [in] The size of the array A
-/// \param M [in] The size of the array M
-/// \return A Pointer to array A
-/// \author Kazuyoshi Yoshimi (University of Tokyo)
-double **d_2d_allocate(const long unsigned int N, const long unsigned int M);
-///
-/// \brief Function to free 2d array (double)
-/// \param A Pointer of 2d array A
+double **d_2d_allocate(const long int N, const long int M);
 void free_d_2d_allocate(double **A);
-
-
-///
-/// \brief Allocation for A[N]
-/// \param N [in] The size of the array A
-/// \return A Pointer to array A
-/// \author Kazuyoshi Yoshimi (University of Tokyo)
-std::complex<double> *cd_1d_allocate(const long unsigned int N);
-
-///
-/// \brief Function to free 1d array (std::complex<double>)
-/// \param A Pointer of 2d array A
+std::complex<double> *cd_1d_allocate(const long int N);
 void free_cd_1d_allocate(std::complex<double>*A);
-
-///
-/// \brief Allocation for A[N][M]
-/// \param N [in] The size of the array A
-/// \param M [in] The size of the array M
-/// \return A Pointer to array A
-/// \author Kazuyoshi Yoshimi (University of Tokyo)
-std::complex<double> **cd_2d_allocate(const long unsigned int N, const long unsigned int M);
-
-///
-/// \brief Function to free 2d array (std::complex<double>)
-/// \param A Pointer of 2d array A
+std::complex<double> **cd_2d_allocate(const long int N, const long int M);
 void free_cd_2d_allocate(std::complex<double>**A);
-
-//
-/// \brief Allocation for A[N][M]
-/// \param N [in] The size of the array A
-/// \param M [in] The size of the array M
-/// \return A Pointer to array A
-/// \author Kazuyoshi Yoshimi (University of Tokyo)
-std::complex<double>***cd_3d_allocate(const long unsigned int N, const long unsigned int M, const long unsigned int L);
-///
-/// \brief Function to free 3d array (std::complex<double>)
-/// \param A A pointer of 3d array A
+std::complex<double>***cd_3d_allocate(const long int N, const long int M, const long int L);
 void free_cd_3d_allocate(std::complex<double>***A);
-
-std::complex<double>****cd_4d_allocate(const long unsigned int N, const long unsigned int M, const long unsigned int L, const long unsigned int K);
-
+std::complex<double>****cd_4d_allocate(const long int N, const long int M, const long int L, const long int K);
 void free_cd_4d_allocate(std::complex<double>****A);
 
 #endif //MVMC_SETMEMORY_H

@@ -36,7 +36,7 @@
  * @version 2.0
  */
 
-void StampTime(FILE *fp, char *str, int num){
+void StampTime(FILE *fp, const char *str, int num){
 #ifdef __MPI
   char str1[256];
   sprintf(str1, "%-50s [%04d] %12.5lf\n", str, num, Timer[num]);

@@ -22,13 +22,13 @@
 #include "struct.hpp"
 
 void defmodelBoost(
-  long unsigned int W0,
-  long unsigned int R0,
-  long unsigned int num_pivot,
-  long unsigned int ishift_nspin,
+  long int W0,
+  long int R0,
+  long int num_pivot,
+  long int ishift_nspin,
   int  **list_6spin_star,
   int ***list_6spin_pair,
-  long unsigned int model_num,
+  long int model_num,
   std::complex<double> ***arrayJ,
   std::complex<double> *vecB
 );

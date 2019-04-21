@@ -44,19 +44,19 @@
  */
 int GetSplitBit(
                 const int Nsite, //!<[in]
-                long unsigned int *irght, //!<[out]
-                long unsigned int *ilft, //!<[out]
-                long unsigned int *ihfbit//!<[out]
+                long int *irght, //!<[out]
+                long int *ilft, //!<[out]
+                long int *ihfbit//!<[out]
 ){
   if(Nsite<1){
     fprintf(stderr, "%s", cErrSiteNumber);
     return -1;
   }
   *ihfbit=1;
-  *ihfbit=(*ihfbit<<(unsigned long int)((Nsite+1)/2));
+  *ihfbit=(*ihfbit<<(long int)((Nsite+1)/2));
   *irght = *ihfbit-1;
   *ilft=1;
-  *ilft = (*ilft<<(unsigned long int)Nsite)-1;
+  *ilft = (*ilft<<(long int)Nsite)-1;
   *ilft= *ilft ^ *irght;
   return 0;
 }
@@ -78,9 +78,9 @@ int GetSplitBit(
 int GetSplitBitByModel(
                        const int Nsite,  //!<[in]
                        const int iCalcModel,  //!<[in]
-                       long unsigned int *irght,  //!<[out]
-                       long unsigned int *ilft,  //!<[out]
-                       long unsigned int *ihfbit  //!<[out]
+                       long int *irght,  //!<[out]
+                       long int *ilft,  //!<[out]
+                       long int *ihfbit  //!<[out]
                        )
 {
   int tmpNsite=Nsite;
@@ -123,7 +123,7 @@ int GetSplitBitByModel(
  */
 int GetSplitBitForGeneralSpin(
                 const int Nsite,  //!<[in]
-                long unsigned int *ihfbit, //!<[out]
+                long int *ihfbit, //!<[out]
                 const long int *SiteToBit  //!<[in]
 ){
   int isite=0;
@@ -164,12 +164,12 @@ int GetSplitBitForGeneralSpin(
  * @author Kazuyoshi Yoshimi (The University of Tokyo) 
  */
 void SplitBit(
-              const long unsigned int ibit,  //!<[in]
-              const long unsigned int irght,  //!<[in]
-              const long unsigned int ilft,  //!<[in]
-              const long unsigned int ihfbit,  //!<[in]
-              long unsigned int *isplited_Bit_right,  //!<[out]
-              long unsigned int *isplited_Bit_left  //!<[out]
+              const long int ibit,  //!<[in]
+              const long int irght,  //!<[in]
+              const long int ilft,  //!<[in]
+              const long int ihfbit,  //!<[in]
+              long int *isplited_Bit_right,  //!<[out]
+              long int *isplited_Bit_left  //!<[out]
 )
 {
   *isplited_Bit_right=ibit & irght;
@@ -193,16 +193,16 @@ void SplitBit(
  * @author Kazuyoshi Yoshimi (The University of Tokyo) 
  */
 int GetOffComp(
-               long unsigned int *_list_2_1,  //!<[in]
-               long unsigned int *_list_2_2, //!<[in]
-               long unsigned int _ibit,  //!<[in]
-               const long unsigned int _irght, //!<[in]
-               const long unsigned int _ilft,  //!<[in]
-               const long unsigned int _ihfbit,  //!<[in]
-               long unsigned int *_ioffComp  //!<[out]
+               long int *_list_2_1,  //!<[in]
+               long int *_list_2_2, //!<[in]
+               long int _ibit,  //!<[in]
+               const long int _irght, //!<[in]
+               const long int _ilft,  //!<[in]
+               const long int _ihfbit,  //!<[in]
+               long int *_ioffComp  //!<[out]
 )
 {
-  long unsigned int ia, ib;
+  long int ia, ib;
   SplitBit(_ibit, _irght, _ilft, _ihfbit, &ia, &ib);
 /*
   *_ioffComp =_list_2_1[ia];
@@ -241,13 +241,13 @@ int GetOffComp(
  * @author Kazuyoshi Yoshimi (The University of Tokyo) 
  */
 int GetOffCompGeneralSpin(
-                          const long unsigned int org_ibit,  //!<[in]
+                          const long int org_ibit,  //!<[in]
                           const int org_isite,  //!<[in]
                           const int org_ispin, //!<[in]
                           const int off_ispin, //!<[in]
-                          long  unsigned int *_ioffComp,  //!<[out]
+                          long  int *_ioffComp,  //!<[out]
                           const long int *SiteToBit,  //!<[in]
-                          const long unsigned int *Tpow  //!<[in]
+                          const long int *Tpow  //!<[in]
 )
 {
   if(off_ispin>SiteToBit[org_isite-1]-1 ||
@@ -283,12 +283,12 @@ int GetOffCompGeneralSpin(
  * @author Kazuyoshi Yoshimi (The University of Tokyo) 
  */
 int ConvertToList1GeneralSpin(
-    const long unsigned int org_ibit,  //!<[in]
-    const long unsigned int ihlfbit,    //!<[in]
-    long unsigned int *_ilist1Comp     //!<[out]
+    const long int org_ibit,  //!<[in]
+    const long int ihlfbit,    //!<[in]
+    long int *_ilist1Comp     //!<[out]
 )
 {
-  long unsigned int ia, ib;
+  long int ia, ib;
   ia=org_ibit%ihlfbit;
   ib=org_ibit/ihlfbit;
   if(list_2_1[ia]*list_2_2[ib]==0){
@@ -310,11 +310,11 @@ int ConvertToList1GeneralSpin(
  * @author Kazuyoshi Yoshimi (The University of Tokyo) 
  */
 void SgnBit_old( 
-      const long unsigned int org_bit,  //!<[in]
+      const long int org_bit,  //!<[in]
                   int *sgn  //!<[out]
 )
 {
-   long unsigned int bit;
+   long int bit;
 
    bit     = org_bit^(org_bit>>1);
    bit     = (bit^(bit>>2) ) & 0x11111111;
@@ -336,11 +336,11 @@ void SgnBit_old(
  * @author Kazuyoshi Yoshimi (The University of Tokyo) 
  */
 void SgnBit( 
-      const long unsigned int org_bit,  //!<[in]
+      const long int org_bit,  //!<[in]
                   int *sgn  //!<[out]
 )
 {
-   long unsigned int bit;
+   long int bit;
 
    bit =  org_bit^(org_bit>>1);
    bit =  bit^(bit>>2);
@@ -364,8 +364,8 @@ void SgnBit(
  * @author Kazuyoshi Yoshimi (The University of Tokyo) 
  */
 int BitCheck( 
-       const long unsigned int org_bit,  //!<[in]
-       const long unsigned int target_bit  //!<[in]
+       const long int org_bit,  //!<[in]
+       const long int target_bit  //!<[in]
 )
 {
    return  (org_bit >> target_bit) &1;
@@ -390,11 +390,11 @@ int BitCheck(
  * @author Kazuyoshi Yoshimi (The University of Tokyo) 
  */
 int BitCheckGeneral(
-       const long unsigned int org_bit,  //!<[in]
-       const unsigned int org_isite,  //!<[in]
-       const unsigned int target_ispin,  //!<[in]
+       const long int org_bit,  //!<[in]
+       const int org_isite,  //!<[in]
+       const int target_ispin,  //!<[in]
        const long int *SiteToBit,  //!<[in]
-       const long unsigned int *Tpow  //!<[in]
+       const long int *Tpow  //!<[in]
 )
 {
 
@@ -418,14 +418,14 @@ int BitCheckGeneral(
  * @version 0.2
  * @author Kazuyoshi Yoshimi (The University of Tokyo) 
  */
-unsigned int GetBitGeneral( 
-       const unsigned int isite,  //!<[in]
-       const long unsigned int org_bit,  //!<[in]
+int GetBitGeneral( 
+       const int isite,  //!<[in]
+       const long int org_bit,  //!<[in]
        const long int *SiteToBit,  //!<[in]
-       const long unsigned int *Tpow  //!<[in]
+       const long int *Tpow  //!<[in]
 )
 {
-  long unsigned int tmp_bit=(org_bit/Tpow[isite-1])%SiteToBit[isite-1] ;
+  long int tmp_bit=(org_bit/Tpow[isite-1])%SiteToBit[isite-1] ;
   return (tmp_bit);
 }
 
@@ -446,14 +446,14 @@ unsigned int GetBitGeneral(
 
 int GetLocal2Sz
 (
- const unsigned int isite,  //!<[in]
- const long unsigned int org_bit,  //!<[in]
+ const int isite,  //!<[in]
+ const long int org_bit,  //!<[in]
  const long int *SiteToBit,  //!<[in]
- const long unsigned int *Tpow  //!<[in]
+ const long int *Tpow  //!<[in]
  )
 {
   int TwiceSz=0;
-  unsigned int bitAtSite=0;
+  int bitAtSite=0;
   //get bit
   bitAtSite=GetBitGeneral(isite, org_bit, SiteToBit, Tpow);
   TwiceSz=-(SiteToBit[isite-1]-1)+2*bitAtSite; //-2S^{total}_i+2Sz_i
@@ -470,8 +470,8 @@ int GetLocal2Sz
  * @author Takahiro Misawa (The University of Tokyo) 
  */
 
-unsigned long int snoob(unsigned long int x){
-  unsigned long int smallest, ripple, ones;
+long int snoob(long int x){
+  long int smallest, ripple, ones;
   smallest = x &(-x);
   ripple   = x+ smallest;
   ones     = x ^ ripple;
@@ -488,7 +488,7 @@ unsigned long int snoob(unsigned long int x){
  * @version 2.0
  * @author Takahiro Misawa (The University of Tokyo) 
  */
-int pop(unsigned int x){
+int pop(int x){
   x = x - ((x>>1) & 0x55555555);
   x = (x & 0x33333333)+ ((x>>2)& 0x33333333);
   x = (x+(x>>4)) & 0x0F0F0F0F;

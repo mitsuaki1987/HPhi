@@ -73,43 +73,7 @@ int CheckQuadSite(
           const int iMaxNum
           );
 
-int CheckTransferHermite
-(
-        struct DefineList *X
-);
-
-int CheckInterAllHermite
-(
-        int **InterAll,
-        std::complex<double>* ParaInterAll,
-        unsigned int **InterAllOffDiagonal,
-        std::complex<double>*ParaInterAllOffDiagonal,
-        const int NInterAllOffDiagonal,
-        const int iCalcModel
-);
-
-/*
-int GetDiagonalInterAll
-(
- struct DefineList *X
- );
-*/
-
-int GetDiagonalInterAll
-                (
-                                int **InterAll,
-                                std::complex<double> *ParaInterAll,
-                                const int NInterAll,
-                                int **InterAllDiagonal,
-                                double *ParaInterAllDiagonal,
-                                unsigned int **InterAllOffDiagonal,
-                                std::complex<double> *ParaInterAllOffDiagonal,
-                                int *Chemi,
-                                int *SpinChemi,
-                                double *ParaChemi,
-                                unsigned int *NChemi,
-                                const int iCalcModel
-                );
+int CheckTransferHermite(struct DefineList *X);
 
 int JudgeDefType
 (

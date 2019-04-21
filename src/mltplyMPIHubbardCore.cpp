@@ -45,11 +45,11 @@ and compute the index of final wavefunction associated to
 @return 1 if unoccupied, 0 if occupied
 */
 int CheckBit_Cis(
-  long unsigned int is1_spin,//!<[in] Index of site+spin
-  long unsigned int orgbit,//!<[in] Index of initial wavefunction
-  long unsigned int *offbit//!<[out] Index of final wavefunction
+  long int is1_spin,//!<[in] Index of site+spin
+  long int orgbit,//!<[in] Index of initial wavefunction
+  long int *offbit//!<[out] Index of final wavefunction
 ) {
-  long unsigned int ibit_tmp;
+  long int ibit_tmp;
   ibit_tmp = orgbit & is1_spin;
   if (ibit_tmp == 0) {
     *offbit = orgbit + is1_spin;
@@ -65,11 +65,11 @@ and compute the index of final wavefunction associated to
 @return 1 if occupied, 0 if unoccupied
 */
 int CheckBit_Ajt(
-  long unsigned int is1_spin,//!<[in] Index of site+spin
-  long unsigned int orgbit,//!<[in] Index of initial wavefunction
-  long unsigned int *offbit//!<[out] Index of final wavefunction
+  long int is1_spin,//!<[in] Index of site+spin
+  long int orgbit,//!<[in] Index of initial wavefunction
+  long int *offbit//!<[out] Index of final wavefunction
 ) {
-  long unsigned int ibit_tmp;
+  long int ibit_tmp;
   ibit_tmp = orgbit & is1_spin;
   if (ibit_tmp != 0) {
     *offbit = orgbit - is1_spin;
@@ -94,11 +94,11 @@ int CheckBit_InterAllPE(
   int org_isite4,//!<[in] Site 4
   int org_isigma4,//!<[in] Spin 4
   struct BindStruct *X,//!<[inout]
-  long unsigned int orgbit,//!<[in] Index of initial wavefunction
-  long unsigned int *offbit//!<[out] Index of final wavefunction
+  long int orgbit,//!<[in] Index of initial wavefunction
+  long int *offbit//!<[out] Index of final wavefunction
 ){
-  long unsigned int tmp_ispin;
-  long unsigned int tmp_org, tmp_off;
+  long int tmp_ispin;
+  long int tmp_org, tmp_off;
   int iflgBitExist = TRUE;
   tmp_org=orgbit;
   tmp_off=0;
@@ -153,10 +153,10 @@ int CheckBit_PairPE(
   int org_isite3,//!<[in] Site 3
   int org_isigma3,//!<[in] Spin 4
   struct BindStruct *X,//!<[inout]
-  long unsigned int orgbit//!<[in] Index pf intial wavefunction
+  long int orgbit//!<[in] Index pf intial wavefunction
 ){
-  long unsigned int tmp_ispin;
-  long unsigned int tmp_org, tmp_off;
+  long int tmp_ispin;
+  long int tmp_org, tmp_off;
   int iflgBitExist = TRUE;
   tmp_org=orgbit;
   
@@ -187,18 +187,18 @@ Fermion sign
 @return 1 if relevant, 0 if irrelevant
 */
 int GetSgnInterAll(
-  unsigned long int isite1,//!<[in] Site 1
-  unsigned long int isite2,//!<[in] Site 2
-  unsigned long int isite3,//!<[in] Site 3
-  unsigned long int isite4,//!<[in] Site 4
+  long int isite1,//!<[in] Site 1
+  long int isite2,//!<[in] Site 2
+  long int isite3,//!<[in] Site 3
+  long int isite4,//!<[in] Site 4
   int *Fsgn,//!<[out] Fermion sign
   struct BindStruct *X,//!<[inout]
-  unsigned long int orgbit,//!<[in] Index of the initial state
-  unsigned long int *offbit//!<[out] Index of the final state
+  long int orgbit,//!<[in] Index of the initial state
+  long int *offbit//!<[out] Index of the final state
 ){
-  long unsigned int diffA;
-  long unsigned int tmp_off;
-  long unsigned int tmp_ispin1, tmp_ispin2;
+  long int diffA;
+  long int tmp_off;
+  long int tmp_ispin1, tmp_ispin2;
   int tmp_sgn=0;
 
   tmp_ispin1=isite2;
@@ -217,7 +217,7 @@ int GetSgnInterAll(
     if (tmp_ispin2 > tmp_ispin1) diffA = tmp_ispin2 - tmp_ispin1 * 2;
     else diffA = tmp_ispin1-tmp_ispin2*2;
 
-    tmp_sgn=X_GC_CisAjt(orgbit, X, tmp_ispin1, tmp_ispin2, tmp_ispin1+tmp_ispin2, diffA, &tmp_off);
+    tmp_sgn=X_GC_CisAjt(orgbit, tmp_ispin1, tmp_ispin2, tmp_ispin1+tmp_ispin2, diffA, &tmp_off);
     if(tmp_sgn ==0){
       *offbit =0;
       *Fsgn = 0;
@@ -239,7 +239,7 @@ int GetSgnInterAll(
   else{
     if(tmp_ispin2 > tmp_ispin1) diffA = tmp_ispin2 - tmp_ispin1*2;
     else diffA = tmp_ispin1-tmp_ispin2*2;
-    tmp_sgn *=X_GC_CisAjt(tmp_off, X, tmp_ispin1, tmp_ispin2, tmp_ispin1+tmp_ispin2, diffA, offbit);
+    tmp_sgn *=X_GC_CisAjt(tmp_off, tmp_ispin1, tmp_ispin2, tmp_ispin1+tmp_ispin2, diffA, offbit);
     
     if(tmp_sgn ==0){
       *offbit =0;
@@ -267,12 +267,12 @@ void X_GC_child_CisAisCjtAjt_Hubbard_MPI(
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
   int iCheck;
-  unsigned long int tmp_ispin1;
-  unsigned long int i_max = X->Check.idim_max;
-  unsigned long int tmp_off, j;
+  long int tmp_ispin1;
+  long int i_max = X->Check.idim_max;
+  long int tmp_off, j;
   int one = 1;
 
-  iCheck=CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, X, (long unsigned int) myrank);
+  iCheck=CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, X, (long int) myrank);
   if(iCheck != TRUE){
     return;
   }
@@ -311,18 +311,18 @@ void X_GC_child_CisAjtCkuAku_Hubbard_MPI(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  unsigned long int i_max = X->Check.idim_max;
-  unsigned long int idim_max_buf;
+  long int i_max = X->Check.idim_max;
+  long int idim_max_buf;
   int iCheck, Fsgn;
-  unsigned long int isite1, isite2, isite3;
-  unsigned long int tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4;
-  unsigned long int j, Asum, Adiff;
+  long int isite1, isite2, isite3;
+  long int tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4;
+  long int j, Asum, Adiff;
   std::complex<double> dmv;
-  unsigned long int origin, tmp_off;
-  unsigned long int org_rankbit;
+  long int origin, tmp_off;
+  long int org_rankbit;
   int one = 1;
 
-  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, X, (long unsigned int) myrank, &origin);
+  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, X, (long int) myrank, &origin);
   isite1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
   isite2 = X->Def.Tpow[2 * org_isite2 + org_ispin2];
   isite3 = X->Def.Tpow[2 * org_isite3 + org_ispin3];
@@ -337,7 +337,7 @@ void X_GC_child_CisAjtCkuAku_Hubbard_MPI(
     else Adiff = tmp_isite1 - tmp_isite2 * 2;
   }
   else {
-    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, X, (long unsigned int) myrank, &origin);
+    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, X, (long int) myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
       tmp_isite4 = X->Def.OrgTpow[2 * org_isite1 + org_ispin1];
@@ -366,12 +366,12 @@ firstprivate(i_max,X,Asum,Adiff,isite1,isite2, tmp_V) \
     {
 #pragma omp for
       for (j = 1; j <= i_max; j++) 
-        GC_CisAjt(j, nstate, tmp_v0, tmp_v1, X, isite2, isite1, Asum, Adiff, tmp_V, &tmp_off);
+        GC_CisAjt(j, nstate, tmp_v0, tmp_v1, isite2, isite1, Asum, Adiff, tmp_V, &tmp_off);
 
       if (X->Large.mode != M_CORR) {
 #pragma omp for
         for (j = 1; j <= i_max; j++) 
-          GC_CisAjt(j, nstate, tmp_v0, tmp_v1, X, isite1, isite2, Asum, Adiff, tmp_V, &tmp_off);
+          GC_CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, tmp_V, &tmp_off);
       }/*if (X->Large.mode != M_CORR)*/
     }/*End of paralle region*/
     return;
@@ -387,7 +387,7 @@ firstprivate(idim_max_buf,tmp_V,X,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4)
       if (org_isite1 + 1 > X->Def.Nsite && org_isite2 + 1 > X->Def.Nsite) {
         if (isite2 > isite1) Adiff = isite2 - isite1 * 2;
         else Adiff = isite1 - isite2 * 2;
-        SgnBit(((long unsigned int) myrank & Adiff), &Fsgn);
+        SgnBit(((long int) myrank & Adiff), &Fsgn);
         tmp_V *= Fsgn;
 
         if (org_isite3 + 1 > X->Def.Nsite) {
@@ -456,21 +456,21 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  unsigned long int i_max = X->Check.idim_max;
-  unsigned long int idim_max_buf;
+  long int i_max = X->Check.idim_max;
+  long int idim_max_buf;
   int iCheck, Fsgn;
-  unsigned long int isite1, isite2, isite3, isite4;
-  unsigned long int tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4;
-  unsigned long int j, Adiff, Bdiff;
+  long int isite1, isite2, isite3, isite4;
+  long int tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4;
+  long int j, Adiff, Bdiff;
   std::complex<double> dmv;
-  unsigned long int origin, tmp_off, tmp_off2;
-  unsigned long int org_rankbit;
+  long int origin, tmp_off, tmp_off2;
+  long int org_rankbit;
   int iFlgHermite = FALSE;
   int one = 1;
 
   iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2,
                                org_isite3, org_ispin3, org_isite4, org_ispin4,
-                               X, (long unsigned int) myrank, &origin);
+                               X, (long int) myrank, &origin);
   isite1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
   isite2 = X->Def.Tpow[2 * org_isite2 + org_ispin2];
   isite3 = X->Def.Tpow[2 * org_isite3 + org_ispin3];
@@ -485,7 +485,7 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
   else {
     iCheck = CheckBit_InterAllPE(org_isite4, org_ispin4, org_isite3, org_ispin3,
                                  org_isite2, org_ispin2, org_isite1, org_ispin1,
-                                 X, (long unsigned int) myrank, &origin);
+                                 X, (long int) myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
       tmp_isite4 = X->Def.OrgTpow[2 * org_isite1 + org_ispin1];
@@ -517,7 +517,7 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
 #pragma omp parallel for default(none)  private(j, tmp_off) \
   firstprivate(i_max, tmp_V, X, isite1, isite4, Adiff) shared(tmp_v1, tmp_v0,nstate)
       for (j = 1; j <= i_max; j++) 
-        GC_CisAjt(j - 1, nstate, tmp_v0, tmp_v1, X, isite1, isite4, (isite1 + isite4), Adiff, tmp_V, &tmp_off);
+        GC_CisAjt(j - 1, nstate, tmp_v0, tmp_v1, isite1, isite4, (isite1 + isite4), Adiff, tmp_V, &tmp_off);
       
       //calc -CisAku njv
       X_GC_child_CisAjtCkuAku_Hubbard_MPI(org_isite1, org_ispin1, org_isite4, org_ispin4, 
@@ -526,7 +526,7 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
 #pragma omp parallel for default(none)  private(j, tmp_off) \
   firstprivate(i_max, tmp_V, X, isite1, isite4, Adiff) shared(tmp_v1, tmp_v0,nstate)
         for (j = 1; j <= i_max; j++) 
-          GC_CisAjt(j - 1, nstate, tmp_v0, tmp_v1, X, isite4, isite1, (isite1 + isite4), Adiff, tmp_V, &tmp_off);
+          GC_CisAjt(j - 1, nstate, tmp_v0, tmp_v1, isite4, isite1, (isite1 + isite4), Adiff, tmp_V, &tmp_off);
         
         //calc -njvCkuAis
         X_GC_child_CisAisCjtAku_Hubbard_MPI(org_isite2, org_ispin2, org_isite4, org_ispin4,
@@ -556,13 +556,13 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
       else Bdiff = isite3 - isite4 * 2;
 
       if (iFlgHermite == FALSE) {
-        Fsgn = X_GC_CisAjt((long unsigned int) myrank, X, isite2, isite1, (isite1 + isite2), Adiff, &tmp_off2);
-        Fsgn *= X_GC_CisAjt(tmp_off2, X, isite4, isite3, (isite3 + isite4), Bdiff, &tmp_off);
+        Fsgn = X_GC_CisAjt((long int) myrank, isite2, isite1, (isite1 + isite2), Adiff, &tmp_off2);
+        Fsgn *= X_GC_CisAjt(tmp_off2, isite4, isite3, (isite3 + isite4), Bdiff, &tmp_off);
         tmp_V *= Fsgn;
       }/*if (iFlgHermite == FALSE)*/
       else {
-        Fsgn = X_GC_CisAjt((long unsigned int) myrank, X, isite3, isite4, (isite3 + isite4), Bdiff, &tmp_off2);
-        Fsgn *= X_GC_CisAjt(tmp_off2, X, isite1, isite2, (isite1 + isite2), Adiff, &tmp_off);
+        Fsgn = X_GC_CisAjt((long int) myrank, isite3, isite4, (isite3 + isite4), Bdiff, &tmp_off2);
+        Fsgn *= X_GC_CisAjt(tmp_off2, isite1, isite2, (isite1 + isite2), Adiff, &tmp_off);
         tmp_V *= Fsgn;
       }/*if (iFlgHermite == TRUE)*/
 
@@ -594,13 +594,13 @@ void X_GC_child_CisAis_Hubbard_MPI(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  unsigned long int i_max = X->Check.idim_max;
-  unsigned long int j, isite1, tmp_off;
+  long int i_max = X->Check.idim_max;
+  long int j, isite1, tmp_off;
   int one = 1;
 
   isite1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
   if (org_isite1 + 1 > X->Def.Nsite) {
-    if (CheckBit_Ajt(isite1, (unsigned long int) myrank, &tmp_off) == FALSE) return;
+    if (CheckBit_Ajt(isite1, (long int) myrank, &tmp_off) == FALSE) return;
 
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
   }/*if (org_isite1 + 1 > X->Def.Nsite)*/
@@ -658,12 +658,12 @@ void X_child_CisAisCjtAjt_Hubbard_MPI(
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
   int iCheck;
-  unsigned long int tmp_ispin1;
-  unsigned long int i_max = X->Check.idim_max;
-  unsigned long int tmp_off, j;
+  long int tmp_ispin1;
+  long int i_max = X->Check.idim_max;
+  long int tmp_off, j;
   int one = 1;
 
-  iCheck = CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, X, (long unsigned int) myrank);
+  iCheck = CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, X, (long int) myrank);
   if (iCheck != TRUE) return;
   
   if (org_isite1 + 1 > X->Def.Nsite && org_isite3 + 1 > X->Def.Nsite) {
@@ -701,21 +701,21 @@ void X_child_CisAjtCkuAlv_Hubbard_MPI(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  unsigned long int i_max = X->Check.idim_max;
-  unsigned long int idim_max_buf;
+  long int i_max = X->Check.idim_max;
+  long int idim_max_buf;
   int iCheck, Fsgn;
-  unsigned long int isite1, isite2, isite3, isite4;
-  unsigned long int tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4;
-  unsigned long int j, Adiff, Bdiff;
+  long int isite1, isite2, isite3, isite4;
+  long int tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4;
+  long int j, Adiff, Bdiff;
   std::complex<double> dmv;
-  unsigned long int origin, tmp_off, tmp_off2;
-  unsigned long int org_rankbit, ioff;
+  long int origin, tmp_off, tmp_off2;
+  long int org_rankbit, ioff;
   int iFlgHermite = FALSE;
   int one = 1;
 
   iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2,
                                org_isite3, org_ispin3, org_isite4, org_ispin4,
-                               X, (long unsigned int) myrank, &origin);
+                               X, (long int) myrank, &origin);
   //printf("iCheck=%d, myrank=%d, origin=%d\n", iCheck, myrank, origin);
   isite1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
   isite2 = X->Def.Tpow[2 * org_isite2 + org_ispin2];
@@ -731,7 +731,7 @@ void X_child_CisAjtCkuAlv_Hubbard_MPI(
   else {
     iCheck = CheckBit_InterAllPE(org_isite4, org_ispin4, org_isite3, org_ispin3,
                                  org_isite2, org_ispin2, org_isite1, org_ispin1,
-                                 X, (long unsigned int) myrank, &origin);
+                                 X, (long int) myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
       tmp_isite4 = X->Def.OrgTpow[2 * org_isite1 + org_ispin1];
@@ -800,13 +800,13 @@ firstprivate(i_max, tmp_V, X, isite1, isite4, Adiff) shared(tmp_v1, nstate, tmp_
       else Bdiff = isite3 - isite4 * 2;
 
       if (iFlgHermite == FALSE) {
-        Fsgn = X_GC_CisAjt((long unsigned int) myrank, X, isite2, isite1, (isite1 + isite2), Adiff, &tmp_off2);
-        Fsgn *= X_GC_CisAjt(tmp_off2, X, isite4, isite3, (isite3 + isite4), Bdiff, &tmp_off);
+        Fsgn = X_GC_CisAjt((long int) myrank, isite2, isite1, (isite1 + isite2), Adiff, &tmp_off2);
+        Fsgn *= X_GC_CisAjt(tmp_off2, isite4, isite3, (isite3 + isite4), Bdiff, &tmp_off);
         tmp_V *= Fsgn;
       }/*if (iFlgHermite == FALSE)*/
       else {
-        Fsgn = X_GC_CisAjt((long unsigned int) myrank, X, isite3, isite4, (isite3 + isite4), Bdiff, &tmp_off2);
-        Fsgn *= X_GC_CisAjt(tmp_off2, X, isite1, isite2, (isite1 + isite2), Adiff, &tmp_off);
+        Fsgn = X_GC_CisAjt((long int) myrank, isite3, isite4, (isite3 + isite4), Bdiff, &tmp_off2);
+        Fsgn *= X_GC_CisAjt(tmp_off2, isite1, isite2, (isite1 + isite2), Adiff, &tmp_off);
         tmp_V *= Fsgn;
       }/*if (iFlgHermite == TRUE)*/
 #pragma omp parallel default(none) private(j,ioff) \
@@ -864,18 +864,18 @@ void X_child_CisAjtCkuAku_Hubbard_MPI(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  unsigned long int i_max = X->Check.idim_max;
-  unsigned long int idim_max_buf, ioff;
+  long int i_max = X->Check.idim_max;
+  long int idim_max_buf, ioff;
   int iCheck, Fsgn;
-  unsigned long int isite1, isite2, isite3;
-  unsigned long int tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4;
-  unsigned long int j, Asum, Adiff;
+  long int isite1, isite2, isite3;
+  long int tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4;
+  long int j, Asum, Adiff;
   std::complex<double> dmv;
-  unsigned long int origin, tmp_off;
-  unsigned long int org_rankbit;
+  long int origin, tmp_off;
+  long int org_rankbit;
   int one = 1;
   //printf("Deubg0-0: org_isite1=%d, org_ispin1=%d, org_isite2=%d, org_ispin2=%d, org_isite3=%d, org_ispin3=%d\n", org_isite1, org_ispin1,org_isite2, org_ispin2,org_isite3, org_ispin3);
-  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, X, (long unsigned int) myrank, &origin);
+  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, X, (long int) myrank, &origin);
   //printf("iCheck=%d, myrank=%d, origin=%d\n", iCheck, myrank, origin);
 
   isite1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
@@ -892,7 +892,7 @@ void X_child_CisAjtCkuAku_Hubbard_MPI(
     else Adiff = tmp_isite1 - tmp_isite2 * 2;
   }/*if (iCheck == TRUE)*/
   else {
-    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, X, (long unsigned int) myrank, &origin);
+    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, X, (long int) myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
       tmp_isite4 = X->Def.OrgTpow[2 * org_isite1 + org_ispin1];
@@ -939,7 +939,7 @@ firstprivate(idim_max_buf,tmp_V,X,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,is
       if (org_isite1 + 1 > X->Def.Nsite && org_isite2 + 1 > X->Def.Nsite) {
         if (isite2 > isite1) Adiff = isite2 - isite1 * 2;
         else Adiff = isite1 - isite2 * 2;
-        SgnBit(((long unsigned int) myrank & Adiff), &Fsgn);
+        SgnBit(((long int) myrank & Adiff), &Fsgn);
         tmp_V *= Fsgn;
 
         if (org_isite3 + 1 > X->Def.Nsite) {
@@ -1007,13 +1007,13 @@ void X_child_CisAis_Hubbard_MPI(
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  unsigned long int i_max = X->Check.idim_max;
-  unsigned long int j, isite1, tmp_off;
+  long int i_max = X->Check.idim_max;
+  long int j, isite1, tmp_off;
   int one = 1;
 
   isite1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
   if (org_isite1 + 1 > X->Def.Nsite) {
-    if (CheckBit_Ajt(isite1, (unsigned long int) myrank, &tmp_off) == FALSE)
+    if (CheckBit_Ajt(isite1, (long int) myrank, &tmp_off) == FALSE)
       return;
 
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
@@ -1024,7 +1024,7 @@ void X_child_CisAis_Hubbard_MPI(
     {
 #pragma omp for
       for (j = 1; j <= i_max; j++) {
-        if (X_CisAis(list_1[j], X, isite1) != 0) {
+        if (X_CisAis(list_1[j], isite1) != 0) {
           zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
         }/*if (X_CisAis(list_1[j], X, isite1) != 0)*/
       }/*for (j = 1; j <= i_max; j++)*/
@@ -1045,11 +1045,11 @@ void X_GC_Cis_MPI(
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 += H v1*/,
   std::complex<double> **tmp_v1,//!<[in] v0 += H v1*/,
-  unsigned long int idim_max,//!<[in] Similar to CheckList::idim_max
-  unsigned long int *Tpow//!<[in] Similar to DefineList::Tpow
+  long int idim_max,//!<[in] Similar to CheckList::idim_max
+  long int *Tpow//!<[in] Similar to DefineList::Tpow
 ) {
   int mask2, state2, origin, bit2diff, Fsgn;
-  unsigned long int idim_max_buf;
+  long int idim_max_buf;
   std::complex<double> trans;
 
   // org_isite >= Nsite
@@ -1063,8 +1063,8 @@ void X_GC_Cis_MPI(
 
   bit2diff = myrank - ((2 * mask2 - 1) & myrank);
 
-  //SgnBit((unsigned long int) (origin & bit2diff), &Fsgn); // Fermion sign
-  SgnBit((unsigned long int) (bit2diff), &Fsgn); // Fermion sign
+  //SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
+  SgnBit((long int) (bit2diff), &Fsgn); // Fermion sign
 
   idim_max_buf = SendRecv_i(origin, idim_max);
   SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
@@ -1093,11 +1093,11 @@ void X_GC_Ajt_MPI(
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 += H v1*/,
   std::complex<double> **tmp_v1,//!<[in] v0 += H v1*/,
-  unsigned long int idim_max,//!<[in] Similar to CheckList::idim_max
-  unsigned long int *Tpow//!<[in] Similar to DefineList::Tpow
+  long int idim_max,//!<[in] Similar to CheckList::idim_max
+  long int *Tpow//!<[in] Similar to DefineList::Tpow
 ) {
   int mask2, state2, origin, bit2diff, Fsgn;
-  unsigned long int idim_max_buf;
+  long int idim_max_buf;
   std::complex<double> trans;
 
   // org_isite >= Nsite
@@ -1111,8 +1111,8 @@ void X_GC_Ajt_MPI(
 
   bit2diff = myrank - ((2 * mask2 - 1) & myrank);
 
-  //SgnBit((unsigned long int) (origin & bit2diff), &Fsgn); // Fermion sign
-  SgnBit((unsigned long int) (bit2diff), &Fsgn); // Fermion sign
+  //SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
+  SgnBit((long int) (bit2diff), &Fsgn); // Fermion sign
 
   idim_max_buf = SendRecv_i(origin, idim_max);
   SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
@@ -1129,19 +1129,19 @@ term of canonical Hubbard system
 */
 void X_Cis_MPI(
   int org_isite,//!<[in] Site i
-  unsigned int org_ispin,//!<[in] Spin s
+  int org_ispin,//!<[in] Spin s
   std::complex<double> tmp_trans,//!<[in] Coupling constant
   int nstate, 
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[inout] Initial wavefunction
-  unsigned long int idim_max,//!<[in] Similar to CheckList::idim_max
-  long unsigned int *Tpow,//!<[in] Similar to DefineList::Tpow
-  long unsigned int _irght,//!<[in] Similer to LargeList::irght
-  long unsigned int _ilft,//!<[in] Similer to LargeList::ilft
-  long unsigned int _ihfbit//!<[in] Similer to LargeList::ihfbit
+  long int idim_max,//!<[in] Similar to CheckList::idim_max
+  long int *Tpow,//!<[in] Similar to DefineList::Tpow
+  long int _irght,//!<[in] Similer to LargeList::irght
+  long int _ilft,//!<[in] Similer to LargeList::ilft
+  long int _ihfbit//!<[in] Similer to LargeList::ihfbit
 ) {
   int mask2, state2, origin, bit2diff, Fsgn;
-  unsigned long int idim_max_buf, j, ioff;
+  long int idim_max_buf, j, ioff;
   std::complex<double> trans;
   int one = 1;
 
@@ -1156,7 +1156,7 @@ void X_Cis_MPI(
 
   bit2diff = myrank - ((2 * mask2 - 1) & myrank);
 
-  SgnBit((unsigned long int) (bit2diff), &Fsgn); // Fermion sign
+  SgnBit((long int) (bit2diff), &Fsgn); // Fermion sign
 
   idim_max_buf = SendRecv_i(origin, idim_max);
   SendRecv_iv(origin, idim_max + 1, idim_max_buf + 1, list_1_org, list_1buf_org);
@@ -1185,18 +1185,18 @@ term of canonical Hubbard system
 */
 void X_Ajt_MPI(
   int org_isite,//!<[in] Site j
-  unsigned int org_ispin,//!<[in] Spin t
+  int org_ispin,//!<[in] Spin t
   std::complex<double> tmp_trans,//!<[in] Coupling constant
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[inout] Initial wavefunction
-  unsigned long int idim_max,//!<[in] Similar to CheckList::idim_max
-  long unsigned int *Tpow,//!<[in] Similar to DefineList::Tpow
-  long unsigned int _irght,//!<[in] Similer to LargeList::irght
-  long unsigned int _ilft,//!<[in] Similer to LargeList::ilft
-  long unsigned int _ihfbit//!<[in] Similer to LargeList::ihfbit
+  long int idim_max,//!<[in] Similar to CheckList::idim_max
+  long int *Tpow,//!<[in] Similar to DefineList::Tpow
+  long int _irght,//!<[in] Similer to LargeList::irght
+  long int _ilft,//!<[in] Similer to LargeList::ilft
+  long int _ihfbit//!<[in] Similer to LargeList::ihfbit
 ){
   int mask2, state2, origin, bit2diff, Fsgn;
-  unsigned long int idim_max_buf, j, ioff;
+  long int idim_max_buf, j, ioff;
   std::complex<double> trans;
   int one = 1;
 
@@ -1211,7 +1211,7 @@ void X_Ajt_MPI(
 
   bit2diff = myrank - ((2 * mask2 - 1) & myrank);
 
-  SgnBit((unsigned long int) (bit2diff), &Fsgn); // Fermion sign
+  SgnBit((long int) (bit2diff), &Fsgn); // Fermion sign
   idim_max_buf = SendRecv_i(origin, idim_max);
   SendRecv_iv(origin, idim_max + 1, idim_max_buf + 1, list_1_org, list_1buf_org);
   SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);

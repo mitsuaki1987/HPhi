@@ -27,7 +27,7 @@
 extern "C" {
   extern void zaxpy_(int *n, std::complex<double> *a, std::complex<double> *x, int *incx, std::complex<double> *y, int *incy);
 }
-void zaxpy_long(unsigned long int n, std::complex<double> a, std::complex<double> *x, std::complex<double> *y);
-void zswap_long(unsigned long int n,std::complex<double> *x, std::complex<double> *y);
-void zclear(unsigned long int n, std::complex<double> *x);
+void zaxpy_long(long int n, std::complex<double> a, std::complex<double> *x, std::complex<double> *y);
+void zswap_long(long int n,std::complex<double> *x, std::complex<double> *y);
+void zclear(long int n, std::complex<double> *x);
 #endif /* HPHI_MLTPLYCOMMON_H */

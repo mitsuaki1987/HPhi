@@ -171,15 +171,16 @@ static void Initialize_wave(
   char sdt[D_FileNameMax];
   size_t byte_size;
   std::complex<double> *vin;
-  int iproc, ie, ierr;
-  long int idim, iv, i_max;
-  unsigned long int i_max_tmp, sum_i_max;
+  int ie;
+  int iproc, ierr;
+  long int iv;
+  long int i_max_tmp, sum_i_max, idim, i_max;
   int mythread;
   double *dnorm;
   /*
   For DSFMT
   */
-  long unsigned int u_long_i;
+  long int u_long_i;
   dsfmt_t dsfmt;
   /**@brief
   (A) For restart: Read saved eigenvector files (as binary files) from each processor
@@ -203,7 +204,7 @@ static void Initialize_wave(
       }
       else {
         byte_size = fread(&iproc, sizeof(int), 1, fp);
-        byte_size = fread(&i_max, sizeof(unsigned long int), 1, fp);
+        byte_size = fread(&i_max, sizeof(long int), 1, fp);
         //fprintf(stdoutMPI, "Debug: i_max=%ld, step_i=%d\n", i_max, step_i);
         if (i_max != X->Check.idim_max) {
           fprintf(stderr, "Error: Invalid restart file.\n");
@@ -317,7 +318,7 @@ static void Output_restart(
   size_t byte_size;
   char sdt[D_FileNameMax];
   int ie;
-  long unsigned int idim;
+  long int idim;
   std::complex<double> *vout;
 
   //TimeKeeperWithRandAndStep(&(X->Bind), cFileNameTPQStep, cOutputVecStart, "a", rand_i, step_i);
@@ -355,7 +356,8 @@ int LOBPCG_Main(
   FILE *fp;
   int iconv = -1, i4_max;
   long int idim, i_max;
-  int ii, jj, ie, nsub, stp, nsub_cut, nstate;
+  int ie, stp;
+  int ii, jj, nsub, nsub_cut, nstate;
   std::complex<double> ***wxp/*[0] w, [1] x, [2] p of Ref.1*/,
     ***hwxp/*[0] h*w, [1] h*x, [2] h*p of Ref.1*/,
     ****hsub, ****ovlp; /*Subspace Hamiltonian and Overlap*/
@@ -644,7 +646,9 @@ int CalcByLOBPCG(
 {
   char sdt[D_FileNameMax];
   size_t byte_size;
-  long int i_max = 0, ie, idim;
+  long int ie;
+  long int i_max = 0;
+  long int idim;
   FILE *fp;
   std::complex<double> *vin;
 

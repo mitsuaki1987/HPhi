@@ -47,16 +47,16 @@ void totalspin_Hubbard(
   int nstate,
   std::complex<double> **vec
 ) {
-  long unsigned int j;
-  long unsigned int irght, ilft, ihfbit;
-  long unsigned int isite1, isite2;
-  long unsigned int is1_up, is2_up, is1_down, is2_down;
-  long unsigned int iexchg, off;
+  long int j;
+  long int irght, ilft, ihfbit;
+  long int isite1, isite2;
+  long int is1_up, is2_up, is1_down, is2_down;
+  long int iexchg, off;
   int num1_up, num2_up, istate;
   int num1_down, num2_down;
-  long unsigned int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
+  long int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
   std::complex<double> tmp_spn_z;
-  long unsigned i_max;
+  long i_max;
   i_max = X->Check.idim_max;
 
   GetSplitBitByModel(X->Def.Nsite, X->Def.iCalcModel, &irght, &ilft, &ihfbit);
@@ -129,15 +129,15 @@ void totalspin_HubbardGC(
   int nstate,
   std::complex<double> **vec
 ) {
-  long unsigned int j;
-  long unsigned int isite1, isite2;
-  long unsigned int is1_up, is2_up, is1_down, is2_down;
-  long unsigned int iexchg, off;
+  long int j;
+  long int isite1, isite2;
+  long int is1_up, is2_up, is1_down, is2_down;
+  long int iexchg, off;
   int num1_up, num2_up, istate;
   int num1_down, num2_down;
-  long unsigned int ibit1_up, ibit2_up, ibit1_down, ibit2_down, list_1_j;
+  long int ibit1_up, ibit2_up, ibit1_down, ibit2_down, list_1_j;
   std::complex<double> tmp_spn_z;
-  long unsigned int i_max;
+  long int i_max;
 
   i_max = X->Check.idim_max;
 
@@ -209,20 +209,20 @@ void totalspin_Spin(
   int nstate,
   std::complex<double> **vec
 ) {
-  long unsigned int j;
-  long unsigned int irght, ilft, ihfbit;
-  long unsigned int isite1, isite2;
-  long unsigned int tmp_isite1, tmp_isite2;
+  long int j;
+  long int irght, ilft, ihfbit;
+  long int isite1, isite2;
+  long int tmp_isite1, tmp_isite2;
 
-  long unsigned int is1_up, is2_up;
-  long unsigned int iexchg, off, off_2;
+  long int is1_up, is2_up;
+  long int iexchg, off, off_2;
 
   int num1_up, num2_up;
   int num1_down, num2_down;
   int sigma_1, sigma_2, istate;
-  long unsigned int ibit1_up, ibit2_up, ibit_tmp, is_up;
+  long int ibit1_up, ibit2_up, ibit_tmp, is_up;
   std::complex<double> spn_z1, spn_z2;
-  long unsigned int i_max;
+  long int i_max;
   double spn_z;
 
   i_max = X->Check.idim_max;
@@ -240,9 +240,9 @@ void totalspin_Spin(
           is1_up = X->Def.Tpow[isite1 - 1];
           is2_up = X->Def.Tpow[isite2 - 1];
           is_up = is1_up + is2_up;
-          num1_up = X_SpinGC_CisAis((unsigned long int) myrank + 1, X, is1_up, 1);
+          num1_up = X_SpinGC_CisAis((long int) myrank + 1, is1_up, 1);
           num1_down = 1 - num1_up;
-          num2_up = X_SpinGC_CisAis((unsigned long int) myrank + 1, X, is2_up, 1);
+          num2_up = X_SpinGC_CisAis((long int) myrank + 1, is2_up, 1);
           num2_down = 1 - num2_up;
           spn_z = (num1_up - num1_down) * (num2_up - num2_down);
 
@@ -274,7 +274,7 @@ void totalspin_Spin(
 
           is1_up = X->Def.Tpow[tmp_isite1 - 1];
           is2_up = X->Def.Tpow[tmp_isite2 - 1];
-          num2_up = X_SpinGC_CisAis((unsigned long int) myrank + 1, X, is2_up, 1);
+          num2_up = X_SpinGC_CisAis((long int) myrank + 1, is2_up, 1);
           num2_down = 1 - num2_up;
 
           //diagonal
@@ -407,17 +407,17 @@ void totalspin_SpinGC(
   int nstate,
   std::complex<double> **vec
 ) {
-  long unsigned int j;
-  long unsigned int isite1, isite2, tmp_isite1, tmp_isite2;
-  long unsigned int is1_up, is2_up;
-  long unsigned int iexchg, off, off_2;
+  long int j;
+  long int isite1, isite2, tmp_isite1, tmp_isite2;
+  long int is1_up, is2_up;
+  long int iexchg, off, off_2;
   int num1_up, num2_up, istate;
   int num1_down, num2_down;
   int sigma_1, sigma_2;
-  long unsigned int ibit1_up, ibit2_up, ibit_tmp, is_up;
+  long int ibit1_up, ibit2_up, ibit_tmp, is_up;
   std::complex<double> spn_z1, spn_z2;
-  long unsigned int list_1_j;
-  long unsigned int i_max;
+  long int list_1_j;
+  long int i_max;
 
   i_max = X->Check.idim_max;
   X->Large.mode = M_TOTALS;
@@ -453,9 +453,9 @@ void totalspin_SpinGC(
         if (isite1 > X->Def.Nsite && isite2 > X->Def.Nsite) {
           is1_up = X->Def.Tpow[isite1 - 1];
           is2_up = X->Def.Tpow[isite2 - 1];
-          num1_up = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is1_up, 1);
+          num1_up = X_SpinGC_CisAis((long int)myrank + 1, is1_up, 1);
           num1_down = 1 - num1_up;
-          num2_up = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is2_up, 1);
+          num2_up = X_SpinGC_CisAis((long int)myrank + 1, is2_up, 1);
           num2_down = 1 - num2_up;
           spn_z2 = (num1_up - num1_down)*(num2_up - num2_down) / 4.0;
           for (j = 1; j <= i_max; j++) {
@@ -484,7 +484,7 @@ void totalspin_SpinGC(
           }
           is1_up = X->Def.Tpow[tmp_isite1 - 1];
           is2_up = X->Def.Tpow[tmp_isite2 - 1];
-          num2_up = X_SpinGC_CisAis((unsigned long int)myrank + 1, X, is2_up, 1);
+          num2_up = X_SpinGC_CisAis((long int)myrank + 1, is2_up, 1);
           num2_down = 1 - num2_up;
           //diagonal
           for (j = 1; j <= i_max; j++) {
@@ -543,7 +543,7 @@ void totalspin_SpinGC(
     for (isite1 = 1; isite1 <= X->Def.NsiteMPI; isite1++) {
       S1 = 0.5*(X->Def.SiteToBit[isite1 - 1] - 1);
       if (isite1 > X->Def.Nsite) {
-        spn_z1 = 0.5*GetLocal2Sz(isite1, (unsigned long int) myrank, X->Def.SiteToBit, X->Def.Tpow);
+        spn_z1 = 0.5*GetLocal2Sz(isite1, (long int) myrank, X->Def.SiteToBit, X->Def.Tpow);
         for (j = 1; j <= i_max; j++) {
           for (istate = 0; istate < nstate; istate++) {
             X->Phys.s2[istate] += real(conj(vec[j][istate])*vec[j][istate]) * S1*(S1 + 1.0);

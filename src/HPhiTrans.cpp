@@ -46,8 +46,8 @@ int HPhiTrans(struct BindStruct *X) {
   FILE *fp_err;
   char sdt_err[D_FileNameMax];
 
-  unsigned int i, k;
-  unsigned int cnt_trans;
+  int i, k;
+  int cnt_trans;
 
   strcpy(sdt_err, cFileNameWarningOnTransfer);
   if (childfopenMPI(sdt_err, "w", &fp_err) != 0) {
@@ -65,9 +65,10 @@ int HPhiTrans(struct BindStruct *X) {
           && X->Def.EDGeneralTransfer[i][3] == X->Def.EDGeneralTransfer[k][3]) {
         if (X->Def.EDGeneralTransfer[i][0] == X->Def.EDGeneralTransfer[k][0]
             && X->Def.EDGeneralTransfer[i][2] == X->Def.EDGeneralTransfer[k][2]) {
-          sprintf(sdt_err, "%s", cErrTransfer);
+          sprintf(sdt_err, "WarningOnTransfer.dat");
           childfopenMPI(sdt_err, "a", &fp_err);
-          fprintf(fp_err, cErrDoubleCounting, X->Def.EDGeneralTransfer[k][0], X->Def.EDGeneralTransfer[k][2],
+          fprintf(fp_err, "double conuntings in transfers: i=%d j=%d spni %d spnj %d  \n",
+                  X->Def.EDGeneralTransfer[k][0], X->Def.EDGeneralTransfer[k][2],
                   X->Def.EDGeneralTransfer[k][1], X->Def.EDGeneralTransfer[k][3]);
           fclose(fp_err);
         }
@@ -90,7 +91,7 @@ int HPhiTrans(struct BindStruct *X) {
  * @author Kota Ido (The University of Tokyo)
  */
 int TransferWithPeierls(struct BindStruct *X, const double time) {
-  unsigned int i;
+  int i;
   int ri_x, rj_x;
   int ri_y, rj_y;
   std::complex<double> dir;
@@ -172,7 +173,7 @@ int TransferWithPeierls(struct BindStruct *X, const double time) {
  * @author Kota Ido (The University of Tokyo)
  */
 int TransferForQuench(struct BindStruct *X, const double time) {
-  unsigned int i;
+  int i;
   int ri_x, rj_x;
   int ri_y, rj_y;
   const int Mode = (int) (X->Def.ParaLaser[0]);
