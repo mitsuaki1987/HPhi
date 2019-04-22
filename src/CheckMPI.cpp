@@ -157,9 +157,20 @@ int CheckMPI(struct BindStruct *X/**< [inout] */)
           }
         }/*for (isite = X->Def.Nsite; isite < X->Def.NsiteMPI; isite++)*/
       } /*if (X->Def.iCalcModel == Kondo)*/
+      else {
+        X->Def.Nup = 0;
+        X->Def.Ndown = 0;
+        X->Def.Ne = 0;
+      }
 
       break; /*case KondoGC, Kondo*/
 
+    case HubbardGC:
+      X->Def.Nup = 0;
+      X->Def.Ndown = 0;
+      X->Def.Ne = 0;
+      X->Def.Total2Sz = 0;
+      break;
     } /*switch (X->Def.iCalcModel) 2(inner)*/
 
     break; /*case HubbardGC, Hubbard, HubbardNConserved, Kondo, KondoGC:*/

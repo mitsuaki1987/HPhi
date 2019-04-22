@@ -27,6 +27,7 @@
 #include "sz.hpp"
 #include "check.hpp"
 #include "diagonalcalc.hpp"
+#include <iostream>
 /**
  * @file   CalcSpectrum.c
  * @version 1.1
@@ -321,7 +322,7 @@ int MakeExcitedList(
     v1buf = cd_2d_allocate(MAXidim_maxOrg + 1, 1);
   }
 #endif // MPI
-  
+
   if (X->Def.iCalcModel == HubbardNConserved) {
     X->Def.iCalcModel = Hubbard;
   }
@@ -352,7 +353,7 @@ int OutputSpectrum(
   int Nomega,
   int NdcSpectrum,
   std::complex<double> **dcSpectrum,
-  std::complex<double> *dcomega) 
+  std::complex<double> *dcomega)
 {
   FILE *fp;
   char sdt[D_FileNameMax];
@@ -360,7 +361,7 @@ int OutputSpectrum(
 
   //output spectrum
   sprintf(sdt, cFileNameCalcDynamicalGreen, X->Bind.Def.CDataFileHead);
-  if(childfopenMPI(sdt, "w", &fp)!=0){
+  if (childfopenMPI(sdt, "w", &fp) != 0) {
     return FALSE;
   }
 
@@ -488,7 +489,8 @@ int CalcSpectrum(
   OmegaMax = X->Bind.Def.dcOmegaMax + X->Bind.Def.dcOmegaOrg;
   OmegaMin = X->Bind.Def.dcOmegaMin + X->Bind.Def.dcOmegaOrg;
   for (i = 0; i < Nomega; i++) {
-    dcomega[i] = (OmegaMax - OmegaMin) / (std::complex<double>)(Nomega * i) + OmegaMin;
+    dcomega[i] = OmegaMin
+     + (OmegaMax - OmegaMin) / (std::complex<double>)Nomega * (std::complex<double>)i;
   }
 
   fprintf(stdoutMPI, "\nFrequency range:\n");
@@ -496,7 +498,7 @@ int CalcSpectrum(
   fprintf(stdoutMPI, "  Omega Min. : %15.5e %15.5e\n", real(OmegaMin), imag(OmegaMin));
   fprintf(stdoutMPI, "  Num. of Omega : %d\n", Nomega);
 
-  if (X->Bind.Def.NNSingleExcitationOperator == 0){
+  if (X->Bind.Def.NNSingleExcitationOperator == 0) {
     if (X->Bind.Def.NNPairExcitationOperator == 0) {
       fprintf(stderr, "Error: Any excitation operators are not defined.\n");
       exitMPI(-1);
@@ -519,7 +521,7 @@ int CalcSpectrum(
     return FALSE;
   }
   X->Bind.Def.iFlagListModified = iFlagListModified;
-  
+
   //Make excited state
   StartTimer(6100);
   if (X->Bind.Def.iFlgCalcSpec == RECALC_NOT ||

@@ -28,6 +28,7 @@
 #ifdef __MPI
 #include <mpi.h>
 #endif
+#include <iostream>
 /**@brief
 Read @f$\alpha, \beta@f$, projected residual for restart
 */

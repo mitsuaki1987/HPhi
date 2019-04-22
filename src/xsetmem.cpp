@@ -61,10 +61,9 @@ void setmem_def
   X->Phys.spin_real_cor = d_1d_allocate(X->Def.Nsite * X->Def.Nsite);
   X->Phys.charge_real_cor = d_1d_allocate(X->Def.Nsite * X->Def.Nsite);
   X->Phys.loc_spin_z = d_1d_allocate(X->Def.Nsite * X->Def.Nsite);
-
-  X->Def.EDChemi = i_1d_allocate(X->Def.EDNChemi + X->Def.NInterAll + X->Def.NTransfer);
-  X->Def.EDSpinChemi = i_1d_allocate(X->Def.EDNChemi + X->Def.NInterAll + X->Def.NTransfer);
-  X->Def.EDParaChemi = d_1d_allocate(X->Def.EDNChemi + X->Def.NInterAll + X->Def.NTransfer);
+  X->Def.EDChemi = i_1d_allocate(X->Def.NInterAll + X->Def.NTransfer);
+  X->Def.EDSpinChemi = i_1d_allocate(X->Def.NInterAll + X->Def.NTransfer);
+  X->Def.EDParaChemi = d_1d_allocate(X->Def.NInterAll + X->Def.NTransfer);
   X->Def.GeneralTransfer = i_2d_allocate(X->Def.NTransfer, 4);
   X->Def.ParaGeneralTransfer = cd_1d_allocate(X->Def.NTransfer);
 
@@ -246,6 +245,7 @@ int GetlistSize(
     }
     break;
   default:
+    X->Large.SizeOflistjb = 1;
     return FALSE;
   }
   return TRUE;

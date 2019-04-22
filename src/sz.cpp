@@ -20,6 +20,7 @@
 #include "sz.hpp"
 #include "wrapperMPI.hpp"
 #include "xsetmem.hpp"
+#include <iostream>
 
 /**
  * @file   sz.c

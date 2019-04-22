@@ -53,25 +53,25 @@ static void StdFace_LargeValue(struct StdIntList *StdI) {
 
   LargeValue0 = 0.0;
   for (ktrans = 0; ktrans < StdI->ntrans; ktrans++) {
-    LargeValue0 += abs(StdI->trans[ktrans]);
+    LargeValue0 += std::abs(StdI->trans[ktrans]);
   }
   for (kintr = 0; kintr < StdI->nintr; kintr++) {
-    LargeValue0 += abs(StdI->intr[kintr]);
+    LargeValue0 += std::abs(StdI->intr[kintr]);
   }
   for (kintr = 0; kintr < StdI->NCintra; kintr++) {
-    LargeValue0 += abs(StdI->Cintra[kintr]);
+    LargeValue0 += std::abs(StdI->Cintra[kintr]);
   }
   for (kintr = 0; kintr < StdI->NCinter; kintr++) {
-    LargeValue0 += abs(StdI->Cinter[kintr]);
+    LargeValue0 += std::abs(StdI->Cinter[kintr]);
   }
   for (kintr = 0; kintr < StdI->NEx; kintr++) {
-    LargeValue0 += 2.0 * abs(StdI->Ex[kintr]);
+    LargeValue0 += 2.0 * std::abs(StdI->Ex[kintr]);
   }
   for (kintr = 0; kintr < StdI->NPairLift; kintr++) {
-    LargeValue0 += 2.0 * abs(StdI->PairLift[kintr]);
+    LargeValue0 += 2.0 * std::abs(StdI->PairLift[kintr]);
   }
   for (kintr = 0; kintr < StdI->NHund; kintr++) {
-    LargeValue0 += 2.0 * abs(StdI->Hund[kintr]);
+    LargeValue0 += 2.0 * std::abs(StdI->Hund[kintr]);
   }
   LargeValue0 /= (double)StdI->nsite;
   StdFace_PrintVal_d("LargeValue", &StdI->LargeValue, LargeValue0);
@@ -614,12 +614,12 @@ static void PrintPump(struct StdIntList *StdI) {
       */
       npump0 = 0;
       for (ipump = 0; ipump < StdI->npump[it]; ipump++) 
-        if (abs(StdI->pump[it][ipump]) > 0.000001) npump0 += 1;
+        if (std::abs(StdI->pump[it][ipump]) > 0.000001) npump0 += 1;
 
       fprintf(fp, "%f  %d\n", StdI->dt*(double)it, npump0);
       for (ipump = 0; ipump < StdI->npump[it]; ipump++) {
 
-        if (abs(StdI->pump[it][ipump]) <= 0.000001) continue;
+        if (std::abs(StdI->pump[it][ipump]) <= 0.000001) continue;
 
         fprintf(fp, "%5d %5d %5d %5d %25.15f %25.15f\n",
           StdI->pumpindx[it][ipump][0], StdI->pumpindx[it][ipump][1],
@@ -784,7 +784,7 @@ static void PrintGutzwiller(struct StdIntList *StdI)
 
   Gutz = (int *)malloc(sizeof(int) * StdI->nsite);
 
-  if (abs(StdI->NMPTrans) == 1 || StdI->NMPTrans == StdI->NaN_i) {
+  if (std::abs(StdI->NMPTrans) == 1 || StdI->NMPTrans == StdI->NaN_i) {
     if (strcmp(StdI->model, "hubbard") == 0) NGutzwiller = 0;
     else NGutzwiller = -1;
 
@@ -813,7 +813,7 @@ static void PrintGutzwiller(struct StdIntList *StdI)
     for (isite = 0; isite < StdI->nsite; isite++) {
       Gutz[isite] = -1 - Gutz[isite];
     }/*for (isite = 0; isite < StdI->nsite; isite++)*/
-  }/*if (abs(StdI->NMPTrans) == 1)*/
+  }/*if (std::abs(StdI->NMPTrans) == 1)*/
   else {
     if (strcmp(StdI->model, "hubbard") == 0) NGutzwiller = StdI->NsiteUC;
     else if (strcmp(StdI->model, "spin") == 0) NGutzwiller = 1;
@@ -831,7 +831,7 @@ static void PrintGutzwiller(struct StdIntList *StdI)
         }
       }/*for (isite = 0; isite < StdI->NsiteUC; isite++)*/
     }/*for (iCell = 0; iCell < StdI->NCell; iCell++)*/
-  }/*if (abs(StdI->NMPTrans) != 1)*/
+  }/*if (std::abs(StdI->NMPTrans) != 1)*/
 
   fp = fopen("gutzwilleridx.def", "w");
   fprintf(fp, "=============================================\n");
@@ -1244,7 +1244,7 @@ static void PrintTrans(struct StdIntList *StdI){
 
   ntrans0 = 0;
   for (ktrans = 0; ktrans < StdI->ntrans; ktrans++){
-    if (abs(StdI->trans[ktrans]) > 0.000001) ntrans0 = ntrans0 + 1;
+    if (std::abs(StdI->trans[ktrans]) > 0.000001) ntrans0 = ntrans0 + 1;
   }
 
   fp = fopen("trans.def", "w");
@@ -1256,7 +1256,7 @@ static void PrintTrans(struct StdIntList *StdI){
 
   ntrans0 = 0;
   for (ktrans = 0; ktrans < StdI->ntrans; ktrans++) {
-    if (abs(StdI->trans[ktrans]) > 0.000001)
+    if (std::abs(StdI->trans[ktrans]) > 0.000001)
       fprintf(fp, "%5d %5d %5d %5d %25.15f %25.15f\n",
         StdI->transindx[ktrans][0], StdI->transindx[ktrans][1],
         StdI->transindx[ktrans][2], StdI->transindx[ktrans][3],
@@ -2220,7 +2220,7 @@ static void PrintInteractions(struct StdIntList *StdI)
 
   nintr0 = 0;
   for (kintr = 0; kintr < StdI->nintr; kintr++) {
-    if (abs(StdI->intr[kintr]) > 0.000001) nintr0 = nintr0 + 1;
+    if (std::abs(StdI->intr[kintr]) > 0.000001) nintr0 = nintr0 + 1;
   }
   if (nintr0 == 0 || StdI->lBoost == 1) StdI->Lintr = 0;
   else StdI->Lintr = 1;
@@ -2236,7 +2236,7 @@ static void PrintInteractions(struct StdIntList *StdI)
     if (StdI->lBoost == 0) {
       nintr0 = 0;
       for (kintr = 0; kintr < StdI->nintr; kintr++) {
-        if (abs(StdI->intr[kintr]) > 0.000001)
+        if (std::abs(StdI->intr[kintr]) > 0.000001)
           fprintf(fp, "%5d %5d %5d %5d %5d %5d %5d %5d %25.15f  %25.15f\n",
             StdI->intrindx[kintr][0], StdI->intrindx[kintr][1],
             StdI->intrindx[kintr][2], StdI->intrindx[kintr][3],
