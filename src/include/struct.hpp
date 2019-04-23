@@ -382,7 +382,7 @@ struct BoostList {
   long int W0;
   long int num_pivot;
   long int ishift_nspin;
-  int NumarrayJ;/**<@brief */
+  int NumarrayJ = 0;/**<@brief */
   std::complex<double> ***arrayJ;/**<@brief */
   std::complex<double> vecB[3];/**<@brief */
   int **list_6spin_star;/**<@brief */
