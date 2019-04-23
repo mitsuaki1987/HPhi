@@ -26,20 +26,55 @@
 #include "wrapperMPI.hpp"
 #include "HPhiTrans.hpp"
 #include "common/setmemory.hpp"
-
-void MakeTEDTransfer(struct BindStruct *X, const int timeidx);
-void MakeTEDInterAll(struct BindStruct *X, const int timeidx);
-
-
+#include <iostream>
 /**
  * @file   CalcByTEM.c
  *
  * @brief  File to define functions to calculate expected values by Time evolution method.
- *
- *
  */
+ /// \brief Set transfer integrals at timeidx-th time
+ /// \param X struct for getting information of transfer integrals
+ /// \param timeidx index of time
+void MakeTEDTransfer(struct BindStruct *X, const int timeidx) {
+  int i, j;
+  //Clear values
+  for (i = 0; i < X->Def.NTETransferMax; i++) {
+    for (j = 0; j < 4; j++) {
+      X->Def.EDGeneralTransfer[i + X->Def.EDNTransfer][j] = 0;
+    }
+    X->Def.EDParaGeneralTransfer[i + X->Def.EDNTransfer] = 0.0;
+  }
 
-
+  //Input values
+  for (i = 0; i < X->Def.NTETransfer[timeidx]; i++) {
+    for (j = 0; j < 4; j++) {
+      X->Def.EDGeneralTransfer[i + X->Def.EDNTransfer][j] = X->Def.TETransfer[timeidx][i][j];
+    }
+    X->Def.EDParaGeneralTransfer[i + X->Def.EDNTransfer] = X->Def.ParaTETransfer[timeidx][i];
+  }
+  X->Def.EDNTransfer += X->Def.NTETransfer[timeidx];
+}
+/// \brief Set interall interactions at timeidx-th time
+/// \param X struct for getting information of interall interactions
+/// \param timeidx index of time
+void MakeTEDInterAll(struct BindStruct *X, const int timeidx) {
+  int i, j;
+  //Clear values
+  for (i = 0; i < X->Def.NTEInterAllMax; i++) {
+    for (j = 0; j < 8; j++) {
+      X->Def.InterAll_OffDiagonal[i + X->Def.NInterAll_OffDiagonal][j] = 0;
+    }
+    X->Def.ParaInterAll_OffDiagonal[i + X->Def.NInterAll_OffDiagonal] = 0.0;
+  }
+  //Input values
+  for (i = 0; i < X->Def.NTEInterAllOffDiagonal[timeidx]; i++) {
+    for (j = 0; j < 8; j++) {
+      X->Def.InterAll_OffDiagonal[i + X->Def.NInterAll_OffDiagonal][j] = X->Def.TEInterAllOffDiagonal[timeidx][i][j];
+    }
+    X->Def.ParaInterAll_OffDiagonal[i + X->Def.NInterAll_OffDiagonal] = X->Def.ParaTEInterAllOffDiagonal[timeidx][i];
+  }
+  X->Def.NInterAll_OffDiagonal += X->Def.NTEInterAllOffDiagonal[timeidx];
+}
 /** 
  * @brief main function of time evolution calculation
  * 
@@ -241,48 +276,4 @@ int CalcByTEM(
 
   fprintf(stdoutMPI, "%s", cLogTEM_End);
   return 0;
-}
-/// \brief Set transfer integrals at timeidx-th time
-/// \param X struct for getting information of transfer integrals
-/// \param timeidx index of time
-void MakeTEDTransfer(struct BindStruct *X, const int timeidx) {
-  int i, j;
-  //Clear values
-  for (i = 0; i < X->Def.NTETransferMax; i++) {
-    for (j = 0; j < 4; j++) {
-      X->Def.EDGeneralTransfer[i + X->Def.EDNTransfer][j] = 0;
-    }
-    X->Def.EDParaGeneralTransfer[i + X->Def.EDNTransfer] = 0.0;
-  }
-
-  //Input values
-  for (i = 0; i < X->Def.NTETransfer[timeidx]; i++) {
-    for (j = 0; j < 4; j++) {
-      X->Def.EDGeneralTransfer[i + X->Def.EDNTransfer][j] = X->Def.TETransfer[timeidx][i][j];
-    }
-    X->Def.EDParaGeneralTransfer[i + X->Def.EDNTransfer] = X->Def.ParaTETransfer[timeidx][i];
-  }
-  X->Def.EDNTransfer += X->Def.NTETransfer[timeidx];
-}
-/// \brief Set interall interactions at timeidx-th time
-/// \param X struct for getting information of interall interactions
-/// \param timeidx index of time
-void MakeTEDInterAll(struct BindStruct *X, const int timeidx) {
-  int i, j;
-  //Clear values
-  for (i = 0; i < X->Def.NTEInterAllMax; i++) {
-    for (j = 0; j < 8; j++) {
-      X->Def.InterAll_OffDiagonal[i + X->Def.NInterAll_OffDiagonal][j] = 0;
-    }
-    X->Def.ParaInterAll_OffDiagonal[i + X->Def.NInterAll_OffDiagonal] = 0.0;
-  }
-
-  //Input values
-  for (i = 0; i < X->Def.NTEInterAllOffDiagonal[timeidx]; i++) {
-    for (j = 0; j < 8; j++) {
-      X->Def.InterAll_OffDiagonal[i + X->Def.NInterAll_OffDiagonal][j] = X->Def.TEInterAllOffDiagonal[timeidx][i][j];
-    }
-    X->Def.ParaInterAll_OffDiagonal[i + X->Def.NInterAll_OffDiagonal] = X->Def.ParaTEInterAllOffDiagonal[timeidx][i];
-  }
-  X->Def.NInterAll_OffDiagonal += X->Def.NTEInterAllOffDiagonal[timeidx];
 }

@@ -89,13 +89,14 @@ struct StdIntList *StdI,//!<[inout]
   */
 #if defined(_HPhi)
   int it, ii;
-  std::complex<double> Cphase, coef;
+  double Cphase;
+  std::complex<double> coef;
 
   if (strcmp(StdI->method, "timeevolution") == 0 && StdI->PumpBody == 1) {
     for (it = 0; it < StdI->Lanczos_max; it++) {
       Cphase = 0.0f;
       for (ii = 0; ii < 3; ii++) Cphase += /*2.0*StdI->pi */ StdI->At[it][ii] * dR[ii];
-      coef = (cos(Cphase), sin(-Cphase));
+      coef = std::complex<double>(cos(Cphase), sin(-Cphase));
       for (ispin = 0; ispin < 2; ispin++) {
         StdI->pump[it][StdI->npump[it]] = coef * trans0;
         StdI->pumpindx[it][StdI->npump[it]][0] = isite;

@@ -851,6 +851,7 @@ int ReadDefFileNInt(
           X->Ndown = X->NLocSpn + X->NCond - X->Total2Sz;
           X->Nup /= 2;
           X->Ndown /= 2;
+          X->Ne = X->Nup + X->Ndown;
         }
         else {
           if (X->iCalcModel == Hubbard) {

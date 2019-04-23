@@ -1,6 +1,6 @@
 matrix:
   include:
-  - language: c
+  - language: c++
     sudo: enabled
     before_install:
       - sudo apt-get update
@@ -37,7 +37,7 @@ matrix:
       - export OMP_NUM_THREADS=3
       - make test MPIRUN="mpiexec -np 16"
   - os: osx
-    language: c
+    language: c++
     sudo: enabled
     before_install:
       - brew update

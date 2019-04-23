@@ -218,7 +218,7 @@ SUBROUTINE komega_BICG_init(ndim0, nl0, nz0, x, z0, itermax0, threshold0, comm0)
   threshold = threshold0
   !
   comm = comm0
-#if defined(MPI)
+#if defined(__MPI)
   lmpi = .TRUE.
 #else
   lmpi = .FALSE.

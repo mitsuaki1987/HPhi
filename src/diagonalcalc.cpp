@@ -37,6 +37,7 @@
 #include "diagonalcalc.hpp"
 #include "mltplySpinCore.hpp"
 #include "wrapperMPI.hpp"
+#include <iostream>
 /**
  * @brief Update the vector by the general two-body diagonal interaction, \f$ H_{i\sigma_1 j\sigma_2} n_ {i\sigma_1}n_{j\sigma_2}\f$.\n
  * (Using in Time Evolution mode).
@@ -727,7 +728,6 @@ int diagonalcalcForTE
       isite2 = X->Def.TEInterAllDiagonal[_istep][i][2] + 1;
       B_spin = X->Def.TEInterAllDiagonal[_istep][i][3];
       tmp_V = X->Def.ParaTEInterAllDiagonal[_istep][i];
-
       if (SetDiagonalTEInterAll(isite1, isite2, A_spin, B_spin, tmp_V, X, tmp_v0, tmp_v1) != 0) {
         return -1;
       }

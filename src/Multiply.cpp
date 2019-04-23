@@ -19,6 +19,7 @@
 #include "Multiply.hpp"
 #include "wrapperMPI.hpp"
 #include "mltply.hpp"
+#include <iostream>
 
 /**
  * @file   Multiply.c

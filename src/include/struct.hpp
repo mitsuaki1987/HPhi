@@ -32,7 +32,7 @@ struct ParamList {
     double Tinit;
     double TimeSlice;
     int OutputInterval;
-    int ExpandCoef;
+    int ExpandCoef = 0;
     int ExpecInterval;
 };
 /**
@@ -53,23 +53,23 @@ struct DefineList {
   int READ;/**<@brief It is ALWAYS 0 ???*/
   int WRITE;/**<@brief It is ALWAYS 0 ???*/
 
-  int Nsite;/**<@brief Number of sites in the INTRA process region*/
-  int NsiteMPI;/**<@brief Total number of sites, differ from DefineList::Nsite*/
-  int Nup;/**<@brief Number of spin-up electrons in this process. */
-  int Ndown;/**<@brief Number of spin-down electrons in this process. */
-  int NupMPI;/**<@brief Total number of spin-up electrons across processes.
+  int Nsite = 0;/**<@brief Number of sites in the INTRA process region*/
+  int NsiteMPI = 0;/**<@brief Total number of sites, differ from DefineList::Nsite*/
+  int Nup = 0;/**<@brief Number of spin-up electrons in this process. */
+  int Ndown = 0;/**<@brief Number of spin-down electrons in this process. */
+  int NupMPI = 0;/**<@brief Total number of spin-up electrons across processes.
                       Deffer from DefineList::Nup. Read from modpara in readdef.h*/
-  int NdownMPI;/**<@brief Total number of spin-down electrons across processes.
+  int NdownMPI = 0;/**<@brief Total number of spin-down electrons across processes.
                       Deffer from DefineList::Ndown. Read from modpara in readdef.h*/
-  int NupOrg;/**<@brief Number of spin-up electrons before exitation. Used only in
+  int NupOrg = 0;/**<@brief Number of spin-up electrons before exitation. Used only in
                       the spectrum calculation. Read from modpara in readdef.h*/
-  int NdownOrg;/**<@brief Number of spin-down electrons before exitation. Used only in
+  int NdownOrg = 0;/**<@brief Number of spin-down electrons before exitation. Used only in
                       the spectrum calculation. Read from modpara in readdef.h*/
 
-  int Total2Sz;/**<@brief Total @f$2S_z@f$ in this process.*/
-  int Total2SzMPI;/**<@brief Total @f$2S_z@f$ across processes.*/
-  int Ne;/**<@brief Number of electrons in this process.*/
-  int NeMPI;/**<@brief Total number of electrons across process.
+  int Total2Sz = 0;/**<@brief Total @f$2S_z@f$ in this process.*/
+  int Total2SzMPI = 0;/**<@brief Total @f$2S_z@f$ across processes.*/
+  int Ne = 0;/**<@brief Number of electrons in this process.*/
+  int NeMPI = 0;/**<@brief Total number of electrons across process.
                      Differ from DefineList::Ne .*/
   int Lanczos_max;/**<@brief Maximum number of iterations.*/
   int Lanczos_restart;/**<@brief Number of iterations performed in the restart computation.*/
@@ -118,39 +118,39 @@ struct DefineList {
                                         Data Format [DefineList::NTransfer].*/
     //[e] Transfer
 
-  int NCoulombIntra;/**< Number of on-site Coulomb interaction*/
+  int NCoulombIntra = 0;/**< Number of on-site Coulomb interaction*/
   int **CoulombIntra;/**< [DefineList::NCoulombIntra][1] Index of on-site coulomb interaction.
                      malloc in setmem_def().*/
   double *ParaCoulombIntra;/**< [DefineList::NCoulombIntra] Coupling constant of on-site 
                            Coulomb interaction. malloc in setmem_def().*/
 
-  int NCoulombInter;/**<@brief Number of off-site Coulomb interaction*/
+  int NCoulombInter = 0;/**<@brief Number of off-site Coulomb interaction*/
   int **CoulombInter;/**< [DefineList::NCoulombInter][2] Index of off-site coulomb interaction.
                      malloc in setmem_def().*/
   double *ParaCoulombInter;/**<@brief [DefineList::NCoulombInter]Coupling constant of off-site 
                            Coulomb interaction. malloc in setmem_def().*/
 
-  int NHundCoupling;/**<@brief Number of Hund coupling*/
+  int NHundCoupling = 0;/**<@brief Number of Hund coupling*/
   int **HundCoupling;/**<@brief [DefineList::NHundCoupling][2] Index of Hund coupling.
                      malloc in setmem_def().*/
   double *ParaHundCoupling;/**<@brief [DefineList::NHundCoupling] Hund coupling constant.
                            malloc in setmem_def().*/
 
-  int NPairHopping;/**<@brief Number of pair-hopping term*/
+  int NPairHopping = 0;/**<@brief Number of pair-hopping term*/
   int **PairHopping;/**<@brief [DefineList::NPairHopping][2] Index of pair-hopping.
                     malloc in setmem_def().*/
   double *ParaPairHopping;/**<@brief [DefineList::NPairHopping] Coupling constant of
                           pair-hopping term. malloc in setmem_def().*/
 
-  int NExchangeCoupling;/**<@brief Number of exchange term*/
+  int NExchangeCoupling = 0;/**<@brief Number of exchange term*/
   int **ExchangeCoupling;/**<@brief [DefineList::NExchangeCoupling][2] Index of exchange term.
                          malloc in setmem_def().*/
   double *ParaExchangeCoupling;/**<@brief [DefineList::NExchangeCoupling] Coupling constant of
                                exchange term. malloc in setmem_def().*/
 
-  int NIsingCoupling;/**<@brief Number of Ising term.*/
+  int NIsingCoupling = 0;/**<@brief Number of Ising term.*/
 
-  int NPairLiftCoupling;/**<@brief Number of pair-lift term*/
+  int NPairLiftCoupling = 0;/**<@brief Number of pair-lift term*/
   int **PairLiftCoupling;/**<@brief [DefineList::NPairHopping][2] Index of pair-lift term.
                          malloc in setmem_def().*/
   double *ParaPairLiftCoupling;/**<@brief [DefineList::NPairHopping] Coupling constant of
@@ -160,9 +160,9 @@ struct DefineList {
   int **InterAll;/**<@brief [DefineList::NinterAll][8] Interacted quartet*/
   int **InterAll_OffDiagonal;/**<@brief [DefineList::NinterAll_OffDiagonal][8] Interacted quartet*/
   int **InterAll_Diagonal;/**<@brief [DefineList::NinterAll_Diagonal][4] Interacted quartet*/
-  int NInterAll;/**<@brief Total Number of Interacted quartet*/
-  int NInterAll_Diagonal;/**<@brief Number of interall term (diagonal)*/
-  int NInterAll_OffDiagonal;/**<@brief Number of interall term (off-diagonal)*/
+  int NInterAll = 0;/**<@brief Total Number of Interacted quartet*/
+  int NInterAll_Diagonal = 0;/**<@brief Number of interall term (diagonal)*/
+  int NInterAll_OffDiagonal = 0;/**<@brief Number of interall term (off-diagonal)*/
   std::complex<double> *ParaInterAll;/**<@brief [DefineList::NInterAll] Coupling constant of
                                inter-all term. malloc in setmem_def().*/
   double *ParaInterAll_Diagonal;/**<@brief [DefineList::NInterAll_Diagonal] Coupling constant of
@@ -172,21 +172,21 @@ struct DefineList {
     //[e] For InterAll
 
   int **CisAjt;/**<@brief [DefineList::NCisAjt][4] Indices of one-body correlation function. malloc in setmem_def().*/
-  int NCisAjt;/**<@brief Number of indices of two-body correlation function.*/
+  int NCisAjt = 0;/**<@brief Number of indices of two-body correlation function.*/
 
   int **CisAjtCkuAlvDC;/**<@brief [DefineList::NCisAjtCkuAlvDC][4] Indices of two-body correlation function. malloc in setmem_def().*/
-  int NCisAjtCkuAlvDC;/**<@brief Number of indices of two-body correlation function.*/
+  int NCisAjtCkuAlvDC = 0;/**<@brief Number of indices of two-body correlation function.*/
 
   int ***SingleExcitationOperator;/**<@brief [DefineList::NSingleExcitationOperator][3] 
                                  Indices of single excitaion operator for spectrum. malloc in setmem_def().*/
-  int NNSingleExcitationOperator;/**<@brief Number of single excitaion operator for spectrum.*/
+  int NNSingleExcitationOperator = 0;/**<@brief Number of single excitaion operator for spectrum.*/
   int *NSingleExcitationOperator;/**<@brief Number of single excitaion operator for spectrum.*/
   std::complex<double> **ParaSingleExcitationOperator;/**<@brief [DefineList::NSingleExcitationOperator] 
               Coefficient of single excitaion operator for spectrum. malloc in setmem_def().*/
 
   int ***PairExcitationOperator;/**<@brief [DefineList::NPairExcitationOperator][5] 
                                Indices of pair excitaion operator for spectrum. malloc in setmem_def().*/
-  int NNPairExcitationOperator;/**<@brief Number of pair excitaion operator for spectrum.*/
+  int NNPairExcitationOperator = 0;/**<@brief Number of pair excitaion operator for spectrum.*/
   int *NPairExcitationOperator;/**<@brief Number of pair excitaion operator for spectrum.*/
   std::complex<double> **ParaPairExcitationOperator;/**<@brief [DefineList::NPairExcitationOperator]
                            Coefficient of pair excitaion operator for spectrum. malloc in setmem_def().*/
@@ -245,16 +245,16 @@ struct DefineList {
     //[s] For Time Evolution
 
     //Information of Time
-    int NTETimeSteps;
+    int NTETimeSteps = 0;
     double *TETime;
 
     //[s]For Ido-san version
-    int NLaser;
+    int NLaser = 0;
     double *ParaLaser;
     //[e]For Ido-san version
 
     //Information of Transfer integrals
-    int NTETransferMax;
+    int NTETransferMax = 0;
     int *NTETransfer;        /**< Number of time-dependent transfer integrals for Time Evolution.\n
                Data Format [NTE]*/
     int *NTETransferDiagonal;        /**< Number of time-dependent transfer integrals for Time Evolution.\n
@@ -269,7 +269,7 @@ struct DefineList {
                Data Format [NTE][Ntransfer]. */
 
     //Two-body part
-    int NTEInterAllMax;
+    int NTEInterAllMax = 0;
     int *NTEInterAll;        /**< Number of time-dependent InterAll for Time Evolution.\n
                Data Format [NTE]*/
     int *NTEInterAllOffDiagonal;        /**< Number of off-diagonal part of time-dependent InterAll for Time Evolution.\n
