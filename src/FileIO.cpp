@@ -35,7 +35,7 @@ int childfopenMPI(
   *_fp = fopenMPI(ctmpPath, _cmode);
   
   if(*_fp == NULL){
-    fprintf(stdoutMPI, cErrFIOpen, ctmpPath);
+    fprintf(stdoutMPI, "FileOpenError: %s.\n", ctmpPath);
     return -1;
   }
     
@@ -58,7 +58,7 @@ int childfopenALL(
   *_fp = fopen(ctmpPath, _cmode);
   
   if(*_fp == NULL){
-    fprintf(stdout, cErrFIOpen, ctmpPath);
+    fprintf(stdout, "FileOpenError: %s.\n", ctmpPath);
     return -1;
   }
     

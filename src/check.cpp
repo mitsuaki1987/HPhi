@@ -187,7 +187,7 @@ int check(struct BindStruct *X){
     
     break;
   default:
-    fprintf(stderr, cErrNoModel, X->Def.iCalcModel);
+    fprintf(stderr, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
     free_li_2d_allocate(comb);
     return FALSE;
   }  
@@ -293,7 +293,7 @@ int check(struct BindStruct *X){
     }
     break;
   default:
-    fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+    fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
     free_li_2d_allocate(comb);
     return FALSE;
   }  
@@ -379,7 +379,7 @@ int check(struct BindStruct *X){
    }     
     break;
   default:
-    fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+    fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
     free_li_2d_allocate(comb);
     return FALSE;
   }  

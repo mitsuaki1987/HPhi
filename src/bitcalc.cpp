@@ -49,7 +49,7 @@ int GetSplitBit(
                 long int *ihfbit//!<[out]
 ){
   if(Nsite<1){
-    fprintf(stderr, "%s", cErrSiteNumber);
+    fprintf(stderr, "%s", "Error: Total Site Number is incorrect.\n");
     return -1;
   }
   *ihfbit=1;
@@ -96,7 +96,7 @@ int GetSplitBitByModel(
   case SpinGC:   
     break;
   default:
-    fprintf(stderr, cErrNoModel, iCalcModel);
+    fprintf(stderr, "Error: CalcModel %d is incorrect.\n", iCalcModel);
     return -1;
   }
 
@@ -131,7 +131,7 @@ int GetSplitBitForGeneralSpin(
   long int tmpbit=1;
   
   if(Nsite<1){
-    fprintf(stderr, "%s", cErrSiteNumber);
+    fprintf(stderr, "%s", "Error: Total Site Number is incorrect.\n");
     return -1;
   }
   

@@ -127,7 +127,7 @@ int SetDiagonalTEInterAll(
       break;/*case SpinGC, Spin:*/
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
     }/*if (isite1 > X->Def.Nsite)*/
 
@@ -249,7 +249,7 @@ firstprivate(i_max, dtmp_V, isite1, isigma1, X) private(j, num1)
       break;/*case Spin:*/
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
 
     }/*switch (X->Def.iCalcModel)*/
@@ -350,7 +350,7 @@ private(j, num1)
     break;
 
   default:
-    fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+    fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
     return -1;
   }
   return 0;
@@ -424,7 +424,7 @@ int SetDiagonalTEChemi(
       break;/*case SpinGC, Spin:*/
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
 
     } /*switch (X->Def.iCalcModel)*/
@@ -521,7 +521,7 @@ shared(tmp_v0, tmp_v1, list_1) firstprivate(i_max, dtmp_V, isite1, isigma1, X) p
 
     break;
   default:
-    fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+    fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
     return -1;
   }
   return 0;
@@ -593,7 +593,7 @@ int SetDiagonalTETransfer
       break;/*case SpinGC, Spin:*/
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
 
     } /*switch (X->Def.iCalcModel)*/
@@ -686,7 +686,7 @@ firstprivate(i_max, dtmp_V, isite1, isigma1, X) private(j, num1)
       break;
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
     }
   }
@@ -803,7 +803,7 @@ int SetDiagonalCoulombIntra
       break;
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
       //break;
 
@@ -847,7 +847,7 @@ int SetDiagonalCoulombIntra
       break;
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
       //break;
     }
@@ -931,7 +931,7 @@ firstprivate(i_max, dtmp_V) private(j)
       break;/*case SpinGC, Spin:*/
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
 
     } /*switch (X->Def.iCalcModel)*/
@@ -1018,7 +1018,7 @@ firstprivate(i_max, dtmp_V) private(j)
 
     break;
   default:
-    fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+    fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
     return -1;
   }
 
@@ -1107,7 +1107,7 @@ int SetDiagonalCoulombInter
       break;/*case Spin, SpinGC*/
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
 
     }/*switch (X->Def.iCalcModel)*/
@@ -1138,7 +1138,7 @@ int SetDiagonalCoulombInter
       break;
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
     }
 
@@ -1188,7 +1188,7 @@ private(num1, ibit1_up, ibit1_down, j)
       break;/* case Spin, SpinGC:*/
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
 
     }/*switch (X->Def.iCalcModel)*/
@@ -1254,7 +1254,7 @@ private(num1, ibit1_up, ibit1_down, j)
       }
       break;
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
     }
   }
@@ -1355,7 +1355,7 @@ firstprivate(i_max, dtmp_V) private(j)
       break;/*case SpinGC, Spin:*/
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
     }
 
@@ -1485,7 +1485,7 @@ firstprivate(i_max, dtmp_V, is1_up) private(j, ibit1_up)
       break;/*case Spin:*/
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
 
     }/*switch (X->Def.iCalcModel)*/
@@ -1576,7 +1576,7 @@ firstprivate(i_max, dtmp_V, is1_up) private(j, ibit1_up)
       }
       break;
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
     }
   }
@@ -1691,7 +1691,7 @@ firstprivate(i_max, dtmp_V, num1, X) private(j)
       break;/*case SpinGC, Spin:*/
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
 
     }/*if (isite1 > X->Def.Nsite)*/
@@ -1802,7 +1802,7 @@ firstprivate(i_max, dtmp_V, isite1, isigma1, X) private(j, num1)
       break;/*case Spin:*/
 
     default:
-      fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+      fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
       return -1;
 
     }/*switch (X->Def.iCalcModel)*/
@@ -1893,7 +1893,7 @@ firstprivate(i_max, dtmp_V, isite1, isigma1, X) private(j, num1)
     break;
 
   default:
-    fprintf(stdoutMPI, cErrNoModel, X->Def.iCalcModel);
+    fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", X->Def.iCalcModel);
     return -1;
   }
   return 0;

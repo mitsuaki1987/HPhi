@@ -29,7 +29,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "ProgressMessage.hpp"
-#include "ErrorMessage.hpp"
 #include "struct.hpp"
 #include "log.hpp"
 #include "dSFMT.hpp"

@@ -855,10 +855,10 @@ int Read_sz
     if(childfopenMPI(cFileNameErrorSz,"a",&fp_err)!=0){
       exitMPI(-1);
     }
-    fprintf(fp_err, "%s", cErrSz_NoFile);
-    fprintf(stderr, "%s", cErrSz_NoFile);
-    fprintf(fp_err, cErrSz_NoFile_Show,sdt);
-    fprintf(stderr, cErrSz_NoFile_Show, sdt);
+    fprintf(fp_err, "%s", "No file. Please set READ=0.\n");
+    fprintf(stderr, "%s", "No file. Please set READ=0.\n");
+    fprintf(fp_err, " %s does not exist. \n",sdt);
+    fprintf(stderr, " %s does not exist. \n", sdt);
     fclose(fp_err);
   }else{
     while(NULL != fgetsMPI(buf,sizeof(buf),fp)){  
@@ -1582,7 +1582,7 @@ int sz
     //Error message
     //i_max=i_max+1;
     if (i_max != X->Check.idim_max) {
-      fprintf(stderr, "%s", cErrSz);
+      fprintf(stderr, "%s", "Error: in sz. \n");
       fprintf(stderr, "imax = %ld, Check.idim_max=%ld \n", i_max, X->Check.idim_max);
       strcpy(sdt_err, cFileNameErrorSz);
       if (childfopenMPI(sdt_err, "a", &fp_err) != 0) {

@@ -10,7 +10,7 @@ matrix:
       - mkdir build
       - cd build
     script:
-      - cmake ../
+      - cmake ../ -DCMAKE_CXX_FLAGS="-std=c++11"
       - make
       - export OMP_NUM_THREADS=1
       - ctest -R lobcg_spingc_honey
@@ -22,7 +22,7 @@ matrix:
       - make test
       - rm -r *
       - sudo apt-get install -y libopenmpi-dev openmpi-bin
-      - cmake ../
+      - cmake ../ -DCMAKE_CXX_FLAGS="-std=c++11"
       - make
       - export OMP_NUM_THREADS=1
       - make test MPIRUN="mpiexec -np 4"
@@ -52,7 +52,7 @@ matrix:
       - cd build
       #- export CC=/usr/local/bin/gcc-8
     script:
-      - cmake ../
+      - cmake ../ -DCMAKE_CXX_FLAGS="-std=c++11"
       - make
       - export OMP_NUM_THREADS=1
       - make test
@@ -62,7 +62,7 @@ matrix:
       #- make test
       #- rm -r *
       #- brew install open-mpi
-      #- cmake ../
+      #- cmake ../ -DCMAKE_CXX_FLAGS="-std=c++11"
       #- make
       #- export OMP_NUM_THREADS=1
       #- MPIRUN="mpiexec -np 4" ctest -V

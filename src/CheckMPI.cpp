@@ -58,8 +58,8 @@ int CheckMPI(struct BindStruct *X/**< [inout] */)
     } /*for (isite = NsiteMPI; isite > 0; isite--)*/
     
     if (isite == 0) {
-      fprintf(stdoutMPI, "%s", cErrNProcNumberHubbard);
-      fprintf(stdoutMPI, cErrNProcNumber, nproc);
+      fprintf(stdoutMPI, "%s", "Error ! The number of PROCESS should be 4-exponent !\n");
+      fprintf(stdoutMPI, "        The number of PROCESS : %d\n", nproc);
       NDimInterPE = 1;
       int ismallNproc=1;
       int ilargeNproc=1;
@@ -72,7 +72,7 @@ int CheckMPI(struct BindStruct *X/**< [inout] */)
         }/*if (NDimInterPE > nproc)*/
         NDimInterPE *= 4;
       }/*for (isite = X->Def.NsiteMPI; isite > 0; isite--)*/
-      fprintf(stdoutMPI, cErrNProcNumberSet,ismallNproc, ilargeNproc );
+      fprintf(stdoutMPI, "        Set the number of PROCESS as %d or %d.\n",ismallNproc, ilargeNproc );
         return FALSE;
       //return FALSE;
     } /*if (isite == 0)*/
@@ -193,8 +193,8 @@ int CheckMPI(struct BindStruct *X/**< [inout] */)
       }/*for (isite = X->Def.NsiteMPI; isite > 0; isite--)*/
 
       if (isite == 0) {
-        fprintf(stdoutMPI, "%s", cErrNProcNumberSpin);
-        fprintf(stdoutMPI, cErrNProcNumber, nproc);
+        fprintf(stdoutMPI, "%s", "Error ! The number of PROCESS should be 2-exponent !\n");
+        fprintf(stdoutMPI, "        The number of PROCESS : %d\n", nproc);
       NDimInterPE = 1;
       int ismallNproc=1;
       int ilargeNproc=1;
@@ -207,7 +207,7 @@ int CheckMPI(struct BindStruct *X/**< [inout] */)
         }/*if (NDimInterPE > nproc)*/
         NDimInterPE *= 2;
       }/*for (isite = X->Def.NsiteMPI; isite > 0; isite--)*/
-      fprintf(stdoutMPI, cErrNProcNumberSet,ismallNproc, ilargeNproc );
+      fprintf(stdoutMPI, "        Set the number of PROCESS as %d or %d.\n",ismallNproc, ilargeNproc );
         return FALSE;
       }/*if (isite == 0)*/
 
@@ -245,8 +245,8 @@ int CheckMPI(struct BindStruct *X/**< [inout] */)
       }/*for (isite = X->Def.NsiteMPI; isite > 0; isite--)*/
 
       if (isite == 0) {
-        fprintf(stdoutMPI, "%s", cErrNProcNumberGneralSpin);
-        fprintf(stdoutMPI, cErrNProcNumber, nproc);
+        fprintf(stdoutMPI, "%s", "Error ! The number of PROCESS is wrong !\n");
+        fprintf(stdoutMPI, "        The number of PROCESS : %d\n", nproc);
       NDimInterPE = 1;
       int ismallNproc=1;
       int ilargeNproc=1;
@@ -259,7 +259,7 @@ int CheckMPI(struct BindStruct *X/**< [inout] */)
         }/*if (NDimInterPE > nproc)*/
         NDimInterPE *= X->Def.SiteToBit[isite - 1];
       }/*for (isite = X->Def.NsiteMPI; isite > 0; isite--)*/
-      fprintf(stdoutMPI, cErrNProcNumberSet,ismallNproc, ilargeNproc );
+      fprintf(stdoutMPI, "        Set the number of PROCESS as %d or %d.\n",ismallNproc, ilargeNproc );
         return FALSE;
       }/*if (isite == 0)*/
 

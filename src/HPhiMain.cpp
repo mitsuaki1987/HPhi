@@ -202,7 +202,7 @@ int main(int argc, char* argv[]){
   if (myrank == 0) {
     if (stat(cParentOutputFolder, &tmpst) != 0) {
       if (mkdir(cParentOutputFolder, 0777) != 0) {
-        fprintf(stdoutMPI, "%s", cErrOutput);
+        fprintf(stdoutMPI, "%s", "Error: Fail to make output folder in current directory. \n");
         exitMPI(-1);
       }
     }
@@ -221,12 +221,12 @@ int main(int argc, char* argv[]){
 
   setmem_HEAD(&X.Bind);
   if(ReadDefFileNInt(cFileListName, &(X.Bind.Def), &(X.Bind.Boost))!=0){
-    fprintf(stdoutMPI, "%s", cErrDefFile);
+    fprintf(stdoutMPI, "%s", "Error: Definition files(*.def) are incomplete.\n");
     exitMPI(-1);
   }
 
   if (X.Bind.Def.nvec < X.Bind.Def.k_exct){
-    fprintf(stdoutMPI, "%s", cErrnvec);
+    fprintf(stdoutMPI, "%s", "Error: nvec should be smaller than exct are incorrect.\n");
     fprintf(stdoutMPI, "Error: nvec = %d, exct=%d.\n",
             X.Bind.Def.nvec, X.Bind.Def.k_exct);
     exitMPI(-1);
@@ -265,7 +265,7 @@ int main(int argc, char* argv[]){
     
     /*LARGE VECTORS ARE ALLOCATED*/
     if (setmem_large(&X.Bind) != 0) {
-      fprintf(stdoutMPI, cErrLargeMem, iErrCodeMem);
+      fprintf(stdoutMPI, "Error: Fail for memory allocation.");
       exitMPI(-1);
     }
     

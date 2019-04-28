@@ -307,7 +307,7 @@ int MakeExcitedList(
 
   //set memory
   if (setmem_large(X) != 0) {
-    fprintf(stdoutMPI, cErrLargeMem, iErrCodeMem);
+    fprintf(stdoutMPI, "Error: Fail for memory allocation.\n");
     exitMPI(-1);
   }
   if (sz(X, list_1, list_2_1, list_2_2) != 0) {
