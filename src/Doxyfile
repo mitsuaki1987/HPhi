@@ -782,7 +782,6 @@ WARN_LOGFILE           =
 
 INPUT                  = ./ \
                          ./StdFace/ \
-                         ./komega/ \
                          include/struct.hpp
 
 # This tag can be used to specify the character encoding of the source files
@@ -2033,8 +2032,7 @@ SEARCH_INCLUDES        = YES
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
 INCLUDE_PATH           = ./include/ \
-                         ./StdFace/ \
-                         ./komega/
+                         ./StdFace/
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the

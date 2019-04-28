@@ -13,6 +13,8 @@ matrix:
       - cmake ../
       - make
       - export OMP_NUM_THREADS=1
+      - ctest -R lobcg_spingc_honey
+      - cat Testing/Temporary/LastTest.log
       - make test
       - rm -r test
       - make

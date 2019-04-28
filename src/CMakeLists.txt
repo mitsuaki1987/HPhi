@@ -4,8 +4,6 @@ if(${CMAKE_PROJECT_NAME} STREQUAL "Project")
   message(FATAL_ERROR "cmake should be executed not for 'src' subdirectory, but for the top directory of HPhi.")
 endif(${CMAKE_PROJECT_NAME} STREQUAL "Project")
 
-add_subdirectory(komega)
-
 include_directories(include)
 add_definitions(-D_HPhi)
 add_definitions(-DDSFMT_MEXP=19937)
@@ -25,7 +23,7 @@ set(SOURCES_COMMON common/setmemory.cpp)
 set(SOURCES_STDFACE StdFace/ChainLattice.cpp StdFace/FCOrtho.cpp StdFace/HoneycombLattice.cpp StdFace/Kagome.cpp StdFace/Ladder.cpp StdFace/Orthorhombic.cpp StdFace/Pyrochlore.cpp StdFace/SquareLattice.cpp StdFace/StdFace_main.cpp StdFace/StdFace_ModelUtil.cpp StdFace/TriangularLattice.cpp StdFace/Wannier90.cpp)
 
 add_executable(HPhi++ ${SOURCES} ${SOURCES_CG} ${SOURCES_TPQ} ${SOURCES_SPECTRUM} ${SOURCES_TEM} ${SOURCES_MLTPLY} ${SOURCES_DIAG} ${SOURCES_PHYS} ${SOURCES_STDFACE} ${SOURCES_COMMON})
-target_link_libraries(HPhi++ komega ${LAPACK_LIBRARIES} m)
+target_link_libraries(HPhi++ ${LAPACK_LIBRARIES} m)
 if(MPI_FOUND)
   target_link_libraries(HPhi++ ${MPI_CXX_LIBRARIES})
 endif(MPI_FOUND)
