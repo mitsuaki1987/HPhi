@@ -200,8 +200,8 @@ int main(int argc, char* argv[]){
   //MakeDirectory for output
   struct stat tmpst;
   if (myrank == 0) {
-    if (stat(cParentOutputFolder, &tmpst) != 0) {
-      if (mkdir(cParentOutputFolder, 0777) != 0) {
+    if (stat("./output/", &tmpst) != 0) {
+      if (mkdir("./output/", 0777) != 0) {
         fprintf(stdoutMPI, "%s", "Error: Fail to make output folder in current directory. \n");
         exitMPI(-1);
       }
@@ -231,21 +231,21 @@ int main(int argc, char* argv[]){
             X.Bind.Def.nvec, X.Bind.Def.k_exct);
     exitMPI(-1);
   }
-  fprintf(stdoutMPI, "%s", cProFinishDefFiles);
+  fprintf(stdoutMPI, "%s", "\n######  Definition files are correct.  ######\n\n");
   
   /*ALLOCATE-------------------------------------------*/
   setmem_def(&X.Bind, &X.Bind.Boost);
   /*-----------------------------------------------------*/
 
   /*Read Def files.*/
-  TimeKeeper(&(X.Bind), cFileNameTimeKeep, cReadDefStart, "w");
+  TimeKeeper(&(X.Bind), "%s_TimeKeeper.dat", "Read File starts:   %s", "w");
   if(ReadDefFileIdxPara(&(X.Bind.Def), &(X.Bind.Boost))!=0){
     fprintf(stdoutMPI,
             "Error: Indices and Parameters of Definition files(*.def) are incomplete.\n");
     exitMPI(-1);
   }
-  TimeKeeper(&(X.Bind), cFileNameTimeKeep, cReadDefFinish, "a");
-  fprintf(stdoutMPI, "%s", cProFinishDefCheck);
+  TimeKeeper(&(X.Bind), "%s_TimeKeeper.dat", "Read File finishes: %s", "a");
+  fprintf(stdoutMPI, "%s", "\n######  Indices and Parameters of Definition files(*.def) are complete.  ######\n\n");
 
   /*Set convergence Factor*/
   SetConvergenceFactor(&(X.Bind.Def));

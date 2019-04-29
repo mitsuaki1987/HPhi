@@ -32,7 +32,7 @@ int CalcByFullDiag(
   int iret=0;
   long int idim;
 
-  fprintf(stdoutMPI, "%s", cLogFullDiag_SetHam_Start);
+  fprintf(stdoutMPI, "%s", "######  Start: Setting Hamiltonian.  ######\n\n");
   StartTimer(5100);
   if(X->Bind.Def.iInputHam==FALSE){
     zclear((X->Bind.Check.idim_max + 1)*X->Bind.Check.idim_max, &v0[0][0]);
@@ -41,43 +41,43 @@ int CalcByFullDiag(
     mltply(&(X->Bind), X->Bind.Check.idim_max, v0, v1);
   }
   else if(X->Bind.Def.iInputHam==TRUE){
-    fprintf(stdoutMPI, "%s", cLogFullDiag_InputHam_Start);
+    fprintf(stdoutMPI, "%s", "######  Start: Input Hamiltonian.  ######\n\n");
     inputHam(&(X->Bind));
-    fprintf(stdoutMPI, "%s", cLogFullDiag_InputHam_End);
+    fprintf(stdoutMPI, "%s", "######  End  : Input Hamiltonian.  ######\n\n");
   }
   StopTimer(5100);
-  fprintf(stdoutMPI, "%s", cLogFullDiag_SetHam_End);
+  fprintf(stdoutMPI, "%s", "######  End  : Setting Hamiltonian.  ######\n\n");
   if(iret != 0) return FALSE;
 
 
   if(X->Bind.Def.iOutputHam == TRUE){
-    fprintf(stdoutMPI, "%s", cLogFullDiag_OutputHam_Start);
+    fprintf(stdoutMPI, "%s", "######  Start: Output Hamiltonian.  ######\n\n");
     StartTimer(5500);
     iret=outputHam(&(X->Bind));
     StopTimer(5500);
-    fprintf(stdoutMPI, "%s", cLogFullDiag_OutputHam_End);
+    fprintf(stdoutMPI, "%s", "######  End  : Output Hamiltonian.  ######\n\n");
     if(iret != 0) return FALSE;
     return TRUE;
   }
 
-  fprintf(stdoutMPI, "%s", cLogFullDiag_Start);
+  fprintf(stdoutMPI, "%s", "######  Start: Diagonalization.  ######\n\n");
   StartTimer(5200);
   iret=lapack_diag(&(X->Bind));
   StopTimer(5200);
-  fprintf(stdoutMPI, "%s", cLogFullDiag_End);
+  fprintf(stdoutMPI, "%s", "######  End  : Diagonalization.  ######\n\n");
   if(iret != 0) return FALSE;
 
   X->Bind.Def.St=0;
-  fprintf(stdoutMPI, "%s", cLogFullDiag_ExpecValue_Start);
+  fprintf(stdoutMPI, "%s", "######  Start: Calc Expected value.  ######\n\n");
   StartTimer(5300);
   phys(&(X->Bind), X->Bind.Check.idim_max);
   StopTimer(5300);
-  fprintf(stdoutMPI, "%s", cLogFullDiag_ExpecValue_End);
+  fprintf(stdoutMPI, "%s", "######  End  : Calc Expected value.  ######\n\n");
 
   StartTimer(5400);
   iret=output(&(X->Bind));
   StopTimer(5400);  
-  fprintf(stdoutMPI, "%s", cLogFinish);
+  fprintf(stdoutMPI, "%s", "######  Finish Calculation.  ######\n");
   if(iret != 0) return FALSE;
 
   return TRUE;

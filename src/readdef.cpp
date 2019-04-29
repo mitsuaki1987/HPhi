@@ -35,7 +35,6 @@
 #include "Common.hpp"
 #include "readdef.hpp"
 #include <cctype>
-#include "LogMessage.hpp"
 #include "wrapperMPI.hpp"
 #include "common/setmemory.hpp"
 #include <iostream>
@@ -492,7 +491,7 @@ int ReadDefFileNInt(
   for (i = 0; i < D_iKWNumDef; i++)
     cFileNameListFile[i] = (char*)malloc(sizeof(char)*D_CharTmpReadDef);
 
-  fprintf(stdoutMPI, cReadFileNamelist, xNameListFile);
+  fprintf(stdoutMPI, "  Read File %s.\n", xNameListFile);
   if (GetFileName(xNameListFile, cFileNameListFile) != 0) {
     return(-1);
   }
@@ -525,7 +524,7 @@ int ReadDefFileNInt(
     if (iKWidx == KWSpectrumVec) {
       continue;
     }
-    fprintf(stdoutMPI, cReadFile, defname, cKWListOfFileNameList[iKWidx]);
+    fprintf(stdoutMPI, "  Read File %s for %s.\n", defname, cKWListOfFileNameList[iKWidx]);
     fp = fopenMPI(defname, "r");
     if (fp == NULL) return ReadDefFileError(defname);
     switch (iKWidx) {
@@ -1432,7 +1431,7 @@ int ReadDefFileIdxPara(
   for (iKWidx = KWLocSpin; iKWidx < D_iKWNumDef; iKWidx++) {
     strcpy(defname, cFileNameListFile[iKWidx]);
     if (strcmp(defname, "") == 0 || iKWidx == KWSpectrumVec) continue;
-    fprintf(stdoutMPI, cReadFileNamelist, defname);
+    fprintf(stdoutMPI, "  Read File %s.\n", defname);
     fp = fopenMPI(defname, "r");
     if (fp == NULL) return ReadDefFileError(defname);
     if (iKWidx != KWBoost) {
@@ -3052,7 +3051,7 @@ to get the name of keyword, i.e. cKWListOfFileNameList[KWTest] = "Test".
     if(iKWidx==KWSpectrumVec){
       continue;
     }
-    fprintf(stdoutMPI, cReadFile, defname, cKWListOfFileNameList[iKWidx]);
+    fprintf(stdoutMPI, "  Read File %s for %s.\n", defname, cKWListOfFileNameList[iKWidx]);
     fp = fopenMPI(defname, "r");
     if (fp == NULL) return ReadDefFileError(defname);
     switch (iKWidx) {

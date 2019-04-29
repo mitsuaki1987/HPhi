@@ -49,7 +49,7 @@ int HPhiTrans(struct BindStruct *X) {
   int i, k;
   int cnt_trans;
 
-  strcpy(sdt_err, cFileNameWarningOnTransfer);
+  strcpy(sdt_err, "WarningOnTransfer.dat");
   if (childfopenMPI(sdt_err, "w", &fp_err) != 0) {
     return -1;
   }

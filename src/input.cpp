@@ -31,7 +31,7 @@ int inputHam(struct BindStruct *X){
   FILE *fp;
   char sdt[D_FileNameMax];
 
-  sprintf(sdt,cFileNamePhys_FullDiag_Ham, X->Def.CDataFileHead);
+  sprintf(sdt,"%s_Ham.dat", X->Def.CDataFileHead);
   if(childfopenMPI(sdt,"r",&fp)!=0){
     return -1;
   }

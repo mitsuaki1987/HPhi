@@ -30,7 +30,7 @@ int childfopenMPI(
   FILE **_fp//!<[inout] File pointer
 ){
   char ctmpPath[D_FileNameMax]="";
-  strcat(ctmpPath, cParentOutputFolder);
+  strcat(ctmpPath, "./output/");
   strcat(ctmpPath, _cPathChild);
   *_fp = fopenMPI(ctmpPath, _cmode);
   
@@ -53,7 +53,7 @@ int childfopenALL(
   FILE **_fp//!<[inout] File pointr
 ) {
   char ctmpPath[D_FileNameMax]="";
-  strcat(ctmpPath, cParentOutputFolder);
+  strcat(ctmpPath, "./output/");
   strcat(ctmpPath, _cPathChild);
   *_fp = fopen(ctmpPath, _cmode);
   

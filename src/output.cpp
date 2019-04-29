@@ -36,12 +36,12 @@ int output(struct BindStruct *X) {
       case Spin:
       case Hubbard:
       case Kondo:
-        sprintf(sdt, cFileNamePhys_FullDiag, X->Def.CDataFileHead, X->Def.Nup, X->Def.Ndown);
+        sprintf(sdt, "%s_phys_Nup%d_Ndown%d.dat", X->Def.CDataFileHead, X->Def.Nup, X->Def.Ndown);
         break;
       case SpinGC:
       case HubbardGC:
       case KondoGC:
-        sprintf(sdt, cFileNamePhys_FullDiag_GC, X->Def.CDataFileHead);
+        sprintf(sdt, "%s_phys.dat", X->Def.CDataFileHead);
         break;
       default:
         break;
@@ -89,7 +89,7 @@ int outputHam(struct BindStruct *X){
   }
 
   strcpy(cHeader, "%%%%MatrixMarket matrix coordinate complex hermitian\n");
-  sprintf(sdt,cFileNamePhys_FullDiag_Ham, X->Def.CDataFileHead);
+  sprintf(sdt,"%s_Ham.dat", X->Def.CDataFileHead);
   if(childfopenMPI(sdt,"w",&fp)!=0){
     return -1;
   }

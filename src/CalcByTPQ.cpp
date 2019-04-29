@@ -65,7 +65,7 @@ int CalcByTPQ(
 
   step_spin = ExpecInterval;
   X->Bind.Def.St = 0;
-  fprintf(stdoutMPI, "%s", cLogTPQ_Start);
+  fprintf(stdoutMPI, "%s", "######  Start: TPQCalculation.  ######\n\n");
   global_norm = d_1d_allocate(NumAve);
   global_1st_norm = d_1d_allocate(NumAve);
 
@@ -77,20 +77,20 @@ int CalcByTPQ(
     sdt_phys[rand_i] = (char*)malloc(sizeof(char)*D_FileNameMax);
     sdt_norm[rand_i] = (char*)malloc(sizeof(char)*D_FileNameMax);
     sdt_flct[rand_i] = (char*)malloc(sizeof(char)*D_FileNameMax);
-    sprintf(sdt_phys[rand_i], cFileNameSSRand, rand_i);
-    sprintf(sdt_norm[rand_i], cFileNameNormRand, rand_i);
-    sprintf(sdt_flct[rand_i], cFileNameFlctRand, rand_i);
+    sprintf(sdt_phys[rand_i], "SS_rand%d.dat", rand_i);
+    sprintf(sdt_norm[rand_i], "Norm_rand%d.dat", rand_i);
+    sprintf(sdt_flct[rand_i], "Flct_rand%d.dat", rand_i);
   }
   Ns = 1.0 * X->Bind.Def.NsiteMPI;
-  fprintf(stdoutMPI, cLogTPQRand, 1, NumAve);
+  fprintf(stdoutMPI, "  rand_i / rand_max  =  %d / %d\n", 1, NumAve);
   iret = 0;
 
   //Make or Read initial vector
   if (X->Bind.Def.iReStart == RESTART_INOUT || X->Bind.Def.iReStart == RESTART_IN) {
     StartTimer(3600);
-    TimeKeeperWithRandAndStep(&(X->Bind), cFileNameTPQStep, cOutputVecStart, "a", 0, step_i);
-    fprintf(stdoutMPI, "%s", cLogInputVecStart);
-    sprintf(sdt, cFileNameInputVector, rand_i, myrank);
+    TimeKeeperWithRandAndStep(&(X->Bind), "%s_Time_TPQ_Step.dat", "  set %d step %d:output vector starts: %s\n", "a", 0, step_i);
+    fprintf(stdoutMPI, "%s", "  Start:  Input vector.\n");
+    sprintf(sdt, "tmpvec_set%d_rank_%d.dat", rand_i, myrank);
     childfopenALL(sdt, "rb", &fp);
     if (fp == NULL) {
       fprintf(stdout, "A file of Inputvector does not exist.\n");
@@ -104,8 +104,8 @@ int CalcByTPQ(
       exitMPI(-1);
     }
     byte_size = fread(v0, sizeof(std::complex<double>), (X->Bind.Check.idim_max + 1)*NumAve, fp);
-    TimeKeeperWithRandAndStep(&(X->Bind), cFileNameTPQStep, cOutputVecFinish, "a", 0, step_i);
-    fprintf(stdoutMPI, "%s", cLogInputVecFinish);
+    TimeKeeperWithRandAndStep(&(X->Bind), "%s_Time_TPQ_Step.dat", "  set %d step %d:output vector finishes: %s\n", "a", 0, step_i);
+    fprintf(stdoutMPI, "%s", "  End  :  Input vector.\n");
     fclose(fp);
     StopTimer(3600);
     X->Bind.Def.istep = step_i;
@@ -122,19 +122,19 @@ int CalcByTPQ(
     StartTimer(3600);
     for (rand_i = 0; rand_i < NumAve; rand_i++) {
       if (childfopenMPI(sdt_phys[rand_i], "w", &fp) == 0) {
-        fprintf(fp, "%s", cLogSSRand);
+        fprintf(fp, "%s", " # inv_tmp, energy, phys_var, phys_doublon, phys_num, step_i\n");
         fclose(fp);
       }
       else return -1;
       // for norm
       if (childfopenMPI(sdt_norm[rand_i], "w", &fp) == 0) {
-        fprintf(fp, "%s", cLogNormRand);
+        fprintf(fp, "%s", " # inv_temp, global_norm, global_1st_norm, step_i \n");
         fclose(fp); 
       }
       else return -1;
       // for fluctuations
       if (childfopenMPI(sdt_flct[rand_i], "w", &fp) == 0) {
-        fprintf(fp, "%s", cLogFlctRand);
+        fprintf(fp, "%s", " # inv_temp, N, N^2, D, D^2, Sz, Sz^2, step_i \n");
         fclose(fp);
       }
       else return -1;
@@ -145,10 +145,10 @@ int CalcByTPQ(
 
     StartTimer(3100);
     if (rand_i == 0) {
-      TimeKeeperWithRandAndStep(&(X->Bind), cFileNameTPQStep, cTPQStep, "w", 0, step_i);
+      TimeKeeperWithRandAndStep(&(X->Bind), "%s_Time_TPQ_Step.dat", "set %d step %d:TPQ begins: %s", "w", 0, step_i);
     }
     else {
-      TimeKeeperWithRandAndStep(&(X->Bind), cFileNameTPQStep, cTPQStep, "a", 0, step_i);
+      TimeKeeperWithRandAndStep(&(X->Bind), "%s_Time_TPQ_Step.dat", "set %d step %d:TPQ begins: %s", "a", 0, step_i);
     }
     /**@brief
     Initialize v1 and compute v0 = H*v1
@@ -216,11 +216,11 @@ int CalcByTPQ(
   for (step_i = X->Bind.Def.istep; step_i < X->Bind.Def.Lanczos_max; step_i++) {
     X->Bind.Def.istep = step_i;
     if (step_i % ((X->Bind.Def.Lanczos_max - step_iO) / 10) == 0) {
-      fprintf(stdoutMPI, cLogTPQStep, step_i, X->Bind.Def.Lanczos_max);
+      fprintf(stdoutMPI, "    step_i/total_step = %d/%d \n", step_i, X->Bind.Def.Lanczos_max);
     }
     X->Bind.Def.istep = step_i;
     StartTimer(3600);
-    TimeKeeperWithRandAndStep(&(X->Bind), cFileNameTPQStep, cTPQStep, "a", 0, step_i);
+    TimeKeeperWithRandAndStep(&(X->Bind), "%s_Time_TPQ_Step.dat", "set %d step %d:TPQ begins: %s", "a", 0, step_i);
     StopTimer(3600);
     StartTimer(3500);
     Multiply(&(X->Bind));
@@ -276,9 +276,9 @@ int CalcByTPQ(
   }/*for (step_i = X->Bind.Def.istep; step_i < X->Bind.Def.Lanczos_max; step_i++)*/
 
   if (X->Bind.Def.iReStart == RESTART_OUT || X->Bind.Def.iReStart == RESTART_INOUT) {
-    TimeKeeperWithRandAndStep(&(X->Bind), cFileNameTPQStep, cOutputVecStart, "a", 0, step_i);
-    fprintf(stdoutMPI, "%s", cLogOutputVecStart);
-    sprintf(sdt, cFileNameOutputVector, 0, myrank);
+    TimeKeeperWithRandAndStep(&(X->Bind), "%s_Time_TPQ_Step.dat", "  set %d step %d:output vector starts: %s\n", "a", 0, step_i);
+    fprintf(stdoutMPI, "%s", "  Start:  Output vector.\n");
+    sprintf(sdt, "tmpvec_set%d_rank_%d.dat", 0, myrank);
     if (childfopenALL(sdt, "wb", &fp) != 0) {
       exitMPI(-1);
     }
@@ -286,14 +286,14 @@ int CalcByTPQ(
     fwrite(&X->Bind.Check.idim_max, sizeof(X->Bind.Check.idim_max), 1, fp);
     fwrite(v1, sizeof(std::complex<double>), (X->Bind.Check.idim_max + 1)*NumAve, fp);
     fclose(fp);
-    TimeKeeperWithRandAndStep(&(X->Bind), cFileNameTPQStep, cOutputVecFinish, "a", 0, step_i);
-    fprintf(stdoutMPI, "%s", cLogOutputVecFinish);
+    TimeKeeperWithRandAndStep(&(X->Bind), "%s_Time_TPQ_Step.dat", "  set %d step %d:output vector finishes: %s\n", "a", 0, step_i);
+    fprintf(stdoutMPI, "%s", "  End  :  Output vector.\n");
   }
 
-  fprintf(stdoutMPI, "%s", cLogTPQ_End);
+  fprintf(stdoutMPI, "%s", "######  End  : TPQCalculation.  ######\n\n");
 
   tstruct.tend = time(NULL);
-  fprintf(stdoutMPI, cLogTPQEnd, (int)(tstruct.tend - tstruct.tstart));
+  fprintf(stdoutMPI, "Finish: Elapsed time is %d [s].\n", (int)(tstruct.tend - tstruct.tstart));
   free_d_1d_allocate(inv_temp);
 
   for (rand_i = 0; rand_i < NumAve; rand_i++) {

@@ -1924,8 +1924,8 @@ int diagonalcalc
   /*[e] For InterAll*/
   long int i_max = X->Check.idim_max;
 
-  fprintf(stdoutMPI, "%s", cProStartCalcDiag);
-  TimeKeeper(X, cFileNameTimeKeep, cDiagonalCalcStart, "a");
+  fprintf(stdoutMPI, "%s", "  Start: Calculate diagaonal components of Hamiltonian. \n");
+  TimeKeeper(X, "%s_TimeKeeper.dat", "diagonal calculation starts:   %s", "a");
 
 #pragma omp parallel for default(none) private(j) shared(list_Diagonal) firstprivate(i_max)
   for (j = 1; j <= i_max; j++) {
@@ -1933,7 +1933,7 @@ int diagonalcalc
   }
 
   if (X->Def.NCoulombIntra > 0) {
-    if (childfopenMPI(cFileNameCheckCoulombIntra, "w", &fp) != 0) {
+    if (childfopenMPI("CHECK_CoulombIntra.dat", "w", &fp) != 0) {
       return -1;
     }
     for (i = 0; i < X->Def.NCoulombIntra; i++) {
@@ -1946,7 +1946,7 @@ int diagonalcalc
   }
 
   if (X->Def.EDNChemi > 0) {
-    if (childfopenMPI(cFileNameCheckChemi, "w", &fp) != 0) {
+    if (childfopenMPI("CHECK_Chemi.dat", "w", &fp) != 0) {
       return -1;
     }
     for (i = 0; i < X->Def.EDNChemi; i++) {
@@ -1962,7 +1962,7 @@ int diagonalcalc
   }
 
   if (X->Def.NCoulombInter > 0) {
-    if (childfopenMPI(cFileNameCheckInterU, "w", &fp) != 0) {
+    if (childfopenMPI("CHECK_INTER_U.dat", "w", &fp) != 0) {
       return -1;
     }
     for (i = 0; i < X->Def.NCoulombInter; i++) {
@@ -1977,7 +1977,7 @@ int diagonalcalc
     fclose(fp);
   }
   if (X->Def.NHundCoupling > 0) {
-    if (childfopenMPI(cFileNameCheckHund, "w", &fp) != 0) {
+    if (childfopenMPI("CHECK_Hund.dat", "w", &fp) != 0) {
       return -1;
     }
     for (i = 0; i < X->Def.NHundCoupling; i++) {
@@ -1993,7 +1993,7 @@ int diagonalcalc
   }
 
   if (X->Def.NInterAll_Diagonal > 0) {
-    if (childfopenMPI(cFileNameCheckInterAll, "w", &fp) != 0) {
+    if (childfopenMPI("CHECK_InterAll.dat", "w", &fp) != 0) {
       return -1;
     }
     for (i = 0; i < X->Def.NInterAll_Diagonal; i++) {
@@ -2008,7 +2008,7 @@ int diagonalcalc
     fclose(fp);
   }
 
-  TimeKeeper(X, cFileNameTimeKeep, cDiagonalCalcFinish, "a");
-  fprintf(stdoutMPI, "%s", cProEndCalcDiag);
+  TimeKeeper(X, "%s_TimeKeeper.dat", "diagonal calculation finishes: %s", "a");
+  fprintf(stdoutMPI, "%s", "  End  : Calculate diagaonal components of Hamiltonian. \n\n");
   return 0;
 }

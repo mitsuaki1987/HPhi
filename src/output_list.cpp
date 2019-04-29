@@ -43,14 +43,14 @@ int output_list(struct BindStruct *X){
   char sdt[D_FileNameMax];
   int i,i_max;
   
-  fprintf(stdoutMPI, "%s", cProStartOutputList);
+  fprintf(stdoutMPI, "%s", "  Start: output list. \n");
   i_max=X->Check.idim_max;
   switch(X->Def.iCalcModel){
   case HubbardGC:
   case Hubbard:
   case Spin:
   case SpinGC:
-    sprintf(sdt, cFileNameListModel, X->Def.Nsite,X->Def.Nup,X->Def.Ndown);
+    sprintf(sdt, "ListForModel_Ns%d_Nup%dNdown%d.dat", X->Def.Nsite,X->Def.Nup,X->Def.Ndown);
   break;
   case Kondo:
   case KondoGC:
@@ -67,6 +67,6 @@ int output_list(struct BindStruct *X){
   }
   fclose(fp);
   
-  fprintf(stdoutMPI, "%s", cProEndOutputList);
+  fprintf(stdoutMPI, "%s", "  End  : output list. \n");
   return 0;
 }

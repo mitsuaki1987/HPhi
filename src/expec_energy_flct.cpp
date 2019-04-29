@@ -729,8 +729,8 @@ int expec_energy_flct(
   case TPQCalc:
   case TimeEvolution:
 #ifdef _DEBUG
-    fprintf(stdoutMPI, "%s", cLogExpecEnergyStart);
-    TimeKeeperWithStep(X, cFileNameTimeKeep, cTPQExpecStart, "a", step_i);
+    fprintf(stdoutMPI, "%s", "  Start: Calculate Energy.\n");
+    TimeKeeperWithStep(X, "%s_TimeKeeper.dat", "step %d: Calculate energy begins:      %s", "a", step_i);
 #endif
     break;
   case FullDiag:
@@ -842,8 +842,8 @@ shared(tmp_v1,tmp_v0,nstate) firstprivate(i_max)
   case TPQCalc:
   case TimeEvolution:
 #ifdef _DEBUG
-    fprintf(stdoutMPI, "%s", cLogExpecEnergyEnd);
-    TimeKeeperWithStep(X, cFileNameTimeKeep, cTPQExpecEnd, "a", step_i);
+    fprintf(stdoutMPI, "%s", "  End  : Calculate Energy.\n");
+    TimeKeeperWithStep(X, "%s_TimeKeeper.dat", "step %d: Calculate energy finishes:    %s", "a", step_i);
 #endif
     break;
   default:

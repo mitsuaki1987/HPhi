@@ -112,7 +112,7 @@ int CalcByTEM(
   }
   step_spin = ExpecInterval;
   X->Bind.Def.St = 0;
-  fprintf(stdoutMPI, "%s", cLogTEM_Start);
+  fprintf(stdoutMPI, "%s", "######  Start: TimeEvolution by Taylor Expansion.  ######\n\n");
   if (X->Bind.Def.iInputEigenVec == FALSE) {
     fprintf(stderr, "Error: A file of Inputvector is not inputted.\n");
     return -1;
@@ -120,7 +120,7 @@ int CalcByTEM(
   else {
     //input v1
     fprintf(stdoutMPI, "%s", "An Initial Vector is inputted.\n");
-    TimeKeeper(&(X->Bind), cFileNameTimeKeep, c_InputEigenVectorStart, "a");
+    TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Reading an input Eigenvector starts: %s", "a");
     GetFileNameByKW(KWSpectrumVec, &defname);
     strcat(defname, "_rank_%d.dat");
     sprintf(sdt, defname, myrank);
@@ -145,25 +145,25 @@ int CalcByTEM(
     }
   }
 
-  sprintf(sdt_phys, "%s", cFileNameSS);
+  sprintf(sdt_phys, "%s", "SS.dat");
   if (childfopenMPI(sdt_phys, "w", &fp) != 0) {
     return -1;
   }
-  fprintf(fp, "%s", cLogSS);
+  fprintf(fp, "%s", " # time, energy, phys_var, phys_doublon, phys_num, step_i\n");
   fclose(fp);
 
-  sprintf(sdt_norm, "%s", cFileNameNorm);
+  sprintf(sdt_norm, "%s", "Norm.dat");
   if (childfopenMPI(sdt_norm, "w", &fp) != 0) {
     return -1;
   }
-  fprintf(fp, "%s", cLogNorm);
+  fprintf(fp, "%s", " # time, norm, step_i \n");
   fclose(fp);
 
-  sprintf(sdt_flct, "%s", cFileNameFlct);
+  sprintf(sdt_flct, "%s", "Flct.dat");
   if (childfopenMPI(sdt_flct, "w", &fp) != 0) {
     return -1;
   }
-  fprintf(fp, "%s", cLogFlct);
+  fprintf(fp, "%s", " # time, N, N^2, D, D^2, Sz, Sz^2, step_i \n");
   fclose(fp);
 
 
@@ -178,7 +178,7 @@ int CalcByTEM(
     X->Bind.Def.NInterAll_OffDiagonal = iInterAllOffDiagonal_org;
 
     if (step_i % (X->Bind.Def.Lanczos_max / 10) == 0) {
-      fprintf(stdoutMPI, cLogTEStep, step_i, X->Bind.Def.Lanczos_max);
+      fprintf(stdoutMPI, "    step_i/total_step = %d/%d \n", step_i, X->Bind.Def.Lanczos_max);
     }
 
     if (X->Bind.Def.NLaser != 0) {
@@ -209,10 +209,10 @@ int CalcByTEM(
     }
 
     if (step_i == step_initial) {
-      TimeKeeperWithStep(&(X->Bind), cFileNameTEStep, cTEStep, "w", step_i);
+      TimeKeeperWithStep(&(X->Bind), "%s_Time_TE_Step.dat", "step %d:TE begins: %s", "w", step_i);
     }
     else {
-      TimeKeeperWithStep(&(X->Bind), cFileNameTEStep, cTEStep, "a", step_i);
+      TimeKeeperWithStep(&(X->Bind), "%s_Time_TE_Step.dat", "step %d:TE begins: %s", "a", step_i);
     }
     MultiplyForTEM(&(X->Bind), v2);
     //Add Diagonal Parts
@@ -248,7 +248,7 @@ int CalcByTEM(
     }
     if (X->Bind.Def.iOutputEigenVec == TRUE) {
       if (step_i % X->Bind.Def.Param.OutputInterval == 0) {
-        sprintf(sdt, cFileNameOutputEigen, X->Bind.Def.CDataFileHead, step_i, myrank);
+        sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", X->Bind.Def.CDataFileHead, step_i, myrank);
         if (childfopenALL(sdt, "wb", &fp) != 0) {
           fclose(fp);
           exitMPI(-1);
@@ -263,7 +263,7 @@ int CalcByTEM(
   free_cd_2d_allocate(v2);
 
   if (X->Bind.Def.iOutputEigenVec == TRUE) {
-    sprintf(sdt, cFileNameOutputEigen, X->Bind.Def.CDataFileHead, rand_i, myrank);
+    sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", X->Bind.Def.CDataFileHead, rand_i, myrank);
     if (childfopenALL(sdt, "wb", &fp) != 0) {
       fclose(fp);
       exitMPI(-1);
@@ -274,6 +274,6 @@ int CalcByTEM(
     fclose(fp);
   }
 
-  fprintf(stdoutMPI, "%s", cLogTEM_End);
+  fprintf(stdoutMPI, "%s", "######  End  : TimeEvolution by Taylor Expansion.  ######\n\n");
   return 0;
 }

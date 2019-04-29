@@ -107,7 +107,7 @@ struct BindStruct *X//!<[inout]
     }
   }
 
-  strcpy(sdt, cFileNameEigenvalue_Lanczos);
+  strcpy(sdt, "Eigenvalue.dat");
   if (childfopenMPI(sdt, "w", &fp) != 0) {
     return -1;
   }

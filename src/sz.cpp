@@ -833,15 +833,15 @@ int Read_sz
   long int ibpatn=0;
   long int dam; 
 
-  TimeKeeper(X,cFileNameSzTimeKeep,cReadSzStart, "a");
-  TimeKeeper(X,cFileNameTimeKeep,cReadSzStart, "a");
+  TimeKeeper(X,"%s_sz_TimeKeeper.dat","READ = 1: read starts: %s", "a");
+  TimeKeeper(X,"%s_TimeKeeper.dat","READ = 1: read starts: %s", "a");
 
   switch(X->Def.iCalcModel){
   case Hubbard:
   case HubbardGC:
   case Spin:
   case SpinGC:
-    sprintf(sdt,cFileNameListModel, X->Def.Nsite, X->Def.Nup, X->Def.Ndown);
+    sprintf(sdt,"ListForModel_Ns%d_Nup%dNdown%d.dat", X->Def.Nsite, X->Def.Nup, X->Def.Ndown);
     break;
   case Kondo:
     sprintf(sdt,"ListForKondo_Ns%d_Ncond%d.dat",X->Def.Nsite,X->Def.Ne);
@@ -852,7 +852,7 @@ int Read_sz
   }  
 
   if(fp == NULL){
-    if(childfopenMPI(cFileNameErrorSz,"a",&fp_err)!=0){
+    if(childfopenMPI("Err_sz.dat","a",&fp_err)!=0){
       exitMPI(-1);
     }
     fprintf(fp_err, "%s", "No file. Please set READ=0.\n");
@@ -886,8 +886,8 @@ int Read_sz
     *i_max=icnt-1;
   }
 
-  TimeKeeper(X, cFileNameSzTimeKeep, cReadSzEnd, "a");
-  TimeKeeper(X, cFileNameTimeKeep, cReadSzEnd, "a");
+  TimeKeeper(X, "%s_sz_TimeKeeper.dat", "READ = 1: read finishes: %s", "a");
+  TimeKeeper(X, "%s_TimeKeeper.dat", "READ = 1: read finishes: %s", "a");
 
   return 0;
 }
@@ -973,9 +973,9 @@ int sz
   int iSpnup, iMinup, iAllup;
   int N2 = 0;
   int N = 0;
-  fprintf(stdoutMPI, "%s", cProStartCalcSz);
-  TimeKeeper(X, cFileNameSzTimeKeep, cInitalSz, "w");
-  TimeKeeper(X, cFileNameTimeKeep, cInitalSz, "a");
+  fprintf(stdoutMPI, "%s", "  Start: Calculate HilbertNum for fixed Sz. \n");
+  TimeKeeper(X, "%s_sz_TimeKeeper.dat", "initial sz : %s", "w");
+  TimeKeeper(X, "%s_TimeKeeper.dat", "initial sz : %s", "a");
 
   if (X->Check.idim_max != 0) {
     switch (X->Def.iCalcModel) {
@@ -991,7 +991,7 @@ int sz
       N = X->Def.Nsite;
       idim = pow(2.0, N2);
       for (j = 0; j < N; j++) {
-        fprintf(stdoutMPI, cStateLocSpin, j, X->Def.LocSpn[j]);
+        fprintf(stdoutMPI, "  j  =  %ld loc %d \n", j, X->Def.LocSpn[j]);
       }
       break;
     case SpinGC:
@@ -1044,7 +1044,7 @@ int sz
       }
     }
     else {
-      sprintf(sdt, cFileNameSzTimeKeep, X->Def.CDataFileHead);
+      sprintf(sdt, "%s_sz_TimeKeeper.dat", X->Def.CDataFileHead);
 #ifdef _OPENMP
       num_threads = omp_get_max_threads();
 #else
@@ -1056,8 +1056,8 @@ int sz
 
       //*[s] omp parallel
 
-      TimeKeeper(X, cFileNameSzTimeKeep, cOMPSzStart, "a");
-      TimeKeeper(X, cFileNameTimeKeep, cOMPSzStart, "a");
+      TimeKeeper(X, "%s_sz_TimeKeeper.dat", "omp parallel sz starts: %s", "a");
+      TimeKeeper(X, "%s_TimeKeeper.dat", "omp parallel sz starts: %s", "a");
       switch (X->Def.iCalcModel) {
       case HubbardGC:
         icnt = X->Def.Tpow[2 * X->Def.Nsite - 1] * 2 + 0;/*Tpow[2*X->Def.Nsit]=1*/
@@ -1149,8 +1149,8 @@ int sz
           }
 
           //#pragma omp barrier
-          TimeKeeper(X, cFileNameSzTimeKeep, cOMPSzMid, "a");
-          TimeKeeper(X, cFileNameTimeKeep, cOMPSzMid, "a");
+          TimeKeeper(X, "%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+          TimeKeeper(X, "%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
           icnt = 0;
           for (ib = 0; ib < X->Check.sdim; ib++) {
@@ -1189,8 +1189,8 @@ int sz
           }
 
           //#pragma omp barrier
-          TimeKeeper(X, cFileNameSzTimeKeep, cOMPSzMid, "a");
-          TimeKeeper(X, cFileNameTimeKeep, cOMPSzMid, "a");
+          TimeKeeper(X, "%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+          TimeKeeper(X, "%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
           icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ihfbit, X) shared(list_1_, list_2_1_, list_2_2_, list_jb)
@@ -1242,8 +1242,8 @@ int sz
             }
           }
           //#pragma omp barrier
-          TimeKeeper(X, cFileNameSzTimeKeep, cOMPSzMid, "a");
-          TimeKeeper(X, cFileNameTimeKeep, cOMPSzMid, "a");
+          TimeKeeper(X, "%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+          TimeKeeper(X, "%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
           icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ihfbit, N2, X) shared(list_1_, list_2_1_, list_2_2_, list_jb) 
@@ -1288,8 +1288,8 @@ int sz
             }
           }
           //#pragma omp barrier
-          TimeKeeper(X, cFileNameSzTimeKeep, cOMPSzMid, "a");
-          TimeKeeper(X, cFileNameTimeKeep, cOMPSzMid, "a");
+          TimeKeeper(X, "%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+          TimeKeeper(X, "%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
           icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ihfbit, N2, X) shared(list_1_, list_2_1_, list_2_2_, list_jb) 
@@ -1308,7 +1308,7 @@ int sz
         // this part can not be parallelized
         N_all_up = X->Def.Nup;
         N_all_down = X->Def.Ndown;
-        fprintf(stdoutMPI, cStateNupNdown, N_all_up, N_all_down);
+        fprintf(stdoutMPI, "  N_all_up = %d N_all_down = %d \n", N_all_up, N_all_down);
 
         jb = 0;
         num_loc = 0;
@@ -1382,8 +1382,8 @@ int sz
 
         }
         //#pragma omp barrier
-        TimeKeeper(X, cFileNameSzTimeKeep, cOMPSzMid, "a");
-        TimeKeeper(X, cFileNameTimeKeep, cOMPSzMid, "a");
+        TimeKeeper(X, "%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+        TimeKeeper(X, "%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
         hacker = X->Def.read_hacker;
         if (hacker == 0) {
@@ -1465,8 +1465,8 @@ int sz
               jb += tmp_1;
             }
             //#pragma omp barrier
-            TimeKeeper(X, cFileNameSzTimeKeep, cOMPSzMid, "a");
-            TimeKeeper(X, cFileNameTimeKeep, cOMPSzMid, "a");
+            TimeKeeper(X, "%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+            TimeKeeper(X, "%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
             icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ihfbit, N, X, list_1_, list_2_1_, list_2_2_, list_jb)
@@ -1492,8 +1492,8 @@ int sz
               jb += tmp_1;
             }
             //#pragma omp barrier
-            TimeKeeper(X, cFileNameSzTimeKeep, cOMPSzMid, "a");
-            TimeKeeper(X, cFileNameTimeKeep, cOMPSzMid, "a");
+            TimeKeeper(X, "%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+            TimeKeeper(X, "%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
             icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ihfbit, N, X) shared(list_1_, list_2_1_, list_2_2_, list_jb)
@@ -1549,8 +1549,8 @@ int sz
             }
           }
 
-          TimeKeeper(X, cFileNameSzTimeKeep, cOMPSzMid, "a");
-          TimeKeeper(X, cFileNameTimeKeep, cOMPSzMid, "a");
+          TimeKeeper(X, "%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+          TimeKeeper(X, "%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
           icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ilftdim, ihfbit,  X)  shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb)
@@ -1568,8 +1568,8 @@ int sz
       }
       i_max = icnt;
       //fprintf(stdoutMPI, "Debug: Xicnt=%ld \n",icnt);
-      TimeKeeper(X, cFileNameSzTimeKeep, cOMPSzFinish, "a");
-      TimeKeeper(X, cFileNameTimeKeep, cOMPSzFinish, "a");
+      TimeKeeper(X, "%s_sz_TimeKeeper.dat", "omp parallel sz finishes: %s", "a");
+      TimeKeeper(X, "%s_TimeKeeper.dat", "omp parallel sz finishes: %s", "a");
 
     }
 
@@ -1584,7 +1584,7 @@ int sz
     if (i_max != X->Check.idim_max) {
       fprintf(stderr, "%s", "Error: in sz. \n");
       fprintf(stderr, "imax = %ld, Check.idim_max=%ld \n", i_max, X->Check.idim_max);
-      strcpy(sdt_err, cFileNameErrorSz);
+      strcpy(sdt_err, "Err_sz.dat");
       if (childfopenMPI(sdt_err, "a", &fp_err) != 0) {
         exitMPI(-1);
       }
@@ -1595,7 +1595,7 @@ int sz
 
     free_li_2d_allocate(comb);
   }
-  fprintf(stdoutMPI, "%s", cProEndCalcSz);
+  fprintf(stdoutMPI, "%s", "  End  : Calculate HilbertNum for fixed Sz. \n\n");
 
   free(list_jb);
   if (X->Def.iFlgGeneralSpin == TRUE) {

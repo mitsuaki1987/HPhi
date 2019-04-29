@@ -966,11 +966,11 @@ int expec_cisajscktaltdc
   switch (X->Def.iCalcType) {
   case TPQCalc:
     step = X->Def.istep;
-    TimeKeeperWithRandAndStep(X, cFileNameTimeKeep, cTPQExpecTwoBodyGStart, "a", 0, step);
+    TimeKeeperWithRandAndStep(X, "%s_TimeKeeper.dat", "set %d step %d:expec_cisajscktaltdc finishes: %s", "a", 0, step);
     break;
   case TimeEvolution:
     step = X->Def.istep;
-    TimeKeeperWithStep(X, cFileNameTimeKeep, cTEExpecTwoBodyGStart, "a", step);
+    TimeKeeperWithStep(X, "%s_TimeKeeper.dat", "step %d:expec_cisajscktaltdc finishes: %s", "a", step);
     break;
   case FullDiag:
   case CG:
@@ -1012,15 +1012,15 @@ int expec_cisajscktaltdc
     switch (X->Def.iCalcType) {
     case TPQCalc:
       step = X->Def.istep;
-      sprintf(sdt, cFileName2BGreen_TPQ, X->Def.CDataFileHead, istate, step);
+      sprintf(sdt, "%s_cisajscktalt_set%dstep%d.dat", X->Def.CDataFileHead, istate, step);
       break;
     case TimeEvolution:
       step = X->Def.istep;
-      sprintf(sdt, cFileName2BGreen_TE, X->Def.CDataFileHead, step);
+      sprintf(sdt, "%s_cisajscktalt_step%d.dat", X->Def.CDataFileHead, step);
       break;
     case FullDiag:
     case CG:
-      sprintf(sdt, cFileName2BGreen_FullDiag, X->Def.CDataFileHead, istate);
+      sprintf(sdt, "%s_cisajscktalt_eigen%d.dat", X->Def.CDataFileHead, istate);
       break;
     }
     if (childfopenMPI(sdt, "w", &fp) == 0) {
@@ -1038,10 +1038,10 @@ int expec_cisajscktaltdc
   }/*for (istate = 0; istate < nstate; istate++)*/
 
   if (X->Def.iCalcType == TPQCalc) {
-    TimeKeeperWithRandAndStep(X, cFileNameTimeKeep, cTPQExpecTwoBodyGFinish, "a", rand_i, step);
+    TimeKeeperWithRandAndStep(X, "%s_TimeKeeper.dat", "set %d step %d:expec_cisajscktaltdc finishes: %s", "a", rand_i, step);
   }
   else if (X->Def.iCalcType == TimeEvolution) {
-    TimeKeeperWithStep(X, cFileNameTimeKeep, cTEExpecTwoBodyGFinish, "a", step);
+    TimeKeeperWithStep(X, "%s_TimeKeeper.dat", "step %d:expec_cisajscktaltdc finishes: %s", "a", step);
   }
   //[s] this part will be added
   /* For FullDiag, it is convinient to calculate the total spin for each vector.

@@ -205,7 +205,7 @@ int setmem_large
   X->Phys.Sz2 = d_1d_allocate(nstate);
   X->Phys.s2 = d_1d_allocate(nstate);
 
-  fprintf(stdoutMPI, "%s", cProFinishAlloc);
+  fprintf(stdoutMPI, "%s", "\n######  LARGE ALLOCATE FINISH !  ######\n\n");
   return 0;
 }
 ///

@@ -197,9 +197,9 @@ int CalcSpectrumByBiCG(
   if (X->Bind.Def.iFlgCalcSpec == RECALC_FROM_TMComponents_VEC ||
       X->Bind.Def.iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC) {
     fprintf(stdoutMPI, "  Start: Input vectors for recalculation.\n");
-    TimeKeeper(&(X->Bind), cFileNameTimeKeep, c_InputSpectrumRecalcvecStart, "a");
+    TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Input vectors for recalculation starts: %s", "a");
 
-    sprintf(sdt, cFileNameOutputRestartVec, X->Bind.Def.CDataFileHead, myrank);
+    sprintf(sdt, "%s_recalcvec_rank_%d.dat", X->Bind.Def.CDataFileHead, myrank);
     if (childfopenALL(sdt, "rb", &fp) != 0) {
       fprintf(stdoutMPI, "INFO: File for the restart is not found.\n");
       fprintf(stdoutMPI, "      Start from SCRATCH.\n");
@@ -223,7 +223,7 @@ int CalcSpectrumByBiCG(
       byte_size = fread(&v5[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
       fclose(fp);
       fprintf(stdoutMPI, "  End:   Input vectors for recalculation.\n");
-      TimeKeeper(&(X->Bind), cFileNameTimeKeep, c_InputSpectrumRecalcvecEnd, "a");
+      TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Input vectors for recalculation finishes: %s", "a");
       if (byte_size == 0) printf("byte_size : %d\n", (int)byte_size);
     }/*if (childfopenALL(sdt, "rb", &fp) == 0)*/
   }/*if (X->Bind.Def.iFlgCalcSpec > RECALC_FROM_TMComponents)*/
@@ -242,7 +242,7 @@ int CalcSpectrumByBiCG(
   if (X->Bind.Def.iFlgCalcSpec == RECALC_FROM_TMComponents ||
       X->Bind.Def.iFlgCalcSpec == RECALC_FROM_TMComponents_VEC ||
       X->Bind.Def.iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC) {
-    sprintf(sdt, cFileNameTridiagonalMatrixComponents, X->Bind.Def.CDataFileHead);
+    sprintf(sdt, "%s_TMComponents.dat", X->Bind.Def.CDataFileHead);
     if (childfopenALL(sdt, "rb", &fp) != 0) {
       fprintf(stdoutMPI, "INFO: File for the restart is not found.\n");
       fprintf(stdoutMPI, "      Start from SCRATCH.\n");
@@ -309,7 +309,7 @@ int CalcSpectrumByBiCG(
   <ul>
   */
   fprintf(stdoutMPI, "    Start: Calculate tridiagonal matrix components.\n");
-  TimeKeeper(&(X->Bind), cFileNameTimeKeep, c_GetTridiagonalStart, "a");
+  TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Calculating tridiagonal matrix components starts: %s", "a");
   fprintf(stdoutMPI, "\n  Iteration     Seed     Residual-2-Norm\n");
   childfopenMPI("residual.dat", "w", &fp);
 
@@ -401,12 +401,12 @@ int CalcSpectrumByBiCG(
   <li>@b END @b DO BiCG loop</li>
   */
   fprintf(stdoutMPI, "    End:   Calculate tridiagonal matrix components.\n\n");
-  TimeKeeper(&(X->Bind), cFileNameTimeKeep, c_GetTridiagonalEnd, "a");
+  TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Calculating tridiagonal matrix components finishes: %s", "a");
   /**
   <li>Save @f$\alpha, \beta[iter]@f$, projected residual</li>
   */
   if (X->Bind.Def.iFlgCalcSpec != RECALC_FROM_TMComponents) {
-    sprintf(sdt, cFileNameTridiagonalMatrixComponents, X->Bind.Def.CDataFileHead);
+    sprintf(sdt, "%s_TMComponents.dat", X->Bind.Def.CDataFileHead);
     childfopenMPI(sdt, "w", &fp);
     fprintf(fp, "%d \n", iter_old);
     fprintf(fp, "%.10lf %.10lf\n", std::real(z_seed), std::imag(z_seed));
@@ -428,8 +428,8 @@ int CalcSpectrumByBiCG(
   if (X->Bind.Def.iFlgCalcSpec == RECALC_OUTPUT_TMComponents_VEC ||
       X->Bind.Def.iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC) {
     fprintf(stdoutMPI, "    Start: Output vectors for recalculation.\n");
-    TimeKeeper(&(X->Bind), cFileNameTimeKeep, c_OutputSpectrumRecalcvecStart, "a");
-    sprintf(sdt, cFileNameOutputRestartVec, X->Bind.Def.CDataFileHead, myrank);
+    TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Output vectors for recalculation starts: %s", "a");
+    sprintf(sdt, "%s_recalcvec_rank_%d.dat", X->Bind.Def.CDataFileHead, myrank);
     if (childfopenALL(sdt, "wb", &fp) != 0) {
       exitMPI(-1);
     }
@@ -442,7 +442,7 @@ int CalcSpectrumByBiCG(
     fclose(fp);
 
     fprintf(stdoutMPI, "    End:   Output vectors for recalculation.\n");
-    TimeKeeper(&(X->Bind), cFileNameTimeKeep, c_OutputSpectrumRecalcvecEnd, "a");
+    TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Output vectors for recalculation finishes: %s", "a");
   }/*if (X->Bind.Def.iFlgCalcSpec > RECALC_FROM_TMComponents)*/
 
   free_cd_1d_allocate(alpha);

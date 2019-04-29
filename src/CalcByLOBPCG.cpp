@@ -187,14 +187,14 @@ static void Initialize_wave(
   */
   if (X->Def.iReStart == RESTART_INOUT || X->Def.iReStart == RESTART_IN) {
     //StartTimer(3600);
-    //TimeKeeperWithRandAndStep(&(X->Bind), cFileNameTPQStep, cOutputVecStart, "a", rand_i, step_i);
-    fprintf(stdoutMPI, "%s", cLogInputVecStart);
+    //TimeKeeperWithRandAndStep(&(X->Bind), "%s_Time_TPQ_Step.dat", "  set %d step %d:output vector starts: %s\n", "a", rand_i, step_i);
+    fprintf(stdoutMPI, "%s", "  Start:  Input vector.\n");
 
     ierr = 0;
     vin = cd_1d_allocate(X->Check.idim_max + 1);
     for (ie = 0; ie < X->Def.k_exct; ie++) {
 
-      sprintf(sdt, cFileNameInputVector, ie, myrank);
+      sprintf(sdt, "tmpvec_set%d_rank_%d.dat", ie, myrank);
       childfopenALL(sdt, "rb", &fp);
       if (fp == NULL) {
         fprintf(stdout, "Restart file is not found.\n");
@@ -218,8 +218,8 @@ static void Initialize_wave(
     free_cd_1d_allocate(vin);
 
     if (ierr == 0) {
-      //TimeKeeperWithRandAndStep(X, cFileNameTPQStep, cOutputVecFinish, "a", rand_i, step_i);
-      fprintf(stdoutMPI, "%s", cLogInputVecFinish);
+      //TimeKeeperWithRandAndStep(X, "%s_Time_TPQ_Step.dat", "  set %d step %d:output vector finishes: %s\n", "a", rand_i, step_i);
+      fprintf(stdoutMPI, "%s", "  End  :  Input vector.\n");
       //StopTimer(3600);
       if (byte_size == 0) printf("byte_size: %d \n", (int)byte_size);
       return;
@@ -321,12 +321,12 @@ static void Output_restart(
   long int idim;
   std::complex<double> *vout;
 
-  //TimeKeeperWithRandAndStep(&(X->Bind), cFileNameTPQStep, cOutputVecStart, "a", rand_i, step_i);
-  fprintf(stdoutMPI, "%s", cLogOutputVecStart);
+  //TimeKeeperWithRandAndStep(&(X->Bind), "%s_Time_TPQ_Step.dat", "  set %d step %d:output vector starts: %s\n", "a", rand_i, step_i);
+  fprintf(stdoutMPI, "%s", "  Start:  Output vector.\n");
   
   vout = cd_1d_allocate(X->Check.idim_max + 1);
   for (ie = 0; ie < X->Def.k_exct; ie++) {
-    sprintf(sdt, cFileNameOutputVector, ie, myrank);
+    sprintf(sdt, "tmpvec_set%d_rank_%d.dat", ie, myrank);
     if (childfopenALL(sdt, "wb", &fp) != 0) exitMPI(-1);
     byte_size = fwrite(&X->Large.itr, sizeof(X->Large.itr), 1, fp);
     byte_size = fwrite(&X->Check.idim_max, sizeof(X->Check.idim_max), 1, fp);
@@ -336,8 +336,8 @@ static void Output_restart(
   }/*for (ie = 0; ie < X->Def.k_exct; ie++)*/
   free_cd_1d_allocate(vout);
 
-  //TimeKeeperWithRandAndStep(&(X->Bind), cFileNameTPQStep, cOutputVecFinish, "a", rand_i, step_i);
-  fprintf(stdoutMPI, "%s", cLogOutputVecFinish);
+  //TimeKeeperWithRandAndStep(&(X->Bind), "%s_Time_TPQ_Step.dat", "  set %d step %d:output vector finishes: %s\n", "a", rand_i, step_i);
+  fprintf(stdoutMPI, "%s", "  End  :  Output vector.\n");
   if(byte_size == 0) printf("byte_size : %d\n", (int)byte_size);
 }/*static void Output_restart*/
 /**@brief
@@ -389,12 +389,12 @@ int LOBPCG_Main(
   */
   Initialize_wave(X, wxp[1]);
 
-  TimeKeeper(X, cFileNameTimeKeep, cLanczos_EigenValueStart, "a");
+  TimeKeeper(X, "%s_TimeKeeper.dat", "Lanczos Eigen Value start:    %s", "a");
 
   zclear(i_max*X->Def.k_exct, &hwxp[1][1][0]);
   mltply(X, X->Def.k_exct, hwxp[1], wxp[1]);
   stp = 1;
-  TimeKeeperWithStep(X, cFileNameTimeKeep, cLanczos_EigenValueStep, "a", 0);
+  TimeKeeperWithStep(X, "%s_TimeKeeper.dat", "%3d th Lanczos step: %s", "a", 0);
 
   zclear(i_max*X->Def.k_exct, &wxp[2][1][0]);
   zclear(i_max*X->Def.k_exct, &hwxp[2][1][0]);
@@ -408,7 +408,7 @@ int LOBPCG_Main(
   }
   SumMPI_dv(X->Def.k_exct, eig);
 
-  sprintf(sdt_2, cFileNameLanczosStep, X->Def.CDataFileHead);
+  sprintf(sdt_2, "%s_Lanczos_Step.dat", X->Def.CDataFileHead);
   childfopenMPI(sdt_2, "w", &fp);
   fprintf(stdoutMPI, "    Step   Residual-2-norm     Threshold      Energy\n");
   fprintf(fp, "    Step   Residual-2-norm     Threshold      Energy\n");
@@ -499,7 +499,7 @@ private(idim,precon,ie)
     zclear(i_max*X->Def.k_exct, &hwxp[0][1][0]);
     mltply(X, X->Def.k_exct, hwxp[0], wxp[0]);
 
-    TimeKeeperWithStep(X, cFileNameTimeKeep, cLanczos_EigenValueStep, "a", stp);
+    TimeKeeperWithStep(X, "%s_TimeKeeper.dat", "%3d th Lanczos step: %s", "a", stp);
     /**@brief
     <li>Compute subspace Hamiltonian and overrap matrix:
     @f${\hat H}_{\rm sub}=\{{\bf w},{\bf x},{\bf p}\}^\dagger \{{\bf W},{\bf X},{\bf P}\}@f$, 
@@ -596,10 +596,10 @@ private(idim,precon,ie)
   //fclose(fp);
 
   X->Large.itr = stp;
-  sprintf(sdt, cFileNameTimeKeep, X->Def.CDataFileHead);
+  sprintf(sdt, "%s_TimeKeeper.dat", X->Def.CDataFileHead);
 
-  TimeKeeper(X, cFileNameTimeKeep, cLanczos_EigenValueFinish, "a");
-  fprintf(stdoutMPI, "%s", cLogLanczos_EigenValueEnd);
+  TimeKeeper(X, "%s_TimeKeeper.dat", "Lanczos Eigenvalue finishes:  %s", "a");
+  fprintf(stdoutMPI, "%s", "\n######  End  : Calculate Lanczos EigenValue.  ######\n\n");
 
   free_d_1d_allocate(eig);
   free_d_1d_allocate(dnorm);
@@ -613,7 +613,7 @@ private(idim,precon,ie)
   if (X->Def.iReStart == RESTART_OUT || X->Def.iReStart == RESTART_INOUT){
       Output_restart(X, wxp[1]);
       if(iconv != 0) {
-          sprintf(sdt, "%s", cLogLanczos_EigenValueNotConverged);
+          sprintf(sdt, "%s", "Lanczos Eigenvalue is not converged in this process.");
           return 1;
       }
   }
@@ -630,7 +630,7 @@ private(idim,precon,ie)
   v1 = cd_2d_allocate(X->Check.idim_max + 1, X->Def.k_exct);
 
   if (iconv != 0) {
-    sprintf(sdt, "%s", cLogLanczos_EigenValueNotConverged);
+    sprintf(sdt, "%s", "Lanczos Eigenvalue is not converged in this process.");
     return -1;
   }
   else {
@@ -703,8 +703,8 @@ int CalcByLOBPCG(
     fprintf(stdoutMPI, "An Eigenvector is inputted.\n");
     vin = cd_1d_allocate(X->Bind.Check.idim_max + 1);
     for (ie = 0; ie < X->Bind.Def.k_exct; ie++) {
-      TimeKeeper(&(X->Bind), cFileNameTimeKeep, cReadEigenVecStart, "a");
-      sprintf(sdt, cFileNameInputEigen, X->Bind.Def.CDataFileHead, ie, myrank);
+      TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Read Eigenvector starts:          %s", "a");
+      sprintf(sdt, "%s_eigenvec_%ld_rank_%d.dat", X->Bind.Def.CDataFileHead, ie, myrank);
       childfopenALL(sdt, "rb", &fp);
       if (fp == NULL) {
         fprintf(stderr, "Error: Inputvector file is not found.\n");
@@ -724,12 +724,12 @@ int CalcByLOBPCG(
     }/*for (ie = 0; ie < X->Def.k_exct; ie++)*/
     fclose(fp);
     free_cd_1d_allocate(vin);
-    TimeKeeper(&(X->Bind), cFileNameTimeKeep, cReadEigenVecFinish, "a");
+    TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Read Eigenvector finishes:        %s", "a");
 
     if(byte_size == 0) printf("byte_size : %d\n", (int)byte_size);
   }/*X->Bind.Def.iInputEigenVec == TRUE*/
 
-  fprintf(stdoutMPI, "%s", cLogLanczos_EigenVecEnd);
+  fprintf(stdoutMPI, "%s", "\n######  End  : Calculate Lanczos EigenVec.  ######\n\n");
   /**@brief
     Compute & Output physical variables to a file
     the same function as FullDiag [phys()] is used.
@@ -738,10 +738,10 @@ int CalcByLOBPCG(
 
   X->Bind.Def.St=1;
   if (X->Bind.Def.St == 0) {
-    sprintf(sdt, cFileNameEnergy_Lanczos, X->Bind.Def.CDataFileHead);
+    sprintf(sdt, "%s_energy.dat", X->Bind.Def.CDataFileHead);
   }
   else if (X->Bind.Def.St == 1) {
-    sprintf(sdt, cFileNameEnergy_CG, X->Bind.Def.CDataFileHead);
+    sprintf(sdt, "%s_energy.dat", X->Bind.Def.CDataFileHead);
   }
 
   if (childfopenMPI(sdt, "w", &fp) != 0) {
@@ -763,7 +763,7 @@ int CalcByLOBPCG(
    Output Eigenvector to a file
   */
   if (X->Bind.Def.iOutputEigenVec == TRUE) {
-    TimeKeeper(&(X->Bind), cFileNameTimeKeep, cOutputEigenVecStart, "a");
+    TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Output Eigenvector starts:          %s", "a");
 
     vin = cd_1d_allocate(X->Bind.Check.idim_max + 1);
     for (ie = 0; ie < X->Bind.Def.k_exct; ie++) {
@@ -772,7 +772,7 @@ int CalcByLOBPCG(
       for (idim = 1; idim <= X->Bind.Check.idim_max; idim++)
         vin[idim] = v1[idim][ie];
       
-      sprintf(sdt, cFileNameOutputEigen, X->Bind.Def.CDataFileHead, ie, myrank);
+      sprintf(sdt, "%s_eigenvec_%ld_rank_%d.dat", X->Bind.Def.CDataFileHead, ie, myrank);
       if (childfopenALL(sdt, "wb", &fp) != 0) exitMPI(-1);
       byte_size = fwrite(&X->Bind.Large.itr, sizeof(X->Bind.Large.itr), 1, fp);
       byte_size = fwrite(&X->Bind.Check.idim_max, sizeof(X->Bind.Check.idim_max), 1, fp);
@@ -781,7 +781,7 @@ int CalcByLOBPCG(
     }/*for (ie = 0; ie < X->Bind.Def.k_exct; ie++)*/
     free_cd_1d_allocate(vin);
 
-    TimeKeeper(&(X->Bind), cFileNameTimeKeep, cOutputEigenVecStart, "a");
+    TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Output Eigenvector starts:          %s", "a");
   }/*if (X->Bind.Def.iOutputEigenVec == TRUE)*/
 
   return TRUE;

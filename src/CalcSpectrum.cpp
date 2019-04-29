@@ -62,7 +62,7 @@ int SetOmega
   }
   else {
     if (X->iCalcType == Lanczos || X->iCalcType == FullDiag) {
-      sprintf(sdt, cFileNameLanczosStep, X->CDataFileHead);
+      sprintf(sdt, "%s_Lanczos_Step.dat", X->CDataFileHead);
       childfopenMPI(sdt, "r", &fp);
       if (fp == NULL) {
         fprintf(stdoutMPI, "Error: xx_Lanczos_Step.dat does not exist.\n");
@@ -98,7 +98,7 @@ int SetOmega
     }/*if (X->iCalcType == Lanczos || X->iCalcType == FullDiag)*/
     else
     {
-      sprintf(sdt, cFileNameEnergy_Lanczos, X->CDataFileHead);
+      sprintf(sdt, "%s_energy.dat", X->CDataFileHead);
       childfopenMPI(sdt, "r", &fp);
       if (fp == NULL) {
         fprintf(stdoutMPI, "Error: xx_energy.dat does not exist.\n");
@@ -360,7 +360,7 @@ int OutputSpectrum(
   int iomega, idcSpectrum;
 
   //output spectrum
-  sprintf(sdt, cFileNameCalcDynamicalGreen, X->Bind.Def.CDataFileHead);
+  sprintf(sdt, "%s_DynamicalGreen.dat", X->Bind.Def.CDataFileHead);
   if (childfopenMPI(sdt, "w", &fp) != 0) {
     return FALSE;
   }
@@ -531,10 +531,10 @@ int CalcSpectrum(
     //input eigen vector
     StartTimer(6101);
     fprintf(stdoutMPI, "  Start: An Eigenvector is inputted in CalcSpectrum.\n");
-    TimeKeeper(&(X->Bind), cFileNameTimeKeep, c_InputEigenVectorStart, "a");
+    TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Reading an input Eigenvector starts: %s", "a");
     GetFileNameByKW(KWSpectrumVec, &defname);
     strcat(defname, "_rank_%d.dat");
-    //    sprintf(sdt, cFileNameInputEigen, X->Bind.Def.CDataFileHead, X->Bind.Def.k_exct - 1, myrank);
+    //    sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", X->Bind.Def.CDataFileHead, X->Bind.Def.k_exct - 1, myrank);
     sprintf(sdt, defname, myrank);
     childfopenALL(sdt, "rb", &fp);
 
@@ -562,7 +562,7 @@ int CalcSpectrum(
 
   int iret = TRUE;
   fprintf(stdoutMPI, "  Start: Calculating a spectrum.\n\n");
-  TimeKeeper(&(X->Bind), cFileNameTimeKeep, c_CalcSpectrumStart, "a");
+  TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Calculating a spectrum starts: %s", "a");
   StartTimer(6200);
   switch (X->Bind.Def.iCalcType) {
   case CG:
@@ -585,7 +585,7 @@ int CalcSpectrum(
   }
 
   fprintf(stdoutMPI, "  End:  Calculating a spectrum.\n\n");
-  TimeKeeper(&(X->Bind), cFileNameTimeKeep, c_CalcSpectrumEnd, "a");
+  TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Calculating a spectrum finishes: %s", "a");
   iret = OutputSpectrum(X, Nomega, NdcSpectrum, dcSpectrum, dcomega);
   free_cd_2d_allocate(dcSpectrum);
   free_cd_1d_allocate(dcomega);

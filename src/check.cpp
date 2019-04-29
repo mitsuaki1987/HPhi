@@ -251,7 +251,7 @@ int check(struct BindStruct *X){
   fprintf(stdoutMPI, "  MAX DIMENSION idim_max=%ld \n",li_dim_max);
   double dmax_mem=MaxMPI_d(X->Check.max_mem);
   fprintf(stdoutMPI, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",dmax_mem);
-  if(childfopenMPI(cFileNameCheckMemory,"w", &fp)!=0){
+  if(childfopenMPI("CHECK_Memory.dat","w", &fp)!=0){
     free_li_2d_allocate(comb);
     return FALSE;
   }
@@ -299,7 +299,7 @@ int check(struct BindStruct *X){
   }  
   X->Check.sdim=tmp_sdim;
   
-  if(childfopenMPI(cFileNameCheckSdim,"w", &fp)!=0){
+  if(childfopenMPI("CHECK_Sdim.dat","w", &fp)!=0){
     free_li_2d_allocate(comb);
     return FALSE;
   }

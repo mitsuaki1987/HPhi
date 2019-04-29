@@ -570,11 +570,11 @@ int expec_cisajs(
   switch (X->Def.iCalcType) {
   case TPQCalc:
     step = X->Def.istep;
-    TimeKeeperWithRandAndStep(X, cFileNameTimeKeep, cTPQExpecOneBodyGStart, "a", 0, step);
+    TimeKeeperWithRandAndStep(X, "%s_TimeKeeper.dat", "set %d step %d:expec_cisajs begins: %s", "a", 0, step);
     break;
   case TimeEvolution:
     step = X->Def.istep;
-    TimeKeeperWithStep(X, cFileNameTimeKeep, cTEExpecOneBodyGStart, "a", step);
+    TimeKeeperWithStep(X, "%s_TimeKeeper.dat", "step %d:expec_cisajs begins: %s", "a", step);
     break;
   case FullDiag:
   case CG:
@@ -617,15 +617,15 @@ int expec_cisajs(
     switch (X->Def.iCalcType) {
     case TPQCalc:
       step = X->Def.istep;
-      sprintf(sdt, cFileName1BGreen_TPQ, X->Def.CDataFileHead, istate, step);
+      sprintf(sdt, "%s_cisajs_set%dstep%d.dat", X->Def.CDataFileHead, istate, step);
       break;
     case TimeEvolution:
       step = X->Def.istep;
-      sprintf(sdt, cFileName1BGreen_TE, X->Def.CDataFileHead, step);
+      sprintf(sdt, "%s_cisajs_step%d.dat", X->Def.CDataFileHead, step);
       break;
     case FullDiag:
     case CG:
-      sprintf(sdt, cFileName1BGreen_FullDiag, X->Def.CDataFileHead, istate);
+      sprintf(sdt, "%s_cisajs_eigen%d.dat", X->Def.CDataFileHead, istate);
       break;
     }
     if (childfopenMPI(sdt, "w", &fp) == 0) {
@@ -641,15 +641,15 @@ int expec_cisajs(
 
   if (X->Def.St == 0) {
     if (X->Def.iCalcType == TPQCalc) {
-      TimeKeeperWithRandAndStep(X, cFileNameTimeKeep, cTPQExpecOneBodyGFinish, "a", rand_i, step);
+      TimeKeeperWithRandAndStep(X, "%s_TimeKeeper.dat", "set %d step %d:expec_cisajs finishes: %s", "a", rand_i, step);
     }
     else if (X->Def.iCalcType == TimeEvolution) {
-      TimeKeeperWithStep(X, cFileNameTimeKeep, cTEExpecOneBodyGFinish, "a", step);
+      TimeKeeperWithStep(X, "%s_TimeKeeper.dat", "step %d:expec_cisajs finishes: %s", "a", step);
     }
   }
   else if (X->Def.St == 1) {
-    TimeKeeper(X, cFileNameTimeKeep, cCGExpecOneBodyGFinish, "a");
-    fprintf(stdoutMPI, "%s", cLogCGExpecOneBodyGEnd);
+    TimeKeeper(X, "%s_TimeKeeper.dat", "CG expec_cisajs finishes:     %s", "a");
+    fprintf(stdoutMPI, "%s", "  End  : Calculate one body Green functions.\n\n");
   }
   free_cd_2d_allocate(prod);
   return 0;
