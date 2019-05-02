@@ -3,6 +3,7 @@ MODULE fourier_val
   IMPLICIT NONE
   !
   INTEGER,SAVE :: &
+  & nS, &
   & interval, &
   & numave, &
   & nkg(3), & ! k-grid for momentum ditribution
@@ -32,7 +33,10 @@ MODULE fourier_val
   & irv(:,:,:), & ! (3,125,nr) R-vector
   & rindx(:),   & ! (nsite) Index of R
   & orb(:),     & ! (nsite) Index of orbital
-  & indx(:,:,:,:) ! (nr,8,norb,norb) Mapping index for each Correlation function
+  & indx1(:,:,:,:), & ! (nr,nS,norb,norb) Mapping index for each Correlation function
+  & indx2(:,:,:,:,:), & ! (nr,nS,nS,norb,norb) Mapping index for each Correlation function
+  & indxpm(:,:,:,:,:), & ! (nr,nS-1,nS-1,norb,norb) Mapping index for each Correlation function
+  & indxmp(:,:,:,:,:) ! (nr,nS-1,nS-1,norb,norb) Mapping index for each Correlation function
   !
   REAL(8),ALLOCATABLE,SAVE :: &
   & knode(:,:), & ! (3,nnode) Nodes of k path
@@ -40,8 +44,8 @@ MODULE fourier_val
   & kvec(:,:)     ! (3,nk) k-vector in the 1st BZ
   !
   COMPLEX(8),ALLOCATABLE,SAVE :: &
-  & cor(:,:,:,:,:), & ! (nr,6,norb,norb,nwfc) Correlation function in real space (See below)
-  & cor_k(:,:,:,:,:)  ! (nk,6,norb,norb,nwfc) Correlation function in the k-space (See below)
+  & cor(:,:,:,:,:), & ! (nr,nS+4,norb,norb,nwfc) Correlation function in real space (See below)
+  & cor_k(:,:,:,:,:)  ! (nk,nS+4,norb,norb,nwfc) Correlation function in the k-space (See below)
   !
   CHARACTER(256),ALLOCATABLE :: &
   & kname(:), & ! (nnode) Label of k-point node
@@ -78,10 +82,16 @@ MODULE fourier_routine
 CONTAINS
 !
 SUBROUTINE key2lower(key)
-  CHARACTER(*),INTENT(INOUT) :: key
-  IF(65 <=IACHAR(key) .AND. IACHAR(key) <= 90) THEN
-     key = ACHAR(IACHAR(key) + 32)
-  END IF
+  CHARACTER(*) :: key
+  !
+  INTEGER :: ii, acode
+  !
+  DO ii = 1, LEN(TRIM(key))
+     acode = IACHAR(key(ii:ii))
+     IF(65 <= acode .AND. acode <= 90) THEN
+        key(ii:ii) = ACHAR(acode + 32)
+     END IF
+  END DO
 END SUBROUTINE key2lower
 !
 ! Read from HPhi/mVMC input files
@@ -89,11 +99,11 @@ END SUBROUTINE key2lower
 SUBROUTINE read_filename()
   !
   USE fourier_val, ONLY : file_one, file_two, filehead, nsite, nwfc, &
-  &                       filetail, calctype, numave, interval
+  &                       filetail, calctype, numave, interval, nS
   IMPLICIT NONE
   !
   INTEGER :: fi = 10, lanczos_max, irun, istep, iwfc, idx_start
-  CHARACTER(256) :: modpara, calcmod, keyname, namelist
+  CHARACTER(256) :: modpara, calcmod, keyname, namelist, locspin
   !
   WRITE(*,*) 
   WRITE(*,*) "#####  Read HPhi/mVMC Input Files  #####" 
@@ -120,6 +130,8 @@ SUBROUTINE read_filename()
         READ(fi,*) keyname, modpara
      ELSE IF(TRIM(ADJUSTL(keyname)) == "calcmod") THEN
         READ(fi,*) keyname, calcmod
+     ELSE IF(TRIM(ADJUSTL(keyname)) == "locspin") THEN
+        READ(fi,*) keyname, locspin
      ELSE
         READ(fi,*) keyname
      END IF
@@ -280,6 +292,21 @@ SUBROUTINE read_filename()
   END IF ! (clactype == ??)
   !
   WRITE(*,*) "    Number of States : ", nwfc
+  !
+  ! Read from LocSpin file
+  !
+  OPEN(fi,file = TRIM(locspin))
+  READ(fi,*) keyname
+  READ(fi,*) keyname
+  READ(fi,*) keyname
+  READ(fi,*) keyname
+  READ(fi,*) keyname
+  READ(fi,*) irun, nS
+  IF(nS < 2) THEN
+     nS = 2
+  ELSE
+     nS = nS + 1
+  END IF
   !
 END SUBROUTINE read_filename
 !
@@ -460,19 +487,23 @@ END SUBROUTINE set_kpoints
 !
 SUBROUTINE read_corrindx()
   !
-  USE fourier_val, ONLY : file_one, file_two, ncor1, ncor2, ncor, indx, &
-  &                       calctype, nr, rindx, orb, norb
+  USE fourier_val, ONLY : file_one, file_two, ncor1, ncor2, ncor, nS, &
+  &                       indx1, indx2, indxpm, indxmp, calctype, nr, rindx, orb, norb
   IMPLICIT NONE
   !
-  INTEGER :: fi = 10, itmp(8), icor
+  INTEGER :: fi = 10, itmp(8), icor, iS, jS
   CHARACTER(100) :: ctmp
   !
   WRITE(*,*) 
   WRITE(*,*) "#####  Read Correlation Index File  #####" 
   WRITE(*,*) 
   !
-  ALLOCATE(indx(nr,8,norb,norb))
-  indx(1:nr,1:8,1:norb,1:norb) = 0
+  ALLOCATE(indx1(nr,nS,norb,norb), indx2(nr,nS,nS,norb,norb), &
+  &        indxpm(nr,nS-1,nS-1,norb,norb), indxmp(nr,nS-1,nS-1,norb,norb))
+  indx1( 1:nr,1:nS,         1:norb,1:norb) = 0
+  indx2( 1:nr,1:nS,  1:nS,  1:norb,1:norb) = 0
+  indxpm(1:nr,1:nS-1,1:nS-1,1:norb,1:norb) = 0
+  indxmp(1:nr,1:nS-1,1:nS-1,1:norb,1:norb) = 0
   !
   ! Read index for the One-Body Correlation
   !
@@ -490,21 +521,13 @@ SUBROUTINE read_corrindx()
   ncor(1:2) = 0
   DO icor = 1, ncor1
      READ(fi,*) itmp(1:4)
-     IF(itmp(2) == 0 .AND. itmp(4) == 0) THEN
-        !
-        ! Up-Up correlation
-        !
-        indx(rindx(itmp(3) + 1), 1, orb(itmp(1) + 1), orb(itmp(3) + 1)) = icor 
-     ELSE IF (itmp(2) == 1 .AND. itmp(4) == 1) THEN
-        !
-        ! Down-Down correlation
-        !
-        indx(rindx(itmp(3) + 1), 2, orb(itmp(1) + 1), orb(itmp(3) + 1)) = icor 
-     END IF
+     IF(itmp(2) == itmp(4)) &
+     &  indx1(rindx(itmp(3) + 1), itmp(2)+1, orb(itmp(1) + 1), orb(itmp(3) + 1)) = icor 
   END DO
   !
-  WRITE(*,*) "    Number of Up-Up Index : ",     COUNT(indx(1:nr, 1, 1:norb, 1:norb) /= 0)
-  WRITE(*,*) "    Number of Down-Down Index : ", COUNT(indx(1:nr, 2, 1:norb, 1:norb) /= 0)
+  DO iS = 1, nS
+     WRITE(*,*) "    Number of ", iS, " Index : ", COUNT(indx1(1:nr, iS, 1:norb, 1:norb) /= 0)
+  END DO
   !
   CLOSE(fi)
   !
@@ -528,48 +551,24 @@ SUBROUTINE read_corrindx()
      !
      IF(itmp(1) == itmp(3) .AND. itmp(5) == itmp(7)) THEN
         !
-        IF(itmp(2) == 0 .AND. itmp(4) == 0) THEN
+        IF(itmp(2) == itmp(4) .AND. itmp(6) == itmp(8)) THEN
            !
-           IF(itmp(6) == 0 .AND. itmp(8) == 0) THEN
-              !
-              ! UpUpUpUp
-              !
-              indx(rindx(itmp(5) + 1), 3, orb(itmp(1) + 1), orb(itmp(5) + 1)) = icor 
-           ELSE IF(itmp(6) == 1 .AND. itmp(8) == 1) THEN
-              !
-              ! UpUpDownDown
-              !
-              indx(rindx(itmp(5) + 1), 4, orb(itmp(1) + 1), orb(itmp(5) + 1)) = icor 
-           END IF
-           !
-        ELSE IF(itmp(2) == 1 .AND. itmp(4) == 1) THEN
-           !
-           IF(itmp(6) == 0 .AND. itmp(8) == 0) THEN
-              !
-              ! DownDownUpUp
-              !
-              indx(rindx(itmp(5) + 1), 5, orb(itmp(1) + 1), orb(itmp(5) + 1)) = icor 
-           ELSE IF(itmp(6) == 1 .AND. itmp(8) == 1) THEN
-              !
-              ! DownDownDownDown
-              !
-              indx(rindx(itmp(5) + 1), 6, orb(itmp(1) + 1), orb(itmp(5) + 1)) = icor 
-           END IF
+           indx2(rindx(itmp(5) + 1), itmp(2)+1, itmp(6)+1, orb(itmp(1) + 1), orb(itmp(5) + 1)) = icor 
            !
         ELSE IF(calctype /= 4) THEN
            !
            ! S+S- & S-S+ for HPhi
            !
-           IF((itmp(2) == 0 .AND. itmp(4) == 1) .AND. (itmp(6) == 1 .AND. itmp(8) == 0)) THEN
+           IF(itmp(2) == itmp(4) + 1 .AND. itmp(6) + 1 == itmp(8)) THEN
               !
               ! Up-Down-Down-Up = S+S-
               !
-              indx(rindx(itmp(5) + 1), 7, orb(itmp(1) + 1), orb(itmp(5) + 1)) = icor 
-           ELSE IF((itmp(2) == 1 .AND. itmp(4) == 0) .AND. (itmp(6) == 0 .AND. itmp(8) == 1)) THEN
+              indxpm(rindx(itmp(5) + 1), itmp(2), itmp(8), orb(itmp(1) + 1), orb(itmp(5) + 1)) = icor 
+           ELSE IF(itmp(2) + 1 ==  itmp(4) .AND. itmp(6) == itmp(8) + 1) THEN
               !
               ! Down-Up-Up-Down = S-S+
               !
-              indx(rindx(itmp(5) + 1), 8, orb(itmp(1) + 1), orb(itmp(5) + 1)) = icor 
+              indxmp(rindx(itmp(5) + 1), itmp(4), itmp(6), orb(itmp(1) + 1), orb(itmp(5) + 1)) = icor 
            END IF
            !
         END IF ! (calctype /= 4)
@@ -580,28 +579,35 @@ SUBROUTINE read_corrindx()
         !
         ! S+S- & S-S+ for mVMC
         !
-        IF((itmp(2) == 0 .AND. itmp(4) == 0) .AND. (itmp(6) == 1 .AND. itmp(8) == 1)) THEN
+        IF(itmp(2) == itmp(8) + 1 .AND. itmp(6) + 1 == itmp(4)) THEN
            !
            ! Up-Down-Down-Up = S+S-
            !
-           indx(rindx(itmp(5) + 1), 7, orb(itmp(1) + 1), orb(itmp(5) + 1)) = icor 
-        ELSE IF((itmp(2) == 1 .AND. itmp(4) == 1) .AND. (itmp(6) == 0 .AND. itmp(8) == 0)) THEN
+           indxpm(rindx(itmp(5) + 1), itmp(2), itmp(4), orb(itmp(1) + 1), orb(itmp(5) + 1)) = icor 
+        ELSE IF(itmp(2) + 1 == itmp(8) .AND. itmp(6) == itmp(4) + 1) THEN
            !
            ! Down-Up-Up-Down = S-S+
            !
-           indx(rindx(itmp(5) + 1), 8, orb(itmp(1) + 1), orb(itmp(5) + 1)) = icor 
+           indxmp(rindx(itmp(5) + 1), itmp(8), itmp(6), orb(itmp(1) + 1), orb(itmp(5) + 1)) = icor 
         END IF
         !
      END IF ! (calctype == 4 .AND. (itmp(1) == itmp(7) .AND. itmp(3) == itmp(5)))
      !
   END DO
   !
-  WRITE(*,*) "    Number of UpUpUpUp         Index : ", COUNT(indx(1:nr, 3, 1:norb, 1:norb) /= 0)
-  WRITE(*,*) "    Number of UpUpDownDown     Index : ", COUNT(indx(1:nr, 4, 1:norb, 1:norb) /= 0)
-  WRITE(*,*) "    Number of DownDownUpUp     Index : ", COUNT(indx(1:nr, 5, 1:norb, 1:norb) /= 0)
-  WRITE(*,*) "    Number of DownDownDownDown Index : ", COUNT(indx(1:nr, 6, 1:norb, 1:norb) /= 0)
-  WRITE(*,*) "    Number of Plus-Minus       Index : ", COUNT(indx(1:nr, 7, 1:norb, 1:norb) /= 0)
-  WRITE(*,*) "    Number of Minus-Plus       Index : ", COUNT(indx(1:nr, 8, 1:norb, 1:norb) /= 0)
+  DO iS = 1, nS
+     DO jS = 1, nS
+        WRITE(*,*) "    Number of ", iS, jS, " Index : ", COUNT(indx2(1:nr, iS, jS, 1:norb, 1:norb) /= 0)
+     END DO
+  END DO
+  DO iS = 1, nS - 1
+     DO jS = 1, nS - 1
+        WRITE(*,*) "    Number of ", iS, jS, " (+-) Index : ", &
+        & COUNT(indxpm(1:nr, iS, jS, 1:norb, 1:norb) /= 0)
+        WRITE(*,*) "    Number of ", iS, jS, " (-+) Index : ", &
+        & COUNT(indxmp(1:nr, iS, jS, 1:norb, 1:norb) /= 0)
+     END DO
+  END DO
   !
   CLOSE(fi)
   !
@@ -611,18 +617,24 @@ END SUBROUTINE read_corrindx
 !
 SUBROUTINE read_corrfile()
   !
-  USE fourier_val, ONLY : filehead, filetail, nwfc, calctype, &  
-  &                       ncor1, ncor2, indx, cor, norb, nr
+  USE fourier_val, ONLY : filehead, filetail, nwfc, calctype, nS, &
+  &                       ncor1, ncor2, indx1, indx2, indxpm, indxmp, cor, norb, nr
   IMPLICIT NONE
   !
-  INTEGER :: fi = 10, icor, itmp(8), iwfc, iorb, jorb, ir
+  INTEGER :: fi = 10, icor, itmp(8), iwfc, iorb, jorb, ir, iS, jS
   COMPLEX(8),ALLOCATABLE :: cor0(:)
-  REAL(8) :: cor0_r(2)
+  REAL(8) :: cor0_r(2), sigma(nS), scoef(nS-1), Stot
   CHARACTER(256) :: filename
   !
-  ALLOCATE(cor(nr,6,norb,norb,nwfc))
+  Stot = DBLE(nS-1)*0.5d0
+  DO is = 1, nS
+     sigma(iS) = DBLE(is-1) - Stot
+  END DO
+  scoef(1:nS-1) = SQRT(Stot*(Stot+1.0d0) - sigma(1:nS-1)*(sigma(1:nS-1)+1.0d0))
+  !
+  ALLOCATE(cor(nr,nS+4,norb,norb,nwfc))
   ALLOCATE(cor0(0:MAX(ncor1,ncor2)))
-  cor(1:nr,1:6,1:norb,1:norb,1:nwfc) = CMPLX(0d0, 0d0, KIND(1d0))
+  cor(1:nr,1:nS+4,1:norb,1:norb,1:nwfc) = CMPLX(0d0, 0d0, KIND(1d0))
   cor0(0) = CMPLX(0d0, 0d0, KIND(1d0))
   !
   DO iwfc = 1, nwfc
@@ -644,7 +656,7 @@ SUBROUTINE read_corrfile()
      DO iorb = 1, norb
         DO jorb = 1, norb
            DO ir = 1, nr
-              cor(ir, 1:2, jorb, iorb, iwfc) = cor0(indx(ir, 1:2, jorb, iorb))
+              cor(ir, 1:nS, jorb, iorb, iwfc) = cor0(indx1(ir, 1:nS, jorb, iorb))
            END DO
         END DO
      END DO
@@ -663,31 +675,52 @@ SUBROUTINE read_corrfile()
      !
      ! Map it into Density-Density(3), Sz-Sz(4), S+S-(5), S-S+(6) Correlation
      !
+     DO iorb = 1, norb
+        DO jorb = 1, norb
+           DO ir = 1, nr
+              !
+              cor(ir, nS+1, jorb, iorb, iwfc) = &
+              & SUM(cor0(RESHAPE(indx2(ir, 1:nS, 1:nS, jorb, iorb),(/nS*nS/)))) &
+              &                               - SUM(cor(ir, 1:nS, jorb, iorb, iwfc)) &
+              &                               * SUM(cor(ir, 1:nS, jorb, iorb, iwfc))
+              !
+           END DO
+        END DO
+     END DO
+     !
      ! Up-Up-Up-Up and Down-Down-Down-Down into Density-Density & Sz-Sz
      !
      DO iorb = 1, norb
         DO jorb = 1, norb
            DO ir = 1, nr
               !
-              cor(ir, 3, jorb, iorb, iwfc) = cor0(indx(ir, 3, jorb, iorb)) &
-              &                            + cor0(indx(ir, 4, jorb, iorb)) &
-              &                            + cor0(indx(ir, 5, jorb, iorb)) &
-              &                            + cor0(indx(ir, 6, jorb, iorb))
+              cor(ir, nS+2, jorb, iorb, iwfc) = 0.0d0
+              DO iS = 1, nS
+                 DO js = 1, nS
+                    cor(ir, nS+2, jorb, iorb, iwfc) = cor(ir, nS+2, jorb, iorb, iwfc) &
+                    & + sigma(iS) * sigma(jS) * cor0(indx2(ir, iS, jS, jorb, iorb))
+                 END DO
+              END DO
               !
-              cor(ir, 3, jorb, iorb, iwfc) = cor(ir, 3,   jorb, iorb, iwfc) &
-              &                        - SUM(cor(ir, 1:2, jorb, iorb, iwfc)) &
-              &                        * SUM(cor(ir, 1:2, jorb, iorb, iwfc))
+           END DO ! ir = 1, nr
+        END DO ! jorb = 1, norb
+     END DO ! iorb = 1, norb
+     !
+     ! Up-Down-Down-Up(S+S-) and Down-Up-Up-Down(S-S+)
+     !
+     DO iorb = 1, norb
+        DO jorb = 1, norb
+           DO ir = 1, nr
               !
-              cor(ir, 4, jorb, iorb, iwfc) = cor0(indx(ir, 3, jorb, iorb)) &
-              &                            - cor0(indx(ir, 4, jorb, iorb)) &
-              &                            - cor0(indx(ir, 5, jorb, iorb)) &
-              &                            + cor0(indx(ir, 6, jorb, iorb))
-              !
-              cor(ir, 4, jorb, iorb, iwfc) = cor(ir, 4, jorb, iorb, iwfc) * 0.25d0
-              !
-              ! Up-Down-Down-Up(S+S-) and Down-Up-Up-Down(S-S+)
-              !
-              cor(ir, 5:6, jorb, iorb, iwfc) = cor0(indx(ir, 7:8, jorb, iorb))
+              cor(ir, nS+3:nS+4, jorb, iorb, iwfc) = 0.0d0
+              DO iS = 1, nS - 1
+                 DO js = 1, nS - 1
+                    cor(ir, nS+3, jorb, iorb, iwfc) = cor(ir, nS+3, jorb, iorb, iwfc) &
+                    & + scoef(iS) * scoef(jS) * cor0(indxpm(ir, iS, jS, jorb, iorb))
+                    cor(ir, nS+4, jorb, iorb, iwfc) = cor(ir, nS+4, jorb, iorb, iwfc) &
+                    & + scoef(iS) * scoef(jS) * cor0(indxmp(ir, iS, jS, jorb, iorb))
+                 END DO
+              END DO
               !
            END DO ! ir = 1, nr
         END DO ! jorb = 1, norb
@@ -699,22 +732,26 @@ SUBROUTINE read_corrfile()
      !   Cid+ Ciu Cju+ Cjd = delta_{ij} Cid+ Cid - Cid+ Cjd Cju+ Ciu
      !
      IF (calctype == 4) THEN
-        cor(1:nr, 5:6, 1:norb, 1:norb, iwfc) = - cor(1:nr, 5:6, 1:norb, 1:norb, iwfc)
+        cor(1:nr, nS+3:nS+4, 1:norb, 1:norb, iwfc) = - cor(1:nr, nS+3:nS+4, 1:norb, 1:norb, iwfc)
         DO iorb = 1, norb
-           cor(1, 5:6, iorb, iorb, iwfc) = cor(1, 5:6, iorb, iorb, iwfc) &
-           &                             + cor(1, 1:2, iorb, iorb, iwfc)
+           DO is = 1, nS - 1
+              cor(1, nS+3, iorb, iorb, iwfc) = cor(1, nS+3,  iorb, iorb, iwfc) &
+              &                             + SUM(cor(1, 2:nS,   iorb, iorb, iwfc)*Scoef(1:nS-1)**2)
+              cor(1, nS+4, iorb, iorb, iwfc) = cor(1, nS+4,  iorb, iorb, iwfc) &
+              &                             + SUM(cor(1, 1:nS-1, iorb, iorb, iwfc)*Scoef(1:nS-1)**2)
+           END DO
         END DO
      END IF
      !
      ! S.S = Sz Sz + 0.5 * (S+S- + S-S+)
      !
-     cor(1:nr, 6, 1:norb, 1:norb, iwfc) = cor(1:nr, 4, 1:norb, 1:norb, iwfc) &
-     &                        + 0.5d0 * ( cor(1:nr, 5, 1:norb, 1:norb, iwfc) &
-     &                                  + cor(1:nr, 6, 1:norb, 1:norb, iwfc) )
+     cor(1:nr, 6, 1:norb, 1:norb, iwfc) = cor(1:nr, nS+2, 1:norb, 1:norb, iwfc) &
+     &                        + 0.5d0 * ( cor(1:nr, nS+3, 1:norb, 1:norb, iwfc) &
+     &                                  + cor(1:nr, nS+4, 1:norb, 1:norb, iwfc) )
      !
   END DO ! iwfc = 1, nwfc
   !
-  DEALLOCATE(cor0, indx)
+  DEALLOCATE(cor0, indx1, indx2, indxpm, indxmp)
   !
 END SUBROUTINE read_corrfile
 !
@@ -722,14 +759,14 @@ END SUBROUTINE read_corrfile
 !
 SUBROUTINE fourier_cor()
   !
-  USE fourier_val, ONLY : cor, cor_k, kvec, nwfc, nk, nr, nreq, norb, irv, phase
+  USE fourier_val, ONLY : cor, cor_k, kvec, nwfc, nk, nr, nreq, norb, irv, phase, nS
   IMPLICIT NONE
   !
   INTEGER :: ik, ir, ireq
   REAL(8) :: tpi = 2.0 * ACOS(-1d0), theta
   COMPLEX(8),ALLOCATABLE :: fmat(:,:)
   !
-  ALLOCATE(fmat(nk,nr), cor_k(nk,6,norb,norb,nwfc))
+  ALLOCATE(fmat(nk,nr), cor_k(nk,nS+4,norb,norb,nwfc))
   !
   ! Matirx for Fourier trans. exp(-i k R)
   !
@@ -745,11 +782,11 @@ SUBROUTINE fourier_cor()
      END DO ! ir = 1, nr
   END DO ! ik = 1, nk
   !
-  CALL zgemm('N', 'N', nk, 6*norb*norb*nwfc, nr, CMPLX(1d0, 0d0, KIND(1d0)), fmat, nk, &
+  CALL zgemm('N', 'N', nk, (nS+4)*norb*norb*nwfc, nr, CMPLX(1d0, 0d0, KIND(1d0)), fmat, nk, &
   &          cor, nr, CMPLX(0d0,0d0,KIND(1d0)), cor_k, nk)
   !
-  cor_k(1:nk,1:2,1:norb,1:norb,1:nwfc) = cor_k(1:nk,1:2,1:norb,1:norb,1:nwfc)
-  cor_k(1:nk,3:6,1:norb,1:norb,1:nwfc) = cor_k(1:nk,3:6,1:norb,1:norb,1:nwfc) / dble(nr)
+  cor_k(1:nk,   1:nS,  1:norb,1:norb,1:nwfc) = cor_k(1:nk,   1:nS,  1:norb,1:norb,1:nwfc)
+  cor_k(1:nk,nS+1:nS+4,1:norb,1:norb,1:nwfc) = cor_k(1:nk,nS+1:nS+4,1:norb,1:norb,1:nwfc) / dble(nr)
   !
   DEALLOCATE(fmat, cor)
   !
@@ -760,10 +797,10 @@ END SUBROUTINE fourier_cor
 SUBROUTINE output_cor()
   !
   USE fourier_val, ONLY : cor_k, nk, nnode, knode, nk_line, kname, norb, interval, &
-  &                       nwfc, recipr, filehead, filetail, calctype, nkg, numave
+  &                       nwfc, recipr, filehead, filetail, calctype, nkg, numave, nS
   IMPLICIT NONE
   !
-  INTEGER :: fo = 20, ik, iwfc, inode, iorb, jorb, ii, ikk, iwfc1, iwfc2, istep
+  INTEGER :: fo = 20, ik, iwfc, inode, iorb, jorb, ii, ikk, iwfc1, iwfc2, istep, iS
   REAL(8) :: dk(3), dk_cart(3), xk(nk), &
   &          xk_label(nnode), klength
   CHARACTER(256) :: filename
@@ -806,26 +843,26 @@ SUBROUTINE output_cor()
         !
         ! Average
         !
-        cor_ave(1:ikk,1:6,1:norb,1:norb) = SUM(cor_k(1:ikk,1:6,1:norb,1:norb,&
+        cor_ave(1:ikk,1:nS+4,1:norb,1:norb) = SUM(cor_k(1:ikk,1:nS+4,1:norb,1:norb,&
         &                                      iwfc1:iwfc2), 5) / DBLE(numave)
         !
         ! Variance
         !
-        cor_err(1:ikk,1:6,1:norb,1:norb) = 0d0
+        cor_err(1:ikk,1:nS+4,1:norb,1:norb) = 0d0
         DO iwfc = iwfc1, iwfc2
-           cor_err(1:ikk,1:6,1:norb,1:norb) = cor_err(1:ikk,1:6,1:norb,1:norb) &
-           & + CMPLX( DBLE(cor_k(1:ikk,1:6,1:norb,1:norb,iwfc) - cor_ave(1:ikk,1:6,1:norb,1:norb))**2, &
-           &         AIMAG(cor_k(1:ikk,1:6,1:norb,1:norb,iwfc) - cor_ave(1:ikk,1:6,1:norb,1:norb))**2, &
+           cor_err(1:ikk,1:nS+4,1:norb,1:norb) = cor_err(1:ikk,1:nS+4,1:norb,1:norb) &
+           & + CMPLX( DBLE(cor_k(1:ikk,1:nS+4,1:norb,1:norb,iwfc) - cor_ave(1:ikk,1:nS+4,1:norb,1:norb))**2, &
+           &         AIMAG(cor_k(1:ikk,1:nS+4,1:norb,1:norb,iwfc) - cor_ave(1:ikk,1:nS+4,1:norb,1:norb))**2, &
            &         KIND(0d0))
         END DO
         !
         ! Standard Error
         !
         IF(numave == 1) THEN
-           cor_err(1:ikk,1:6,1:norb,1:norb) = CMPLX(0d0, 0d0, KIND(0d0))
+           cor_err(1:ikk,1:nS+4,1:norb,1:norb) = CMPLX(0d0, 0d0, KIND(0d0))
         ELSE
-           cor_err(1:ikk,1:6,1:norb,1:norb) = CMPLX(SQRT( DBLE(cor_err(1:ikk,1:6,1:norb,1:norb))), &
-           &                                       SQRT(AIMAG(cor_err(1:ikk,1:6,1:norb,1:norb))), KIND(0d0)) &
+           cor_err(1:ikk,1:nS+4,1:norb,1:norb) = CMPLX(SQRT( DBLE(cor_err(1:ikk,1:nS+4,1:norb,1:norb))), &
+           &                                       SQRT(AIMAG(cor_err(1:ikk,1:nS+4,1:norb,1:norb))), KIND(0d0)) &
            &                               / SQRT(DBLE(numave * (numave - 1)))
         END IF
         !
@@ -836,25 +873,45 @@ SUBROUTINE output_cor()
         END IF
         OPEN(fo, file = TRIM(filename))
         !
-        WRITE(fo,*) "# k-length[1]"
-        ii = 1
+        WRITE(fo,'(a)') "#1 k-length"
+        ii = 2
         DO iorb = 1, norb
            DO jorb = 1, norb
-              WRITE(fo,'(a,i3,a,i3)') "# Orbital", iorb, " to Orbital", jorb
-              WRITE(fo,'(a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a)') &
-              & "#  UpUp[", ii+1, ",", ii+2, ",", ii+13, ",", ii+14, &
-              & "] (Re. Im. Err.) DownDown[", ii+3, ",", ii+4, ",", ii+15, ",", ii+16, "]"
-              WRITE(fo,'(a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a)') &
-              & "#  Density[", ii+5, ",", ii+6, ",", ii+17, ",", ii+18, &
-              & "] SzSz[", ii+7, ",", ii+8, ",", ii+19, ",", ii+20, &
-              & "] S+S-[", ii+9, ",", ii+10, ",", ii+21, ",", ii+22, &
-              & "] S.S[", ii+11, ",", ii+12, ",", ii+23, ",", ii+24, "]"
-              ii = ii+24
+              DO is = 1, nS
+                 WRITE(fo,'("#",i0," : Re Ave c^+_{",i0,",",i0,"} c_{",i0,",",i0,"}")') ii,   iorb, iS, jorb, iS
+                 WRITE(fo,'("#",i0," : Im Ave c^+_{",i0,",",i0,"} c_{",i0,",",i0,"}")') ii+1, iorb, iS, jorb, iS
+                 ii = ii + 2
+              END DO
+              WRITE(fo,'("#",i0," : Re Ave rho_",i0," rho_",i0)') ii, iorb, jorb
+              WRITE(fo,'("#",i0," : Im Ave rho_",i0," rho_",i0)') ii+1, iorb, jorb
+              WRITE(fo,'("#",i0," : Re Ave Sz_",i0," Sz_",i0)') ii+2, iorb, jorb
+              WRITE(fo,'("#",i0," : Im Ave Sz_",i0," Sz_",i0)') ii+3, iorb, jorb
+              WRITE(fo,'("#",i0," : Re Ave S+_",i0," S-_",i0)') ii+4, iorb, jorb
+              WRITE(fo,'("#",i0," : Im Ave S-_",i0," S+_",i0)') ii+5, iorb, jorb
+              WRITE(fo,'("#",i0," : Re Ave S",i0," S",i0)') ii+6, iorb, jorb
+              WRITE(fo,'("#",i0," : Im Ave S",i0," S",i0)') ii+7, iorb, jorb
+              ii = ii + 8
+              !
+              DO is = 1, nS
+                 WRITE(fo,'("#",i0," : Re Err c^+_{",i0,",",i0,"} c_{",i0,",",i0,"}")') ii,   iorb, iS, jorb, iS
+                 WRITE(fo,'("#",i0," : Im Err c^+_{",i0,",",i0,"} c_{",i0,",",i0,"}")') ii+1, iorb, iS, jorb, iS
+                 ii = ii + 2
+              END DO
+              WRITE(fo,'("#",i0," : Re Err rho_",i0," rho_",i0)') ii, iorb, jorb
+              WRITE(fo,'("#",i0," : Im Err rho_",i0," rho_",i0)') ii+1, iorb, jorb
+              WRITE(fo,'("#",i0," : Re Err Sz_",i0," Sz_",i0)') ii+2, iorb, jorb
+              WRITE(fo,'("#",i0," : Im Err Sz_",i0," Sz_",i0)') ii+3, iorb, jorb
+              WRITE(fo,'("#",i0," : Re Err S+_",i0," S-_",i0)') ii+4, iorb, jorb
+              WRITE(fo,'("#",i0," : Im Err S-_",i0," S+_",i0)') ii+5, iorb, jorb
+              WRITE(fo,'("#",i0," : Re Err S",i0," S",i0)') ii+6, iorb, jorb
+              WRITE(fo,'("#",i0," : Im Err S",i0," S",i0)') ii+7, iorb, jorb
+              ii = ii + 8
            END DO
         END DO
         !
         DO ik = 1, ikk
-           WRITE(fo,'(1000e15.5)') xk(ik), cor_ave(ik,1:6, 1:norb, 1:norb), cor_err(ik,1:6, 1:norb, 1:norb)
+           WRITE(fo,'(1000e15.5)') xk(ik), cor_ave(ik,1:nS+4, 1:norb, 1:norb), &
+           &                               cor_err(ik,1:nS+4, 1:norb, 1:norb)
         END DO
         !
         CLOSE(fo)
@@ -872,22 +929,29 @@ SUBROUTINE output_cor()
         filename = TRIM(filehead) // "_corr" // TRIM(filetail(iwfc))
         OPEN(fo, file = TRIM(filename))
         !
-        WRITE(fo,*) "# k-length[1]"
-        ii = 1
+        WRITE(fo,'(a)') "#1 k-length"
+        ii = 2
         DO iorb = 1, norb
            DO jorb = 1, norb
-              WRITE(fo,'(a,i3,a,i3)') "# Orbital", iorb, " to Orbital", jorb
-              WRITE(fo,'(a,i4,a,i4,a,i4,a,i4,a)') &
-              & "#  UpUp[", ii+1, ",", ii+2, "] (Re. Im.) DownDown[", ii+3, ",", ii+4, "]"
-              WRITE(fo,'(a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a,i4,a)') &
-              & "#  Density[", ii+5, ",", ii+6, "] SzSz[", ii+7, ",", ii+8, &
-              & "] S+S-[", ii+9, ",", ii+10, "] S.S[", ii+11, ",", ii+12, "]"
-              ii = ii+12
+              DO is = 1, nS
+                 WRITE(fo,'("#",i0," : Re c^+_{",i0,",",i0,"} c_{",i0,",",i0,"}")') ii,   iorb, iS, jorb, iS
+                 WRITE(fo,'("#",i0," : Im c^+_{",i0,",",i0,"} c_{",i0,",",i0,"}")') ii+1, iorb, iS, jorb, iS
+                 ii = ii + 2
+              END DO
+              WRITE(fo,'("#",i0," : Re rho_",i0," rho_",i0)') ii, iorb, jorb
+              WRITE(fo,'("#",i0," : Im rho_",i0," rho_",i0)') ii+1, iorb, jorb
+              WRITE(fo,'("#",i0," : Re Sz_",i0," Sz_",i0)') ii+2, iorb, jorb
+              WRITE(fo,'("#",i0," : Im Sz_",i0," Sz_",i0)') ii+3, iorb, jorb
+              WRITE(fo,'("#",i0," : Re S+_",i0," S-_",i0)') ii+4, iorb, jorb
+              WRITE(fo,'("#",i0," : Im S-_",i0," S+_",i0)') ii+5, iorb, jorb
+              WRITE(fo,'("#",i0," : Re S",i0," S",i0)') ii+6, iorb, jorb
+              WRITE(fo,'("#",i0," : Im S",i0," S",i0)') ii+7, iorb, jorb
+              ii = ii + 8
            END DO
         END DO
         !
         DO ik = 1, ikk
-           WRITE(fo,'(1000e15.5)') xk(ik), cor_k(ik, 1:6, 1:norb, 1:norb, iwfc)
+           WRITE(fo,'(1000e15.5)') xk(ik), cor_k(ik, 1:nS+4, 1:norb, 1:norb, iwfc)
         END DO
         !
         CLOSE(fo)

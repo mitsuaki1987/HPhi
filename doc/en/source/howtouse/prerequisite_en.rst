@@ -5,7 +5,7 @@
 Prerequisite
 ============
 
-:math:`{\mathcal H}\Phi` requires the following packages:
+HPhi++ requires the following packages:
 
  * C/fortran compiler (Intel, Fujitsu, GNU, etc. )
  * BLAS/LAPACK library (Intel MKL, Fujitsu, ATLAS, etc.)

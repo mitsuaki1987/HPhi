@@ -8,7 +8,7 @@
 HPhi/vmc.out の実行
 -------------------
 
-- :math:`{\mathcal H}\Phi` の場合
+- HPhi++ の場合
 
   基底状態および相関関数の計算を行う.
   入力ファイルは次の通り.
@@ -70,7 +70,7 @@ HPhi/vmc.out の実行
 
 関連するファイル
 
-- StdFace.def (mVMC/:math:`{\mathcal H}\Phi` のマニュアル参照)
+- StdFace.def (mVMC/HPhi++ のマニュアル参照)
 - zqp_opt.dat (mVMCのマニュアル参照)
 - greenone.def (:ref:`greenindex`)
 - greentwo.def (:ref:`greenindex`)
@@ -160,7 +160,7 @@ HPhi の実行
 
 関連するファイル
 
-- stan.in (mVMC/:math:`{\mathcal H}\Phi` のマニュアル参照)
+- stan.in (mVMC/HPhi++ のマニュアル参照)
 
 相関関数のフーリエ変換
 ----------------------

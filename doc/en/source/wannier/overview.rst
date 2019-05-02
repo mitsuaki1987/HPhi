@@ -2,7 +2,7 @@ Overview
 ========
 
 In this document, we introduce how we compute downfolded models
-with mVMC or :math:`{\mathcal H}\Phi` in conjunction to
+with mVMC or HPhi++ in conjunction to
 `RESPACK <https://sites.google.com/view/kazuma7k6r>`_.
 
 .. math::
@@ -45,5 +45,5 @@ or
 and obtain the Wannier function, the dielectric function,
 the effective interaction with RESPACK,
 and simulate quantum lattice models with
-mVMC or :math:`{\mathcal H}\Phi`.
+mVMC or HPhi++.
 Therefore, these programs must be available in our machine.

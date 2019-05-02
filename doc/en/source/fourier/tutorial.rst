@@ -9,7 +9,7 @@ the 8-site Hubbard model on the square lattice.
 Run HPhi/vmc.out
 ----------------
 
-- For :math:`{\mathcal H}\Phi`
+- For HPhi++
 
   We calculate the ground state and the correlation function with
   the following input file
@@ -70,7 +70,7 @@ in the ``output/`` directory.
 
 Related files
 
-- StdFace.def (See the manuals for mVMC/:math:`{\mathcal H}\Phi`)
+- StdFace.def (See the manuals for mVMC/HPhi++)
 - zqp_opt.dat (See the manual for mVMC)
 - greenone.def (:ref:`greenindex`)
 - greentwo.def (:ref:`greenindex`)

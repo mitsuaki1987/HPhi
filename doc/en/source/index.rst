@@ -1,8 +1,8 @@
 #####################################################
-Welcome to :math:`{\mathcal H}\Phi`'s documentation!
+Welcome to HPhi++'s documentation!
 #####################################################
 
-About :math:`{\mathcal H}\Phi`
+About HPhi++
 ---------------------------------
 A numerical solver package for a wide range of quantum lattice models including Hubbard-type itinerant electron hamiltonians, quantum spin models, and Kondo-type hamiltonians for itinerant electrons coupled with quantum spins. The Lanczos algorithm for finding ground states and newly developed Lanczos-based algorithm for finite-temperature properties of these models are implemented for parallel computing. A broad spectrum of users including experimental researchers is cordially welcome.
 
@@ -27,7 +27,7 @@ This software was developed with the support of \"*Project for advancement of so
 
 Download
 --------
-You can download software and source codes of :math:`{\mathcal H}\Phi` from `GitHub page <https://github.com/QLMS/HPhi>`_ or `release page <https://github.com/QLMS/HPhi/releases>`_.
+You can download software and source codes of HPhi++ from `GitHub page <https://github.com/QLMS/HPhi>`_ or `release page <https://github.com/QLMS/HPhi/releases>`_.
 
 
 Contents

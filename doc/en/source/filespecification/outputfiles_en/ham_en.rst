@@ -6,7 +6,7 @@ ham.dat
 -------
 
 | (For the FullDiag method) When ``OutputHam=1`` in the ``CalcMod``
-  file, the Hamiltonian calculated by :math:`{\mathcal H}\Phi` is outputted by the
+  file, the Hamiltonian calculated by HPhi++ is outputted by the
   MatrixMarket format. The recalculation by using this file can be down
   when ``InputHam=1`` in the ``CalcMod`` file. An example of the file
   format is as follows.

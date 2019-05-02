@@ -107,7 +107,7 @@ When CalcModel in a CalcMod file is set as the spin system, all the sites are au
 Files for constructing Hamiltonian
 ----------------------------------
 
-After setting the basic parameters, we create input files for constructing the Hamiltonian. Since the calculations are performed by using the representation of the fermion operators in :math:`{\mathcal H}\Phi`, we must rewrite the spin operator. For example,  in the case of :math:`S = 1/2`, we rewrite the equation by using the relation
+After setting the basic parameters, we create input files for constructing the Hamiltonian. Since the calculations are performed by using the representation of the fermion operators in HPhi++, we must rewrite the spin operator. For example,  in the case of :math:`S = 1/2`, we rewrite the equation by using the relation
 
 .. math::
 
@@ -236,7 +236,7 @@ The details of the input formats of the TwoBodyG file are shown in :ref:`Subsec:
 Running
 -------
 
-After creating all the input files above, we are ready to run a program. For Expert mode, we must set an option \"-e\" and a file name list (in this sample, namelist.def) as arguments to run :math:`{\mathcal H}\Phi`. ::
+After creating all the input files above, we are ready to run a program. For Expert mode, we must set an option \"-e\" and a file name list (in this sample, namelist.def) as arguments to run HPhi++. ::
 
  $ Path/HPhi -e namelist.def
 

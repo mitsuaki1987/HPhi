@@ -40,7 +40,7 @@ Local terms
    diagonal exchange couplings, ``Jx, Jy, Jz``, are set as
    ``Jx = Jy = Jz = J``. When both the set of exchange couplings
    (``Jx``, ``Jy``, ``Jz``) and the exchange coupling ``J`` are
-   specified in the input file, :math:`{\mathcal H}\Phi` will stop.
+   specified in the input file, HPhi++ will stop.
 
 *   ``h``
 
@@ -123,7 +123,7 @@ Non-local terms[ for Ladder ( :numref:`fig_ladder` )]
    the input file instead of the diagonal couplings, ``J0x, J0y, J0z``,
    these diagonal couplings are set as ``J0x = J0y = J0z = J0``. If both
    J0 and the set of the couplings (J0x, J0y, J0z) are
-   specified, :math:`{\mathcal H}\Phi` will stop. The above rules are also valid
+   specified, HPhi++ will stop. The above rules are also valid
    for the simplified parameters, ``J1``, ``J1'``, ``J2``, and ``J2'``.
 
 Non-local terms [other than Ladder ( :numref:`fig_chap04_1_lattice` , :numref:`fig_chap04_1_honeycomb` , :numref:`fig_kagome` )]
@@ -140,7 +140,7 @@ Non-local terms [other than Ladder ( :numref:`fig_chap04_1_lattice` , :numref:`f
    of the hoppings, the simplified parameter ``t`` is available to
    specify ``t0``, ``t1``, and ``t2`` as ``t0 = t1 = t2 = t``. If both
    ``t`` and the set of the hoppings (``t0``, ``t1``, ``t2``) are
-   specified, :math:`{\mathcal H}\Phi` will stop.
+   specified, HPhi++ will stop.
 
 *  ``t'``, ``t0'``, ``t1'``, ``t2'``
 
@@ -153,7 +153,7 @@ Non-local terms [other than Ladder ( :numref:`fig_chap04_1_lattice` , :numref:`f
    of the hoppings, the simplified parameter ``t'`` is available to
    specify ``t0'``, ``t1'``, and ``t2'`` as ``t0' = t1' = t2' = t'``. If both
    ``t'`` and the set of the hoppings (``t0'``, ``t1'``, ``t2'``) are
-   specified, :math:`{\mathcal H}\Phi` will stop.
+   specified, HPhi++ will stop.
    
 *  ``t''``, ``t0''``, ``t1''``, ``t2''``
 
@@ -166,7 +166,7 @@ Non-local terms [other than Ladder ( :numref:`fig_chap04_1_lattice` , :numref:`f
    of the hoppings, the simplified parameter ``t''`` is available to
    specify ``t0''``, ``t1''``, and ``t2''`` as ``t0'' = t1'' = t2'' = t''``. If both
    ``t''`` and the set of the hoppings (``t0''``, ``t1''``, ``t2''``) are
-   specified, :math:`{\mathcal H}\Phi` will stop.
+   specified, HPhi++ will stop.
  
 *  ``V``, ``V0``, ``V1``, ``V2``
 
@@ -179,7 +179,7 @@ Non-local terms [other than Ladder ( :numref:`fig_chap04_1_lattice` , :numref:`f
    of the offsite Coulomb integrals, the simplified parameter ``V`` is
    available to specify ``V0``, ``V1``, and ``V2`` as
    ``V0 = V1 = V2 = V``. If both ``V`` and the set of the Coulomb
-   integrals (``V0``, ``V1``, ``V2``) are specified, :math:`{\mathcal H}\Phi` will
+   integrals (``V0``, ``V1``, ``V2``) are specified, HPhi++ will
    stop.
 
 *  ``V'``, ``V0'``, ``V1'``, ``V2'``
@@ -193,7 +193,7 @@ Non-local terms [other than Ladder ( :numref:`fig_chap04_1_lattice` , :numref:`f
    of the offsite Coulomb integrals, the simplified parameter ``V'`` is
    available to specify ``V0'``, ``V1'``, and ``V2'`` as
    ``V0' = V1' = V2' = V'``. If both ``V'`` and the set of the Coulomb
-   integrals (``V0'``, ``V1'``, ``V2'``) are specified, :math:`{\mathcal H}\Phi` will
+   integrals (``V0'``, ``V1'``, ``V2'``) are specified, HPhi++ will
    stop.
 
 *  ``V''``, ``V0''``, ``V1''``, ``V2''``
@@ -207,7 +207,7 @@ Non-local terms [other than Ladder ( :numref:`fig_chap04_1_lattice` , :numref:`f
    of the offsite Coulomb integrals, the simplified parameter ``V''`` is
    available to specify ``V0''``, ``V1''``, and ``V2''`` as
    ``V0'' = V1'' = V2'' = V''``. If both ``V''`` and the set of the Coulomb
-   integrals (``V0''``, ``V1''``, ``V2''``) are specified, :math:`{\mathcal H}\Phi` will
+   integrals (``V0''``, ``V1''``, ``V2''``) are specified, HPhi++ will
    stop.
 
 *  ``J0x``, ``J0y``, ``J0z``, ``J0xy``, ``J0yx``, ``J0xz``, ``J0zx``,
@@ -226,7 +226,7 @@ Non-local terms [other than Ladder ( :numref:`fig_chap04_1_lattice` , :numref:`f
    the simplified parameter ``J0`` is specified, instead of
    ``J0x, J0y, J0z``, the exchange couplings, ``J0x, J0y, J0z``, are set
    as ``J0x = J0y = J0z = J0``. If both ``J0`` and the set of the
-   exchange couplings (``J0x, J0y, J0z``) are specified, :math:`{\mathcal H}\Phi`
+   exchange couplings (``J0x, J0y, J0z``) are specified, HPhi++
    will stop. The above rules are valid for ``J1`` and ``J2``.
 
    If there is no bond dependence of the exchange couplings, the
@@ -234,7 +234,7 @@ Non-local terms [other than Ladder ( :numref:`fig_chap04_1_lattice` , :numref:`f
    ``Jxz``, ``Jzx``, ``Jyz``, ``Jzy``, are available to specify the
    exchange couplings for every bond as ``J0x = J1x = J2x = Jx``. If any
    simplified parameter (``Jx``-``Jzy``) is specified in addition to its
-   counterparts (``J0x``-``J2zy``), :math:`{\mathcal H}\Phi` will stop. Below,
+   counterparts (``J0x``-``J2zy``), HPhi++ will stop. Below,
    examples of parameter sets for nearest neighbor exchange couplings
    are shown.
 
@@ -282,7 +282,7 @@ Non-local terms [other than Ladder ( :numref:`fig_chap04_1_lattice` , :numref:`f
    mode. If the simplified parameter ``J'`` is specified, instead of
    ``J'x, J'y, J'z``, the exchange couplings are set as
    ``J'x = J'y = J'z = J'``. If both ``J'`` and the set of the couplings
-   (``J'x, J'y, J'z``) are specified, :math:`{\mathcal H}\Phi` will stop.
+   (``J'x, J'y, J'z``) are specified, HPhi++ will stop.
 
 *  ``J''x``, ``J''y``, ``J''z``, ``J''xy``, ``J''yx``, ``J''xz``, ``J''zx``,
    ``J''yz``, ``J''zy``
@@ -302,7 +302,7 @@ Non-local terms [other than Ladder ( :numref:`fig_chap04_1_lattice` , :numref:`f
    mode. If the simplified parameter ``J''`` is specified, instead of
    ``J''x, J''y, J''z``, the exchange couplings are set as
    ``J''x = J''y = J''z = J''``. If both ``J''`` and the set of the couplings
-   (``J''x, J''y, J''z``) are specified, :math:`{\mathcal H}\Phi` will stop.
+   (``J''x, J''y, J''z``) are specified, HPhi++ will stop.
 
 *  ``phase0``, ``phase1``
 

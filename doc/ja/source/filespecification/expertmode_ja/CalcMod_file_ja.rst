@@ -190,7 +190,7 @@ CalcModファイル
 
    **説明 :** (FullDiag)
    全対角化計算でのMAGMAライブラリを使用する場合のGPU数を指定します。
-   なお、 :math:`{\mathcal H}\Phi` ではマルチノードでのGPU計算には対応していません。
+   なお、 HPhi++ ではマルチノードでのGPU計算には対応していません。
 
 .. raw:: latex
 

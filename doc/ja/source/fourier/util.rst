@@ -8,10 +8,10 @@
    $ ${PATH}/greenr2k ${NAMELIST} ${GEOMETRY}
 
 ここで, ``${PATH}`` は ``greenr2k`` ユーティリティのバイナリのあるディレクトリのパス,
-${NAMELIST}は :math:`{\mathcal H}\Phi`/mVMC の NameList インプットファイル名,
+${NAMELIST}は HPhi++/mVMC の NameList インプットファイル名,
 ${GEOMETRY}は :ref:`geometry` ファイルへのパスである.
 
-:math:`{\mathcal H}\Phi` の各モード
+HPhi++ の各モード
 (Lanczos, TPQ, 全対角化, LOBCG)および mVMC のどの計算で得られた
 相関関数のFourier変換を行うかによって, 動作が若干異なる.
 以下では ModPara インプットファイルの ``CDataFileHead`` が
@@ -85,7 +85,7 @@ mVMC
    $ ${PATH}/dynamicalr2k ${NAMELIST} ${GEOMETRY}
 
 ここで, ``${PATH}`` は ``dynamicalr2k`` ユーティリティのバイナリのあるディレクトリのパス,
-${NAMELIST}は :math:`{\mathcal H}\Phi`/mVMC の NameList インプットファイル名,
+${NAMELIST}は HPhi++/mVMC の NameList インプットファイル名,
 ${GEOMETRY}は :ref:`geometry` ファイルへのパスである.
 この場合に ``HPhi`` が ``output/`` ディレクトリに出力するサイト表示の動的相関関数は,
 ``zvo_DynamicalGreen.dat`` である.

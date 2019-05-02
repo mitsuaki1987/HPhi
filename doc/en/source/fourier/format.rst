@@ -9,7 +9,7 @@ Geometry
 --------
 
 The file name in the :ref:`tutorial` is ``geometry.dat``.
-When we use Standard mode of mVMC/:math:`{\mathcal H}\Phi`,
+When we use Standard mode of mVMC/HPhi++,
 the information of the cell and geometry is generated automatically.
 
 ::
@@ -58,9 +58,9 @@ Specify the index of correlation function to be computed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specify the index of correlation functions
-computed with mVMC/:math:`{\mathcal H}\Phi`.
+computed with mVMC/HPhi++.
 When we use the standard mode, this file is generated automatically.
-The general description is written in the manuals for mVMC/:math:`{\mathcal H}\Phi`.
+The general description is written in the manuals for mVMC/HPhi++.
 The file names in the :ref:`tutorial` are ``greenone.def`` (one body) and ``greentwo.def`` (two body).
 
 For calculating correlation functions in :ref:`supported`,
@@ -91,7 +91,7 @@ indices must be specified as follows:
 - :math:`\langle {\hat S}_{{\bf k}\alpha}^{+} {\hat S}_{{\bf k}\beta}^{-} \rangle` and
   :math:`\langle {\hat {\bf S}}_{{\bf k}\alpha} \cdot {\hat {\bf S}}_{{\bf k}\beta} \rangle`
 
-  For :math:`{\mathcal H}\Phi`,
+  For HPhi++,
   :math:`\langle {\hat c}_{{\bf 0}\alpha\sigma}^{\dagger} {\hat c}_{{\bf 0}\alpha-\sigma} {\hat c}_{{\bf R}\beta -\sigma}^{\dagger} {\hat c}_{{\bf R}\beta \sigma}\rangle`
   with :math:`{\bf R}` ranging on the all unit cell, 
   :math:`(\alpha, \beta)` ranging on the all orbitals in the unit cell, and
@@ -113,12 +113,12 @@ Results of correlation function in the site representation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The correlation functions having the indices specified in :ref:`greenindex`
-are computed by mVMC/:math:`{\mathcal H}\Phi`,
+are computed by mVMC/HPhi++,
 and written to files.
-The general description of this file is written in the manuals of mVMC/:math:`{\mathcal H}\Phi`.
+The general description of this file is written in the manuals of mVMC/HPhi++.
 File names in the :ref:`tutorial` are
 ``output/zvo_cisajs_001.dat`` and ``output/zvo_cisajscktalt_001.dat`` (mVMC), or
-``output/zvo_cisajs.dat`` and ``output/zvo_cisajscktalt.dat`` (:math:`{\mathcal H}\Phi`).
+``output/zvo_cisajs.dat`` and ``output/zvo_cisajscktalt.dat`` (HPhi++).
 
 The utility ``fourier`` reads these files before the calculation.
 If some of the correlation functions with indices written in :ref:`greenindex` are lacking

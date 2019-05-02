@@ -23,7 +23,7 @@ four parts.
       Kondo model).
 
 (3) Hamiltonian:
-    | The Hamiltonian for :math:`{\mathcal H}\Phi` is denoted by the format of the
+    | The Hamiltonian for HPhi++ is denoted by the format of the
       interactions for the electron system. The types of interaction are
       determined by the following keywords.  
     | **Trans**: The one-body part,

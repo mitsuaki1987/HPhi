@@ -10,7 +10,7 @@
 
 :ref:`tutorial` でのファイル名は ``geometry.dat`` .
 各サイトの位置と軌道の情報は
-mVMC/:math:`{\mathcal H}\Phi` のスタンンダードモードを用いた場合には
+mVMC/HPhi++ のスタンンダードモードを用いた場合には
 自動的に生成される.
 
 ::
@@ -57,9 +57,9 @@ mVMC/:math:`{\mathcal H}\Phi` のスタンンダードモードを用いた場�
 計算する相関関数のインデックスの指定
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-mVMC/:math:`{\mathcal H}\Phi` で計算する相関関数を指定する.
+mVMC/HPhi++ で計算する相関関数を指定する.
 スタンダードモードを使った場合には自動的に生成される.
-総合的な説明はmVMC/:math:`{\mathcal H}\Phi` のマニュアルを参照.
+総合的な説明はmVMC/HPhi++ のマニュアルを参照.
 :ref:`tutorial` でのファイル名は ``greenone.def`` (1体)および ``greentwo.def`` (2体)である.
 
 :ref:`supported` にある相関関数を計算するためには, 
@@ -88,7 +88,7 @@ mVMC/:math:`{\mathcal H}\Phi` で計算する相関関数を指定する.
 - :math:`\langle {\hat S}_{{\bf k}\alpha}^{+} {\hat S}_{{\bf k}\beta}^{-} \rangle` および
   :math:`\langle {\hat {\bf S}}_{{\bf k}\alpha} \cdot {\hat {\bf S}}_{{\bf k}\beta} \rangle`
 
-  :math:`{\mathcal H}\Phi` の場合は
+  HPhi++ の場合は
   :math:`\langle {\hat c}_{{\bf 0}\alpha\sigma}^{\dagger} {\hat c}_{{\bf 0}\alpha-\sigma} {\hat c}_{{\bf R}\beta -\sigma}^{\dagger} {\hat c}_{{\bf R}\beta \sigma}\rangle`
   に対して, :math:`{\bf R}` が全ての単位胞,
   :math:`\alpha` および :math:`\beta` がそれぞれ全ての軌道を網羅し,
@@ -109,12 +109,12 @@ mVMC/:math:`{\mathcal H}\Phi` で計算する相関関数を指定する.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :ref:`greenindex` で指定したインデックスを持つ相関関数が
-mVMC/:math:`{\mathcal H}\Phi` によって計算され,
+mVMC/HPhi++ によって計算され,
 ファイルに出力される.
-総合的な説明はmVMC/:math:`{\mathcal H}\Phi` のマニュアルを参照.
+総合的な説明はmVMC/HPhi++ のマニュアルを参照.
 :ref:`tutorial` でのファイル名は
 ``output/zvo_cisajs_001.dat`` および ``output/zvo_cisajscktalt_001.dat`` (mVMC), 
-``output/zvo_cisajs.dat`` および ``output/zvo_cisajscktalt.dat`` (:math:`{\mathcal H}\Phi`).
+``output/zvo_cisajs.dat`` および ``output/zvo_cisajscktalt.dat`` (HPhi++).
 
 ``greenr2k`` ユーティリティはこのファイルを読み込んで計算を行う.
 この時, (スタンダードモードを使わず自分でインデックスを指定するなどにより)

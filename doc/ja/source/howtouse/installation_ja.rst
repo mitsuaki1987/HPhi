@@ -1,7 +1,7 @@
 インストール方法
 ================
 
-:math:`{\mathcal H}\Phi` は次の場所からダウンロードできます。
+HPhi++ は次の場所からダウンロードできます。
 
 https://github.com/QLMS/HPhi/releases
 
@@ -9,7 +9,7 @@ https://github.com/QLMS/HPhi/releases
 
 ``$ tar xzvf HPhi-xxx.tar.gz``
 
-:math:`{\mathcal H}\Phi`\ はcmakeを利用してインストールできます。
+HPhi++\ はcmakeを利用してインストールできます。
 
 
 .. tip::
@@ -18,7 +18,7 @@ https://github.com/QLMS/HPhi/releases
  | ``source /home/issp/materiapps/tool/env.sh``
  | をあらかじめ実行する必要があります。
 
-:math:`{\mathcal H}\Phi`\ を展開したディレクトリのパスを$PathTohphi
+HPhi++\ を展開したディレクトリのパスを$PathTohphi
 、ビルドディレクトリを$HOME/build/hphi
 (任意の場所を指定可能)とした場合に、 ::
 

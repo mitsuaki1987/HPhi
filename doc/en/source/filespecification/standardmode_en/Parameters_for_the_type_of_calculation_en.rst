@@ -51,7 +51,7 @@ Parameters for the type of calculation
    [Eqn. :eq:`fml4_1_kondo` ], respectively.
 
    When ``model="SpinGCCMA"``, by using a more efficient algorithm [#]_,
-   :math:`{\mathcal H}\Phi` calculates a system that is the same as ``"SpinGC"``.
+   HPhi++ calculates a system that is the same as ``"SpinGC"``.
    However, supported models and MPI processes are highly limited. See
    ``"Lattice"`` section.
 

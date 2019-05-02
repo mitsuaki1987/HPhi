@@ -27,7 +27,7 @@ File format
 ~~~~~~~~~~~
 
 This file is written through the following source code (a little
-different from the actual :math:`{\mathcal H}\Phi` source).
+different from the actual HPhi++ source).
 
 | Lanczos
 

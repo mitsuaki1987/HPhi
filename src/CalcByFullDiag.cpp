@@ -24,7 +24,6 @@
  /// \param X [in,out] Struct to get information about file header names, dimension of hirbert space, calc type, physical quantities.
  /// \retval TRUE(=1) normally finished.
  /// \retval FALSE(=0) abnormally finished.
-
 int CalcByFullDiag(
   struct EDMainCalStruct *X
 )

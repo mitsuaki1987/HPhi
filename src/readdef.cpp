@@ -19,30 +19,20 @@
  *-------------------------------------------------------------
  * Copyright (C) 2007-2009 Daisuke Tahara. All rights reserved.
  *-------------------------------------------------------------*/
-
-
-/*=================================================================================================*/
-
 /**
  * @file   readdef.c
  * 
  * @brief  File to define functions of reading input files
- * 
- * 
  */
-
-
 #include "Common.hpp"
 #include "readdef.hpp"
 #include <cctype>
 #include "wrapperMPI.hpp"
 #include "common/setmemory.hpp"
 #include <iostream>
-
 /**
- * Keyword List in NameListFile.
- **/
-
+ @brief Keyword List in NameListFile.
+ */
 static char cKWListOfFileNameList[][D_CharTmpReadDef]={
   "CalcMod",
   "ModPara",
@@ -1220,7 +1210,8 @@ int GetDiagonalInterAll
         else {
           // Sz symmetry is assumed
           if (iCalcModel == Hubbard || iCalcModel == Kondo) {
-            fprintf(stdoutMPI, "Error: This operator breaks Sz Symmetry (i, spni, j, spnj, k, spnk, l, spnl) = (%d, %d, %d, %d, %d, %d, %d, %d), InterAll_re= %lf, InterAll_im= %lf . \n",
+            fprintf(stdoutMPI, 
+              "Error: This operator breaks Sz Symmetry (i, spni, j, spnj, k, spnk, l, spnl) = (%d, %d, %d, %d, %d, %d, %d, %d), InterAll_re= %lf, InterAll_im= %lf . \n",
               isite1,
               isigma1,
               isite2,
@@ -1331,8 +1322,12 @@ static int CheckTETransferHermite
             itmperrsite2 = itmpsite2;
             itmperrsigma2 = itmpsigma2;
             dcerrTrans = tmp_paraTETransfer[j];
-            fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", isite1, isigma1, isite2, isigma2, real(tmp_paraTETransfer[i]), imag(tmp_paraTETransfer[i]));
-            fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", itmperrsite1, itmperrsigma1, itmperrsite2, itmperrsigma2, real(dcerrTrans), imag(dcerrTrans));
+            fprintf(stdoutMPI, 
+              "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", 
+              isite1, isigma1, isite2, isigma2, real(tmp_paraTETransfer[i]), imag(tmp_paraTETransfer[i]));
+            fprintf(stdoutMPI,
+              "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n",
+              itmperrsite1, itmperrsigma1, itmperrsite2, itmperrsigma2, real(dcerrTrans), imag(dcerrTrans));
             iCount++;
           }
           else {
@@ -1367,7 +1362,10 @@ static int CheckTETransferHermite
 
     //if counterpart for satisfying hermite conjugate does not exist.
     if (icheckHermiteCount == FALSE) {
-      fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", isite1, isigma1, isite2, isigma2, real(tmp_paraTETransfer[i]), imag(tmp_paraTETransfer[i]));
+      fprintf(stdoutMPI,
+        "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n",
+        isite1, isigma1, isite2, isigma2, 
+        real(tmp_paraTETransfer[i]), imag(tmp_paraTETransfer[i]));
       iCount++;
       //fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", itmperrsite1, itmperrsigma1, itmperrsite2, itmperrsigma2, real(dcerrTrans), imag(dcerrTrans));
       //return(-1);
@@ -1493,7 +1491,9 @@ int ReadDefFileIdxPara(
           if (isite1 == isite2 && isigma1 == isigma2) {
             if (fabs(dvalue_im) > eps_CheckImag0) {
               //NonHermite
-              fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", isite1, isigma1, isite2, isigma2, dvalue_re, dvalue_im);
+              fprintf(stdoutMPI,
+                "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n",
+                isite1, isigma1, isite2, isigma2, dvalue_re, dvalue_im);
               fclose(fp);
               return ReadDefFileError(defname);
             }
@@ -1502,7 +1502,8 @@ int ReadDefFileIdxPara(
           if (X->iCalcModel == Spin) {
             if (isite1 != isite2) {
               iboolLoc = 1;
-              fprintf(stdoutMPI, "Warning: Site component of (i, j) =(%d, %d) is ignored.\n", isite1, isite2);
+              fprintf(stdoutMPI, "Warning: Site component of (i, j) =(%d, %d) is ignored.\n",
+                isite1, isite2);
             }
           }
           else if (X->iCalcModel == Kondo) {
@@ -1516,7 +1517,9 @@ int ReadDefFileIdxPara(
           else if (X->iCalcModel == SpinlessFermion || X->iCalcModel == SpinlessFermionGC) {
             if (isigma1 != 0 || isigma2 != 0) {
               //Not allowed
-              fprintf(stderr, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", isite1, isigma1, isite2, isigma2, dvalue_re, dvalue_im);
+              fprintf(stderr,
+                "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n",
+                isite1, isigma1, isite2, isigma2, dvalue_re, dvalue_im);
               fclose(fp);
               return ReadDefFileError(defname);
             }
@@ -1844,7 +1847,8 @@ int ReadDefFileIdxPara(
 
           if (X->iCalcModel == Spin) {
             if (isite1 != isite2) {
-              fprintf(stdoutMPI, "Warning: Site component of (i, j) =(%d, %d) is ignored.\n", isite1, isite2);
+              fprintf(stdoutMPI, "Warning: Site component of (i, j) =(%d, %d) is ignored.\n",
+                isite1, isite2);
               X->NCisAjt--;
               continue;
             }
@@ -2008,8 +2012,10 @@ int ReadDefFileIdxPara(
           X->NTEInterAllDiagonal[idx] = icnt_diagonal;
           X->NTEInterAllOffDiagonal[idx] = icnt_interall - icnt_diagonal;
           //Diagonal -> OffDiagonal -> search pair -> hermite
-          if (GetDiagonalInterAll(X->TEInterAll[idx], X->ParaTEInterAll[idx], X->NTEInterAll[idx], X->TEInterAllDiagonal[idx], X->ParaTEInterAllDiagonal[idx],
-            X->TEInterAllOffDiagonal[idx], X->ParaTEInterAllOffDiagonal[idx], X->TEChemi[idx], X->SpinTEChemi[idx], X->ParaTEChemi[idx], &X->NTEChemi[idx], X->iCalcModel) != 0)
+          if (GetDiagonalInterAll(X->TEInterAll[idx], X->ParaTEInterAll[idx], 
+            X->NTEInterAll[idx], X->TEInterAllDiagonal[idx], X->ParaTEInterAllDiagonal[idx],
+            X->TEInterAllOffDiagonal[idx], X->ParaTEInterAllOffDiagonal[idx], X->TEChemi[idx], 
+            X->SpinTEChemi[idx], X->ParaTEChemi[idx], &X->NTEChemi[idx], X->iCalcModel) != 0)
           {
             fclose(fp);
             return (-1);
@@ -2085,7 +2091,8 @@ int ReadDefFileIdxPara(
           //copy
           for (iloop = 0; iloop < xBoost->R0; iloop++) {
             for (itmp = 0; itmp < 7; itmp++) {
-              xBoost->list_6spin_star[iloop*xBoost->num_pivot + iline][itmp] = xBoost->list_6spin_star[iline][itmp];
+              xBoost->list_6spin_star[iloop*xBoost->num_pivot + iline][itmp] 
+                = xBoost->list_6spin_star[iline][itmp];
             }
           }
         }
@@ -2110,7 +2117,8 @@ int ReadDefFileIdxPara(
             //copy
             for (iloop = 0; iloop < xBoost->R0; iloop++) {
               for (itmp = 0; itmp < 7; itmp++) {
-                xBoost->list_6spin_pair[iloop*xBoost->num_pivot + iline][itmp][ilineIn2] = xBoost->list_6spin_pair[iline][itmp][ilineIn2];
+                xBoost->list_6spin_pair[iloop*xBoost->num_pivot + iline][itmp][ilineIn2]
+                  = xBoost->list_6spin_pair[iline][itmp][ilineIn2];
               }
             }
           }
@@ -2228,7 +2236,8 @@ int ReadDefFileIdxPara(
     case KWIsing:
     case KWPairLift:
       if (X->iFlgGeneralSpin == TRUE) {
-        fprintf(stdoutMPI, "%s", "Error: Use only InterAll for setteing interactions for general spin.\n");
+        fprintf(stdoutMPI, "%s", 
+          "Error: Use only InterAll for setteing interactions for general spin.\n");
         return(-1);
       }
       break;
@@ -2353,8 +2362,6 @@ int CheckTransferHermite
     isite2 = X->GeneralTransfer[i][2];
     isigma2 = X->GeneralTransfer[i][3];
     icheckHermiteCount = FALSE;
-    // fprintf(stdoutMPI, "Debug: isite1=%d, isigma1=%d, isite2=%d, isigma2=%d, reTrans=%lf, imTrans = %lf\n",
-    //         isite1, isigma1, isite2, isigma2, real(X->ParaGeneralTransfer[i]), imag((X->ParaGeneralTransfer[i])));
     for (j = 0; j < X->NTransfer; j++) {
       itmpsite1 = X->GeneralTransfer[j][0];
       itmpsigma1 = X->GeneralTransfer[j][1];
@@ -2370,8 +2377,10 @@ int CheckTransferHermite
             itmperrsite2 = itmpsite2;
             itmperrsigma2 = itmpsigma2;
             dcerrTrans = X->ParaGeneralTransfer[j];
-            fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", isite1, isigma1, isite2, isigma2, real(X->ParaGeneralTransfer[i]), imag(X->ParaGeneralTransfer[i]));
-            fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", itmperrsite1, itmperrsigma1, itmperrsite2, itmperrsigma2, real(dcerrTrans), imag(dcerrTrans));
+            fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n",
+              isite1, isigma1, isite2, isigma2, real(X->ParaGeneralTransfer[i]), imag(X->ParaGeneralTransfer[i]));
+            fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", 
+              itmperrsite1, itmperrsigma1, itmperrsite2, itmperrsigma2, real(dcerrTrans), imag(dcerrTrans));
             iCount++;
           }
           else {

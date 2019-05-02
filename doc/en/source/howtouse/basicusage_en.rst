@@ -3,7 +3,7 @@
 Basic usage
 ===========
 
-:math:`{\mathcal H}\Phi` has two modes: Standard mode and Expert mode. Here, the basic flows of calculations of the Standard and expert modes are shown.
+HPhi++ has two modes: Standard mode and Expert mode. Here, the basic flows of calculations of the Standard and expert modes are shown.
 
 *Standard* mode
 ----------------
@@ -43,7 +43,7 @@ The procedure of calculation through the standard mode is as follows:
 .. tip::
 
  | **The number of threads for OpenMP**
- | If you specify the number of OpenMP threads for :math:`{\mathcal H}\Phi`, you should set it as follows (in the case of 16 threads) before running:
+ | If you specify the number of OpenMP threads for HPhi++, you should set it as follows (in the case of 16 threads) before running:
  | ``export OMP_NUM_THREADS=16``
   
 *Expert* mode
@@ -64,7 +64,7 @@ The calculation procedure for Expert mode is as follows.
   
  3. Run
  
-  Run :math:`{\mathcal H}\Phi` in the terminal by setting option \"``-e``\" (or \"``--expert``\") and the file name of a list file.
+  Run HPhi++ in the terminal by setting option \"``-e``\" (or \"``--expert``\") and the file name of a list file.
   
    * Serial/OpenMP
    
@@ -94,7 +94,7 @@ The usage is shown as follows.
 
  1. Create an input file for *Standard* mode.
  
- 2. Setting an option \"-sdry\" and an input file (in this example, StdFace.def), run :math:`{\mathcal H}\Phi`.
+ 2. Setting an option \"-sdry\" and an input file (in this example, StdFace.def), run HPhi++.
     ::
 
      $ Path/HPhi -sdry StdFace.def
@@ -151,6 +151,6 @@ For using MPI/hybrid parallelization, the process number must be set as follows.
 Printing version ID
 -------------------
 
-By using the ``-v`` option as follows, you can check which version of :math:`{\mathcal H}\Phi` you are using.
+By using the ``-v`` option as follows, you can check which version of HPhi++ you are using.
 
  ``$ PATH/HPhi -v``

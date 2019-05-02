@@ -111,7 +111,7 @@ using the following two methods.
    (:numref:`fig_chap04_1_unitlattice` ).
    These vectors should be specified in the fractional coordinate.
 
-If we use both these methods, :math:`{\mathcal H}\Phi` stops. When
+If we use both these methods, HPhi++ stops. When
 ``model=SpinGCCMA``, we can use only the former.
 
 We can check the shape of the numerical cell by using a file

@@ -3,7 +3,7 @@
 Real time evolution method
 ==========================
 
-In :math:`{\mathcal H}\Phi`, real time evolution calculation is done by using the following relation
+In HPhi++, real time evolution calculation is done by using the following relation
 
 .. math::
 

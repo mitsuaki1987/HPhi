@@ -169,7 +169,7 @@ For the Lanczos method, an initial vector is specified with ``initial_iv``:math:
 **Convergence condition**
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In :math:`{\mathcal H}\Phi`,
+In HPhi++,
 we use ``dsyev`` (routine of LAPACK)
 for diagonalization of :math:`T_{n}`.
 We use the energy of the first excited state of :math:`T_{n}`
@@ -202,6 +202,6 @@ This frequently accelerates the convergence.
 
 .. [#] \http://www.stat.phys.titech.ac.jp/~nishimori/titpack2_new/index-e.html
 .. [#] \M. Sugihara, K. Murota, Theoretical Numerical Linear Algebra, Iwanami Stud-ies in Advanced Mathematics, Iwanami Shoten, Publishers, 2009.
-.. [#] \In :math:`{\mathcal H}\Phi`, to reduce the numerical cost, we use some additional vectors; a vector for accumulating the real-space diagonal elements of the Hamiltonian and a vector for specifying the given :math:`S_{z}` space and given particle space. The dimension of these vectors is that of the Hilbert space.
+.. [#] \In HPhi++, to reduce the numerical cost, we use some additional vectors; a vector for accumulating the real-space diagonal elements of the Hamiltonian and a vector for specifying the given :math:`S_{z}` space and given particle space. The dimension of these vectors is that of the Hilbert space.
 .. [#] \Upper bound of the dimensions of :math:`\tilde{\boldsymbol{e}_{i}}` is \# of Lanczos iterations.
 .. [#] \http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/index.html

@@ -39,12 +39,12 @@ An example of an input file for the standard mode is as follows:
    are ignored.
 
 *  | There are three types of parameters.
-   | 1. Parameters that must be specified (if not, :math:`{\mathcal H}\Phi` will
+   | 1. Parameters that must be specified (if not, HPhi++ will
      stop with error messages),
    | 2. Parameters that it is not necessary to specified (if not
      specified, default values are used),
    | 3. Parameters that must not be specified (if specified,
-     :math:`{\mathcal H}\Phi` will stop with error messages).
+     HPhi++ will stop with error messages).
    | An example of type 3 is the transfer :math:`t` parameter for the
      Heisenberg spin system. If you choose “model=spin", you should not
      specify “\ :math:`t`".

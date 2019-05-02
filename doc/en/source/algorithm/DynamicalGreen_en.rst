@@ -3,7 +3,7 @@
 Dynamical Green’s function
 --------------------------
 
-Using :math:`{\mathcal H}\Phi`, we can calculate a dynamical Green’s
+Using HPhi++, we can calculate a dynamical Green’s
 function
 
 .. math:: I(z) = \langle \Phi ' | \frac{1}{ {\mathcal H}- z\hat{I} } | \Phi '\rangle,

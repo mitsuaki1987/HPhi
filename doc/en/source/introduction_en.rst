@@ -1,10 +1,10 @@
 .. highlight:: none
 
 *********************************
-What is :math:`{\mathcal H}\Phi`?
+What is HPhi++?
 *********************************
 
-What is :math:`{\mathcal H}\Phi`?
+What is HPhi++?
 =================================
 
 Comparison between experimental observation and theoretical analysis is a crucial step in condensed-matter physics research. The temperature dependence of specific heat and magnetic susceptibility, for example, has been studied to extract the nature of low energy excitations of and magnetic interactions between electrons, respectively, through comparison with theories such as Landau's Fermi liquid theory and the Curie-Weiss law.
@@ -13,12 +13,12 @@ For the flexible and quantitative comparison of theoretical and  experimental da
 
 In contrast, the recent and rapid development of a parallel computing infrastructure has opened up new avenues for user-friendly larger scale diagonalizations up to 18-site Hubbard clusters or 36 :math:`S=1/2` quantum spins. In addition, recent advances in quantum statistical mechanics [2]_ [3]_ [4]_ [5]_ allow the finite temperature properties of quantum many-body systems to be calculated at computational costs similar to those of the calculations of ground state properties, which also allows theoretical results for the temperature dependence of, for example, specific heat and magnetic susceptibility, to be compared with experimental results quantitatively [6]_ . To utilize the parallel computing infrastructure with narrow bandwidth and distributed-memory architectures, efficient, user-friendly, and highly parallelized diagonalization packages are highly desirable.
 
-:math:`{\mathcal H}\Phi`, a flexible diagonalization package for solving quantum lattice Hamiltonians, has been developed as a descendant of the pioneering package TITPACK. The Lanczos method for calculations of the ground state and a few excited states properties, as well as finite temperature calculations based on thermal pure quantum states [5]_ , are implemented in the :math:`{\mathcal H}\Phi` package, with an easy-to-use and flexible user interface. By using :math:`{\mathcal H}\Phi`, you can analyze a wide range of quantum lattice Hamiltonians including simple Hubbard and Heisenberg models, multi-band extensions of the Hubbard model, exchange couplings that break the SU(2) symmetry of quantum spins, such as Dzyaloshinskii-Moriya and Kitaev interactions, and Kondo lattice models describing itinerant electrons coupled with quantum spins. :math:`{\mathcal H}\Phi` calculates a variety of physical quantities, such as internal energy at zero temperature or finite temperatures, temperature dependence of specific heat, and charge/spin structure factors. A broad spectrum of users including experimental scientists is cordially welcome.
+HPhi++, a flexible diagonalization package for solving quantum lattice Hamiltonians, has been developed as a descendant of the pioneering package TITPACK. The Lanczos method for calculations of the ground state and a few excited states properties, as well as finite temperature calculations based on thermal pure quantum states [5]_ , are implemented in the HPhi++ package, with an easy-to-use and flexible user interface. By using HPhi++, you can analyze a wide range of quantum lattice Hamiltonians including simple Hubbard and Heisenberg models, multi-band extensions of the Hubbard model, exchange couplings that break the SU(2) symmetry of quantum spins, such as Dzyaloshinskii-Moriya and Kitaev interactions, and Kondo lattice models describing itinerant electrons coupled with quantum spins. HPhi++ calculates a variety of physical quantities, such as internal energy at zero temperature or finite temperatures, temperature dependence of specific heat, and charge/spin structure factors. A broad spectrum of users including experimental scientists is cordially welcome.
 
 License
 -------
 
-The distribution of the program package and the source codes for :math:`{\mathcal H}\Phi` follow GNU General Public License version 3 (GPL v3) or later. We hope that you cite the reference, `Comp. Phys. Commun. 217 (2017) 180-192 <https://www.sciencedirect.com/science/article/pii/S0010465517301200?via%3Dihub>`_ , when you publish the results using :math:`{\mathcal H}\Phi` (hphi).
+The distribution of the program package and the source codes for HPhi++ follow GNU General Public License version 3 (GPL v3) or later. We hope that you cite the reference, `Comp. Phys. Commun. 217 (2017) 180-192 <https://www.sciencedirect.com/science/article/pii/S0010465517301200?via%3Dihub>`_ , when you publish the results using HPhi++ (hphi).
 
 Copyright
 ---------
@@ -103,7 +103,7 @@ This software was developed by the following contributors.
 Operating environment
 =====================
 
-:math:`{\mathcal H}\Phi` was tested on the following platforms
+HPhi++ was tested on the following platforms
 
 * The supercomputer system-B \"sekirei\" in ISSP
 * Fujitsu FX-10 and K computer

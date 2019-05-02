@@ -9,11 +9,11 @@ This utility is used as follows:
 
 where ``${PATH}`` is the path to the directory where
 the executable ``fourier`` exists,
-${NAMELIST} is the NameList input-file name of :math:`{\mathcal H}\Phi`/mVMC, and
+${NAMELIST} is the NameList input-file name of HPhi++/mVMC, and
 ${GEOMETRY} is the path to the :ref:`geometry` file.
 
 The behavior of this utility is slightly different between the correlation functions from
-each mode of :math:`{\mathcal H}\Phi` (Lanczos, TPQ, Full diagonalization, LOBCG)
+each mode of HPhi++ (Lanczos, TPQ, Full diagonalization, LOBCG)
 and mVMC.
 In the following cases, we assume that
 ``CDataFileHead`` in the ModPara input file is ``"zvo"`` (default).

@@ -99,7 +99,7 @@ html_theme = 'alabaster'
 # documentation.
 #
 html_theme_options = {
-    'logo': 'logo_HPhi.png',
+    'logo': 'HPhi++.png',
     'font_family': 'Georgia',
     'sidebar_search_button': 'pink_1'
 }
