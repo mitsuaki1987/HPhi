@@ -27,7 +27,7 @@ matrix:
       - cat Testing/Temporary/LastTest.log
       - cd test/lobcg_spingc_honey/
       - sudo apt-get install -y gdb
-      - gdb --ex run --args ../../src/HPhi++ -s stan.inw
+      - gdb --ex run --args ../../src/HPhi++ -s stan.in
       #- make test MPIRUN="mpiexec -np 4"
       #- rm -r test
       #- make
