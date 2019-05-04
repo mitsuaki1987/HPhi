@@ -378,10 +378,10 @@ struct PhysList {
 */
 struct BoostList {
   int flgBoost;/**<@brief Flag whether use CMA algorithm.*/
-  long int R0;
-  long int W0;
-  long int num_pivot;
-  long int ishift_nspin;
+  long int R0 = 0;
+  long int W0 = 0;
+  long int num_pivot = 0;
+  long int ishift_nspin = 0;
   int NumarrayJ = 0;/**<@brief */
   std::complex<double> ***arrayJ;/**<@brief */
   std::complex<double> vecB[3];/**<@brief */
