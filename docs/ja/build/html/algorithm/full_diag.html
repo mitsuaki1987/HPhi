@@ -1,0 +1,143 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>5.2. 完全対角化 &#8212; HPhi++ 3.2.0 ドキュメント</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="5.3. 熱的純粋量子状態による有限温度計算" href="tpq.html" />
+    <link rel="prev" title="5.1. Lanczos法" href="lanczos.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="tpq.html" title="5.3. 熱的純粋量子状態による有限温度計算"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="lanczos.html" title="5.1. Lanczos法"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">5. アルゴリズム</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>5.2. 完全対角化<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id2">
+<h2>5.2.1. 手法概要<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>ハミルトニアン<span class="math">\({{\mathcal H}}\)</span>を実空間配置<span class="math">\(| \psi_j \rangle\)</span>(<span class="math">\(j=1\cdots N\)</span>)を用いて
+作成します:
+<span class="math">\(H_{ij}= \langle \psi_i | {\hat H} | \psi_j \rangle\)</span>。
+この行列を対角化することで、固有値<span class="math">\(E_i\)</span>、
+固有ベクトル<span class="math">\(|\Phi_i\rangle\)</span>を求める
+ことができます(<span class="math">\(i=1 \cdots N\)</span>)。なお、対角化ではlapackの<strong>dsyev</strong>また
+<strong>zheev</strong>を用いています。 また、有限温度計算用に各固有エネルギー状態の
+期待値<span class="math">\(\langle A_i\rangle \equiv \langle \Phi_i | {\hat A} | \Phi_i\rangle\)</span>を計算・出力するようにしています。</p>
+</div>
+<div class="section" id="id3">
+<h2>5.2.2. 有限温度物理量の計算<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>完全対角化で求めた<span class="math">\(\langle A_i\rangle \equiv \langle \Phi_i | {\hat A} | \Phi_i\rangle\)</span>を用い、</p>
+<div class="math">
+\[\langle {\hat A}\rangle=\frac{\sum_{i=1}^N \langle A_i\rangle {\rm  e}^{-\beta E_i}}{\sum_{i=1}^N{\rm  e}^{-\beta E_i}}\]</div>
+<p>の関係から有限温度の物理量を計算します。
+実際の計算処理としてはポスト処理により計算を行います。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5.2. 完全対角化</a><ul>
+<li><a class="reference internal" href="#id2">5.2.1. 手法概要</a></li>
+<li><a class="reference internal" href="#id3">5.2.2. 有限温度物理量の計算</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="lanczos.html"
+                        title="前の章へ">5.1. Lanczos法</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="tpq.html"
+                        title="次の章へ">5.3. 熱的純粋量子状態による有限温度計算</a></p>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/algorithm/full_diag.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="tpq.html" title="5.3. 熱的純粋量子状態による有限温度計算"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="lanczos.html" title="5.1. Lanczos法"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >5. アルゴリズム</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7 で生成しました。
+    </div>
+  </body>
+</html>

@@ -1,0 +1,180 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>7.1. 概要 &#8212; HPhi++ 3.2.0 ドキュメント</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="7.2. 静的相関関数についてのチュートリアル" href="tutorial.html" />
+    <link rel="prev" title="7. 相関関数のFourier変換ユーティリティー" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="tutorial.html" title="7.2. 静的相関関数についてのチュートリアル"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="7. 相関関数のFourier変換ユーティリティー"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">7. 相関関数のFourier変換ユーティリティー</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>7.1. 概要<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>本資料は, mVMC および HPhi++ で計算された
+サイト表示の静的相関関数をFourier変換し, 出力するユーティリティと
+HPhi++ で計算された
+サイト表示の動的相関関数をFourier変換し, 出力するユーティリティ
+に関するマニュアルである.</p>
+<div class="section" id="id2">
+<h2>7.1.1. 要件<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>本ユーティリティの使用要件はmVMC および HPhi++ と同じである.</p>
+</div>
+<div class="section" id="supported">
+<span id="id3"></span><h2>7.1.2. 対応する量<a class="headerlink" href="#supported" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>本ユーティリティは以下の相関関数のFourier変換に対応している.</p>
+<p>1体相関</p>
+<div class="math">
+\begin{align}
+\langle {\hat c}_{{\bf k} \alpha \uparrow}^{\dagger} {\hat c}_{{\bf k} \beta \uparrow}\rangle
+&amp;\equiv \sum_{\bf R}^{N_{\bf R}} e^{-i {\bf k}\cdot{\bf R}}
+\langle {\hat c}_{{\bf 0} \alpha \uparrow}^{\dagger} {\hat c}_{{\bf R} \beta \uparrow}\rangle
+\\
+\langle {\hat c}_{{\bf k} \alpha \downarrow}^{\dagger} {\hat c}_{{\bf k} \beta \downarrow}\rangle
+&amp;\equiv \sum_{\bf R}^{N_{\bf R}} e^{-i {\bf k}\cdot {\bf R}}
+\langle {\hat c}_{{\bf 0} \alpha \downarrow}^{\dagger} {\hat c}_{{\bf R} \beta \downarrow}\rangle
+\end{align}</div><p>密度-密度相関</p>
+<div class="math">
+\[\begin{align}
+\langle {\hat \rho}_{{\bf k}\alpha} {\hat \rho}_{{\bf k}\beta}\rangle
+\equiv \frac{1}{N_{\bf R}} \sum_{\bf R}^{N_{\bf R}} e^{-i {\bf k}\cdot{\bf R}}
+\langle ({\hat \rho}_{{\bf 0}\alpha} - \langle {\hat \rho}_{{\bf 0}\alpha} \rangle)
+        ({\hat \rho}_{{\bf R}\beta} - \langle {\hat \rho}_{{\bf R}\beta} \rangle) \rangle
+\end{align}\]</div>
+<p>スピン-スピン相関</p>
+<div class="math">
+\begin{align}
+\langle {\hat S}_{{\bf k}\alpha}^{z} {\hat S}_{{\bf k}\beta}^{z} \rangle
+&amp;\equiv \frac{1}{N_{\bf R}} \sum_{\bf R}^{N_{\bf R}} e^{-i {\bf k}\cdot{\bf R}}
+\langle {\hat S}_{{\bf 0}\alpha}^{z} {\hat S}_{{\bf R}\beta}^{z} \rangle
+\\
+\langle {\hat S}_{{\bf k}\alpha}^{+} {\hat S}_{{\bf k}\beta}^{-} \rangle
+&amp;\equiv \frac{1}{N_{\bf R}} \sum_{\bf R}^{N_{\bf R}} e^{-i {\bf k}\cdot{\bf R}}
+\langle {\hat S}_{{\bf 0}\alpha}^{+} {\hat S}_{{\bf R}\beta}^{-} \rangle
+\\
+\langle {\hat {\bf S}}_{{\bf k}\alpha} \cdot {\hat {\bf S}}_{{\bf k}\beta} \rangle
+&amp;\equiv \frac{1}{N_{\bf R}} \sum_{\bf R}^{N_{\bf R}} e^{-i {\bf k}\cdot{\bf R}}
+\langle {\hat {\bf S}}_{{\bf 0}\alpha} \cdot {\hat {\bf S}}_{{\bf R}\beta} \rangle
+\end{align}</div><p>動的相関</p>
+<blockquote>
+<div>begin{align}
+langle {hat X}_{{bf k} alpha uparrow}^{dagger} {hat X}_{{bf k} beta uparrow}rangle (omega)
+&amp;equiv sum_{bf R}^{N_{bf R}} e^{-i {bf k}cdot{bf R}}
+langle {hat X}_{{bf R} alpha uparrow}^{dagger}
+(omega - {hat H})^{-1}
+{hat X}_{{bf 0} beta uparrow}rangle
+end{align}</div></blockquote>
+<p>励起演算子 <span class="math">\({\hat X}\)</span> は任意のものを指定できる。
+スタンダードモードでは上記の1体相関、2体相関の励起演算子を自動的に生成できる。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">7.1. 概要</a><ul>
+<li><a class="reference internal" href="#id2">7.1.1. 要件</a></li>
+<li><a class="reference internal" href="#supported">7.1.2. 対応する量</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="index.html"
+                        title="前の章へ">7. 相関関数のFourier変換ユーティリティー</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="次の章へ">7.2. 静的相関関数についてのチュートリアル</a></p>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/fourier/overview.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="tutorial.html" title="7.2. 静的相関関数についてのチュートリアル"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="7. 相関関数のFourier変換ユーティリティー"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >7. 相関関数のFourier変換ユーティリティー</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7 で生成しました。
+    </div>
+  </body>
+</html>

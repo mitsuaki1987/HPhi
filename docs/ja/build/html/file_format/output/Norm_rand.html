@@ -1,0 +1,179 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>4.3.15. Norm_rand.dat &#8212; HPhi++ 3.2.0 ドキュメント</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" />
+    <link rel="next" title="4.3.16. SS_rand.dat" href="SS_rand.html" />
+    <link rel="prev" title="4.3.14. Time_TPQ_Step.dat" href="Time_TPQ_Step.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="SS_rand.html" title="4.3.16. SS_rand.dat"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="Time_TPQ_Step.html" title="4.3.14. Time_TPQ_Step.dat"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >4. ファイルフォーマット</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">4.3. 出力ファイル</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="norm-rand-dat">
+<span id="subsec-normrand"></span><h1>4.3.15. Norm_rand.dat<a class="headerlink" href="#norm-rand-dat" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="line-block">
+<div class="line">(TPQ法でのみ出力) TPQ法での有限温度計算時のログを出力します。
+再計算の場合は値が追記されます。 以下にファイル例を示します。</div>
+</div>
+<div class="highlight-none"><div class="highlight"><pre><span></span> # inv_temp, global_norm, global_1st_norm, step_i
+0.017471 19.046586 11.288975 1
+0.034863 19.089752 11.288975 2
+…
+31.999572 20.802362 11.288975 1997
+32.015596 20.802362 11.288975 1998
+32.031620 20.802362 11.288975 1999
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h2>ファイル名<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li>Norm_rand??.dat</li>
+</ul>
+<p>??はTPQ法計算時のrunの番号を表します。</p>
+</div>
+<div class="section" id="id2">
+<h2>ファイル形式<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>1行目はヘッダで、2行目以降は以下のファイル形式で記載されます。</p>
+<ul class="simple">
+<li><span class="math">\([\)</span>double01<span class="math">\(]\)</span> <span class="math">\([\)</span>double02<span class="math">\(]\)</span>
+<span class="math">\([\)</span>double03<span class="math">\(]\)</span> <span class="math">\([\)</span>int01<span class="math">\(]\)</span></li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>パラメータ<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul>
+<li><p class="first"><span class="math">\([\)</span>double01<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> double型</p>
+<p><strong>説明 :</strong> 逆温度<span class="math">\(1/{k_{\rm B}T}\)</span>。</p>
+</li>
+<li><p class="first"><span class="math">\([\)</span>double02<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> double型</p>
+<p><strong>説明 :</strong> TPQ法で計算される規格化前の波動関数(ベクトル)のノルム:
+<span class="math">\(\langle \tilde{\psi}_{k} |\tilde{\psi}_{k}\rangle\)</span>。ただし、<span class="math">\(|\tilde{\psi}_{k}\rangle \equiv(l-\hat{H}/N_{s})|\psi_{k-1}\rangle\)</span>。</p>
+</li>
+<li><p class="first"><span class="math">\([\)</span>double03<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> double型</p>
+<p><strong>説明 :</strong>
+規格化前の初期波動関数(ランダムベクトル)のノルム：<span class="math">\(\langle \tilde{\psi}_{0} |\tilde{\psi}_{0}\rangle\)</span>。ただし、<span class="math">\(|\tilde{\psi}_{0}\rangle\)</span>は規格化前の初期波動関数。</p>
+</li>
+<li><p class="first"><span class="math">\([\)</span>int01<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> int型</p>
+<p><strong>説明 :</strong>
+初期ランダムベクトルに<span class="math">\((l-\hat{H}/N_{s})\)</span>(<span class="math">\(l\)</span>はModParaファイルの<code class="docutils literal"><span class="pre">LargeValue</span></code>、<span class="math">\(N_{s}\)</span>はサイト数)を作用させた回数。</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.3.15. Norm_rand.dat</a><ul>
+<li><a class="reference internal" href="#id1">ファイル名</a></li>
+<li><a class="reference internal" href="#id2">ファイル形式</a></li>
+<li><a class="reference internal" href="#id3">パラメータ</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="Time_TPQ_Step.html"
+                        title="前の章へ">4.3.14. Time_TPQ_Step.dat</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="SS_rand.html"
+                        title="次の章へ">4.3.16. SS_rand.dat</a></p>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/file_format/output/Norm_rand.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="SS_rand.html" title="4.3.16. SS_rand.dat"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="Time_TPQ_Step.html" title="4.3.14. Time_TPQ_Step.dat"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >4. ファイルフォーマット</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" >4.3. 出力ファイル</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7 で生成しました。
+    </div>
+  </body>
+</html>

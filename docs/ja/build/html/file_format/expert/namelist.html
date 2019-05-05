@@ -1,0 +1,237 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>4.2.1. 入力ファイル指定用ファイル &#8212; HPhi++ 3.2.0 ドキュメント</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" />
+    <link rel="next" title="4.2.2. CalcModファイル" href="calcmod.html" />
+    <link rel="prev" title="4.2. エキスパートモード用入力ファイル" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="calcmod.html" title="4.2.2. CalcModファイル"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="4.2. エキスパートモード用入力ファイル"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >4. ファイルフォーマット</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">4.2. エキスパートモード用入力ファイル</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="subsec-inputfilelist">
+<span id="id1"></span><h1>4.2.1. 入力ファイル指定用ファイル<a class="headerlink" href="#subsec-inputfilelist" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="line-block">
+<div class="line">計算で使用する入力ファイル一式を指定します。ファイル形式に関しては、以下のようなフォーマットをしています。</div>
+</div>
+<div class="highlight-none"><div class="highlight"><pre><span></span>CalcMod  calcmod.def
+ModPara  modpara.def
+LocSpin  zlocspn.def
+Trans    ztransfer.def
+InterAll zinterall.def
+OneBodyG zcisajs.def
+TwoBodyG    zcisajscktaltdc.def
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="id2">
+<h2>ファイル形式<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>[string01] [string02]</p>
+</div>
+<div class="section" id="id3">
+<h2>パラメータ<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul>
+<li><p class="first"><span class="math">\([\)</span>string01<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> string型 (固定)</p>
+<p><strong>説明 :</strong> キーワードを指定します。</p>
+</li>
+<li><p class="first"><span class="math">\([\)</span>string02<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> string型</p>
+<p><strong>説明 :</strong> キーワードにひも付けられるファイル名を指定します(任意)。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>使用ルール<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>本ファイルを使用するにあたってのルールは以下の通りです。</p>
+<ul class="simple">
+<li>キーワードを記載後、半角空白を開けた後にファイル名を書きます。ファイル名は自由に設定できます。</li>
+<li>必ず指定しなければいけないパラメーターはCalcMod, ModPara,
+LocSpinです。</li>
+<li>各キーワードは順不同に記述できます。</li>
+<li>指定したキーワード、ファイルが存在しない場合はエラー終了します。</li>
+<li><span class="math">\(\#\)</span>で始まる行は読み飛ばされます。</li>
+<li>ファイル読込用キーワードは <a class="reference internal" href="#table-4-2"><span class="std std-numref">表 4.2</span></a> により指定します。</li>
+</ul>
+<span id="table-4-2"></span><table border="1" class="colwidths-given docutils" id="id5">
+<caption><span class="caption-number">表 4.2 </span><span class="caption-text">定義ファイル一覧</span><a class="headerlink" href="#id5" title="このテーブルへのパーマリンク">¶</a></caption>
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Keywords</th>
+<th class="head">指定ファイルの概要</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>CalcMod</td>
+<td>計算モードに関する指定をします。</td>
+</tr>
+<tr class="row-odd"><td>ModPara</td>
+<td>計算で用いるパラメータの指定をします。</td>
+</tr>
+<tr class="row-even"><td>LocSpin</td>
+<td>各サイトに対して遍歴電子もしくは局在スピンの指定をします。</td>
+</tr>
+<tr class="row-odd"><td>Trans</td>
+<td>一般的一体相互作用に関する設定をします。</td>
+</tr>
+<tr class="row-even"><td>InterAll</td>
+<td>一般的二体相互作用に関する設定をします。</td>
+</tr>
+<tr class="row-odd"><td>CoulombIntra</td>
+<td>内部クーロン相互作用に関する設定をします。</td>
+</tr>
+<tr class="row-even"><td>CoulombInter</td>
+<td>サイト間クーロン相互作用に関する設定をします。</td>
+</tr>
+<tr class="row-odd"><td>Hund</td>
+<td>フント結合に関する設定をします。</td>
+</tr>
+<tr class="row-even"><td>PairHop</td>
+<td>ペアホッピングに関する設定をします。</td>
+</tr>
+<tr class="row-odd"><td>Exchange</td>
+<td>交換相互作用に関する設定をします。</td>
+</tr>
+<tr class="row-even"><td>Ising</td>
+<td>イジング相互作用に関する設定をします。</td>
+</tr>
+<tr class="row-odd"><td>PairLift</td>
+<td>ペアリフト相互作用に関する設定をします。</td>
+</tr>
+<tr class="row-even"><td>OneBodyG</td>
+<td>出力する一体グリーン関数 <span class="math">\(\langle c_{i\sigma}^{\dagger}c_{j\sigma}\rangle\)</span> に関する設定をします。</td>
+</tr>
+<tr class="row-odd"><td>TwoBodyG</td>
+<td>出力するニ体グリーン関数 <span class="math">\(\langle c_{i\sigma}^{\dagger}c_{j\sigma}c_{k\tau}^{\dagger}c_{l\tau}\rangle\)</span>に関する設定をします。</td>
+</tr>
+<tr class="row-even"><td>SingleExcitation</td>
+<td>一体励起状態の生成演算子に関する指定をします。</td>
+</tr>
+<tr class="row-odd"><td>PairExcitation</td>
+<td>ニ体励起状態の生成演算子に関する指定をします。</td>
+</tr>
+<tr class="row-even"><td>SpectrumVec</td>
+<td>スペクトル関数を計算するためのリスタート用の入力ベクトルを指定します。</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.2.1. 入力ファイル指定用ファイル</a><ul>
+<li><a class="reference internal" href="#id2">ファイル形式</a></li>
+<li><a class="reference internal" href="#id3">パラメータ</a></li>
+<li><a class="reference internal" href="#id4">使用ルール</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="index.html"
+                        title="前の章へ">4.2. エキスパートモード用入力ファイル</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="calcmod.html"
+                        title="次の章へ">4.2.2. CalcModファイル</a></p>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/file_format/expert/namelist.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="calcmod.html" title="4.2.2. CalcModファイル"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="4.2. エキスパートモード用入力ファイル"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >4. ファイルフォーマット</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" >4.2. エキスパートモード用入力ファイル</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7 で生成しました。
+    </div>
+  </body>
+</html>

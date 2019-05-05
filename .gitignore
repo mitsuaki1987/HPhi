@@ -26,7 +26,6 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
-build/
 develop-eggs/
 dist/
 downloads/
@@ -77,10 +76,6 @@ instance/
 # Scrapy stuff:
 .scrapy
 
-# Sphinx documentation
-doc/en/build/
-doc/ja/build/
-
 # PyBuilder
 target/
 
@@ -126,9 +121,7 @@ userguide_*.pdf
 *.synctex.gz
 *.toc
 *~
-build*
 #*
-html/
 GPATH
 GRTAGS
 GTAGS
@@ -142,3 +135,20 @@ tool/cTPQ
 
 #p4merge
 *.orig
+*.doctree
+docs/ja/build/latex/*.png
+docs/ja/build/latex/*.xbb
+docs/ja/build/latex/*.sty
+docs/ja/build/latex/*.cls
+docs/ja/build/latex/HPhi++.fdb_latexmk
+docs/ja/build/latex/HPhi++.fls
+docs/ja/build/latex/HPhi++.idx
+docs/ja/build/latex/HPhi++.ilg
+docs/ja/build/latex/HPhi++.ind
+docs/ja/build/latex/HPhi++.log
+docs/ja/build/latex/HPhi++.out
+docs/ja/build/latex/HPhi++.tex
+docs/ja/build/latex/HPhi++.toc
+docs/ja/build/latex/latexmkjarc
+docs/ja/build/latex/latexmkrc
+docs/ja/build/latex/python.ist

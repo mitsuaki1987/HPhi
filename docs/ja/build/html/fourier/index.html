@@ -1,0 +1,154 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>7. 相関関数のFourier変換ユーティリティー &#8212; HPhi++ 3.2.0 ドキュメント</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="7.1. 概要" href="overview.html" />
+    <link rel="prev" title="6.3. Calculation of magnetization curve" href="../tool/magnetization.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="overview.html" title="7.1. 概要"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="../tool/magnetization.html" title="6.3. Calculation of magnetization curve"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>7. 相関関数のFourier変換ユーティリティー<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">7.1. 概要</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#id2">7.1.1. 要件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#supported">7.1.2. 対応する量</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">7.2. 静的相関関数についてのチュートリアル</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#hphi-vmc-out">7.2.1. HPhi++/vmc.out の実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#id2">7.2.2. 相関関数のフーリエ変換</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#id3">7.2.3. 相関関数のプロット</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html#id4">7.3. 動的相関関数についてのチュートリアル</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#hphi">7.3.1. HPhi++の実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#id5">7.3.2. 相関関数のフーリエ変換</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#id6">7.3.3. 相関関数のプロット</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">7.4. ファイルフォーマット</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="format.html#k">7.4.1. サイトの位置と軌道のインデックス, <em>k</em> 点</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#id2">7.4.2. サイト表示の1体および2体相関関数</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="format.html#greenindex">計算する相関関数のインデックスの指定</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#zvocisajs">サイト表示の1体および2体相関関数の計算結果</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#zvocorr">7.4.3. <em>k</em> パス上での相関関数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#gnuplot">7.4.4. gnuplot スクリプト</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#fermisurfer">7.4.5. 運動量分布関数の等値面をプロットするためのFermiSurferファイル</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="util.html">7.5. <code class="docutils literal"><span class="pre">greenr2k</span></code> ユーティリティの動作について</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="util.html#hphi-tpq">7.5.1. HPhi++-TPQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.html#hphi-lobcg">7.5.2. HPhi++-全対角化およびLOBCG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.html#mvmc">7.5.3. mVMC</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="util.html#dynamicalr2k">7.6. <code class="docutils literal"><span class="pre">dynamicalr2k</span></code> ユーティリティの動作について</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">7.7. Contact</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="../tool/magnetization.html"
+                        title="前の章へ">6.3. Calculation of magnetization curve</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="overview.html"
+                        title="次の章へ">7.1. 概要</a></p>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/fourier/index.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="overview.html" title="7.1. 概要"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="../tool/magnetization.html" title="6.3. Calculation of magnetization curve"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7 で生成しました。
+    </div>
+  </body>
+</html>

@@ -1,0 +1,205 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>4.3.17. Flct_rand.dat &#8212; HPhi++ 3.2.0 ドキュメント</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" />
+    <link rel="next" title="4.3.18. Time_TE_Step.dat" href="Time_TE_Step.html" />
+    <link rel="prev" title="4.3.16. SS_rand.dat" href="SS_rand.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="Time_TE_Step.html" title="4.3.18. Time_TE_Step.dat"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="SS_rand.html" title="4.3.16. SS_rand.dat"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >4. ファイルフォーマット</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">4.3. 出力ファイル</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="flct-rand-dat">
+<span id="subsec-flctrand"></span><h1>4.3.17. Flct_rand.dat<a class="headerlink" href="#flct-rand-dat" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="line-block">
+<div class="line">(TPQ法でのみ出力)
+TPQ法での揺らぎに関する有限温度計算結果を出力します。
+再計算の場合は値が追記されます。 以下にファイル例を示します。</div>
+</div>
+<div class="highlight-none"><div class="highlight"><pre><span></span> # inv_temp, N, N^2, D, D^2, Sz, Sz^2, step_i
+0.0826564 12.00 144.00 0.00 0.00 0.0009345626081113 0.2500 1
+0.1639935 12.00 144.00 0.00 0.00 0.0023147006319775 0.2500 2
+0.2440168 12.00 144.00 0.00 0.00 0.0037424057659867 0.2500 3
+…
+135.97669 12.00 144.00 0.00 0.00 -0.0000000000167368 0.2500 1998
+136.04474 12.00 144.00 0.00 0.00 -0.0000000000165344 0.2500 1999
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h2>ファイル名<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li>Flct_rand??.dat</li>
+</ul>
+<p>??はTPQ法計算時のrunの番号を表します。</p>
+</div>
+<div class="section" id="id2">
+<h2>ファイル形式<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>1行目はヘッダで、2行目以降は以下のファイル形式で記載されます。</p>
+<ul class="simple">
+<li><span class="math">\([\)</span>double01<span class="math">\(]\)</span> <span class="math">\([\)</span>double02<span class="math">\(]\)</span>
+<span class="math">\([\)</span>double03<span class="math">\(]\)</span> <span class="math">\([\)</span>double04<span class="math">\(]\)</span>
+<span class="math">\([\)</span>double05<span class="math">\(]\)</span> <span class="math">\([\)</span>double06<span class="math">\(]\)</span>
+<span class="math">\([\)</span>double07<span class="math">\(]\)</span> <span class="math">\([\)</span>int01<span class="math">\(]\)</span></li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>パラメータ<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul>
+<li><p class="first"><span class="math">\([\)</span>double01<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> double型</p>
+<p><strong>説明 :</strong> 逆温度<span class="math">\(1/{k_{\rm B}T}\)</span>。</p>
+</li>
+<li><p class="first"><span class="math">\([\)</span>double02<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> double型</p>
+<p><strong>説明 :</strong> 全粒子数<span class="math">\(\sum_{i} \langle \hat{n}_i \rangle\)</span>。</p>
+</li>
+<li><p class="first"><span class="math">\([\)</span>double03<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> double型</p>
+<p><strong>説明 :</strong>
+粒子数の2乗の期待値:math:` langle (sum_{i}hat{n}_i)^2 rangle`。</p>
+</li>
+<li><p class="first"><span class="math">\([\)</span>double04<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> double型</p>
+<p><strong>説明 :</strong> ダブロン
+<span class="math">\(\frac{1}{N_s} \sum_{i}\langle n_{i\uparrow}n_{i\downarrow}\rangle\)</span>
+の期待値(ただし<span class="math">\(N_s\)</span>はサイト数)。</p>
+</li>
+<li><p class="first"><span class="math">\([\)</span>double05<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> double型</p>
+<p><strong>説明 :</strong> ダブロンの二乗
+<span class="math">\(\frac{1}{N_s} \langle (\sum_{i}n_{i\uparrow} n_{i\downarrow})^2\rangle\)</span>
+の期待値(ただし<span class="math">\(N_s\)</span>はサイト数)。</p>
+</li>
+<li><p class="first"><span class="math">\([\)</span>double06<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> double型</p>
+<p><strong>説明 :</strong> スピンの<span class="math">\(Sz\)</span>成分
+<span class="math">\(\frac{1}{N_s} \sum_{i}\langle \hat{S}_i^z\rangle\)</span>
+の期待値(ただし<span class="math">\(N_s\)</span>はサイト数)。</p>
+</li>
+<li><p class="first"><span class="math">\([\)</span>double07<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> double型</p>
+<p><strong>説明 :</strong> スピンの<span class="math">\(Sz\)</span>成分の二乗
+<span class="math">\(\frac{1}{N_s} \langle (\sum_{i} \hat{S}_i^z)^2\rangle\)</span>
+の期待値(ただし<span class="math">\(N_s\)</span>はサイト数)。</p>
+</li>
+<li><p class="first"><span class="math">\([\)</span>int01<span class="math">\(]\)</span></p>
+<p><strong>形式 :</strong> int型</p>
+<p><strong>説明 :</strong>
+初期ランダムベクトルに<span class="math">\((l-\hat{H}/N_{s})\)</span>(<span class="math">\(l\)</span>はModParaファイルの<code class="docutils literal"><span class="pre">LargeValue</span></code>、<span class="math">\(N_{s}\)</span>はサイト数)を作用させた回数。</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../index.html">目次</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.3.17. Flct_rand.dat</a><ul>
+<li><a class="reference internal" href="#id1">ファイル名</a></li>
+<li><a class="reference internal" href="#id2">ファイル形式</a></li>
+<li><a class="reference internal" href="#id3">パラメータ</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="SS_rand.html"
+                        title="前の章へ">4.3.16. SS_rand.dat</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="Time_TE_Step.html"
+                        title="次の章へ">4.3.18. Time_TE_Step.dat</a></p>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/file_format/output/Flct_rand.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="Time_TE_Step.html" title="4.3.18. Time_TE_Step.dat"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="SS_rand.html" title="4.3.16. SS_rand.dat"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >4. ファイルフォーマット</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" >4.3. 出力ファイル</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7 で生成しました。
+    </div>
+  </body>
+</html>

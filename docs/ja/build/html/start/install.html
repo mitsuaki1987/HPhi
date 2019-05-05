@@ -1,0 +1,162 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>2.2. インストール方法 &#8212; HPhi++ 3.2.0 ドキュメント</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="検索" href="../search.html" />
+    <link rel="next" title="2.3. ディレクトリ構成" href="directory.html" />
+    <link rel="prev" title="2.1. 要件" href="prerequisite.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="directory.html" title="2.3. ディレクトリ構成"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="prerequisite.html" title="2.1. 要件"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">2. How to use HPhi++</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="id1">
+<h1>2.2. インストール方法<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>HPhi++は次の場所からダウンロードできます。</p>
+<p><a class="reference external" href="https://github.com/QLMS/HPhi/releases">https://github.com/QLMS/HPhi/releases</a></p>
+<p>ダウンロードしたファイルを次のように展開してください。</p>
+<p><code class="docutils literal"><span class="pre">$</span> <span class="pre">tar</span> <span class="pre">xzvf</span> <span class="pre">HPhi-xxx.tar.gz</span></code></p>
+<p>HPhi++はcmakeを利用してインストールできます。</p>
+<div class="admonition tip">
+<p class="first admonition-title">ちなみに</p>
+<div class="last line-block">
+<div class="line">sekirei で cmake を利用するには</div>
+<div class="line"><code class="docutils literal"><span class="pre">source</span> <span class="pre">/home/issp/materiapps/tool/env.sh</span></code></div>
+<div class="line">をあらかじめ実行する必要があります。</div>
+</div>
+</div>
+<p>HPhi++を展開したディレクトリのパスを$PathTohphi
+、ビルドディレクトリを$HOME/build/hphi
+(任意の場所を指定可能)とした場合に、</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>cd $HOME/build/hphi
+cmake -DCONFIG=gcc $PathTohphi
+make
+</pre></div>
+</div>
+<p>でコンパイルすることができます。全対角化の計算に<code class="docutils literal"><span class="pre">ScaLAPACK</span></code>を使用する場合には、<code class="docutils literal"><span class="pre">-DUSE_SCALAPACK=ON</span></code>のオプションをcmake時につけてください。
+コンパイル後、$HOME/build/hphi直下にsrcフォルダが作成され、
+実行ファイルであるHPhi++がそのフォルダ内に作成されます。
+MPIライブラリがない場合には、MPI非対応の実行ファイルが作成されます。</p>
+<p>なお、上の例ではgccコンパイラを前提としたコンパイルになっていますが、</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">sekirei</span></code> : 物性研究所システムB ”sekirei”</li>
+<li><code class="docutils literal"><span class="pre">sekirei_acc</span></code> : 物性研究所システムB ”sekirei” (MAGMAライブラリを使用する場合)</li>
+<li><code class="docutils literal"><span class="pre">fujitsu</span></code> : 富士通コンパイラ</li>
+<li><code class="docutils literal"><span class="pre">intel</span></code> : intelコンパイラ + Linux PC</li>
+<li><code class="docutils literal"><span class="pre">gcc</span></code> : GCC + Linux PC</li>
+</ul>
+</div></blockquote>
+<p>のオプションが用意されています。
+以下、HPhi++を展開したディレクトリでビルドする例を示します(intelコンパイラの場合)。</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">./</span><span class="n">build</span>
+<span class="n">cd</span> <span class="o">./</span><span class="n">build</span>
+<span class="n">cmake</span> <span class="o">-</span><span class="n">DCONFIG</span><span class="o">=</span><span class="n">intel</span> <span class="o">../</span>
+<span class="n">make</span>
+</pre></div>
+</div>
+<p>実行後、buildフォルダ直下にsrcフォルダが作成され、HPhi++がsrcフォルダ内に作成されます。
+なお、コンパイラを変更しコンパイルし直したい場合には、都度buildフォルダごと削除を行った上で、
+新規に上記作業を行うことをお薦めします。
+また、SSE2が使用出来る場合には、cmakeでのコンパイル時<code class="docutils literal"><span class="pre">-DHAVE_SSE2</span></code>を付け加えてください.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h4>前のトピックへ</h4>
+  <p class="topless"><a href="prerequisite.html"
+                        title="前の章へ">2.1. 要件</a></p>
+  <h4>次のトピックへ</h4>
+  <p class="topless"><a href="directory.html"
+                        title="次の章へ">2.3. ディレクトリ構成</a></p>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/start/install.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="検索" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="directory.html" title="2.3. ディレクトリ構成"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="prerequisite.html" title="2.1. 要件"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 ドキュメント</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >2. How to use HPhi++</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7 で生成しました。
+    </div>
+  </body>
+</html>
