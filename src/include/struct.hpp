@@ -31,9 +31,9 @@ struct ParamList {
     //For Time Evolution
     double Tinit;
     double TimeSlice;
-    int OutputInterval;
+    int OutputInterval = 0;
     int ExpandCoef = 0;
-    int ExpecInterval;
+    int ExpecInterval = 0;
 };
 /**
 @brief Definision of system (Hamiltonian) etc.
@@ -43,15 +43,15 @@ struct DefineList {
                       Header of output file such as Green's function*/
   char *CParaFileHead;/**<@brief Read from Calcmod in readdef.h.
                       It is not used. Just for the compatibility to mVMC*/
-  int nvec;/**<@brief Read from Calcmod in readdef.h*/
-  int k_exct;/**<@brief Read from Calcmod in readdef.h*/
-  int LanczosEps;/**<@brief log(10 base) of the convergence threshold.
+  int nvec = 0;/**<@brief Read from Calcmod in readdef.h*/
+  int k_exct = 0;/**<@brief Read from Calcmod in readdef.h*/
+  int LanczosEps = 0;/**<@brief log(10 base) of the convergence threshold.
                  Read from Calcmod in readdef.h*/
-  int LanczosTarget;/**<@brief Which eigenstate is used to check convergence.
+  int LanczosTarget = 0;/**<@brief Which eigenstate is used to check convergence.
                     Read from Calcmod in readdef.h.*/
-  int read_hacker;/**<@brief Whether use an efficient method (=1) in sz.c or not (=0)*/
-  int READ;/**<@brief It is ALWAYS 0 ???*/
-  int WRITE;/**<@brief It is ALWAYS 0 ???*/
+  int read_hacker = 0;/**<@brief Whether use an efficient method (=1) in sz.c or not (=0)*/
+  int READ = 0;/**<@brief It is ALWAYS 0 ???*/
+  int WRITE = 0;/**<@brief It is ALWAYS 0 ???*/
 
   int Nsite = 0;/**<@brief Number of sites in the INTRA process region*/
   int NsiteMPI = 0;/**<@brief Total number of sites, differ from DefineList::Nsite*/
@@ -71,22 +71,22 @@ struct DefineList {
   int Ne = 0;/**<@brief Number of electrons in this process.*/
   int NeMPI = 0;/**<@brief Total number of electrons across process.
                      Differ from DefineList::Ne .*/
-  int Lanczos_max;/**<@brief Maximum number of iterations.*/
-  int Lanczos_restart;/**<@brief Number of iterations performed in the restart computation.*/
-  long int initial_iv;/**<@brief Seed of random number for initial guesss of wavefunctions.*/
+  int Lanczos_max = 0;/**<@brief Maximum number of iterations.*/
+  int Lanczos_restart = 0;/**<@brief Number of iterations performed in the restart computation.*/
+  long int initial_iv = 0;/**<@brief Seed of random number for initial guesss of wavefunctions.*/
 
-  int istep;/**<@brief Index of TPQ step ???*/
-  int irand;/**<@brief Input keyword TargetTPQRand ???*/
-  int St;/**<@brief 0 or 1, but it affects nothing.*/
+  int istep = 0;/**<@brief Index of TPQ step ???*/
+  int irand = 0;/**<@brief Input keyword TargetTPQRand ???*/
+  int St = 0;/**<@brief 0 or 1, but it affects nothing.*/
 
   int *LocSpn;/**<@brief [DefineList::NLocSpn] Flag (and size) of the local spin.
               malloc in setmem_def().*/
-  int NLocSpn;/**<@brief Number of local spins*/
-  int NCond;/**<@brief Number of itinerant electrons*/
-  int iFlgGeneralSpin;/**<@brief Flag for the general (Sz/=1/2) spin*/
-  int iFlgSzConserved;/**<@brief Flag whether Sz is conserved.*/
+  int NLocSpn = 0;/**<@brief Number of local spins*/
+  int NCond = 0;/**<@brief Number of itinerant electrons*/
+  int iFlgGeneralSpin = 0;/**<@brief Flag for the general (Sz/=1/2) spin*/
+  int iFlgSzConserved = 0;/**<@brief Flag whether Sz is conserved.*/
 
-  int fidx;/**<@brief Always 0, it is not used ???*/
+  int fidx = 0;/**<@brief Always 0, it is not used ???*/
   long int *Tpow;/**<@brief [2 * DefineList::NsiteMPI] @f$2^n@f$
                           malloc in setmem_def().*/
   long int *OrgTpow;/**<@brief [2 * DefineList::NsiteMPI] @f$2^n@f$
@@ -94,15 +94,15 @@ struct DefineList {
   long int *SiteToBit;/**<@brief [DefineList::NsiteMPI] Similar to DefineList::Tpow.
                       For general spin.*/
 
-  int EDNChemi;/**<@brief Number of on-site term.*/
+  int EDNChemi = 0;/**<@brief Number of on-site term.*/
   int *EDChemi;/**<@brief [DefineList::Nsite] Chemical potential. malloc in setmem_def().*/
   int *EDSpinChemi;/**<@brief [DefineList::Nsite]*/
   double *EDParaChemi;/**<@brief [DefineList::Nsite] On-site potential parameter.
                       malloc in setmem_def().*/
 
     //[s] Transfer
-  int NTransfer;/**<@brief Number of transfer integrals obtained by a def file.*/
-  int EDNTransfer;/**<@brief Number of transfer integrals for calculation. */
+  int NTransfer = 0;/**<@brief Number of transfer integrals obtained by a def file.*/
+  int EDNTransfer = 0;/**<@brief Number of transfer integrals for calculation. */
   int **GeneralTransfer;/**<@brief Index of transfer integrals obtained by a def file. 
                         malloc in setmem_def().\n
                         Data Format [DefineList::NTransfer][4]: 
@@ -191,50 +191,50 @@ struct DefineList {
   std::complex<double> **ParaPairExcitationOperator;/**<@brief [DefineList::NPairExcitationOperator]
                            Coefficient of pair excitaion operator for spectrum. malloc in setmem_def().*/
   
-  int iCalcType;/**<@brief Switch for calculation type. 0:Lanczos, 1:TPQCalc, 2:FullDiag.*/
-  int iCalcEigenVec;/**<@brief Switch for method to calculate eigenvectors. 
+  int iCalcType = 0;/**<@brief Switch for calculation type. 0:Lanczos, 1:TPQCalc, 2:FullDiag.*/
+  int iCalcEigenVec = 0;/**<@brief Switch for method to calculate eigenvectors.
                     0:Lanczos+CG, 1: Lanczos. default value is set as 0 in readdef.c*/
-  int iInitialVecType;/**<@brief Switch for type of inital vectors. 
+  int iInitialVecType = 0;/**<@brief Switch for type of inital vectors.
                       0:complex type, 1: real type. default value is set as 0 in readdef.c*/
-  int iFlgFiniteTemperature;/**<@brief ???*/
-  int iCalcModel;/**<@brief Switch for model. 0:Hubbard, 1:Spin, 2:Kondo, 
+  int iFlgFiniteTemperature = 0;/**<@brief ???*/
+  int iCalcModel = 0;/**<@brief Switch for model. 0:Hubbard, 1:Spin, 2:Kondo,
                  3:HubbardGC, 4:SpinGC, 5:KondoGC, 6:HubbardNConserved*/
-  int iOutputMode;/**<@brief Switch for output mode. 0: OneBodyG and TwoBodyG. 
+  int iOutputMode = 0;/**<@brief Switch for output mode. 0: OneBodyG and TwoBodyG.
                   1: OneBodyG and TwoBodyG and correlations for charge and spin.*/
-  int iOutputEigenVec;/**<@brief ASwitch for outputting an eigenvector. 0: no output, 1:output.*/
-  int iInputEigenVec;/**<@brief Switch for reading an eigenvector. 0: no input, 1:input*/
-  int iOutputHam;/**<brief Switch for outputting a Hamiltonian. 0: no output, 1:output*/
-  int iInputHam;/**<brief Switch for reading a Hamiltonian. 0: no input, 1:input*/
-  int iOutputExVec; /**<brief Switch for outputting an excited vector. 0: no output, 1:output*/
+  int iOutputEigenVec = 0;/**<@brief ASwitch for outputting an eigenvector. 0: no output, 1:output.*/
+  int iInputEigenVec = 0;/**<@brief Switch for reading an eigenvector. 0: no input, 1:input*/
+  int iOutputHam = 0;/**<brief Switch for outputting a Hamiltonian. 0: no output, 1:output*/
+  int iInputHam = 0;/**<brief Switch for reading a Hamiltonian. 0: no input, 1:input*/
+  int iOutputExVec = 0; /**<brief Switch for outputting an excited vector. 0: no output, 1:output*/
 
     //[s] For Spectrum
   std::complex<double> dcOmegaMax;/**<@brief Upper limit of the frequency for the spectrum.*/
   std::complex<double> dcOmegaMin;/**<@brief Lower limit of the frequency for the spectrum.*/
   std::complex<double> dcOmegaOrg;/**<@brief Origin limit of the frequency for the spectrum.*/
-  int iNOmega;/**<@brief Number of frequencies for spectrum.*/
-  int iFlgSpecOmegaMax;/**<@brief Whether DefineList::dcOmegaMax is input or not.*/
-  int iFlgSpecOmegaMin;/**<@brief Whether DefineList::dcOmegaMin is input or not.*/
-  int iFlgSpecOmegaOrg;/**<@brief Whether DefineList::dcOmegaOrg is input or not.*/
-  int iFlgCalcSpec;/**<@brief Input parameter CalcSpec in teh CalcMod file.*/
-  int iFlagListModified;/**<@brief When the Hilbert space of excited state differs from the original one.*/
+  int iNOmega = 0;/**<@brief Number of frequencies for spectrum.*/
+  int iFlgSpecOmegaMax = 0;/**<@brief Whether DefineList::dcOmegaMax is input or not.*/
+  int iFlgSpecOmegaMin = 0;/**<@brief Whether DefineList::dcOmegaMin is input or not.*/
+  int iFlgSpecOmegaOrg = 0;/**<@brief Whether DefineList::dcOmegaOrg is input or not.*/
+  int iFlgCalcSpec = 0;/**<@brief Input parameter CalcSpec in teh CalcMod file.*/
+  int iFlagListModified = 0;/**<@brief When the Hilbert space of excited state differs from the original one.*/
 
     //[e] For Spectrum
 
-  int iReStart;/**< An integer for restarting output a Hamiltonian.
+  int iReStart = 0;/**< An integer for restarting output a Hamiltonian.
      - 0: not restart
      - 1:restart (output restart vector),
      - 2: restart (input and output restart vector) */
-  int iFlgMPI;/**<@brief MPI mode
+  int iFlgMPI = 0;/**<@brief MPI mode
     - 0: butterfly
     - 1: Parallel Interaction [to be supported]
     */
 
-    int iNGPU;/**<@brief GPU mode ( only for FullDiag )
+    int iNGPU = 0;/**<@brief GPU mode ( only for FullDiag )
     - 0: Use lapack
     - >0: Use GPU
     */
 
-    int iFlgScaLAPACK;/**<@brief ScaLAPACK mode ( only for FullDiag )
+    int iFlgScaLAPACK = 0;/**<@brief ScaLAPACK mode ( only for FullDiag )
     - 0: Use lapack
     - 1: Use ScaLAPACK
     */
@@ -302,50 +302,50 @@ struct DefineList {
 @brief Size of the Hilbert space
 */
 struct CheckList {
-  long int idim_max;/**<@brief The dimension of the Hilbert space of this process.*/
-  long int idim_maxMPI;/**<@brief The total dimension across process.*/
-  long int idim_maxOrg;/**<@brief The local Hilbert-space dimention of original state for the spectrum.*/
-  long int idim_maxMPIOrg;/**<@brief The global Hilbert-space dimention of original state for the spectrum.*/
-  long int sdim;/**<@brief Dimension for Ogata-Lin ???*/
+  long int idim_max = 0;/**<@brief The dimension of the Hilbert space of this process.*/
+  long int idim_maxMPI = 0;/**<@brief The total dimension across process.*/
+  long int idim_maxOrg = 0;/**<@brief The local Hilbert-space dimention of original state for the spectrum.*/
+  long int idim_maxMPIOrg = 0;/**<@brief The global Hilbert-space dimention of original state for the spectrum.*/
+  long int sdim = 0;/**<@brief Dimension for Ogata-Lin ???*/
   double max_mem;/**<@brief Estimated memory size.*/
 };/*struct CheckList*/
 /**
 @brief For Matrix-Vector product
 */
 struct LargeList {
-  int itr;/**<@brief Iteration number.*/
-  long int iv;/**<@brief Used for initializing vector.*/
-  long int i_max;/**<@brief Length of eigenvector*/
-  long int SizeOflist_2_1;/**<@brief Size of ::list_2_1*/
-  long int SizeOflist_2_2;/**<@brief Size of ::list_2_2*/
-  long int SizeOflistjb;/**<@brief Used for computing Sz.*/
+  int itr = 0;/**<@brief Iteration number.*/
+  long int iv = 0;/**<@brief Used for initializing vector.*/
+  long int i_max = 0;/**<@brief Length of eigenvector*/
+  long int SizeOflist_2_1 = 0;/**<@brief Size of ::list_2_1*/
+  long int SizeOflist_2_2 = 0;/**<@brief Size of ::list_2_2*/
+  long int SizeOflistjb = 0;/**<@brief Used for computing Sz.*/
 
   std::complex<double> tmp_trans;/**<@brief Hopping parameter.*/
   std::complex<double> tmp_J;/**<@brief Coupling constant*/
 
-  long int is1_up;/**<@brief Mask used in the bit oeration.*/
-  long int is1_down;/**<@brief Mask used in the bit oeration.*/
-  long int is2_up;/**<@brief Mask used in the bit oeration.*/
-  long int is2_down;/**<@brief Mask used in the bit oeration.*/
+  long int is1_up = 0;/**<@brief Mask used in the bit oeration.*/
+  long int is1_down = 0;/**<@brief Mask used in the bit oeration.*/
+  long int is2_up = 0;/**<@brief Mask used in the bit oeration.*/
+  long int is2_down = 0;/**<@brief Mask used in the bit oeration.*/
 
-  int mode;/**<@brief multiply or expectation value.*/
+  int mode = 0;/**<@brief multiply or expectation value.*/
   double sgn;/**<@brief Not used ???*/
-  long int is1_spin;/**<@brief Mask used in the bit oeration.*/
-  long int is2_spin;/**<@brief Mask used in the bit oeration.*/
-  long int is3_spin;/**<@brief Mask used in the bit oeration.*/
-  long int is4_spin;/**<@brief Mask used in the bit oeration.*/
-  int isite1;/**<@brief Is it realy used ???*/
-  int isite2;/**<@brief Is it realy used ???*/
-  int isite3;/**<@brief Is it realy used ???*/
-  int isite4;/**<@brief Is it realy used ???*/
+  long int is1_spin = 0;/**<@brief Mask used in the bit oeration.*/
+  long int is2_spin = 0;/**<@brief Mask used in the bit oeration.*/
+  long int is3_spin = 0;/**<@brief Mask used in the bit oeration.*/
+  long int is4_spin = 0;/**<@brief Mask used in the bit oeration.*/
+  int isite1 = 0;/**<@brief Is it realy used ???*/
+  int isite2 = 0;/**<@brief Is it realy used ???*/
+  int isite3 = 0;/**<@brief Is it realy used ???*/
+  int isite4 = 0;/**<@brief Is it realy used ???*/
 
-  long int A_spin;/**<@brief Mask used in the bit oeration.*/
-  long int B_spin;/**<@brief Mask used in the bit oeration.*/
-  long int irght;/**<@brief Used for Ogata-Lin ???*/
-  long int ilft;/**<@brief Used for Ogata-Lin ???*/
-  long int ihfbit;/**<@brief Used for Ogata-Lin ???*/
-  long int isA_spin;/**<@brief Mask used in the bit oeration.*/
-  long int isB_spin;/**<@brief Mask used in the bit oeration.*/
+  long int A_spin = 0;/**<@brief Mask used in the bit oeration.*/
+  long int B_spin = 0;/**<@brief Mask used in the bit oeration.*/
+  long int irght = 0;/**<@brief Used for Ogata-Lin ???*/
+  long int ilft = 0;/**<@brief Used for Ogata-Lin ???*/
+  long int ihfbit = 0;/**<@brief Used for Ogata-Lin ???*/
+  long int isA_spin = 0;/**<@brief Mask used in the bit oeration.*/
+  long int isB_spin = 0;/**<@brief Mask used in the bit oeration.*/
   std::complex<double> tmp_V;/**<@brief Coupling constant*/
 };/*struct LargeList*/
 /**
@@ -377,7 +377,7 @@ struct PhysList {
 @brief For Boost
 */
 struct BoostList {
-  int flgBoost;/**<@brief Flag whether use CMA algorithm.*/
+  int flgBoost = 0;/**<@brief Flag whether use CMA algorithm.*/
   long int R0 = 0;
   long int W0 = 0;
   long int num_pivot = 0;

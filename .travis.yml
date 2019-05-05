@@ -10,37 +10,37 @@ matrix:
       - mkdir build
       - cd build
     script:
-      #- cmake ../ -DCMAKE_CXX_FLAGS="-std=c++11"
-      #- make
-      #- export OMP_NUM_THREADS=1
-      #- make test
-      #- rm -r test
-      #- make
-      #- export OMP_NUM_THREADS=3
-      #- make test
-      #- rm -r *
+      - cmake ../ -DCMAKE_CXX_FLAGS="-std=c++11"
+      - make
+      - export OMP_NUM_THREADS=1
+      - make test
+      - rm -r test
+      - make
+      - export OMP_NUM_THREADS=3
+      - make test
+      - rm -r *
       - sudo apt-get install -y libopenmpi-dev openmpi-bin
       - cmake ../ -DCMAKE_CXX_FLAGS="-std=c++11" -DCMAKE_BUILD_TYPE="Debug"
       - make
       - export OMP_NUM_THREADS=1
-      - ctest -R lobcg_spingc_honey
-      - cat Testing/Temporary/LastTest.log
-      - cd test/lobcg_spingc_honey/
-      - sudo apt-get install -y gdb
-      - gdb --ex run --args ../../src/HPhi++ -s stan.in
-      #- make test MPIRUN="mpiexec -np 4"
-      #- rm -r test
-      #- make
-      #- export OMP_NUM_THREADS=3
-      #- make test MPIRUN="mpiexec -np 4"
-      #- rm -r test
-      #- make
-      #- export OMP_NUM_THREADS=1
-      #- make test MPIRUN="mpiexec -np 16"
-      #- rm -r test
-      #- make
-      #- export OMP_NUM_THREADS=3
-      #- make test MPIRUN="mpiexec -np 16"
+      #- ctest -R lobcg_spingc_honey
+      #- cat Testing/Temporary/LastTest.log
+      #- cd test/lobcg_spingc_honey/
+      #- sudo apt-get install -y gdb
+      #- gdb --ex run --args ../../src/HPhi++ -s stan.in
+      - make test MPIRUN="mpiexec -np 4"
+      - rm -r test
+      - make
+      - export OMP_NUM_THREADS=3
+      - make test MPIRUN="mpiexec -np 4"
+      - rm -r test
+      - make
+      - export OMP_NUM_THREADS=1
+      - make test MPIRUN="mpiexec -np 16"
+      - rm -r test
+      - make
+      - export OMP_NUM_THREADS=3
+      - make test MPIRUN="mpiexec -np 16"
   - os: osx
     language: c++
     sudo: enabled
