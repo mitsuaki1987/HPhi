@@ -138,7 +138,7 @@ int CalcByTEM(
       printf("byte_size : %d\n", (int)byte_size);
       exitMPI(-1);
     }
-    fread(&v1[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
+    byte_size = fread(&v1[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
     fclose(fp);
     if (X->Bind.Def.iReStart == RESTART_NOT || X->Bind.Def.iReStart == RESTART_OUT) {
       step_initial = 0;
