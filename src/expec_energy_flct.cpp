@@ -209,7 +209,7 @@ int expec_energy_flct_Hubbard(
   num2_t = d_2d_allocate(nthreads, nstate);
   Sz_t = d_2d_allocate(nthreads, nstate);
   Sz2_t = d_2d_allocate(nthreads, nstate);
-  i_32 = (int)(pow(2, 32) - 1);
+  i_32 = 0xFFFFFFFF;
 
   //[s] for bit count
   is1_up_a = 0;
