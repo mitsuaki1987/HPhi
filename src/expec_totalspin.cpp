@@ -21,7 +21,7 @@
 #include "mltplyMPISpinCore.hpp"
 #include "expec_totalspin.hpp"
 /**
- * @file   expec_totalspin.c
+ * @file
  *
  * @brief  File for calculating total spin
  *

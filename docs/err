@@ -1,0 +1,471 @@
+warning: tag INCLUDE_PATH: include path `./StdFace/' does not exist
+warning: source ./StdFace/ is not a readable file or directory... skipping.
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/CalcSpectrum.cpp:386: warning: The following parameters of GetExcitedState(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/CalcSpectrum.cpp:351: warning: The following parameters of OutputSpectrum(struct EDMainCalStruct *X, int Nomega, int NdcSpectrum, std::complex< double > **dcSpectrum, std::complex< double > *dcomega) are not documented:
+  parameter 'NdcSpectrum'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/CalcSpectrumByFullDiag.cpp:51: warning: explicit link request to 'vg' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/CalcSpectrumByFullDiag.cpp:61: warning: explicit link request to 'vg' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/CalcSpectrumByFullDiag.cpp:37: warning: The following parameters of CalcSpectrumByFullDiag(struct EDMainCalStruct *X, int Nomega, int NdcSpectrum, std::complex< double > **dcSpectrum, std::complex< double > *dcomega, std::complex< double > **v1Org) are not documented:
+  parameter 'NdcSpectrum'
+  parameter 'v1Org'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:544: warning: The following parameters of expec_cisajs(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:117: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajs_Hubbard(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:125: warning: The following parameters of expec_cisajs_Hubbard(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:41: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajs_HubbardGC(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:49: warning: The following parameters of expec_cisajs_HubbardGC(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:479: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajs_Spin(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:487: warning: The following parameters of expec_cisajs_Spin(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:505: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajs_SpinGC(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:513: warning: The following parameters of expec_cisajs_SpinGC(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:405: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajs_SpinGCGeneral(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:413: warning: The following parameters of expec_cisajs_SpinGCGeneral(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:333: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajs_SpinGCHalf(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:341: warning: The following parameters of expec_cisajs_SpinGCHalf(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:276: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajs_SpinGeneral(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:284: warning: The following parameters of expec_cisajs_SpinGeneral(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:218: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajs_SpinHalf(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajs.cpp:226: warning: The following parameters of expec_cisajs_SpinHalf(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:249: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajscktalt_Hubbard(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:258: warning: The following parameters of expec_cisajscktalt_Hubbard(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:136: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajscktalt_HubbardGC(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:145: warning: The following parameters of expec_cisajscktalt_HubbardGC(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:875: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajscktalt_Spin(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:884: warning: The following parameters of expec_cisajscktalt_Spin(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:901: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajscktalt_SpinGC(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:910: warning: The following parameters of expec_cisajscktalt_SpinGC(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:733: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajscktalt_SpinGCGeneral(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:742: warning: The following parameters of expec_cisajscktalt_SpinGCGeneral(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:607: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajscktalt_SpinGCHalf(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:616: warning: The following parameters of expec_cisajscktalt_SpinGCHalf(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:494: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajscktalt_SpinGeneral(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:503: warning: The following parameters of expec_cisajscktalt_SpinGeneral(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:374: warning: argument '_fp' of command @param is not found in the argument list of expec_cisajscktalt_SpinHalf(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:383: warning: The following parameters of expec_cisajscktalt_SpinHalf(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec, std::complex< double > **prod) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_cisajscktaltdc.cpp:943: warning: The following parameters of expec_cisajscktaltdc(struct BindStruct *X, int nstate, std::complex< double > **Xvec, std::complex< double > **vec) are not documented:
+  parameter 'nstate'
+  parameter 'Xvec'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_energy_flct.cpp:716: warning: The following parameters of expec_energy_flct(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+  parameter 'tmp_v0'
+  parameter 'tmp_v1'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_energy_flct.cpp:632: warning: The following parameters of expec_energy_flct_GeneralSpin(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0) are not documented:
+  parameter 'nstate'
+  parameter 'tmp_v0'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_energy_flct.cpp:450: warning: The following parameters of expec_energy_flct_GeneralSpinGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0) are not documented:
+  parameter 'nstate'
+  parameter 'tmp_v0'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_energy_flct.cpp:529: warning: The following parameters of expec_energy_flct_HalfSpin(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0) are not documented:
+  parameter 'nstate'
+  parameter 'tmp_v0'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_energy_flct.cpp:347: warning: The following parameters of expec_energy_flct_HalfSpinGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0) are not documented:
+  parameter 'nstate'
+  parameter 'tmp_v0'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_energy_flct.cpp:187: warning: The following parameters of expec_energy_flct_Hubbard(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0) are not documented:
+  parameter 'nstate'
+  parameter 'tmp_v0'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_energy_flct.cpp:29: warning: The following parameters of expec_energy_flct_HubbardGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0) are not documented:
+  parameter 'nstate'
+  parameter 'tmp_v0'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_totalspin.cpp:618: warning: The following parameters of expec_totalspin(struct BindStruct *X, int nstate, std::complex< double > **vec) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_totalspin.cpp:45: warning: The following parameters of totalspin_Hubbard(struct BindStruct *X, int nstate, std::complex< double > **vec) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_totalspin.cpp:127: warning: The following parameters of totalspin_HubbardGC(struct BindStruct *X, int nstate, std::complex< double > **vec) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_totalspin.cpp:207: warning: The following parameters of totalspin_Spin(struct BindStruct *X, int nstate, std::complex< double > **vec) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/expec_totalspin.cpp:405: warning: The following parameters of totalspin_SpinGC(struct BindStruct *X, int nstate, std::complex< double > **vec) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/FirstMultiply.cpp:34: warning: argument 'rand_i' of command @param is not found in the argument list of FirstMultiply(struct BindStruct *X)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltply.cpp:56: warning: The following parameters of mltply(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:37: warning: explicit link request to 'Cis' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:38: warning: explicit link request to 'Cis_MPI' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:39: warning: explicit link request to 'X_GC_Cis' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:40: warning: explicit link request to 'GC_Cis_MPI' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:44: warning: explicit link request to 'Ajt' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:45: warning: explicit link request to 'Ajt_MPI' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:46: warning: explicit link request to 'X_GC_Ajt' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:47: warning: explicit link request to 'GC_Ajt_MPI' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:51: warning: explicit link request to 'CisAis' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:52: warning: explicit link request to 'child_CisAis_Hubbard_MPI' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:54: warning: explicit link request to 'GC_child_CisAis_Hubbard_MPI' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:59: warning: explicit link request to 'child_CisAjt_MPIsingle' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:59: warning: explicit link request to 'child_CisAjt_MPIdouble' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:62: warning: explicit link request to 'GC_child_CisAjt_Hubbard_MPI' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:67: warning: explicit link request to 'X_child_CisAisCisAis_Hubbard_MPI' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:69: warning: explicit link request to 'X_GC_child_CisAisCisAis_Hubbard_MPI' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:73: warning: explicit link request to 'child_CisAisCjtAjt_element' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:75: warning: explicit link request to 'GC_child_CisAisCjtAjt_element' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:543: warning: The following parameters of child_exchange(int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:563: warning: The following parameters of child_general_hopp(int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X, std::complex< double > trans) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:622: warning: The following parameters of child_general_int(int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:523: warning: The following parameters of child_pairhopp(int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:588: warning: The following parameters of GC_child_general_hopp(int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X, std::complex< double > trans) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:683: warning: The following parameters of GC_child_general_int(int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:743: warning: The following parameters of GC_child_pairhopp(int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:150: warning: The following parameters of mltplyHubbard(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbard.cpp:339: warning: The following parameters of mltplyHubbardGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:629: warning: The following parameters of child_CisAisCisAis_element(long int j, long int isite1, long int isite3, std::complex< double > tmp_V, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:651: warning: The following parameters of child_CisAisCjtAku_element(long int j, long int isite1, long int isite3, long int isite4, long int Bsum, long int Bdiff, std::complex< double > tmp_V, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:682: warning: The following parameters of child_CisAjtCkuAku_element(long int j, long int isite1, long int isite2, long int isite3, long int Asum, long int Adiff, std::complex< double > tmp_V, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:713: warning: The following parameters of child_CisAjtCkuAlv_element(long int j, long int isite1, long int isite2, long int isite3, long int isite4, long int Asum, long int Adiff, long int Bsum, long int Bdiff, std::complex< double > tmp_V, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X, long int *tmp_off_2) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:442: warning: The following parameters of child_exchange_element(long int j, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:494: warning: The following parameters of child_pairhopp_element(long int j, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:291: warning: The following parameters of CisAjt(long int j, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X, long int is1_spin, long int is2_spin, long int sum_spin, long int diff_spin, std::complex< double > tmp_V) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:253: warning: The following parameters of GC_AisCis(long int j, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int is1_spin, std::complex< double > tmp_trans) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:919: warning: The following parameters of GC_Ajt(long int j, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int is1_spin, std::complex< double > tmp_V, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:751: warning: The following parameters of GC_child_CisAisCisAis_element(long int j, long int isite1, long int isite3, std::complex< double > tmp_V, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:775: warning: The following parameters of GC_child_CisAisCjtAku_element(long int j, long int isite1, long int isite3, long int isite4, long int Bsum, long int Bdiff, std::complex< double > tmp_V, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:805: warning: The following parameters of GC_child_CisAjtCkuAku_element(long int j, long int isite1, long int isite2, long int isite3, long int Asum, long int Adiff, std::complex< double > tmp_V, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:835: warning: The following parameters of GC_child_CisAjtCkuAlv_element(long int j, long int isite1, long int isite2, long int isite3, long int isite4, long int Asum, long int Adiff, long int Bsum, long int Bdiff, std::complex< double > tmp_V, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int *tmp_off_2) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:537: warning: The following parameters of GC_child_exchange_element(long int j, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:586: warning: The following parameters of GC_child_pairhopp_element(long int j, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:872: warning: The following parameters of GC_Cis(long int j, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int is1_spin, std::complex< double > tmp_V, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:231: warning: The following parameters of GC_CisAis(long int j, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int is1_spin, std::complex< double > tmp_trans) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyHubbardCore.cpp:330: warning: The following parameters of GC_CisAjt(long int j, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int is1_spin, long int is2_spin, long int sum_spin, long int diff_spin, std::complex< double > tmp_V, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbard.cpp:236: warning: The following parameters of child_general_hopp_MPIdouble(long int itrans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbard.cpp:309: warning: The following parameters of child_general_hopp_MPIsingle(long int itrans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbard.cpp:29: warning: The following parameters of GC_child_general_hopp_MPIdouble(long int itrans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbard.cpp:147: warning: The following parameters of GC_child_general_hopp_MPIsingle(long int itrans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbard.cpp:92: warning: The following parameters of X_child_CisAjt_MPIdouble(int org_isite1, int org_ispin1, int org_isite2, int org_ispin2, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbard.cpp:398: warning: The following parameters of X_child_CisAjt_MPIsingle(int org_isite1, int org_ispin1, int org_isite2, int org_ispin2, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbard.cpp:252: warning: The following parameters of X_child_general_hopp_MPIdouble(int org_isite1, int org_ispin1, int org_isite2, int org_ispin2, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbard.cpp:325: warning: The following parameters of X_child_general_hopp_MPIsingle(int org_isite1, int org_ispin1, int org_isite2, int org_ispin2, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbard.cpp:47: warning: The following parameters of X_GC_child_general_hopp_MPIdouble(int org_isite1, int org_ispin1, int org_isite2, int org_ispin2, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbard.cpp:164: warning: The following parameters of X_GC_child_general_hopp_MPIsingle(int org_isite1, int org_ispin1, int org_isite2, int org_ispin2, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:1186: warning: The following parameters of X_Ajt_MPI(int org_isite, int org_ispin, std::complex< double > tmp_trans, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int idim_max, long int *Tpow, long int _irght, long int _ilft, long int _ihfbit) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:1001: warning: The following parameters of X_child_CisAis_Hubbard_MPI(int org_isite1, int org_ispin1, std::complex< double > tmp_V, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:650: warning: The following parameters of X_child_CisAisCjtAjt_Hubbard_MPI(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, std::complex< double > tmp_V, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:984: warning: The following parameters of X_child_CisAisCjtAku_Hubbard_MPI(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, int org_isite4, int org_ispin4, std::complex< double > tmp_V, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:855: warning: The following parameters of X_child_CisAjtCkuAku_Hubbard_MPI(int org_isite1, int org_ispin1, int org_isite2, int org_ispin2, int org_isite3, int org_ispin3, std::complex< double > tmp_V, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:690: warning: The following parameters of X_child_CisAjtCkuAlv_Hubbard_MPI(int org_isite1, int org_ispin1, int org_isite2, int org_ispin2, int org_isite3, int org_ispin3, int org_isite4, int org_ispin4, std::complex< double > tmp_V, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:1130: warning: The following parameters of X_Cis_MPI(int org_isite, int org_ispin, std::complex< double > tmp_trans, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int idim_max, long int *Tpow, long int _irght, long int _ilft, long int _ihfbit) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:1089: warning: The following parameters of X_GC_Ajt_MPI(int org_isite, int org_ispin, std::complex< double > tmp_trans, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int idim_max, long int *Tpow) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:589: warning: The following parameters of X_GC_child_CisAis_Hubbard_MPI(int org_isite1, int org_ispin1, std::complex< double > tmp_V, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:259: warning: The following parameters of X_GC_child_CisAisCjtAjt_Hubbard_MPI(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, std::complex< double > tmp_V, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:425: warning: The following parameters of X_GC_child_CisAisCjtAku_Hubbard_MPI(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, int org_isite4, int org_ispin4, std::complex< double > tmp_V, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:624: warning: The following parameters of X_GC_child_CisAjt_Hubbard_MPI(int org_isite1, int org_ispin1, int org_isite2, int org_ispin2, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:302: warning: The following parameters of X_GC_child_CisAjtCkuAku_Hubbard_MPI(int org_isite1, int org_ispin1, int org_isite2, int org_ispin2, int org_isite3, int org_ispin3, std::complex< double > tmp_V, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:445: warning: The following parameters of X_GC_child_CisAjtCkuAlv_Hubbard_MPI(int org_isite1, int org_ispin1, int org_isite2, int org_ispin2, int org_isite3, int org_ispin3, int org_isite4, int org_ispin4, std::complex< double > tmp_V, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPIHubbardCore.cpp:1041: warning: The following parameters of X_GC_Cis_MPI(int org_isite, int org_ispin, std::complex< double > tmp_trans, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int idim_max, long int *Tpow) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpin.cpp:337: warning: The following parameters of child_general_int_GeneralSpin_MPIdouble(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpin.cpp:355: warning: The following parameters of child_general_int_GeneralSpin_MPIsingle(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpin.cpp:32: warning: The following parameters of child_general_int_spin_MPIdouble(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpin.cpp:141: warning: The following parameters of child_general_int_spin_MPIsingle(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpin.cpp:268: warning: The following parameters of GC_child_general_int_GeneralSpin_MPIdouble(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpin.cpp:302: warning: The following parameters of GC_child_general_int_GeneralSpin_MPIsingle(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpin.cpp:222: warning: The following parameters of GC_child_general_int_spin_MPIdouble(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpin.cpp:245: warning: The following parameters of GC_child_general_int_spin_MPIsingle(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpin.cpp:49: warning: The following parameters of X_child_general_int_spin_MPIdouble(int org_isite1, int org_ispin1, int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpin.cpp:158: warning: The following parameters of X_child_general_int_spin_MPIsingle(int org_isite1, int org_ispin1, int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpin.cpp:101: warning: The following parameters of X_child_general_int_spin_TotalS_MPIdouble(int org_isite1, int org_isite3, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:35: warning: explicit link request to 'GC_child_CisAisCjuAju_spin_MPIsingle' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:36: warning: explicit link request to 'GC_child_CisAisCjuAju_spin_MPIdouble' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:44: warning: explicit link request to 'X_child_CisAisCjuAjv_GeneralSpin_MPIsingle' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:45: warning: explicit link request to 'X_child_CisAisCjuAjv_GeneralSpin_MPIsingle' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:51: warning: explicit link request to 'X_child_CisAitCjuAju_GeneralSpin_MPIsingle' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:52: warning: explicit link request to 'X_child_CisAitCjuAju_GeneralSpin_MPIsingle' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:56: warning: explicit link request to 'GC_child_CisAitCjuAjv_spin_MPIsingle' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:57: warning: explicit link request to 'GC_child_CisAitCjuAjv_spin_MPIdouble' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:152: warning: The following parameters of GC_child_CisAisCjuAjv_spin_MPIdouble(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:434: warning: The following parameters of GC_child_CisAisCjuAjv_spin_MPIsingle(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:76: warning: The following parameters of GC_child_CisAitCiuAiv_spin_MPIdouble(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:356: warning: The following parameters of GC_child_CisAitCiuAiv_spin_MPIsingle(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:214: warning: The following parameters of GC_child_CisAitCjuAju_spin_MPIdouble(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:509: warning: The following parameters of GC_child_CisAitCjuAju_spin_MPIsingle(long int i_int, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:1154: warning: The following parameters of X_child_CisAisCjuAju_GeneralSpin_MPIdouble(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:1199: warning: The following parameters of X_child_CisAisCjuAju_GeneralSpin_MPIsingle(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:844: warning: The following parameters of X_child_CisAit_GeneralSpin_MPIdouble(int org_isite1, int org_ispin1, int org_ispin2, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int idim_max) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:1340: warning: The following parameters of X_child_CisAit_spin_MPIdouble(int org_isite1, int org_ispin2, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int idim_max) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:1088: warning: The following parameters of X_child_CisAitCjuAjv_GeneralSpin_MPIdouble(int org_isite1, int org_ispin1, int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:1237: warning: The following parameters of X_child_CisAitCjuAjv_GeneralSpin_MPIsingle(int org_isite1, int org_ispin1, int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:820: warning: The following parameters of X_GC_child_AisCis_GeneralSpin_MPIdouble(int org_isite1, int org_ispin1, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:1404: warning: The following parameters of X_GC_child_AisCis_spin_MPIdouble(int org_isite1, int org_ispin1, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:796: warning: The following parameters of X_GC_child_CisAis_GeneralSpin_MPIdouble(int org_isite1, int org_ispin1, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:1385: warning: The following parameters of X_GC_child_CisAis_spin_MPIdouble(int org_isite1, int org_ispin1, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:731: warning: The following parameters of X_GC_child_CisAisCjuAju_GeneralSpin_MPIdouble(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:1051: warning: The following parameters of X_GC_child_CisAisCjuAju_GeneralSpin_MPIsingle(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:287: warning: The following parameters of X_GC_child_CisAisCjuAju_spin_MPIdouble(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:321: warning: The following parameters of X_GC_child_CisAisCjuAju_spin_MPIsingle(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:577: warning: The following parameters of X_GC_child_CisAisCjuAjv_GeneralSpin_MPIdouble(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, int org_ispin4, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:890: warning: The following parameters of X_GC_child_CisAisCjuAjv_GeneralSpin_MPIsingle(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, int org_ispin4, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:168: warning: The following parameters of X_GC_child_CisAisCjuAjv_spin_MPIdouble(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, int org_ispin4, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:450: warning: The following parameters of X_GC_child_CisAisCjuAjv_spin_MPIsingle(int org_isite1, int org_ispin1, int org_isite3, int org_ispin3, int org_ispin4, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:761: warning: The following parameters of X_GC_child_CisAit_GeneralSpin_MPIdouble(int org_isite1, int org_ispin1, int org_ispin2, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:1300: warning: The following parameters of X_GC_child_CisAit_spin_MPIdouble(int org_isite1, int org_ispin1, int org_ispin2, std::complex< double > tmp_trans, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:95: warning: The following parameters of X_GC_child_CisAitCiuAiv_spin_MPIdouble(int org_isite1, int org_ispin1, int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:373: warning: The following parameters of X_GC_child_CisAitCiuAiv_spin_MPIsingle(int org_isite1, int org_ispin1, int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:622: warning: The following parameters of X_GC_child_CisAitCjuAju_GeneralSpin_MPIdouble(int org_isite1, int org_ispin1, int org_ispin2, int org_isite3, int org_ispin3, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:942: warning: The following parameters of X_GC_child_CisAitCjuAju_GeneralSpin_MPIsingle(int org_isite1, int org_ispin1, int org_ispin2, int org_isite3, int org_ispin3, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:231: warning: The following parameters of X_GC_child_CisAitCjuAju_spin_MPIdouble(int org_isite1, int org_ispin1, int org_ispin2, int org_isite3, int org_ispin3, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:525: warning: The following parameters of X_GC_child_CisAitCjuAju_spin_MPIsingle(int org_isite1, int org_ispin2, int org_isite3, int org_ispin3, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:669: warning: The following parameters of X_GC_child_CisAitCjuAjv_GeneralSpin_MPIdouble(int org_isite1, int org_ispin1, int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplyMPISpinCore.cpp:992: warning: The following parameters of X_GC_child_CisAitCjuAjv_GeneralSpin_MPIsingle(int org_isite1, int org_ispin1, int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4, std::complex< double > tmp_J, struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpin.cpp:103: warning: explicit link request to 'X_child_CisAis_spin_MPIdouble' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpin.cpp:106: warning: explicit link request to 'X_child_CisAis_GeneralSpin_MPIdouble' could not be resolved
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpin.cpp:785: warning: The following parameters of child_exchange_spin(int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpin.cpp:842: warning: The following parameters of child_general_int_spin(int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpin.cpp:804: warning: The following parameters of GC_child_exchange_spin(int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpin.cpp:878: warning: The following parameters of GC_child_general_int_spin(int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpin.cpp:823: warning: The following parameters of GC_child_pairlift_spin(int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpin.cpp:294: warning: The following parameters of mltplyGeneralSpin(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpin.cpp:603: warning: The following parameters of mltplyGeneralSpinGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpin.cpp:190: warning: The following parameters of mltplyHalfSpin(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpin.cpp:401: warning: The following parameters of mltplyHalfSpinGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpin.cpp:173: warning: The following parameters of mltplySpin(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpin.cpp:381: warning: The following parameters of mltplySpinGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpinCore.cpp:357: warning: The following parameters of child_CisAisCisAis_spin_element(long int j, long int isA_up, long int isB_up, long int org_sigma2, long int org_sigma4, std::complex< double > tmp_V, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpinCore.cpp:266: warning: The following parameters of child_exchange_spin_element(long int j, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpinCore.cpp:386: warning: The following parameters of GC_child_CisAisCisAis_spin_element(long int j, long int isA_up, long int isB_up, long int org_sigma2, long int org_sigma4, std::complex< double > tmp_V, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpinCore.cpp:413: warning: The following parameters of GC_child_CisAisCitAiu_spin_element(long int j, long int org_sigma2, long int org_sigma4, long int isA_up, long int isB_up, std::complex< double > tmp_V, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpinCore.cpp:442: warning: The following parameters of GC_child_CisAitCiuAiu_spin_element(long int j, long int org_sigma2, long int org_sigma4, long int isA_up, long int isB_up, std::complex< double > tmp_V, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpinCore.cpp:471: warning: The following parameters of GC_child_CisAitCiuAiv_spin_element(long int j, long int org_sigma2, long int org_sigma4, long int isA_up, long int isB_up, std::complex< double > tmp_V, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, long int *tmp_off_2) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpinCore.cpp:299: warning: The following parameters of GC_child_exchange_spin_element(long int j, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/mltplySpinCore.cpp:329: warning: The following parameters of GC_child_pairlift_spin_element(long int j, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, struct BindStruct *X, long int *tmp_off) are not documented:
+  parameter 'nstate'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/Multiply.cpp:79: warning: The following parameters of MultiplyForTEM(struct BindStruct *X, std::complex< double > **v2) are not documented:
+  parameter 'v2'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairEx.cpp:46: warning: The following parameters of GetPairExcitedState(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExHubbard.cpp:133: warning: The following parameters of GetPairExcitedStateHubbard(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExHubbard.cpp:133: warning: The following parameters of GetPairExcitedStateHubbard(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExHubbard.cpp:37: warning: The following parameters of GetPairExcitedStateHubbardGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExHubbard.cpp:37: warning: The following parameters of GetPairExcitedStateHubbardGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExSpin.cpp:346: warning: The following parameters of GetPairExcitedStateGeneralSpin(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExSpin.cpp:346: warning: The following parameters of GetPairExcitedStateGeneralSpin(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExSpin.cpp:125: warning: The following parameters of GetPairExcitedStateGeneralSpinGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExSpin.cpp:125: warning: The following parameters of GetPairExcitedStateGeneralSpinGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExSpin.cpp:240: warning: The following parameters of GetPairExcitedStateHalfSpin(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExSpin.cpp:240: warning: The following parameters of GetPairExcitedStateHalfSpin(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExSpin.cpp:34: warning: The following parameters of GetPairExcitedStateHalfSpinGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExSpin.cpp:34: warning: The following parameters of GetPairExcitedStateHalfSpinGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExSpin.cpp:456: warning: The following parameters of GetPairExcitedStateSpin(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExSpin.cpp:456: warning: The following parameters of GetPairExcitedStateSpin(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExSpin.cpp:216: warning: The following parameters of GetPairExcitedStateSpinGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/PairExSpin.cpp:216: warning: The following parameters of GetPairExcitedStateSpinGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/SingleEx.cpp:30: warning: The following parameters of GetSingleExcitedState(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/SingleExHubbard.cpp:35: warning: The following parameters of GetSingleExcitedStateHubbard(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/SingleExHubbard.cpp:106: warning: The following parameters of GetSingleExcitedStateHubbardGC(struct BindStruct *X, int nstate, std::complex< double > **tmp_v0, std::complex< double > **tmp_v1, int iEx) are not documented:
+  parameter 'nstate'
+  parameter 'iEx'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/StdFace/Wannier90.cpp:77: warning: The following parameters of read_W90(struct StdIntList *StdI, char *filename, double cutoff, int *cutoff_R, double cutoff_length, int itUJ, int *NtUJ, int ***tUJindx, std::complex< double > **tUJ) are not documented:
+  parameter 'cutoff_R'
+  parameter 'cutoff_length'
+  parameter 'itUJ'
+  parameter 'NtUJ'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/sz.cpp:542: warning: argument 'N2' of command @param is not found in the argument list of child_omp_sz_KondoGC(long int ib, long int ihfbit, struct BindStruct *X, long int *list_1_, long int *list_2_1_, long int *list_2_2_, long int *list_jb_)
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/wrapperMPI.cpp:401: warning: The following parameters of MultiVecProdMPI(long int ndim, int nstate, std::complex< double > **v1, std::complex< double > **v2, std::complex< double > *prod) are not documented:
+  parameter 'nstate'
+  parameter 'prod'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/wrapperMPI.cpp:344: warning: The following parameters of NormMPI_dv(long int ndim, int nstate, std::complex< double > **_v1, double *dnorm) are not documented:
+  parameter 'nstate'
+  parameter 'dnorm'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/wrapperMPI.cpp:254: warning: The following parameters of SumMPI_cv(int nnorm, std::complex< double > *norm) are not documented:
+  parameter 'nnorm'
+/mnt/c/Users/kawamuura/program/hphi/hphi/src/wrapperMPI.cpp:238: warning: The following parameters of SumMPI_dv(int nnorm, double *norm) are not documented:
+  parameter 'nnorm'

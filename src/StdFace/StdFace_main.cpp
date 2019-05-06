@@ -2737,12 +2737,12 @@ void StdFace_main(
 
 If you want to create a new lattice file, the following procedures are needed.
 
--# Copy one of lattice files such as Kagome.c 
+-# Copy one of lattice files such as Kagome.cpp 
    (Probably the most similar one) and rename it.
 -# @ref sec_lattice
 -# Add the function in the header file, StdFace_ModelUtil.hpp.
 -# Add entry at
-   @dontinclude StdFace_main.c
+   @dontinclude StdFace_main.cpp
    @skip StdFace\_main
    @until StdIntList
    :
@@ -2753,9 +2753,9 @@ If you want to create a new lattice file, the following procedures are needed.
 @section sec_lattice Modify lattice model file
 
 To create a new lattice file, please modify the following part
-(Kagome.c as an example):
+(Kagome.cpp as an example):
 
-@dontinclude Kagome.c
+@dontinclude Kagome.cpp
 Define function as
 @skip StdFace\_Kagome(
 @until {
@@ -2798,7 +2798,7 @@ We add new input variable in Standard mode through the following procedure:
 The input file for Standared mode is read in StdFace_main().
 In that function, the keyword value pair is found as follows:
 
-@dontinclude StdFace_main.c
+@dontinclude StdFace_main.cpp
 @skip (fgets(ctmpline
 @until fclose
 

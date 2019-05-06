@@ -20,7 +20,7 @@
  * Copyright (C) 2007-2009 Daisuke Tahara. All rights reserved.
  *-------------------------------------------------------------*/
 /**
- * @file   readdef.c
+ * @file
  * 
  * @brief  File to define functions of reading input files
  */
@@ -2992,7 +2992,7 @@ When you add a new input file to _namelist file_,
 the following procedures must be needed.
 In the following, we add the keyword "Test" as an example.
 
-1. Add a new keyword to the end of @c cKWListOfFileNameList in @c readdef.c.
+1. Add a new keyword to the end of @c cKWListOfFileNameList in @c readdef.cpp.
 ```
 static char cKWListOfFileNameList[][D_CharTmpReadDef]
 ={
@@ -3051,7 +3051,7 @@ If the the character number of added keyword exceeds `` 200 ``, please change th
 The defined value must be same as the index of cKWListOfFileNameList
 to get the name of keyword, i.e. cKWListOfFileNameList[KWTest] = "Test".
 
-3. Add procedure of reading the file in @c ReadDefFileNInt function in @c readdef.c.
+3. Add procedure of reading the file in @c ReadDefFileNInt function in @c readdef.cpp.
  ```
  for(iKWidx=0; iKWidx< D_iKWNumDef; iKWidx++) {
     strcpy(defname, cFileNameListFile[iKWidx]);
@@ -3097,7 +3097,7 @@ to get the name of keyword, i.e. cKWListOfFileNameList[KWTest] = "Test".
 }
  ```
     @sa  InitializeInteractionNum
-5. The memories of arrays are stored by setmem_def function in @c xsetmem.c.
+5. The memories of arrays are stored by setmem_def function in @c xsetmem.cpp.
    @sa  setmem_def
  **/
 
@@ -3108,7 +3108,7 @@ You can set a value of parameters with a new keyword in ``modpara`` file by foll
 
 - Define a new variable corresponding to the above parameter in @c struct.h file.
 
-- The value with the keyword are read by `` ReadDefFileNInt `` function in @c readdef.c.
+- The value with the keyword are read by `` ReadDefFileNInt `` function in @c readdef.cpp.
 
   In the following, we describe the detail of the flow of reading the parameter.
 
@@ -3155,7 +3155,7 @@ You can set a new calculation mode with a new keyword in ``calcmod`` file by fol
 
 - Define a new variable corresponding to the new calculation mode in @c struct.h file.
 
-- The value with the keyword are read by `` ReadcalcmodFile `` function in @c readdef.c.
+- The value with the keyword are read by `` ReadcalcmodFile `` function in @c readdef.cpp.
 
 In the following, we describe the detail of the flow of setting the calculation mode.
 

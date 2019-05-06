@@ -23,7 +23,7 @@
 #include <iostream>
 
 /**
- * @file   sz.c
+ * @file
  * 
  * @brief  Generating Hilbert spaces
  * 
@@ -163,7 +163,7 @@ int child_omp_sz_Kondo_hacker(
 }
 /** 
  * 
- * @file   sz.c
+ * @file
  * @brief  calculating binomial coefficients
  * 
  * @param[in] n      n for @f$_nC_k = \frac{n!}{(n-k)!k!}@f$

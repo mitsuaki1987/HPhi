@@ -20,7 +20,7 @@
 #include "wrapperMPI.hpp"
 
 /**
- * @file   HPhiTrans.c
+ * @file
  *
  * @brief  Check the inputted transfer integrals.
  *

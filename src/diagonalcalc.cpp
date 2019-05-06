@@ -15,7 +15,7 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 /**
- * @file   diagonalcalc.c
+ * @file
  * @version 2.1
  * @details add functions to calculate diagonal components for Time evolution.
  * @author Kazuyoshi Yoshimi (The University of Tokyo)

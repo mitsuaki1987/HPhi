@@ -27,7 +27,7 @@
 #include "mltplyMPIHubbardCore.hpp"
 #include "common/setmemory.hpp"
 /**
- * @file   expec_cisajscktaltdc.c
+ * @file
  * 
  * @brief  File for calculating two-body green's functions
  * 

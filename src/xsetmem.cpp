@@ -20,7 +20,7 @@
 #include "wrapperMPI.hpp"
 #include <iostream>
 /**
- * @file   xsetmem.c
+ * @file
  *
  * @brief  Set size of memories to be needed for calculation.
  * @version 2.0

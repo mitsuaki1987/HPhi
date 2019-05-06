@@ -27,7 +27,7 @@
 #include "mltplyCommon.hpp"
 
 /**
- * @file   expec_cisajs.c
+ * @file
  * 
  * @brief  File for calculation of one body green's function
  *

@@ -61,12 +61,12 @@
   <HR>
   <H2>Important functions and source files</H2>
   <ul>
-    <li>mltply.c : Perform Hamiltonian-vector product</li>
+    <li>mltply.cpp : Perform Hamiltonian-vector product</li>
     <ul>
-      <li>mltplyHubbard.c : For Hubbard and Kondo system</li>
-      <li>mltplySpin.c : For local spin system</li>
+      <li>mltplyHubbard.cpp : For Hubbard and Kondo system</li>
+      <li>mltplySpin.cpp : For local spin system</li>
     </ul>
-    <li>StdFace_main.c : Construct typical models</li>
+    <li>StdFace_main.cpp : Construct typical models</li>
     <li>global.h : Global variables</li>
     <li>struct.h : Binded struct</li>
   </ul>
@@ -103,7 +103,7 @@
 
 - Do not use TAB character. Use two spaces as an indent.
 - Use @c default(none) for scoping of OpenMP-parallel region. E.g.
-  @dontinclude CalcByLOBPCG.c
+  @dontinclude CalcByLOBPCG.cpp
   @skip pragma
   @until 0.0
 - Variable declared with @c const must not be included in @c firstprivate of OpenMP scoping.
@@ -129,7 +129,7 @@ When we add a new source code, we have to add the file-name
 into the following part of @c src/CMakeLists.txt.
 
 \code{cmake}
-set(SOURCES source1.c source2.c ...)
+set(SOURCES source1.cpp source2.cpp ...)
 \endcode
 
 @section sec_newexecutable New executable
@@ -138,7 +138,7 @@ When we add a new executable ("myprog" in this case),
 we have to add following command in @c src/CMakeLists.txt.
 
 \code{CMake}
-set(SOURCES_MYPROG source1.c source2.c ...)
+set(SOURCES_MYPROG source1.cpp source2.cpp ...)
 add_executable(myprog ${SOURCES_MYPROG})
 target_link_libraries(myprog ${LAPACK_LIBRARIES} m)
 if(MPI_FOUND)

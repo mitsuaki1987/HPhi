@@ -20,7 +20,7 @@
 #include "FileIO.hpp"
 
 /**
- * @file   log.c
+ * @file
  *
  * @brief  File for defining functions to write log messages.
  *
@@ -141,6 +141,6 @@ int TimeKeeperWithRandAndStep
 /**
 @page page_log Various kind of Logs
 
-Functions in log.c are used to output the time-stamp.
+Functions in log.cpp are used to output the time-stamp.
 
 */

@@ -18,11 +18,11 @@
 #include "wrapperMPI.hpp"
 
 /**
- * @file   output_list.c
+ * @file
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  *
- * @brief  Output list_1 for canonical ensembles obtained in sz.c.
+ * @brief  Output list_1 for canonical ensembles obtained in sz.cpp.
  *
  */
 

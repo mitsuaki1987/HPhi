@@ -29,7 +29,7 @@
 #include "diagonalcalc.hpp"
 #include <iostream>
 /**
- * @file   CalcSpectrum.c
+ * @file
  * @version 1.1
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  *

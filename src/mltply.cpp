@@ -25,7 +25,7 @@
 #include "diagonalcalc.hpp"
 
 /**
- * @file   mltply.c
+ * @file
  *
  * @brief  Multiplying the wavefunction by the Hamiltonian. @f$ H v_1@f$.
  *

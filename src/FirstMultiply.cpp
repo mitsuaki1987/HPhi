@@ -22,7 +22,7 @@
 #include "expec_cisajs.hpp"
 #include "expec_cisajscktaltdc.hpp"
 /**
- * @file   FirstMultiply.c
+ * @file
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @version 0.1

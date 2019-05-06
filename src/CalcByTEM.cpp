@@ -27,11 +27,9 @@
 #include "HPhiTrans.hpp"
 #include "common/setmemory.hpp"
 #include <iostream>
-/**
- * @file   CalcByTEM.c
- *
+/**@file
  * @brief  File to define functions to calculate expected values by Time evolution method.
- */
+*/
  /// \brief Set transfer integrals at timeidx-th time
  /// \param X struct for getting information of transfer integrals
  /// \param timeidx index of time

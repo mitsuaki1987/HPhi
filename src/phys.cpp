@@ -24,7 +24,7 @@
 #endif
 
 /**
- * @file   phys.c
+ * @file
  * @version 0.1, 0.2
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)

@@ -25,7 +25,7 @@
 #include "matrixlapack.hpp"
 #include <cstdlib>
 /**
- * @file   matrixlapack.c
+ * @file
  * @version 0.1, 0.2
  * @author Takahiro Misawa (The University of Tokyo)
  * 

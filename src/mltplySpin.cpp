@@ -456,7 +456,7 @@ int mltplyHalfSpinGC(
           fprintf(stderr, "Transverse_OffDiagonal component is illegal.\n");
         }
         else{
-          // longitudinal magnetic field (considerd in diagonalcalc.c)
+          // longitudinal magnetic field (considerd in diagonalcalc.cpp)
           // transverse magnetic field
           is1_spin = X->Def.Tpow[isite1 - 1];
 #pragma omp parallel for default(none) \

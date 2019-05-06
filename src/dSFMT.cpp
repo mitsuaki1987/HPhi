@@ -1,5 +1,5 @@
 /** 
- * @file dSFMT.c 
+ * @file
  * @brief double precision SIMD-oriented Fast Mersenne Twister (dSFMT)
  * based on IEEE 754 format.
  *
@@ -629,7 +629,7 @@ void dsfmt_chk_init_gen_rand(dsfmt_t *dsfmt, uint32_t seed, int mexp) {
 
     /* make sure caller program is compiled with the same MEXP */
     if (mexp != dsfmt_mexp) {
-        fprintf(stderr, "DSFMT_MEXP doesn't match with dSFMT.c\n");
+        fprintf(stderr, "DSFMT_MEXP doesn't match with dSFMT.cpp\n");
         exitMPI(1);
     }
     psfmt = &dsfmt->status[0].u32[0];
@@ -665,7 +665,7 @@ void dsfmt_chk_init_by_array(dsfmt_t *dsfmt, uint32_t init_key[],
 
     /* make sure caller program is compiled with the same MEXP */
     if (mexp != dsfmt_mexp) {
-        fprintf(stderr, "DSFMT_MEXP doesn't match with dSFMT.c\n");
+        fprintf(stderr, "DSFMT_MEXP doesn't match with dSFMT.cpp\n");
         exitMPI(1);
     }
     if (size >= 623) {

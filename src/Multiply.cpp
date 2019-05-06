@@ -22,7 +22,7 @@
 #include <iostream>
 
 /**
- * @file   Multiply.c
+ * @file
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @author Kota Ido (The University of Tokyo)
@@ -51,7 +51,7 @@ int Multiply
 
   i_max = X->Check.idim_max;
   Ns = 1.0*X->Def.NsiteMPI;
-  // mltply is in expec_energy.c v0=H*v1
+  // mltply is in expec_energy.cpp v0=H*v1
 #pragma omp parallel for default(none) private(i,rand_i)  \
   shared(v0, v1,NumAve) firstprivate(i_max, Ns, LargeValue)
   for (i = 1; i <= i_max; i++) {
@@ -91,7 +91,7 @@ int MultiplyForTEM
 
   //Make |v0> = |psi(t+dt)> from |v1> = |psi(t)> and |v0> = H |psi(t)>
   i_max = X->Check.idim_max;
-  // mltply is in expec_energy.c v0=H*v1
+  // mltply is in expec_energy.cpp v0=H*v1
   if (dt < pow(10.0, -14)) {
 #pragma omp parallel for default(none) private(i) \
 shared(I,v0, v1, v2) firstprivate(i_max, dt, tmp2)

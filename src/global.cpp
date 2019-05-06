@@ -74,3 +74,14 @@ int myrank;//!< Process ID, defined in InitializeMPI()
 int nthreads;//!< Number of Threads, defined in InitializeMPI()
 FILE *stdoutMPI;/**<@brief File pointer to the standard output
                 defined in InitializeMPI()*/
+
+
+/**@page page_variable Global variables and Data structure
+  In HPhi, global variables are used. List of them can be found in global.h
+  Sometimes, we pass variables to the function as
+  @code
+    func(&(X.Bind.Def))
+  @endcode
+ This C-structure is defined in struct.hpp.
+*/
+

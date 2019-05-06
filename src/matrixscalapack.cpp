@@ -15,7 +15,7 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "matrixscalapack.hpp"
 /**
- * @file matrixscalapack.c
+ * @file
  * @version 3.1
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
