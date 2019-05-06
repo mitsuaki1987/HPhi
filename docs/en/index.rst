@@ -1,13 +1,15 @@
-#####################################################
+##################################
 Welcome to HPhi++'s documentation!
-#####################################################
+##################################
 
 About HPhi++
----------------------------------
+------------
+
 A numerical solver package for a wide range of quantum lattice models including Hubbard-type itinerant electron hamiltonians, quantum spin models, and Kondo-type hamiltonians for itinerant electrons coupled with quantum spins. The Lanczos algorithm for finding ground states and newly developed Lanczos-based algorithm for finite-temperature properties of these models are implemented for parallel computing. A broad spectrum of users including experimental researchers is cordially welcome.
 
 License
---------------
+-------
+
 This package is distributed under GNU General Public License version 3 (GPL v3) or later.
 
 We kindly ask you to cite the article
@@ -27,6 +29,7 @@ This software was developed with the support of \"*Project for advancement of so
 
 Download
 --------
+
 You can download software and source codes of HPhi++ from `GitHub page <https://github.com/QLMS/HPhi>`_ or `release page <https://github.com/QLMS/HPhi/releases>`_.
 
 
@@ -36,14 +39,15 @@ Contents
    :maxdepth: 3
    :numbered: 3
 
-   introduction_en
-   howtouse/ho-index
-   tutorial/tu-index
-   filespecification/fi-index
-   algorithm/al-index
-   acknowledgement_en
+   introduction
+   start/index
+   tutorial/index
+   file_format/index
+   algorithm/index
+   tool/index
    fourier/index
    wannier/index
+   acknowledge
 
 .. Indices and tables
 .. ==================

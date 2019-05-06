@@ -13,7 +13,7 @@ Chain [ :numref:`fig_chap04_1_lattice` (a)]
    **Description :** The length of the chain is specified with this
    parameter.
 
-   .. figure:: ../../../../figs/chap04_1_lattice.png
+   .. figure:: ../../../figs/chap04_1_lattice.png
       :name: fig_chap04_1_lattice
       :alt: Schematic illustration of (a) one-dimensional chain lattice,
             (b) two-dimensional square lattice, and (c) two-dimensional
@@ -33,7 +33,7 @@ Chain [ :numref:`fig_chap04_1_lattice` (a)]
       nearest neighbor hopping, offsite Coulomb integral, and
       spin-coupling constant, respectively (green dashed line). 
 
-   .. figure:: ../../../../figs/chap04_1_honeycomb.png
+   .. figure:: ../../../figs/chap04_1_honeycomb.png
       :name: fig_chap04_1_honeycomb
       :alt: Schematic illustration of the anisotropic honeycomb lattice.
             The first/second/third nearest neighbor hopping integral,
@@ -45,13 +45,13 @@ Chain [ :numref:`fig_chap04_1_lattice` (a)]
       spin coupling, and offsite
       Coulomb integral depend on the bond direction.
 
-   .. figure:: ../../../../figs/kagome.png
+   .. figure:: ../../../figs/kagome.png
       :name: fig_kagome
       :alt: Schematic illustration of the Kagome lattice.
       
       Schematic illustration of the Kagome lattice. 
 
-   .. figure:: ../../../../figs/ladder.png
+   .. figure:: ../../../figs/ladder.png
       :name: fig_ladder
       :alt: Schematic illustration of the ladder lattice.
       
@@ -74,7 +74,7 @@ Ladder ( :numref:`fig_ladder` )
    **Description :** The number of the ladder is specified with this
    parameter.
 
-  .. figure:: ../../../../figs/chap04_1_unitlattice.png
+  .. figure:: ../../../figs/chap04_1_unitlattice.png
      :name: fig_chap04_1_unitlattice
      :scale: 100%
      :alt: Shape of the numerical cell when

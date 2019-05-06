@@ -44,7 +44,7 @@ Contents
    :maxdepth: 3
    :numbered: 3
 
-   introduction_ja
+   introduction
    start/index
    tutorial/index
    file_format/index

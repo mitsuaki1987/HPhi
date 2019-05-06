@@ -54,13 +54,13 @@ We explain each keyword as follows.
 .. toctree::
    :maxdepth: 1
 
-   Parameters_for_the_type_of_calculation_en
-   Parameters_for_the_lattice_en
-   Parameters_for_conserved_quantities_en
-   Parameters_for_the_Hamiltonian_en
-   Parameters_for_the_numerical_condition
-   Parameters_for_the_dynamical_Greens_function        
-   Parameters_for_time-evolution
+   calc_type
+   lattice
+   conserve
+   hamiltonian
+   numerical
+   dynamical_green
+   time_evolution
 
 
 
