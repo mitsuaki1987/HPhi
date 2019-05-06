@@ -60,7 +60,3 @@ endif()
 add_subdirectory(src)
 add_subdirectory(tool)
 add_subdirectory(test)
-
-if (Document)
-  add_subdirectory(doc)
-endif(Document)
