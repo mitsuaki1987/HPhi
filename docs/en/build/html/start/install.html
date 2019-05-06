@@ -1,0 +1,163 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>2.2. Installation &#8212; HPhi++ 3.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="2.3. Directory structure" href="directory.html" />
+    <link rel="prev" title="2.1. Prerequisite" href="prerequisite.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="directory.html" title="2.3. Directory structure"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="prerequisite.html" title="2.1. Prerequisite"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">2. How to use HPhi++</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="installation">
+<h1>2.2. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>You can download HPhi++ at the following location.</p>
+<p><a class="reference external" href="https://github.com/QLMS/HPhi/releases">https://github.com/QLMS/HPhi/releases</a></p>
+<p>You can obtain the HPhi++ directory by typing</p>
+<p><code class="docutils literal"><span class="pre">$</span> <span class="pre">tar</span> <span class="pre">xzvf</span> <span class="pre">HPhi-xxx.tar.gz</span></code></p>
+<p>HPhi++ can be installed by using cmake.</p>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<div class="last line-block">
+<div class="line">Before using cmake for sekirei, you must type</div>
+<div class="line"><code class="docutils literal"><span class="pre">source</span> <span class="pre">/home/issp/materiapps/tool/env.sh</span></code></div>
+</div>
+</div>
+<p>We can compile HPhi++ as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>cd $HOME/build/hphi
+cmake -DCONFIG=gcc $PathTohphi
+make
+</pre></div>
+</div>
+<p>To use ScaLAPACK library for full diagonalization, the cmake option <code class="docutils literal"><span class="pre">-DUSE_SCALAPACK=ON</span></code> is needed.
+Here, we set a path to HPhi++ as <code class="docutils literal"><span class="pre">$PathTohphi</span></code>
+and to a build directory as <code class="docutils literal"><span class="pre">$HOME/build/hphi</span></code>.
+After compilation, <code class="docutils literal"><span class="pre">src</span></code> folder is constructed below a <code class="docutils literal"><span class="pre">$HOME/build/hphi</span></code>
+folder and we obtain an executable <code class="docutils literal"><span class="pre">HPhi</span></code> in <code class="docutils literal"><span class="pre">src/</span></code> directory.
+When no MPI library exists in the system, an executable <code class="docutils literal"><span class="pre">HPhi</span></code>
+is automatically compiled without an MPI library.</p>
+<p>In the above example,
+we compile HPhi++ by using a gcc compiler.
+We can select a compiler by using the following options:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">sekirei</span></code> : ISSP system-B “sekirei”</li>
+<li><code class="docutils literal"><span class="pre">sekirei_acc</span></code>: ISSP system-B “sekirei” (for using MAGMA library)</li>
+<li><code class="docutils literal"><span class="pre">fujitsu</span></code> : Fujitsu compiler</li>
+<li><code class="docutils literal"><span class="pre">intel</span></code> : Intel compiler + Linux PC</li>
+<li><code class="docutils literal"><span class="pre">gcc</span></code> : GCC compiler + Linux PC.</li>
+</ul>
+</div></blockquote>
+<p>An example of compiling HPhi++ by using the Intel compiler is shown as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">./</span><span class="n">build</span>
+<span class="n">cd</span> <span class="o">./</span><span class="n">build</span>
+<span class="n">cmake</span> <span class="o">-</span><span class="n">DCONFIG</span><span class="o">=</span><span class="n">intel</span> <span class="o">../</span>
+<span class="n">make</span>
+</pre></div>
+</div>
+<p>After compilation,
+<code class="docutils literal"><span class="pre">src</span></code> folder is created below the <code class="docutils literal"><span class="pre">build</span></code> folder and
+an execute HPhi++ in the <code class="docutils literal"><span class="pre">src</span></code> folder.
+Please note that we must delete the <code class="docutils literal"><span class="pre">build</span></code> folder and
+repeat the above operations when we change the compiler.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="prerequisite.html"
+                        title="previous chapter">2.1. Prerequisite</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="directory.html"
+                        title="next chapter">2.3. Directory structure</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/start/install.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="directory.html" title="2.3. Directory structure"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="prerequisite.html" title="2.1. Prerequisite"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >2. How to use HPhi++</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>

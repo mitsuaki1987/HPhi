@@ -1,0 +1,215 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>4.2.19. OneBodyTE File &#8212; HPhi++ 3.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="4.2.20. TwoBodyTE File" href="te2.html" />
+    <link rel="prev" title="4.2.18. SpectrumVec File" href="spectrum_vec.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="te2.html" title="4.2.20. TwoBodyTE File"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="spectrum_vec.html" title="4.2.18. SpectrumVec File"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >4. File specification</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">4.2. Input files for <em>Expert</em> mode</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="onebodyte-file">
+<span id="subsec-1te"></span><h1>4.2.19. OneBodyTE File<a class="headerlink" href="#onebodyte-file" title="Permalink to this headline">¶</a></h1>
+<p>This file determines the values of the transfer integrals <span class="math">\(t_{ij\sigma_1\sigma_2} (t)\)</span> at each time <span class="math">\(t\)</span>,</p>
+<div class="math">
+\[{\mathcal H}(t) +=-\sum_{ij\sigma_1\sigma_2} t_{ij\sigma_1\sigma_2}(t)c_{i\sigma_1}^{\dagger}c_{j\sigma_2}.\]</div>
+<p>An example of the file format is as follows.</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>==================================
+AllTimeStep         100
+==================================
+===== OneBody Time Evolution =====
+==================================
+    0.0   4
+    0  0  1  0      1.0    0.0
+    1  0  0  0      1.0    0.0
+    0  1  1  1      1.0    0.0
+    1  1  0  1      1.0    0.0
+    0.2   4
+   (continue...)
+</pre></div>
+</div>
+<div class="section" id="file-format">
+<span id="file-format-18"></span><h2>File format<a class="headerlink" href="#file-format" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Line 1: Header</li>
+<li>Line 2: [string01]&nbsp;[int01]</li>
+<li>Lines 3-5: Header</li>
+</ul>
+<p>From line 6, time <span class="math">\(t\)</span> and total number of transfer integrals
+<span class="math">\(N(t)\)</span> are first defined and next the transfer integrals
+<span class="math">\(t_{ij\sigma_1\sigma_2} (t)\)</span> are defined.</p>
+<ul class="simple">
+<li>Line m: [double01]&nbsp;&nbsp;[int02]</li>
+<li>Lines (m+1) - (m+1+[int02]):
+[int03]&nbsp;&nbsp;[int04]&nbsp;&nbsp;[int05]&nbsp;&nbsp;[int06]&nbsp;&nbsp;[double02]&nbsp;&nbsp;[double03]</li>
+</ul>
+</div>
+<div class="section" id="parameters">
+<span id="parameters-18"></span><h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">[string01]</p>
+<p><strong>Type :</strong> String (a blank parameter is not allowed)</p>
+<p><strong>Description :</strong> A keyword for the total number of transfer
+integrals. You can freely give a name to the keyword.</p>
+</li>
+<li><p class="first">[int01]</p>
+<p><strong>Type :</strong> Int (a blank parameter is not allowed)</p>
+<p><strong>Description :</strong> An integer giving the total time steps defined in
+this file.</p>
+</li>
+<li><p class="first">[double01]</p>
+<p><strong>Type :</strong> Double (a blank parameter is not allowed)</p>
+<p><strong>Description :</strong> Time <span class="math">\(t\)</span>.</p>
+</li>
+<li><p class="first">[int02]</p>
+<p><strong>Type :</strong> Int (a blank parameter is not allowed)</p>
+<p><strong>Description :</strong> An integer giving the total number of transfer
+integrals at time <span class="math">\(t\)</span>.</p>
+</li>
+<li><p class="first">[int03], [int05]</p>
+<p><strong>Type :</strong> Int (a blank parameter is not allowed)</p>
+<p><strong>Description :</strong> An integer giving a site index
+(<span class="math">\(0&lt;=\)</span> [int03], [int05] <span class="math">\(&lt;\)</span> <code class="docutils literal"><span class="pre">Nsite</span></code>).</p>
+</li>
+<li><p class="first">[int04], [int06]</p>
+<p><strong>Type :</strong> Int (a blank parameter is not allowed)</p>
+<div class="line-block">
+<div class="line"><strong>Description :</strong> An integer giving a spin index:</div>
+<div class="line">0: Up-spin</div>
+<div class="line">1: Down-spin.</div>
+</div>
+</li>
+<li><p class="first">[double02], [double03]</p>
+<p><strong>Type :</strong> Double (a blank parameter is not allowed)</p>
+<p><strong>Description :</strong> A value for real and imaginary part of
+<span class="math">\(t_{ij\sigma_1\sigma_2}(t)\)</span> at time <span class="math">\(t\)</span> is defined
+[double02] and [double03],
+respectively.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="use-rules">
+<span id="use-rules-17"></span><h2>Use rules<a class="headerlink" href="#use-rules" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Headers cannot be omitted.</li>
+<li>A program is terminated when <code class="docutils literal"><span class="pre">LanczosStep</span></code> defined in <code class="docutils literal"><span class="pre">ModPara</span></code>
+is greater than [int02].</li>
+<li>A program is terminated when
+[int03]-[int06] are outside
+the range of the defined values.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.2.19. OneBodyTE File</a><ul>
+<li><a class="reference internal" href="#file-format">File format</a></li>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#use-rules">Use rules</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="spectrum_vec.html"
+                        title="previous chapter">4.2.18. SpectrumVec File</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="te2.html"
+                        title="next chapter">4.2.20. TwoBodyTE File</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/file_format/expert/te1.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="te2.html" title="4.2.20. TwoBodyTE File"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="spectrum_vec.html" title="4.2.18. SpectrumVec File"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >4. File specification</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" >4.2. Input files for <em>Expert</em> mode</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>

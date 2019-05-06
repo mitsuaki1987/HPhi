@@ -1,0 +1,215 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>4.2.16. SingleExcitation file &#8212; HPhi++ 3.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="4.2.17. PairExcitation file" href="excitation2.html" />
+    <link rel="prev" title="4.2.15. TwoBodyG file" href="green2.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="excitation2.html" title="4.2.17. PairExcitation file"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="green2.html" title="4.2.15. TwoBodyG file"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >4. File specification</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">4.2. Input files for <em>Expert</em> mode</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="singleexcitation-file">
+<span id="subsec-singleexcitation"></span><h1>4.2.16. SingleExcitation file<a class="headerlink" href="#singleexcitation-file" title="Permalink to this headline">¶</a></h1>
+<p>The operators to generate the single excited state
+<span class="math">\(c_{i\sigma_1}(c_{i\sigma_1}^{\dagger})\)</span> are defined. An example
+of the file format is as follows.</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>===============================
+NSingle         24
+===============================
+======== Single Excitation ======
+===============================
+    0     0     0    1.0    0.0
+    0     1     0    1.0    0.0
+    1     0     0    1.0    0.0
+   (continue...)
+   11     0    0    1.0    0.0
+   11     1    0    1.0    0.0
+</pre></div>
+</div>
+<div class="section" id="file-format">
+<span id="file-format-15"></span><h2>File format<a class="headerlink" href="#file-format" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Line 1: Header</li>
+<li>Line 2: [string01]&nbsp;[int01]</li>
+<li>Lines 3-5: Header</li>
+<li>Lines 6-: [int02]&nbsp;&nbsp;[int03]&nbsp;&nbsp;[int04]&nbsp;&nbsp;[double01]&nbsp;&nbsp;[double02].</li>
+</ul>
+</div>
+<div class="section" id="parameters">
+<span id="parameters-15"></span><h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">[string01]</p>
+<p><strong>Type :</strong> String (a blank parameter is not allowed)</p>
+<p><strong>Description :</strong> A keyword for the total number of single excitation
+operators. You can freely give a name to the keyword.</p>
+</li>
+<li><p class="first">[int01]</p>
+<p><strong>Type :</strong> Int (a blank parameter is not allowed)</p>
+<p><strong>Description :</strong> An integer giving the total number of total number
+of single excitation operators.</p>
+</li>
+<li><p class="first">[int02]</p>
+<p><strong>Type :</strong> Int (a blank parameter is not allowed)</p>
+<p><strong>Description :</strong> An integer giving a site index
+(<span class="math">\(0&lt;=\)</span> [int02] <span class="math">\(&lt;\)</span> <code class="docutils literal"><span class="pre">Nsite</span></code>).</p>
+</li>
+<li><p class="first">[int03]</p>
+<p><strong>Type :</strong> Int (a blank parameter is not allowed)</p>
+<div class="line-block">
+<div class="line"><strong>Description :</strong> An integer giving a spin index:</div>
+<div class="line">For Hubbard or Kondo system, the index can be selected from</div>
+<div class="line">0: Up-spin,</div>
+<div class="line">1: Down-spin.</div>
+<div class="line">For Spin system, the index can be selected from</div>
+<div class="line"><span class="math">\(0, 1, \cdots, 2S+1\)</span> (corresponding to
+-<span class="math">\(S-0.5, -S+0.5, \cdots S+0.5\)</span>).</div>
+</div>
+</li>
+<li><p class="first">[int04]</p>
+<p><strong>Type :</strong> Int (a blank parameter is not allowed)</p>
+<div class="line-block">
+<div class="line"><strong>Description :</strong> An integer giving a type of single excitation
+operators:</div>
+<div class="line">0: <span class="math">\(c_{i\sigma_1}\)</span></div>
+<div class="line">1: <span class="math">\(c_{i\sigma_1}^{\dagger}\)</span>.</div>
+</div>
+</li>
+<li><p class="first">[double01], [double02]</p>
+<p><strong>Type :</strong> Double (a blank parameter is not allowed)</p>
+<p><strong>Description :</strong> [double01] gives the real part
+of <span class="math">\(c_{i\sigma_1} (c_{i\sigma_1} ^{\dagger})\)</span>, while
+[double02] gives the imaginary part of
+<span class="math">\(c_{i\sigma_1} (c_{i\sigma_1} ^{\dagger})\)</span>.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="use-rules">
+<span id="use-rules-15"></span><h2>Use rules<a class="headerlink" href="#use-rules" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Headers cannot be omitted.</li>
+<li>A program is terminated when the components of the single excitation
+operators are double counted.</li>
+<li>A program is terminated when the conditions <span class="math">\(i=j\)</span> and
+<span class="math">\(k=l\)</span> are not satisfied for spin model.</li>
+<li>A program is terminated when [int01] is different
+from the total number of two-body Green’s functions defined in this
+file.</li>
+<li>A program is terminated, when
+[int02]-[int04] are outside
+the range of the defined values.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.2.16. SingleExcitation file</a><ul>
+<li><a class="reference internal" href="#file-format">File format</a></li>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#use-rules">Use rules</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="green2.html"
+                        title="previous chapter">4.2.15. TwoBodyG file</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="excitation2.html"
+                        title="next chapter">4.2.17. PairExcitation file</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/file_format/expert/excitation1.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="excitation2.html" title="4.2.17. PairExcitation file"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="green2.html" title="4.2.15. TwoBodyG file"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >4. File specification</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" >4.2. Input files for <em>Expert</em> mode</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>

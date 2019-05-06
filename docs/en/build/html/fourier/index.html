@@ -1,0 +1,147 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>7. HPhi/mVMC Fourier-Transformation utility &#8212; HPhi++ 3.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7.1. Overview" href="overview.html" />
+    <link rel="prev" title="6.3. Calculation of magnetization curve" href="../tool/magnetization.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="overview.html" title="7.1. Overview"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../tool/magnetization.html" title="6.3. Calculation of magnetization curve"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="hphi-mvmc-fourier-transformation-utility">
+<h1>7. HPhi/mVMC Fourier-Transformation utility<a class="headerlink" href="#hphi-mvmc-fourier-transformation-utility" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">7.1. Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#prerequisite">7.1.1. Prerequisite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#supported-quantities">7.1.2. Supported quantities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">7.2. Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#run-hphi-vmc-out">7.2.1. Run HPhi/vmc.out</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#fourier-transformation-of-correlation-functions">7.2.2. Fourier transformation of correlation functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#display-correlation-functions">7.2.3. Display correlation functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">7.3. File format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="format.html#geometry">7.3.1. Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#one-and-two-body-correlation-function-in-the-site-representation">7.3.2. One- and Two-body correlation function in the site representation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="format.html#specify-the-index-of-correlation-function-to-be-computed">Specify the index of correlation function to be computed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="format.html#results-of-correlation-function-in-the-site-representation">Results of correlation function in the site representation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#correlation-functions-on-the-k-path">7.3.3. Correlation functions on the <em>k</em> path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#gnuplot-script">7.3.4. gnuplot script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html#fermisurfer-file-to-display-the-isosurface-of-the-momentum-distribution">7.3.5. FermiSurfer file to display the isosurface of the momentum distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="util.html">7.4. Behavior of <code class="docutils literal"><span class="pre">greenr2k</span></code> utility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="util.html#hphi-lanczos">7.4.1. HPhi-Lanczos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.html#hphi-tpq">7.4.2. HPhi-TPQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.html#hphi-full-diagonalization-and-lobcg">7.4.3. HPhi-Full diagonalization and LOBCG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.html#mvmc">7.4.4. mVMC</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">7.5. Contact</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../tool/magnetization.html"
+                        title="previous chapter">6.3. Calculation of magnetization curve</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="overview.html"
+                        title="next chapter">7.1. Overview</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/fourier/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="overview.html" title="7.1. Overview"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../tool/magnetization.html" title="6.3. Calculation of magnetization curve"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>

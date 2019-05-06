@@ -1,0 +1,185 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>4.3.24. ham.dat &#8212; HPhi++ 3.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="4.3.25. cisajs.dat" href="cisajs.html" />
+    <link rel="prev" title="4.3.23. phys.dat" href="phys.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="cisajs.html" title="4.3.25. cisajs.dat"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="phys.html" title="4.3.23. phys.dat"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >4. File specification</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">4.3. Output files</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ham-dat">
+<span id="subsec-ham"></span><h1>4.3.24. ham.dat<a class="headerlink" href="#ham-dat" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line">(For the FullDiag method) When <code class="docutils literal"><span class="pre">OutputHam=1</span></code> in the <code class="docutils literal"><span class="pre">CalcMod</span></code>
+file, the Hamiltonian calculated by HPhi++ is outputted by the
+MatrixMarket format. The recalculation by using this file can be down
+when <code class="docutils literal"><span class="pre">InputHam=1</span></code> in the <code class="docutils literal"><span class="pre">CalcMod</span></code> file. An example of the file
+format is as follows.</div>
+</div>
+<div class="highlight-none"><div class="highlight"><pre><span></span>%%%%MatrixMarket matrix coordinate complex hermitian
+28 28 56
+1 1 1.000000 0.000000
+2 1 0.500000 0.000000
+3 2 0.500000 0.000000
+4 3 0.500000 0.000000
+5 4 0.500000 0.000000
+6 5 0.500000 0.000000
+7 6 0.500000 0.000000
+7 7 1.000000 0.000000
+    …
+</pre></div>
+</div>
+<div class="section" id="file-name">
+<span id="file-name-15"></span><h2>File name<a class="headerlink" href="#file-name" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>##_ham.dat</li>
+</ul>
+<p>## indicates [string02] in a ModPara file.</p>
+</div>
+<div class="section" id="file-format">
+<span id="file-format-39"></span><h2>File format<a class="headerlink" href="#file-format" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Line 1: Header</li>
+<li>Line 2:
+[int01] [int02] [int03]</li>
+<li>Lines3-:[int04] [int05] [double01] [double02]</li>
+</ul>
+</div>
+<div class="section" id="parameters">
+<span id="parameters-39"></span><h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">[int01]</p>
+<p><strong>Type :</strong> Int</p>
+<p><strong>Description :</strong> Number of rows of Hamiltonian.</p>
+</li>
+<li><p class="first">[int02]</p>
+<p><strong>Type :</strong> Int</p>
+<p><strong>Description :</strong> Number of columns of Hamiltonian.</p>
+</li>
+<li><p class="first">[int03]</p>
+<p><strong>Type :</strong> Int</p>
+<p><strong>Description :</strong> Number of nonzero elements of Hamiltonian.</p>
+</li>
+<li><p class="first">[double01], [double02]</p>
+<p><strong>Type :</strong> Double</p>
+<p><strong>Description :</strong> The value of Hamiltonian;
+[double01] and [double02]
+represent real and imaginary part of the Hamiltonian, respectively.</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4.3.24. ham.dat</a><ul>
+<li><a class="reference internal" href="#file-name">File name</a></li>
+<li><a class="reference internal" href="#file-format">File format</a></li>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="phys.html"
+                        title="previous chapter">4.3.23. phys.dat</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cisajs.html"
+                        title="next chapter">4.3.25. cisajs.dat</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/file_format/output/ham.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="cisajs.html" title="4.3.25. cisajs.dat"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="phys.html" title="4.3.23. phys.dat"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >4. File specification</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" >4.3. Output files</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>

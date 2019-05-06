@@ -1,0 +1,147 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>5.4. Dynamical Green’s function &#8212; HPhi++ 3.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5.5. Real time evolution method" href="real_time.html" />
+    <link rel="prev" title="5.3. Finite-temperature calculations by the TPQ method" href="tpq.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="real_time.html" title="5.5. Real time evolution method"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tpq.html" title="5.3. Finite-temperature calculations by the TPQ method"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">5. Algorithm</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="dynamical-greens-function">
+<h1>5.4. Dynamical Green’s function<a class="headerlink" href="#dynamical-greens-function" title="Permalink to this headline">¶</a></h1>
+<p>Using HPhi++, we can calculate a dynamical Green’s
+function</p>
+<div class="math">
+\[I(z) = \langle \Phi ' | \frac{1}{ {\mathcal H}- z\hat{I} } | \Phi '\rangle,\]</div>
+<p>where <span class="math">\(|\Phi ' \rangle  = \hat{O} | \Phi _0 \rangle\)</span> is an
+excited state and <span class="math">\(\hat{O}\)</span> is an excitation operator defined as a
+single excitation operator</p>
+<div class="math">
+\[\sum_{i, \sigma_1} A_{i \sigma_1} c_{i \sigma_1} (c_{i\sigma_1}^{\dagger})\]</div>
+<p>or a pair excitation operator</p>
+<div class="math">
+\[\sum_{i, j, \sigma_1, \sigma_2} A_{i \sigma_1 j \sigma_2} c_{i \sigma_1}c_{j \sigma_2}^{\dagger} (c_{i\sigma_1}^{\dagger}c_{j\sigma_2}).\]</div>
+<p>For example, the dynamical spin susceptibilities can be calculated by
+defining <span class="math">\(\hat{O}\)</span> as</p>
+<div class="math">
+\[\hat{O} = \hat{S}({\bf k}) = \sum_{j}\hat{S}_j^z e^{i  {\bf k} \cdot \bf {r}_j} = \sum_{j}\frac{1}{2} (c_{j\uparrow}^{\dagger}c_{j\uparrow}-c_{j\downarrow}^{\dagger}c_{j\downarrow})e^{i  {\bf k} \cdot \bf {r}_j}.\]</div>
+<p>There are two modes implemented in <span class="math">\({\cal H}\Phi\)</span>. One is the
+continued fraction expansion method by using Lanczos method
+&nbsp;<a class="footnote-reference" href="#id3" id="id1">[1]</a> and the other is the shifted Krylov
+method&nbsp;<a class="footnote-reference" href="#id4" id="id2">[2]</a> . See the reference
+for the details of each algorithm.</p>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>E. Dagotto, Rev. Mod. Phys. <strong>66</strong>, 763-840 (1994).</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>S.Yamamoto, T. Sogabe, T. Hoshi, S.-L. Zhang, T. Fujiwara, Journal of the Physical Society of Japan <strong>77</strong>, 114713 (2008).</td></tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tpq.html"
+                        title="previous chapter">5.3. Finite-temperature calculations by the TPQ method</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="real_time.html"
+                        title="next chapter">5.5. Real time evolution method</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/algorithm/dynamical_green.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="real_time.html" title="5.5. Real time evolution method"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tpq.html" title="5.3. Finite-temperature calculations by the TPQ method"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >5. Algorithm</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>

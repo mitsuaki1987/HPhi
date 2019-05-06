@@ -1,0 +1,144 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>5.2. Full Diagonalization method &#8212; HPhi++ 3.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5.3. Finite-temperature calculations by the TPQ method" href="tpq.html" />
+    <link rel="prev" title="5.1. Lanczos method" href="lanczos.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tpq.html" title="5.3. Finite-temperature calculations by the TPQ method"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="lanczos.html" title="5.1. Lanczos method"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">5. Algorithm</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="full-diagonalization-method">
+<h1>5.2. Full Diagonalization method<a class="headerlink" href="#full-diagonalization-method" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>5.2.1. Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>We generate the matrix of <span class="math">\(\hat{\mathcal H }\)</span> by using the real space configuration
+<span class="math">\(| \psi_j \rangle\)</span>(<span class="math">\(j=1\cdots d_{\rm H}\)</span>, where <span class="math">\(d_{\rm H}\)</span> is the dimension of the Hilbert space):
+<span class="math">\({\mathcal H }_{ij}= \langle \psi_i | \hat {\mathcal H } | \psi_j \rangle\)</span>.
+By diagonalizing this matrix,
+we can obtain all the eigenvalues <span class="math">\(E_{i}\)</span> and eigenvectors <span class="math">\(|\Phi_i\rangle\)</span> (<span class="math">\(i=1 \cdots d_{\rm H}\)</span>).
+In the diagonalization, we use a LAPACK routine, such as <code class="docutils literal"><span class="pre">dsyev</span></code> or <code class="docutils literal"><span class="pre">zheev</span></code>.
+We also calculate and output
+the expectation values <span class="math">\(A_i \equiv \langle \Phi_i | {\hat A} | \Phi_i\rangle\)</span>.
+These values are used for the finite-temperature calculations.</p>
+</div>
+<div class="section" id="finite-temperature-calculations">
+<h2>5.2.2. Finite-temperature calculations<a class="headerlink" href="#finite-temperature-calculations" title="Permalink to this headline">¶</a></h2>
+<p>From
+<span class="math">\(A_i \equiv \langle \Phi_i | {\hat A} | \Phi_i\rangle\)</span>,
+we calculate the finite-temperature properties by using the relation</p>
+<div class="math">
+\[\langle {\hat A}\rangle=\frac{\sum_{i=1}^N A_i {\rm  e}^{-\beta E_i}}{\sum_{i=1}^N{\rm  e}^{-\beta E_i}}.\]</div>
+<p>The calculation should be performed by using the own postscripts.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/HPhi++.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5.2. Full Diagonalization method</a><ul>
+<li><a class="reference internal" href="#overview">5.2.1. Overview</a></li>
+<li><a class="reference internal" href="#finite-temperature-calculations">5.2.2. Finite-temperature calculations</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="lanczos.html"
+                        title="previous chapter">5.1. Lanczos method</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tpq.html"
+                        title="next chapter">5.3. Finite-temperature calculations by the TPQ method</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/algorithm/full_diag.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tpq.html" title="5.3. Finite-temperature calculations by the TPQ method"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="lanczos.html" title="5.1. Lanczos method"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">HPhi++ 3.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >5. Algorithm</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, HPhi++ team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>
