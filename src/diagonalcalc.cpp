@@ -716,7 +716,7 @@ int diagonalcalcForTE
     for (i = 0; i < X->Def.NTETransferDiagonal[_istep]; i++) {
       isite1 = X->Def.TETransferDiagonal[_istep][i][0] + 1;
       A_spin = X->Def.TETransferDiagonal[_istep][i][1];
-      tmp_V = X->Def.ParaTETransferDiagonal[_istep][i];
+      tmp_V = -X->Def.ParaTETransferDiagonal[_istep][i];
       SetDiagonalTETransfer(isite1, tmp_V, A_spin, X, tmp_v0, tmp_v1);
     }
   }
