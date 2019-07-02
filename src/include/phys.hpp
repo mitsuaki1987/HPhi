@@ -16,4 +16,4 @@
 #pragma once
 #include "Common.hpp"
 
-void phys(struct BindStruct *X, long int neig);
+void phys(long int neig);

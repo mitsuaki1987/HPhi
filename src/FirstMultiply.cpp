@@ -39,7 +39,7 @@
 /// \version 0.1
 /// \author Takahiro Misawa (The University of Tokyo)
 /// \author Kazuyoshi Yoshimi (The University of Tokyo)
-int FirstMultiply(struct BindStruct *X) {
+int FirstMultiply() {
 
   long int i, i_max;
   double dnorm;
@@ -48,12 +48,12 @@ int FirstMultiply(struct BindStruct *X) {
   dsfmt_t dsfmt;
   int mythread, rand_i, iret;
 
-  Ns = 1.0*X->Def.NsiteMPI;
-  i_max = X->Check.idim_max;
+  Ns = 1.0*Def::NsiteMPI;
+  i_max = Check::idim_max;
 
   for (rand_i = 0; rand_i < NumAve; rand_i++) {
 #pragma omp parallel default(none) private(i, mythread, u_long_i, dsfmt) \
-shared(I, v0, v1, nthreads, myrank, rand_i, X, stdoutMPI) \
+shared(I, v0, v1, nthreads, myrank, rand_i, stdoutMPI) \
 firstprivate(i_max)
   {
 #pragma omp for
@@ -69,16 +69,16 @@ firstprivate(i_max)
 #else
     mythread = 0;
 #endif
-    u_long_i = 123432 + (rand_i + 1)*labs(X->Def.initial_iv) + mythread + nthreads * myrank;
+    u_long_i = 123432 + (rand_i + 1)*labs(Def::initial_iv) + mythread + nthreads * myrank;
     dsfmt_init_gen_rand(&dsfmt, u_long_i);
 
-    if (X->Def.iInitialVecType == 0) {
+    if (Def::iInitialVecType == 0) {
 
       StartTimer(3101);
 #pragma omp for
       for (i = 1; i <= i_max; i++)
         v1[i][rand_i] = 2.0*(dsfmt_genrand_close_open(&dsfmt) - 0.5) + 2.0*(dsfmt_genrand_close_open(&dsfmt) - 0.5)*I;
-      }/*if (X->Def.iInitialVecType == 0)*/
+      }/*if (Def::iInitialVecType == 0)*/
       else {
 #pragma omp for
         for (i = 1; i <= i_max; i++)
@@ -101,18 +101,18 @@ shared(v1, i_max, rand_i) reduction(+:dnorm)
     for (i = 1; i <= i_max; i++) v1[i][rand_i] = v1[i][rand_i] / dnorm;
   }/*for (rand_i = 0; rand_i < NumAve; rand_i++)*/
 
-  TimeKeeperWithRandAndStep(X, "%s_TimeKeeper.dat", "set %d step %d:TPQ begins: %s", "a", rand_i, step_i);
+  TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", "set %d step %d:TPQ begins: %s", "a", rand_i, step_i);
   /**@brief
 Compute expectation value at infinite temperature
 */
-  X->Def.istep = 0;
+  Def::istep = 0;
   StartTimer(3300);
-  iret = expec_cisajs(X, NumAve, v0, v1);
+  iret = expec_cisajs(NumAve, v0, v1);
   StopTimer(3300);
   if (iret != 0) return -1;
 
   StartTimer(3400);
-  iret = expec_cisajscktaltdc(X, NumAve, v0, v1);
+  iret = expec_cisajscktaltdc(NumAve, v0, v1);
   StopTimer(3400);
   if (iret != 0) return -1;
 
@@ -120,7 +120,7 @@ Compute expectation value at infinite temperature
   for (i = 1; i <= i_max; i++) 
     for (rand_i = 0; rand_i < NumAve; rand_i++) v0[i][rand_i] = v1[i][rand_i];
   StartTimer(3102);
-  if(expec_energy_flct(X, NumAve, v0, v1) !=0){
+  if(expec_energy_flct(NumAve, v0, v1) !=0){
     StopTimer(3102);
     return -1;
   }
@@ -144,6 +144,6 @@ firstprivate(i_max) reduction(+:dnorm)
 #pragma omp parallel for default(none) private(i) shared(v0,rand_i) firstprivate(i_max, dnorm)
     for (i = 1; i <= i_max; i++) v0[i][rand_i] = v0[i][rand_i] / dnorm;
   }/*for (rand_i = 0; rand_i < NumAve; rand_i++)*/
-  TimeKeeperWithRandAndStep(X, "%s_TimeKeeper.dat", "set %d step %d:TPQ finishes: %s", "a", rand_i, step_i);
+  TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", "set %d step %d:TPQ finishes: %s", "a", rand_i, step_i);
   return 0;
 }

@@ -16,4 +16,4 @@
 #pragma once
 #include "Common.hpp"
 
-int expec_totalspin(struct BindStruct *X, int nstate, std::complex<double> **vec);
+int expec_totalspin( int nstate, std::complex<double> **vec);

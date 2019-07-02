@@ -16,7 +16,4 @@
 #pragma once
 #include "Common.hpp"
 
-int CalcByTEM(
-              const int ExpecInterval,
-              struct EDMainCalStruct *X
-);
+int CalcByTEM(const int ExpecInterval);

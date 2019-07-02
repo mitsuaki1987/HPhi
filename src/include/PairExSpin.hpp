@@ -16,5 +16,5 @@
 #pragma once
 #include "Common.hpp"
 
-int GetPairExcitedStateSpinGC(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, int iEx);
-int GetPairExcitedStateSpin(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, int iEx);
+int GetPairExcitedStateSpinGC( int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, int iEx);
+int GetPairExcitedStateSpin( int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, int iEx);

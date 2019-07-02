@@ -68,7 +68,6 @@
     </ul>
     <li>StdFace_main.cpp : Construct typical models</li>
     <li>global.h : Global variables</li>
-    <li>struct.h : Binded struct</li>
   </ul>
   <HR>
   <H2>How to modify HPhi (Developer's note)</H2>
@@ -178,7 +177,6 @@ int main(int argc, char* argv[]){
 
   int mode=0;
   char cFileListName[D_FileNameMax];
-  struct EDMainCalStruct X;
 
   stdoutMPI = stdout;
   if(JudgeDefType(argc, argv, &mode)!=0){
@@ -219,84 +217,82 @@ int main(int argc, char* argv[]){
     }
   }
 
-  setmem_HEAD(&X.Bind);
-  if(ReadDefFileNInt(cFileListName, &(X.Bind.Def), &(X.Bind.Boost))!=0){
+  setmem_HEAD();
+  if(ReadDefFileNInt(cFileListName)!=0){
     fprintf(stdoutMPI, "%s", "Error: Definition files(*.def) are incomplete.\n");
     exitMPI(-1);
   }
 
-  if (X.Bind.Def.nvec < X.Bind.Def.k_exct){
+  if (Def::nvec < Def::k_exct){
     fprintf(stdoutMPI, "%s", "Error: nvec should be smaller than exct are incorrect.\n");
-    fprintf(stdoutMPI, "Error: nvec = %d, exct=%d.\n",
-            X.Bind.Def.nvec, X.Bind.Def.k_exct);
+    fprintf(stdoutMPI, "Error: nvec = %d, exct=%d.\n", Def::nvec, Def::k_exct);
     exitMPI(-1);
   }
   fprintf(stdoutMPI, "%s", "\n######  Definition files are correct.  ######\n\n");
   
   /*ALLOCATE-------------------------------------------*/
-  setmem_def(&X.Bind, &X.Bind.Boost);
+  setmem_def();
   /*-----------------------------------------------------*/
 
   /*Read Def files.*/
-  TimeKeeper(&(X.Bind), "%s_TimeKeeper.dat", "Read File starts:   %s", "w");
-  if(ReadDefFileIdxPara(&(X.Bind.Def), &(X.Bind.Boost))!=0){
+  TimeKeeper("%s_TimeKeeper.dat", "Read File starts:   %s", "w");
+  if (ReadDefFileIdxPara() != 0) {
     fprintf(stdoutMPI,
             "Error: Indices and Parameters of Definition files(*.def) are incomplete.\n");
     exitMPI(-1);
   }
-  TimeKeeper(&(X.Bind), "%s_TimeKeeper.dat", "Read File finishes: %s", "a");
+  TimeKeeper("%s_TimeKeeper.dat", "Read File finishes: %s", "a");
   fprintf(stdoutMPI, "%s", "\n######  Indices and Parameters of Definition files(*.def) are complete.  ######\n\n");
 
   /*Set convergence Factor*/
-  SetConvergenceFactor(&(X.Bind.Def));
+  SetConvergenceFactor();
 
   /*---------------------------*/
-  if(HPhiTrans(&(X.Bind))!=0) {
+  if (HPhiTrans() != 0) {
     exitMPI(-1);
   }
 
   //Start Calculation
-  if(X.Bind.Def.iFlgCalcSpec == CALCSPEC_NOT ||
-     X.Bind.Def.iFlgCalcSpec == CALCSPEC_SCRATCH) {
+  if (Def::iFlgCalcSpec == CALCSPEC_NOT || Def::iFlgCalcSpec == CALCSPEC_SCRATCH) {
     
-    if(check(&(X.Bind))==MPIFALSE){
+    if (check() == MPIFALSE) {
      exitMPI(-1);
     }
     
     /*LARGE VECTORS ARE ALLOCATED*/
-    if (setmem_large(&X.Bind) != 0) {
+    if (setmem_large() != 0) {
       fprintf(stdoutMPI, "Error: Fail for memory allocation.");
       exitMPI(-1);
     }
     
     StartTimer(1000);
-    if(sz(&(X.Bind), list_1, list_2_1, list_2_2)!=0){
+    if(sz(list_1, list_2_1, list_2_2)!=0){
       exitMPI(-1);
     }
 
     StopTimer(1000);
-    if(X.Bind.Def.WRITE==1){
-      output_list(&(X.Bind));
+    if(Def::WRITE==1){
+      output_list();
       exitMPI(-2);
     }
     StartTimer(2000);
-    diagonalcalc(&(X.Bind));
+    diagonalcalc();
     StopTimer(2000);
       
-    switch (X.Bind.Def.iCalcType) {
+    switch (Def::iCalcType) {
     case CG:
-      if (CalcByLOBPCG(&X) != TRUE) {
+      if (CalcByLOBPCG() != TRUE) {
           exitMPI(-3);
       }
       break;
 
     case FullDiag:
       StartTimer(5000);
-      if (X.Bind.Def.iFlgScaLAPACK == 0 && nproc != 1) {
+      if (Def::iFlgScaLAPACK == 0 && nproc != 1) {
         fprintf(stdoutMPI, "Error: Full Diagonalization by LAPACK is only allowed for one process.\n");
         FinalizeMPI();
       }
-      if (CalcByFullDiag(&X) != TRUE) {
+      if (CalcByFullDiag() != TRUE) {
         FinalizeMPI();
       }
       StopTimer(5000);
@@ -304,7 +300,7 @@ int main(int argc, char* argv[]){
 
     case TPQCalc:
       StartTimer(3000);
-      if (CalcByTPQ(NumAve, X.Bind.Def.Param.ExpecInterval, &X) != TRUE) {
+      if (CalcByTPQ(NumAve, Param::ExpecInterval) != TRUE) {
         StopTimer(3000);
         exitMPI(-3);
       }
@@ -312,7 +308,7 @@ int main(int argc, char* argv[]){
       break;
 
     case TimeEvolution:
-      if (CalcByTEM(X.Bind.Def.Param.ExpecInterval, &X) != 0) {
+      if (CalcByTEM(Param::ExpecInterval) != 0) {
         exitMPI(-3);
       }
       break;
@@ -323,9 +319,9 @@ int main(int argc, char* argv[]){
     }
   }
 
-  if(X.Bind.Def.iFlgCalcSpec != CALCSPEC_NOT){
+  if(Def::iFlgCalcSpec != CALCSPEC_NOT){
     StartTimer(6000);
-    if (CalcSpectrum(&X) != TRUE) {
+    if (CalcSpectrum() != TRUE) {
       StopTimer(6000);
       exitMPI(-3);
     }
@@ -333,7 +329,7 @@ int main(int argc, char* argv[]){
   }
   
   StopTimer(0);
-  OutputTimer(&(X.Bind));
+  OutputTimer();
   FinalizeMPI();
   return 0;
 }

@@ -40,15 +40,12 @@
 
  ///
  /// \brief Set target frequencies
- /// \param X [in, out] Struct to give and get the information of target frequencies.\n
  /// Output: dcOmegaMax, dcOmegaMin
  ///
  /// \retval FALSE Fail to set frequencies.
  /// \retval TRUE Success to set frequencies.
-int SetOmega
-(
-  struct DefineList *X
-) {
+int SetOmega()
+{
   FILE *fp;
   char sdt[D_FileNameMax], ctmp[256];
   int istp = 4;
@@ -57,12 +54,12 @@ int SetOmega
   long int iline_count = 2;
 
 
-  if (X->iFlgSpecOmegaMax == TRUE && X->iFlgSpecOmegaMin == TRUE) {
+  if (Def::iFlgSpecOmegaMax == TRUE && Def::iFlgSpecOmegaMin == TRUE) {
     return TRUE;
   }
   else {
-    if (X->iCalcType == Lanczos || X->iCalcType == FullDiag) {
-      sprintf(sdt, "%s_Lanczos_Step.dat", X->CDataFileHead);
+    if (Def::iCalcType == Lanczos || Def::iCalcType == FullDiag) {
+      sprintf(sdt, "%s_Lanczos_Step.dat", Def::CDataFileHead);
       childfopenMPI(sdt, "r", &fp);
       if (fp == NULL) {
         fprintf(stdoutMPI, "Error: xx_Lanczos_Step.dat does not exist.\n");
@@ -95,10 +92,10 @@ int SetOmega
         fprintf(stdoutMPI, "Error: Lanczos step must be greater than 4 for using spectrum calculation.\n");
         return FALSE;
       }
-    }/*if (X->iCalcType == Lanczos || X->iCalcType == FullDiag)*/
+    }/*if (Def::iCalcType == Lanczos || Def::iCalcType == FullDiag)*/
     else
     {
-      sprintf(sdt, "%s_energy.dat", X->CDataFileHead);
+      sprintf(sdt, "%s_energy.dat", Def::CDataFileHead);
       childfopenMPI(sdt, "r", &fp);
       if (fp == NULL) {
         fprintf(stdoutMPI, "Error: xx_energy.dat does not exist.\n");
@@ -110,11 +107,11 @@ int SetOmega
       Emax = LargeValue;
     }/**/
     //Read Lanczos_Step
-    if (X->iFlgSpecOmegaMax == FALSE) {
-      X->dcOmegaMax = Emax * (double)X->Nsite;
+    if (Def::iFlgSpecOmegaMax == FALSE) {
+      Def::dcOmegaMax = Emax * (double)Def::Nsite;
     }
-    if (X->iFlgSpecOmegaMin == FALSE) {
-      X->dcOmegaMin = E1;
+    if (Def::iFlgSpecOmegaMin == FALSE) {
+      Def::dcOmegaMin = E1;
     }
   }/*Omegamax and omegamin is not specified in modpara*/
 
@@ -123,29 +120,27 @@ int SetOmega
 ///
 /// \brief Make the lists for the excited state; list_1, list_2_1 and list_2_2 (for canonical ensemble).
 /// The original lists before the excitation are given by list_xxx_org
-/// \param X [in, out] Struct to get and give information to make the lists for the excited state.\n
 /// Output: iCalcModel (From HubbardNConserved to Hubbard), {Ne, Nup, Ndown, Nsite, Total2Sz} (update for MPI)
 ///
 /// \param iFlgListModifed [out] If the list is modified due to the excitation, the value becomes TRUE(1), otherwise FALSE(0).
 /// \retval -1 fail to make lists.
 /// \retval 0  sucsess to make lists.
 int MakeExcitedList(
-  struct BindStruct *X,
   int *iFlgListModifed
 ) {
   long int j;
   *iFlgListModifed = FALSE;
   //To Get Original space
-  if (check(X) == MPIFALSE) {
+  if (check() == MPIFALSE) {
     FinalizeMPI();
     return -1;
   }
 
-  X->Check.idim_maxOrg = X->Check.idim_max;
-  X->Check.idim_maxMPIOrg = X->Check.idim_maxMPI;
+  Check::idim_maxOrg = Check::idim_max;
+  Check::idim_maxMPIOrg = Check::idim_maxMPI;
 
-  if (X->Def.NNSingleExcitationOperator > 0) {
-    switch (X->Def.iCalcModel) {
+  if (Def::NNSingleExcitationOperator > 0) {
+    switch (Def::iCalcModel) {
     case HubbardGC:
       break;
     case HubbardNConserved:
@@ -159,8 +154,8 @@ int MakeExcitedList(
       return FALSE;
     }
   }
-  else if (X->Def.NNPairExcitationOperator > 0) {
-    switch (X->Def.iCalcModel) {
+  else if (Def::NNPairExcitationOperator > 0) {
+    switch (Def::iCalcModel) {
     case HubbardGC:
     case SpinGC:
     case HubbardNConserved:
@@ -169,7 +164,7 @@ int MakeExcitedList(
     case Hubbard:
     case Kondo:
     case Spin:
-      if (X->Def.PairExcitationOperator[0][0][1] != X->Def.PairExcitationOperator[0][0][3]) {
+      if (Def::PairExcitationOperator[0][0][1] != Def::PairExcitationOperator[0][0][3]) {
         *iFlgListModifed = TRUE;
       }
       break;
@@ -180,15 +175,15 @@ int MakeExcitedList(
   }
 
   if (*iFlgListModifed == TRUE) {
-    if (GetlistSize(X) == TRUE) {
-      list_1_org = li_1d_allocate(X->Check.idim_max + 1);
+    if (GetlistSize() == TRUE) {
+      list_1_org = li_1d_allocate(Check::idim_max + 1);
 #ifdef __MPI
       long int MAXidim_max;
-      MAXidim_max = MaxMPI_li(X->Check.idim_max);
+      MAXidim_max = MaxMPI_li(Check::idim_max);
       list_1buf_org = li_1d_allocate(MAXidim_max + 1);
 #endif // MPI
-      list_2_1_org = li_1d_allocate(X->Large.SizeOflist_2_1);
-      list_2_2_org = li_1d_allocate(X->Large.SizeOflist_2_2);
+      list_2_1_org = li_1d_allocate(Large::SizeOflist_2_1);
+      list_2_2_org = li_1d_allocate(Large::SizeOflist_2_2);
       if (list_1_org == NULL
         || list_2_1_org == NULL
         || list_2_2_org == NULL
@@ -196,55 +191,55 @@ int MakeExcitedList(
       {
         return -1;
       }
-      for (j = 0; j < X->Large.SizeOflist_2_1; j++) {
+      for (j = 0; j < Large::SizeOflist_2_1; j++) {
         list_2_1_org[j] = 0;
       }
-      for (j = 0; j < X->Large.SizeOflist_2_2; j++) {
+      for (j = 0; j < Large::SizeOflist_2_2; j++) {
         list_2_2_org[j] = 0;
       }
 
     }
 
-    if (sz(X, list_1_org, list_2_1_org, list_2_2_org) != 0) {
+    if (sz(list_1_org, list_2_1_org, list_2_2_org) != 0) {
       return FALSE;
     }
 
-    if (X->Def.NNSingleExcitationOperator > 0) {
-      switch (X->Def.iCalcModel) {
+    if (Def::NNSingleExcitationOperator > 0) {
+      switch (Def::iCalcModel) {
       case HubbardGC:
         break;
       case HubbardNConserved:
-        if (X->Def.SingleExcitationOperator[0][0][2] == 1) { //cis
-          X->Def.Ne = X->Def.NeMPI + 1;
+        if (Def::SingleExcitationOperator[0][0][2] == 1) { //cis
+          Def::Ne = Def::NeMPI + 1;
         }
         else {
-          X->Def.Ne = X->Def.NeMPI - 1;
+          Def::Ne = Def::NeMPI - 1;
         }
         break;
       case KondoGC:
       case Hubbard:
       case Kondo:
-        if (X->Def.SingleExcitationOperator[0][0][2] == 1) { //cis
-          X->Def.Ne = X->Def.NeMPI + 1;
-          if (X->Def.SingleExcitationOperator[0][0][1] == 0) {//up
-            X->Def.Nup = X->Def.NupOrg + 1;
-            X->Def.Ndown = X->Def.NdownOrg;
+        if (Def::SingleExcitationOperator[0][0][2] == 1) { //cis
+          Def::Ne = Def::NeMPI + 1;
+          if (Def::SingleExcitationOperator[0][0][1] == 0) {//up
+            Def::Nup = Def::NupOrg + 1;
+            Def::Ndown = Def::NdownOrg;
           }
           else {//down
-            X->Def.Nup = X->Def.NupOrg;
-            X->Def.Ndown = X->Def.NdownOrg + 1;
+            Def::Nup = Def::NupOrg;
+            Def::Ndown = Def::NdownOrg + 1;
           }
         }
         else {//ajt
-          X->Def.Ne = X->Def.NeMPI - 1;
-          if (X->Def.SingleExcitationOperator[0][0][1] == 0) {//up
-            X->Def.Nup = X->Def.NupOrg - 1;
-            X->Def.Ndown = X->Def.NdownOrg;
+          Def::Ne = Def::NeMPI - 1;
+          if (Def::SingleExcitationOperator[0][0][1] == 0) {//up
+            Def::Nup = Def::NupOrg - 1;
+            Def::Ndown = Def::NdownOrg;
 
           }
           else {//down
-            X->Def.Nup = X->Def.NupOrg;
-            X->Def.Ndown = X->Def.NdownOrg - 1;
+            Def::Nup = Def::NupOrg;
+            Def::Ndown = Def::NdownOrg - 1;
           }
         }
         break;
@@ -253,9 +248,9 @@ int MakeExcitedList(
         return FALSE;
       }
     }
-    else if (X->Def.NNPairExcitationOperator > 0) {
-      X->Def.Ne = X->Def.NeMPI;
-      switch (X->Def.iCalcModel) {
+    else if (Def::NNPairExcitationOperator > 0) {
+      Def::Ne = Def::NeMPI;
+      switch (Def::iCalcModel) {
       case HubbardGC:
       case SpinGC:
       case HubbardNConserved:
@@ -263,31 +258,31 @@ int MakeExcitedList(
       case KondoGC:
       case Hubbard:
       case Kondo:
-        if (X->Def.PairExcitationOperator[0][0][1] != X->Def.PairExcitationOperator[0][0][3]) {
-          if (X->Def.PairExcitationOperator[0][0][1] == 0) {//up
-            X->Def.Nup = X->Def.NupOrg + 1;
-            X->Def.Ndown = X->Def.NdownOrg - 1;
+        if (Def::PairExcitationOperator[0][0][1] != Def::PairExcitationOperator[0][0][3]) {
+          if (Def::PairExcitationOperator[0][0][1] == 0) {//up
+            Def::Nup = Def::NupOrg + 1;
+            Def::Ndown = Def::NdownOrg - 1;
           }
           else {//down
-            X->Def.Nup = X->Def.NupOrg - 1;
-            X->Def.Ndown = X->Def.NdownOrg + 1;
+            Def::Nup = Def::NupOrg - 1;
+            Def::Ndown = Def::NdownOrg + 1;
           }
         }
         break;
       case Spin:
-        if (X->Def.PairExcitationOperator[0][0][1] != X->Def.PairExcitationOperator[0][0][3]) {
-          if (X->Def.iFlgGeneralSpin == FALSE) {
-            if (X->Def.PairExcitationOperator[0][0][1] == 0) {//down
-              X->Def.Nup = X->Def.NupOrg - 1;
-              X->Def.Ndown = X->Def.NdownOrg + 1;
+        if (Def::PairExcitationOperator[0][0][1] != Def::PairExcitationOperator[0][0][3]) {
+          if (Def::iFlgGeneralSpin == FALSE) {
+            if (Def::PairExcitationOperator[0][0][1] == 0) {//down
+              Def::Nup = Def::NupOrg - 1;
+              Def::Ndown = Def::NdownOrg + 1;
             }
             else {//up
-              X->Def.Nup = X->Def.NupOrg + 1;
-              X->Def.Ndown = X->Def.NdownOrg - 1;
+              Def::Nup = Def::NupOrg + 1;
+              Def::Ndown = Def::NdownOrg - 1;
             }
           }
           else {//for general spin
-            X->Def.Total2Sz = X->Def.Total2SzMPI + 2 * (X->Def.PairExcitationOperator[0][0][1] - X->Def.PairExcitationOperator[0][0][3]);
+            Def::Total2Sz = Def::Total2SzMPI + 2 * (Def::PairExcitationOperator[0][0][1] - Def::PairExcitationOperator[0][0][3]);
           }
         }
         break;
@@ -297,44 +292,44 @@ int MakeExcitedList(
       return FALSE;
     }
     //Update Infomation
-    X->Def.Nsite = X->Def.NsiteMPI;
+    Def::Nsite = Def::NsiteMPI;
 
-    if (check(X) == MPIFALSE) {
+    if (check() == MPIFALSE) {
       FinalizeMPI();
       return FALSE;
     }
   }
 
   //set memory
-  if (setmem_large(X) != 0) {
+  if (setmem_large() != 0) {
     fprintf(stdoutMPI, "Error: Fail for memory allocation.\n");
     exitMPI(-1);
   }
-  if (sz(X, list_1, list_2_1, list_2_2) != 0) {
+  if (sz(list_1, list_2_1, list_2_2) != 0) {
     return FALSE;
   }
 #ifdef __MPI
   long int MAXidim_max, MAXidim_maxOrg;
-  MAXidim_max = MaxMPI_li(X->Check.idim_max);
-  MAXidim_maxOrg = MaxMPI_li(X->Check.idim_maxOrg);
+  MAXidim_max = MaxMPI_li(Check::idim_max);
+  MAXidim_maxOrg = MaxMPI_li(Check::idim_maxOrg);
   if (MAXidim_max < MAXidim_maxOrg) {
     free_cd_2d_allocate(v1buf);
     v1buf = cd_2d_allocate(MAXidim_maxOrg + 1, 1);
   }
 #endif // MPI
 
-  if (X->Def.iCalcModel == HubbardNConserved) {
-    X->Def.iCalcModel = Hubbard;
+  if (Def::iCalcModel == HubbardNConserved) {
+    Def::iCalcModel = Hubbard;
   }
 
 #ifdef _DEBUG
   if (*iFlgListModifed == TRUE) {
-    for (j = 1; j <= X->Check.idim_maxOrg; j++) {
+    for (j = 1; j <= Check::idim_maxOrg; j++) {
       fprintf(stdout, "Debug1: myrank=%d, list_1_org[ %ld] = %ld\n",
-        myrank, j, list_1_org[j] + myrank * X->Def.OrgTpow[2 * X->Def.NsiteMPI - 1]);
+        myrank, j, list_1_org[j] + myrank * Def::OrgTpow[2 * Def::NsiteMPI - 1]);
     }
 
-    for (j = 1; j <= X->Check.idim_max; j++) {
+    for (j = 1; j <= Check::idim_max; j++) {
       fprintf(stdout, "Debug2: myrank=%d, list_1[ %ld] = %ld\n", myrank, j, list_1[j] + myrank * 64);
     }
   }
@@ -342,14 +337,12 @@ int MakeExcitedList(
   return TRUE;
 }
 /// \brief Output spectrum.
-/// \param X [in] Read information of the frequency origin.
 /// \param Nomega [in] A total number of discrete frequencies.
 /// \param dcSpectrum [in] Array of spectrum.
 /// \param dcomega [in] Array of discrete frequencies.
 /// \retval FALSE Fail to open the output file.
 /// \retval TRUE Success to output the spectrum.
 int OutputSpectrum(
-  struct EDMainCalStruct *X,
   int Nomega,
   int NdcSpectrum,
   std::complex<double> **dcSpectrum,
@@ -360,7 +353,7 @@ int OutputSpectrum(
   int iomega, idcSpectrum;
 
   //output spectrum
-  sprintf(sdt, "%s_DynamicalGreen.dat", X->Bind.Def.CDataFileHead);
+  sprintf(sdt, "%s_DynamicalGreen.dat", Def::CDataFileHead);
   if (childfopenMPI(sdt, "w", &fp) != 0) {
     return FALSE;
   }
@@ -368,7 +361,7 @@ int OutputSpectrum(
   for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
     for (iomega = 0; iomega < Nomega; iomega++) {
       fprintf(fp, "%.10lf %.10lf %.10lf %.10lf \n",
-        real(dcomega[iomega] - X->Bind.Def.dcOmegaOrg), imag(dcomega[iomega] - X->Bind.Def.dcOmegaOrg),
+        real(dcomega[iomega] - Def::dcOmegaOrg), imag(dcomega[iomega] - Def::dcOmegaOrg),
         real(dcSpectrum[iomega][idcSpectrum]), imag(dcSpectrum[iomega][idcSpectrum]));
     }/*for (i = 0; i < Nomega; i++)*/
     fprintf(fp, "\n");
@@ -378,27 +371,26 @@ int OutputSpectrum(
   return TRUE;
 }/*int OutputSpectrum*/
 /// \brief Parent function to calculate the excited state.
-/// \param X [in] Struct to get number of excitation operators.
 /// \param tmp_v0 [out] Result @f$ v_0 = H_{ex} v_1 @f$.
 /// \param tmp_v1 [in] The original state before excitation  @f$ v_1 @f$.
 /// \retval FALSE Fail to calculate the excited state.
 /// \retval TRUE Success to calculate the excited state.
 int GetExcitedState
 (
-  struct BindStruct *X,
+  
   int nstate,
   std::complex<double> **tmp_v0,
   std::complex<double> **tmp_v1,
   int iEx
 )
 {
-  if (X->Def.NNSingleExcitationOperator > 0) {
-    if (GetSingleExcitedState(X, nstate, tmp_v0, tmp_v1, iEx) != TRUE) {
+  if (Def::NNSingleExcitationOperator > 0) {
+    if (GetSingleExcitedState(nstate, tmp_v0, tmp_v1, iEx) != TRUE) {
       return FALSE;
     }
   }
-  else if (X->Def.NNPairExcitationOperator > 0) {
-    if (GetPairExcitedState(X, nstate, tmp_v0, tmp_v1, iEx) != TRUE) {
+  else if (Def::NNPairExcitationOperator > 0) {
+    if (GetPairExcitedState(nstate, tmp_v0, tmp_v1, iEx) != TRUE) {
       return FALSE;
     }
   }
@@ -407,7 +399,6 @@ int GetExcitedState
 /**
  * @brief A main function to calculate spectrum.
  *
- * @param X [in,out] CalcStruct list for getting and pushing calculation information \n
  * input: iFlgSpecOmegaOrg, dcOmegaMax, dcOmegaMin, iNOmega etc.\n
  * output: dcOmegaOrg, iFlagListModified.
  *
@@ -419,9 +410,8 @@ int GetExcitedState
  * @author Youhei Yamaji (The University of Tokyo)
  *
  */
-int CalcSpectrum(
-  struct EDMainCalStruct *X
-) {
+int CalcSpectrum()
+{
   char sdt[D_FileNameMax];
   char *defname;
   long int i;
@@ -438,56 +428,56 @@ int CalcSpectrum(
   std::complex<double> *dcomega;
   size_t byte_size;
 
-  if (X->Bind.Def.iFlgCalcSpec == CALCSPEC_SCRATCH) {
-    X->Bind.Def.Nsite = X->Bind.Def.NsiteMPI;
-    X->Bind.Def.Total2Sz = X->Bind.Def.Total2SzMPI;
-    X->Bind.Def.Ne = X->Bind.Def.NeMPI;
-    X->Bind.Def.Nup = X->Bind.Def.NupMPI;
-    X->Bind.Def.Ndown = X->Bind.Def.NdownMPI;
-    if (GetlistSize(&(X->Bind)) == TRUE) {
+  if (Def::iFlgCalcSpec == CALCSPEC_SCRATCH) {
+    Def::Nsite = Def::NsiteMPI;
+    Def::Total2Sz = Def::Total2SzMPI;
+    Def::Ne = Def::NeMPI;
+    Def::Nup = Def::NupMPI;
+    Def::Ndown = Def::NdownMPI;
+    if (GetlistSize() == TRUE) {
       free_li_1d_allocate(list_1);
       free_li_1d_allocate(list_2_1);
       free_li_1d_allocate(list_2_2);
     }
     free_d_1d_allocate(list_Diagonal);
     free_cd_2d_allocate(v0);
-    v1Org = cd_2d_allocate(X->Bind.Check.idim_max + 1, 1);
-    for (i = 1; i <= X->Bind.Check.idim_max; i++) v1Org[i][0] = v1[i][0];
+    v1Org = cd_2d_allocate(Check::idim_max + 1, 1);
+    for (i = 1; i <= Check::idim_max; i++) v1Org[i][0] = v1[i][0];
     free_cd_2d_allocate(v1);
 #ifdef __MPI
     free_li_1d_allocate(list_1buf);
     free_cd_2d_allocate(v1buf);
 #endif // MPI
-    free_d_1d_allocate(X->Bind.Phys.num_down);
-    free_d_1d_allocate(X->Bind.Phys.num_up);
-    free_d_1d_allocate(X->Bind.Phys.num);
-    free_d_1d_allocate(X->Bind.Phys.num2);
-    free_d_1d_allocate(X->Bind.Phys.energy);
-    free_d_1d_allocate(X->Bind.Phys.var);
-    free_d_1d_allocate(X->Bind.Phys.doublon);
-    free_d_1d_allocate(X->Bind.Phys.doublon2);
-    free_d_1d_allocate(X->Bind.Phys.Sz);
-    free_d_1d_allocate(X->Bind.Phys.Sz2);
-    free_d_1d_allocate(X->Bind.Phys.s2);
-  }/*if (X->Bind.Def.iFlgCalcSpec == CALCSPEC_SCRATCH)*/
+    free_d_1d_allocate(Phys::num_down);
+    free_d_1d_allocate(Phys::num_up);
+    free_d_1d_allocate(Phys::num);
+    free_d_1d_allocate(Phys::num2);
+    free_d_1d_allocate(Phys::energy);
+    free_d_1d_allocate(Phys::var);
+    free_d_1d_allocate(Phys::doublon);
+    free_d_1d_allocate(Phys::doublon2);
+    free_d_1d_allocate(Phys::Sz);
+    free_d_1d_allocate(Phys::Sz2);
+    free_d_1d_allocate(Phys::s2);
+  }/*if (Def::iFlgCalcSpec == CALCSPEC_SCRATCH)*/
 
   //set omega
-  if (SetOmega(&(X->Bind.Def)) != TRUE) {
+  if (SetOmega() != TRUE) {
     fprintf(stderr, "Error: Fail to set Omega.\n");
     exitMPI(-1);
   }
   else {
-    if (X->Bind.Def.iFlgSpecOmegaOrg == FALSE) {
-      X->Bind.Def.dcOmegaOrg = I * (X->Bind.Def.dcOmegaMax - X->Bind.Def.dcOmegaMin) / (double)X->Bind.Def.iNOmega;
+    if (Def::iFlgSpecOmegaOrg == FALSE) {
+      Def::dcOmegaOrg = I * (Def::dcOmegaMax - Def::dcOmegaMin) / (double)Def::iNOmega;
     }
   }
   /*
    Set & malloc omega grid
   */
-  Nomega = X->Bind.Def.iNOmega;
+  Nomega = Def::iNOmega;
   dcomega = cd_1d_allocate(Nomega);
-  OmegaMax = X->Bind.Def.dcOmegaMax + X->Bind.Def.dcOmegaOrg;
-  OmegaMin = X->Bind.Def.dcOmegaMin + X->Bind.Def.dcOmegaOrg;
+  OmegaMax = Def::dcOmegaMax + Def::dcOmegaOrg;
+  OmegaMin = Def::dcOmegaMin + Def::dcOmegaOrg;
   for (i = 0; i < Nomega; i++) {
     dcomega[i] = OmegaMin
      + (OmegaMax - OmegaMin) / (std::complex<double>)Nomega * (std::complex<double>)i;
@@ -498,17 +488,17 @@ int CalcSpectrum(
   fprintf(stdoutMPI, "  Omega Min. : %15.5e %15.5e\n", real(OmegaMin), imag(OmegaMin));
   fprintf(stdoutMPI, "  Num. of Omega : %d\n", Nomega);
 
-  if (X->Bind.Def.NNSingleExcitationOperator == 0) {
-    if (X->Bind.Def.NNPairExcitationOperator == 0) {
+  if (Def::NNSingleExcitationOperator == 0) {
+    if (Def::NNPairExcitationOperator == 0) {
       fprintf(stderr, "Error: Any excitation operators are not defined.\n");
       exitMPI(-1);
     }
     else {
-      NdcSpectrum = X->Bind.Def.NNPairExcitationOperator - 1;
+      NdcSpectrum = Def::NNPairExcitationOperator - 1;
     }
   }
-  else if (X->Bind.Def.NNPairExcitationOperator == 0) {
-    NdcSpectrum = X->Bind.Def.NNSingleExcitationOperator - 1;
+  else if (Def::NNPairExcitationOperator == 0) {
+    NdcSpectrum = Def::NNSingleExcitationOperator - 1;
   }
   else {
     fprintf(stderr, "Error: Both single and pair excitation operators exist.\n");
@@ -517,24 +507,24 @@ int CalcSpectrum(
   dcSpectrum = cd_2d_allocate(Nomega, NdcSpectrum);
 
   //Make New Lists
-  if (MakeExcitedList(&(X->Bind), &iFlagListModified) == FALSE) {
+  if (MakeExcitedList(&iFlagListModified) == FALSE) {
     return FALSE;
   }
-  X->Bind.Def.iFlagListModified = iFlagListModified;
+  Def::iFlagListModified = iFlagListModified;
 
   //Make excited state
   StartTimer(6100);
-  if (X->Bind.Def.iFlgCalcSpec == RECALC_NOT ||
-    X->Bind.Def.iFlgCalcSpec == RECALC_OUTPUT_TMComponents_VEC ||
-    (X->Bind.Def.iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC && X->Bind.Def.iCalcType == CG)) {
-    v1Org = cd_2d_allocate(X->Bind.Check.idim_maxOrg + 1, 1);
+  if (Def::iFlgCalcSpec == RECALC_NOT ||
+    Def::iFlgCalcSpec == RECALC_OUTPUT_TMComponents_VEC ||
+    (Def::iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC && Def::iCalcType == CG)) {
+    v1Org = cd_2d_allocate(Check::idim_maxOrg + 1, 1);
     //input eigen vector
     StartTimer(6101);
     fprintf(stdoutMPI, "  Start: An Eigenvector is inputted in CalcSpectrum.\n");
-    TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Reading an input Eigenvector starts: %s", "a");
+    TimeKeeper("%s_TimeKeeper.dat", "Reading an input Eigenvector starts: %s", "a");
     GetFileNameByKW(KWSpectrumVec, &defname);
     strcat(defname, "_rank_%d.dat");
-    //    sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", X->Bind.Def.CDataFileHead, X->Bind.Def.k_exct - 1, myrank);
+    //    sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", Def::CDataFileHead, Def::k_exct - 1, myrank);
     sprintf(sdt, defname, myrank);
     childfopenALL(sdt, "rb", &fp);
 
@@ -544,9 +534,9 @@ int CalcSpectrum(
     }
 
     byte_size = fread(&i_stp, sizeof(i_stp), 1, fp);
-    X->Bind.Large.itr = i_stp; //For TPQ
+    Large::itr = i_stp; //For TPQ
     byte_size = fread(&i_max, sizeof(i_max), 1, fp);
-    if (i_max != X->Bind.Check.idim_maxOrg) {
+    if (i_max != Check::idim_maxOrg) {
       fprintf(stderr, "Error: myrank=%d, i_max=%ld\n", myrank, i_max);
       fprintf(stderr, "Error: A file of Input vector is incorrect.\n");
       return -1;
@@ -558,21 +548,21 @@ int CalcSpectrum(
   }
   StopTimer(6100);
 
-  diagonalcalc(&(X->Bind));
+  diagonalcalc();
 
   int iret = TRUE;
   fprintf(stdoutMPI, "  Start: Calculating a spectrum.\n\n");
-  TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Calculating a spectrum starts: %s", "a");
+  TimeKeeper("%s_TimeKeeper.dat", "Calculating a spectrum starts: %s", "a");
   StartTimer(6200);
-  switch (X->Bind.Def.iCalcType) {
+  switch (Def::iCalcType) {
   case CG:
-    iret = CalcSpectrumByBiCG(X, v0, v1, Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
+    iret = CalcSpectrumByBiCG(v0, v1, Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
     if (iret != TRUE) {
       return FALSE;
     }
     break;
   case FullDiag:
-    iret = CalcSpectrumByFullDiag(X, Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
+    iret = CalcSpectrumByFullDiag(Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
     break;
   default:
     break;
@@ -585,8 +575,8 @@ int CalcSpectrum(
   }
 
   fprintf(stdoutMPI, "  End:  Calculating a spectrum.\n\n");
-  TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Calculating a spectrum finishes: %s", "a");
-  iret = OutputSpectrum(X, Nomega, NdcSpectrum, dcSpectrum, dcomega);
+  TimeKeeper("%s_TimeKeeper.dat", "Calculating a spectrum finishes: %s", "a");
+  iret = OutputSpectrum(Nomega, NdcSpectrum, dcSpectrum, dcomega);
   free_cd_2d_allocate(dcSpectrum);
   free_cd_1d_allocate(dcomega);
   return TRUE;

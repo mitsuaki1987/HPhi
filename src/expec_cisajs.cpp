@@ -47,7 +47,7 @@
  * @retval -1 abnormally finished.
  */
 int expec_cisajs_HubbardGC(
-  struct BindStruct *X,
+  
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -61,23 +61,23 @@ int expec_cisajs_HubbardGC(
   std::complex<double> tmp_OneGreen = 1.0;
   int complex_conj, istate;
 
-  i_max = X->Check.idim_max;
+  i_max = Check::idim_max;
 
-  for (i = 0; i < X->Def.NCisAjt; i++) {
+  for (i = 0; i < Def::NCisAjt; i++) {
     zclear(i_max*nstate, &Xvec[1][0]);
     complex_conj = 0;
-    org_isite1 = X->Def.CisAjt[i][0] + 1;
-    org_isite2 = X->Def.CisAjt[i][2] + 1;
-    org_sigma1 = X->Def.CisAjt[i][1];
-    org_sigma2 = X->Def.CisAjt[i][3];
-    if (org_isite1 > X->Def.Nsite &&
-      org_isite2 > X->Def.Nsite) {
+    org_isite1 = Def::CisAjt[i][0] + 1;
+    org_isite2 = Def::CisAjt[i][2] + 1;
+    org_sigma1 = Def::CisAjt[i][1];
+    org_sigma2 = Def::CisAjt[i][3];
+    if (org_isite1 > Def::Nsite &&
+      org_isite2 > Def::Nsite) {
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {
         if (org_sigma1 == 0) {
-          is = X->Def.Tpow[2 * org_isite1 - 2];
+          is = Def::Tpow[2 * org_isite1 - 2];
         }
         else {
-          is = X->Def.Tpow[2 * org_isite1 - 1];
+          is = Def::Tpow[2 * org_isite1 - 1];
         }
         ibit = (long int)myrank & is;
         if (ibit == is) {
@@ -86,25 +86,25 @@ int expec_cisajs_HubbardGC(
       }
       else {
         X_GC_child_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
-          -tmp_OneGreen, X, nstate, Xvec, vec);
+          -tmp_OneGreen, nstate, Xvec, vec);
       }
     }
-    else if (org_isite2 > X->Def.Nsite || org_isite1 > X->Def.Nsite) {
+    else if (org_isite2 > Def::Nsite || org_isite1 > Def::Nsite) {
       if (org_isite1 < org_isite2) {
         X_GC_child_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
-          -tmp_OneGreen, X, nstate, Xvec, vec);
+          -tmp_OneGreen, nstate, Xvec, vec);
       }
       else {
         X_GC_child_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1, 
-          -tmp_OneGreen, X, nstate, Xvec, vec);
+          -tmp_OneGreen, nstate, Xvec, vec);
         complex_conj = 1;
       }
     }
     else {
-      if (child_general_hopp_GetInfo(X, org_isite1, org_isite2, org_sigma1, org_sigma2) != 0) {
+      if (child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2) != 0) {
         return -1;
       }
-      GC_child_general_hopp(nstate, Xvec, vec, X, tmp_OneGreen);
+      GC_child_general_hopp(nstate, Xvec, vec, tmp_OneGreen);
     }
 
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
@@ -123,7 +123,7 @@ int expec_cisajs_HubbardGC(
  * @retval -1 abnormally finished.
  */
 int expec_cisajs_Hubbard(
-  struct BindStruct *X,
+  
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -137,25 +137,25 @@ int expec_cisajs_Hubbard(
   long int is;
   std::complex<double> tmp_OneGreen = 1.0, dmv;
 
-  i_max = X->Check.idim_max;
-  for (i = 0; i < X->Def.NCisAjt; i++) {
+  i_max = Check::idim_max;
+  for (i = 0; i < Def::NCisAjt; i++) {
     zclear(i_max*nstate, &Xvec[1][0]);
     complex_conj = 0;
-    org_isite1 = X->Def.CisAjt[i][0] + 1;
-    org_isite2 = X->Def.CisAjt[i][2] + 1;
-    org_sigma1 = X->Def.CisAjt[i][1];
-    org_sigma2 = X->Def.CisAjt[i][3];
+    org_isite1 = Def::CisAjt[i][0] + 1;
+    org_isite2 = Def::CisAjt[i][2] + 1;
+    org_sigma1 = Def::CisAjt[i][1];
+    org_sigma2 = Def::CisAjt[i][3];
 
-    if (X->Def.iFlgSzConserved == TRUE) {
+    if (Def::iFlgSzConserved == TRUE) {
       if (org_sigma1 != org_sigma2) {
         zclear(nstate, prod[i]);
         continue;
       }
     }
 
-    if (X->Def.iCalcModel == Kondo || X->Def.iCalcModel == KondoGC) {
-      if ((X->Def.LocSpn[org_isite1 - 1] == 1 && X->Def.LocSpn[org_isite2 - 1] == 0) ||
-          (X->Def.LocSpn[org_isite1 - 1] == 0 && X->Def.LocSpn[org_isite2 - 1] == 1)
+    if (Def::iCalcModel == Kondo || Def::iCalcModel == KondoGC) {
+      if ((Def::LocSpn[org_isite1 - 1] == 1 && Def::LocSpn[org_isite2 - 1] == 0) ||
+          (Def::LocSpn[org_isite1 - 1] == 0 && Def::LocSpn[org_isite2 - 1] == 1)
         )
       {
         zclear(nstate, prod[i]);
@@ -163,10 +163,10 @@ int expec_cisajs_Hubbard(
       }
     }
 
-    if (org_isite1 > X->Def.Nsite &&
-      org_isite2 > X->Def.Nsite) {
+    if (org_isite1 > Def::Nsite &&
+      org_isite2 > Def::Nsite) {
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {//diagonal
-        is = X->Def.Tpow[2 * org_isite1 - 2 + org_sigma1];
+        is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
         ibit = (long int)myrank & is;
         if (ibit == is) {
           zaxpy_long(i_max*nstate, tmp_OneGreen, &vec[1][0], &Xvec[1][0]);
@@ -174,26 +174,26 @@ int expec_cisajs_Hubbard(
       }
       else {
         X_child_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2, 
-          -tmp_OneGreen, X, nstate, Xvec, vec);
+          -tmp_OneGreen, nstate, Xvec, vec);
       }
     }
-    else if (org_isite2 > X->Def.Nsite || org_isite1 > X->Def.Nsite) {
+    else if (org_isite2 > Def::Nsite || org_isite1 > Def::Nsite) {
       if (org_isite1 < org_isite2) {
         X_child_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
-          -tmp_OneGreen, X, nstate, Xvec, vec);
+          -tmp_OneGreen, nstate, Xvec, vec);
       }
       else {
         X_child_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1, 
-          -tmp_OneGreen, X, nstate, Xvec, vec);
+          -tmp_OneGreen, nstate, Xvec, vec);
         complex_conj = 1;
       }
     }
     else {
-      if (child_general_hopp_GetInfo(X, org_isite1, org_isite2, org_sigma1, org_sigma2) != 0) {
+      if (child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2) != 0) {
         return -1;
       }
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {
-        is = X->Def.Tpow[2 * org_isite1 - 2 + org_sigma1];
+        is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
 
 #pragma omp parallel for default(none) shared(list_1, vec,Xvec,nstate,one,tmp_OneGreen) \
 firstprivate(i_max, is) private(num1, ibit, dmv)
@@ -205,7 +205,7 @@ firstprivate(i_max, is) private(num1, ibit, dmv)
         }
       }
       else {
-        child_general_hopp(nstate, Xvec, vec, X, tmp_OneGreen);
+        child_general_hopp(nstate, Xvec, vec, tmp_OneGreen);
       }
     }
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
@@ -224,7 +224,7 @@ firstprivate(i_max, is) private(num1, ibit, dmv)
  * @retval -1 abnormally finished.
  */
 int expec_cisajs_SpinHalf(
-  struct BindStruct *X,
+  
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -239,26 +239,26 @@ int expec_cisajs_SpinHalf(
   long int is1_up;
   int one = 1;
 
-  i_max = X->Check.idim_max;
+  i_max = Check::idim_max;
 
-  for (i = 0; i < X->Def.NCisAjt; i++) {
+  for (i = 0; i < Def::NCisAjt; i++) {
     zclear(i_max*nstate, &Xvec[1][0]);
-    org_isite1 = X->Def.CisAjt[i][0] + 1;
-    org_isite2 = X->Def.CisAjt[i][2] + 1;
-    org_sigma1 = X->Def.CisAjt[i][1];
-    org_sigma2 = X->Def.CisAjt[i][3];
+    org_isite1 = Def::CisAjt[i][0] + 1;
+    org_isite2 = Def::CisAjt[i][2] + 1;
+    org_sigma1 = Def::CisAjt[i][1];
+    org_sigma2 = Def::CisAjt[i][3];
 
     if (org_sigma1 == org_sigma2) {
       if (org_isite1 == org_isite2) {
-        if (org_isite1 > X->Def.Nsite) {
-          is1_up = X->Def.Tpow[org_isite1 - 1];
+        if (org_isite1 > Def::Nsite) {
+          is1_up = Def::Tpow[org_isite1 - 1];
           ibit1 = X_SpinGC_CisAis((long int)myrank + 1, is1_up, org_sigma1);
           if (ibit1 != 0) {
             zaxpy_long(i_max*nstate, 1.0, &vec[1][0], &Xvec[1][0]);
           }
-        }// org_isite1 > X->Def.Nsite
+        }// org_isite1 > Def::Nsite
         else {
-          isite1 = X->Def.Tpow[org_isite1 - 1];
+          isite1 = Def::Tpow[org_isite1 - 1];
 #pragma omp parallel for default(none) private(j,dmv)  \
   firstprivate(i_max, isite1, org_sigma1, X) shared(vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
@@ -282,7 +282,7 @@ int expec_cisajs_SpinHalf(
  * @retval -1 abnormally finished.
  */
 int expec_cisajs_SpinGeneral(
-  struct BindStruct *X,
+  
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -293,33 +293,33 @@ int expec_cisajs_SpinGeneral(
   std::complex<double> dmv;
   long int i_max;
   int num1, one = 1;
-  i_max = X->Check.idim_max;
+  i_max = Check::idim_max;
 
-  for (i = 0; i < X->Def.NCisAjt; i++) {
+  for (i = 0; i < Def::NCisAjt; i++) {
     zclear(i_max*nstate, &Xvec[1][0]);
-    org_isite1 = X->Def.CisAjt[i][0] + 1;
-    org_isite2 = X->Def.CisAjt[i][2] + 1;
-    org_sigma1 = X->Def.CisAjt[i][1];
-    org_sigma2 = X->Def.CisAjt[i][3];
+    org_isite1 = Def::CisAjt[i][0] + 1;
+    org_isite2 = Def::CisAjt[i][2] + 1;
+    org_sigma1 = Def::CisAjt[i][1];
+    org_sigma2 = Def::CisAjt[i][3];
 
     if (org_isite1 == org_isite2) {
-      if (org_isite1 > X->Def.Nsite) {
+      if (org_isite1 > Def::Nsite) {
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
           num1 = BitCheckGeneral((long int)myrank,
-                                           org_isite1, org_sigma1, X->Def.SiteToBit, X->Def.Tpow);
+                                           org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
           if (num1 != 0) {
             zaxpy_long(i_max*nstate, 1.0, &vec[1][0], &Xvec[1][0]);
           }
         }
       }
-      else {//org_isite1 <= X->Def.Nsite
+      else {//org_isite1 <= Def::Nsite
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
 #pragma omp parallel for default(none) private(j, num1,dmv) \
   firstprivate(i_max, org_isite1, org_sigma1, X) shared(vec,Xvec, list_1,nstate,one)
           for (j = 1; j <= i_max; j++) {
-            dmv = BitCheckGeneral(list_1[j], org_isite1, org_sigma1, X->Def.SiteToBit, X->Def.Tpow);
+            dmv = BitCheckGeneral(list_1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
             zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
           }
         }
@@ -339,7 +339,7 @@ int expec_cisajs_SpinGeneral(
  * @retval -1 abnormally finished.
  */
 int expec_cisajs_SpinGCHalf(
-  struct BindStruct *X,
+  
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -353,26 +353,26 @@ int expec_cisajs_SpinGCHalf(
   int tmp_sgn, one = 1;
   long int tmp_off = 0;
 
-  i_max = X->Check.idim_max;
+  i_max = Check::idim_max;
 
-  for (i = 0; i < X->Def.NCisAjt; i++) {
+  for (i = 0; i < Def::NCisAjt; i++) {
     zclear(i_max*nstate, &Xvec[1][0]);
-    org_isite1 = X->Def.CisAjt[i][0] + 1;
-    org_isite2 = X->Def.CisAjt[i][2] + 1;
-    org_sigma1 = X->Def.CisAjt[i][1];
-    org_sigma2 = X->Def.CisAjt[i][3];
+    org_isite1 = Def::CisAjt[i][0] + 1;
+    org_isite2 = Def::CisAjt[i][2] + 1;
+    org_sigma1 = Def::CisAjt[i][1];
+    org_sigma2 = Def::CisAjt[i][3];
 
     if (org_isite1 == org_isite2) {
-      if (org_isite1 > X->Def.Nsite) {
+      if (org_isite1 > Def::Nsite) {
         if (org_sigma1 == org_sigma2) {  // longitudinal magnetic field
-          X_GC_child_CisAis_spin_MPIdouble(org_isite1 - 1, org_sigma1, 1.0, X, nstate, Xvec, vec);
+          X_GC_child_CisAis_spin_MPIdouble(org_isite1 - 1, org_sigma1, 1.0, nstate, Xvec, vec);
         }
         else {  // transverse magnetic field
-          X_GC_child_CisAit_spin_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, 1.0, X, nstate, Xvec, vec);
+          X_GC_child_CisAit_spin_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, 1.0, nstate, Xvec, vec);
         }
       }
       else {
-        isite1 = X->Def.Tpow[org_isite1 - 1];
+        isite1 = Def::Tpow[org_isite1 - 1];
 
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
@@ -411,7 +411,7 @@ int expec_cisajs_SpinGCHalf(
  * @retval -1 abnormally finished.
  */
 int expec_cisajs_SpinGCGeneral(
-  struct BindStruct *X,
+  
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec,
@@ -424,34 +424,34 @@ int expec_cisajs_SpinGCGeneral(
   long int tmp_off = 0;
   int num1, one = 1;
 
-  i_max = X->Check.idim_max;
+  i_max = Check::idim_max;
 
-  for (i = 0; i < X->Def.NCisAjt; i++) {
+  for (i = 0; i < Def::NCisAjt; i++) {
     zclear(i_max*nstate, &Xvec[1][0]);
-    org_isite1 = X->Def.CisAjt[i][0] + 1;
-    org_isite2 = X->Def.CisAjt[i][2] + 1;
-    org_sigma1 = X->Def.CisAjt[i][1];
-    org_sigma2 = X->Def.CisAjt[i][3];
+    org_isite1 = Def::CisAjt[i][0] + 1;
+    org_isite2 = Def::CisAjt[i][2] + 1;
+    org_sigma1 = Def::CisAjt[i][1];
+    org_sigma2 = Def::CisAjt[i][3];
     if (org_isite1 == org_isite2) {
-      if (org_isite1 > X->Def.Nsite) {
+      if (org_isite1 > Def::Nsite) {
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
           X_GC_child_CisAis_GeneralSpin_MPIdouble(org_isite1 - 1, org_sigma1,
-            1.0, X, nstate, Xvec, vec);
+            1.0, nstate, Xvec, vec);
         }
         else {
           // transverse magnetic field
           X_GC_child_CisAit_GeneralSpin_MPIdouble(
-            org_isite1 - 1, org_sigma1, org_sigma2, 1.0, X, nstate, Xvec, vec);
+            org_isite1 - 1, org_sigma1, org_sigma2, 1.0, nstate, Xvec, vec);
         }
       }
-      else {//org_isite1 <= X->Def.Nsite
+      else {//org_isite1 <= Def::Nsite
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
 #pragma omp parallel for default(none) private(j, num1,dmv) \
   firstprivate(i_max, org_isite1, org_sigma1, X) shared(vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
-            num1 = BitCheckGeneral(j - 1, org_isite1, org_sigma1, X->Def.SiteToBit, X->Def.Tpow);
+            num1 = BitCheckGeneral(j - 1, org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
             dmv = (std::complex<double>)num1;
             zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
           }
@@ -459,10 +459,10 @@ int expec_cisajs_SpinGCGeneral(
         else {
           // transverse magnetic field
 #pragma omp parallel for default(none) private(j, num1,dmv) \
-  firstprivate(i_max, org_isite1, org_sigma1, org_sigma2, X,tmp_off) shared(vec,Xvec,nstate,one)
+  firstprivate(i_max, org_isite1, org_sigma1, org_sigma2, tmp_off) shared(vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
             num1 = GetOffCompGeneralSpin(
-              j - 1, org_isite1, org_sigma2, org_sigma1, &tmp_off, X->Def.SiteToBit, X->Def.Tpow);
+              j - 1, org_isite1, org_sigma2, org_sigma1, &tmp_off, Def::SiteToBit, Def::Tpow);
             if (num1 != 0) {
               dmv = (std::complex<double>)num1;
               zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[tmp_off + 1][0], &one);
@@ -485,18 +485,18 @@ int expec_cisajs_SpinGCGeneral(
  * @retval -1 abnormally finished.
  */
 int expec_cisajs_Spin(
-  struct BindStruct *X,
+  
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec,
   std::complex<double> **prod
 ) {
   int info = 0;
-  if (X->Def.iFlgGeneralSpin == FALSE) {
-    info = expec_cisajs_SpinHalf(X, nstate, Xvec, vec, prod);
+  if (Def::iFlgGeneralSpin == FALSE) {
+    info = expec_cisajs_SpinHalf(nstate, Xvec, vec, prod);
   }
   else {
-    info = expec_cisajs_SpinGeneral(X, nstate, Xvec, vec, prod);
+    info = expec_cisajs_SpinGeneral(nstate, Xvec, vec, prod);
   }
   return info;
 }
@@ -511,18 +511,18 @@ int expec_cisajs_Spin(
  * @retval -1 abnormally finished.
  */
 int expec_cisajs_SpinGC(
-  struct BindStruct *X,
+  
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec,
   std::complex<double> **prod
 ) {
   int info = 0;
-  if (X->Def.iFlgGeneralSpin == FALSE) {
-    info = expec_cisajs_SpinGCHalf(X, nstate, Xvec, vec, prod);
+  if (Def::iFlgGeneralSpin == FALSE) {
+    info = expec_cisajs_SpinGCHalf(nstate, Xvec, vec, prod);
   }
   else {
-    info = expec_cisajs_SpinGCGeneral(X, nstate, Xvec, vec, prod);
+    info = expec_cisajs_SpinGCGeneral(nstate, Xvec, vec, prod);
   }
   return info;
 }
@@ -542,7 +542,7 @@ int expec_cisajs_SpinGC(
  * @retval -1 abnormally finished.
  */
 int expec_cisajs(
-  struct BindStruct *X,
+  
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec
@@ -555,36 +555,36 @@ int expec_cisajs(
   //For TPQ
   int step = 0, rand_i = 0, istate;
 
-  if (X->Def.NCisAjt < 1) return 0;
+  if (Def::NCisAjt < 1) return 0;
 
-  i_max = X->Check.idim_max;
-  if (GetSplitBitByModel(X->Def.Nsite, X->Def.iCalcModel, &irght, &ilft, &ihfbit) != 0) {
+  i_max = Check::idim_max;
+  if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit) != 0) {
     return -1;
   }
-  X->Large.i_max = i_max;
-  X->Large.irght = irght;
-  X->Large.ilft = ilft;
-  X->Large.ihfbit = ihfbit;
-  X->Large.mode = M_CORR;
+  Large::i_max = i_max;
+  Large::irght = irght;
+  Large::ilft = ilft;
+  Large::ihfbit = ihfbit;
+  Large::mode = M_CORR;
 
-  switch (X->Def.iCalcType) {
+  switch (Def::iCalcType) {
   case TPQCalc:
-    step = X->Def.istep;
-    TimeKeeperWithRandAndStep(X, "%s_TimeKeeper.dat", "set %d step %d:expec_cisajs begins: %s", "a", 0, step);
+    step = Def::istep;
+    TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", "set %d step %d:expec_cisajs begins: %s", "a", 0, step);
     break;
   case TimeEvolution:
-    step = X->Def.istep;
-    TimeKeeperWithStep(X, "%s_TimeKeeper.dat", "step %d:expec_cisajs begins: %s", "a", step);
+    step = Def::istep;
+    TimeKeeperWithStep("%s_TimeKeeper.dat", "step %d:expec_cisajs begins: %s", "a", step);
     break;
   case FullDiag:
   case CG:
     break;
   }
 
-  prod = cd_2d_allocate(X->Def.NCisAjt, nstate);
-  switch (X->Def.iCalcModel) {
+  prod = cd_2d_allocate(Def::NCisAjt, nstate);
+  switch (Def::iCalcModel) {
   case HubbardGC:
-    if (expec_cisajs_HubbardGC(X, nstate, Xvec, vec, prod) != 0) {
+    if (expec_cisajs_HubbardGC(nstate, Xvec, vec, prod) != 0) {
       return -1;
     }
     break;
@@ -592,19 +592,19 @@ int expec_cisajs(
   case KondoGC:
   case Hubbard:
   case Kondo:
-    if (expec_cisajs_Hubbard(X, nstate, Xvec, vec, prod) != 0) {
+    if (expec_cisajs_Hubbard(nstate, Xvec, vec, prod) != 0) {
       return -1;
     }
     break;
 
   case Spin: // for the Sz-conserved spin system
-    if (expec_cisajs_Spin(X, nstate, Xvec, vec, prod) != 0) {
+    if (expec_cisajs_Spin(nstate, Xvec, vec, prod) != 0) {
       return -1;
     }
     break;
 
   case SpinGC:
-    if (expec_cisajs_SpinGC(X, nstate, Xvec, vec, prod) != 0) {
+    if (expec_cisajs_SpinGC(nstate, Xvec, vec, prod) != 0) {
       return -1;
     }
     break;
@@ -614,24 +614,24 @@ int expec_cisajs(
   }
 
   for (istate = 0; istate < nstate; istate++) {
-    switch (X->Def.iCalcType) {
+    switch (Def::iCalcType) {
     case TPQCalc:
-      step = X->Def.istep;
-      sprintf(sdt, "%s_cisajs_set%dstep%d.dat", X->Def.CDataFileHead, istate, step);
+      step = Def::istep;
+      sprintf(sdt, "%s_cisajs_set%dstep%d.dat", Def::CDataFileHead, istate, step);
       break;
     case TimeEvolution:
-      step = X->Def.istep;
-      sprintf(sdt, "%s_cisajs_step%d.dat", X->Def.CDataFileHead, step);
+      step = Def::istep;
+      sprintf(sdt, "%s_cisajs_step%d.dat", Def::CDataFileHead, step);
       break;
     case FullDiag:
     case CG:
-      sprintf(sdt, "%s_cisajs_eigen%d.dat", X->Def.CDataFileHead, istate);
+      sprintf(sdt, "%s_cisajs_eigen%d.dat", Def::CDataFileHead, istate);
       break;
     }
     if (childfopenMPI(sdt, "w", &fp) == 0) {
-      for (ica = 0; ica < X->Def.NCisAjt; ica++) {
+      for (ica = 0; ica < Def::NCisAjt; ica++) {
         fprintf(fp, " %4d %4d %4d %4d %.10lf %.10lf\n",
-          X->Def.CisAjt[ica][0], X->Def.CisAjt[ica][1], X->Def.CisAjt[ica][2], X->Def.CisAjt[ica][3],
+          Def::CisAjt[ica][0], Def::CisAjt[ica][1], Def::CisAjt[ica][2], Def::CisAjt[ica][3],
           real(prod[ica][istate]), imag(prod[ica][istate]));
       }
       fclose(fp);
@@ -639,16 +639,16 @@ int expec_cisajs(
     else return -1;
   }/*for (istate = 0; istate < nstate; istate++)*/
 
-  if (X->Def.St == 0) {
-    if (X->Def.iCalcType == TPQCalc) {
-      TimeKeeperWithRandAndStep(X, "%s_TimeKeeper.dat", "set %d step %d:expec_cisajs finishes: %s", "a", rand_i, step);
+  if (Def::St == 0) {
+    if (Def::iCalcType == TPQCalc) {
+      TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", "set %d step %d:expec_cisajs finishes: %s", "a", rand_i, step);
     }
-    else if (X->Def.iCalcType == TimeEvolution) {
-      TimeKeeperWithStep(X, "%s_TimeKeeper.dat", "step %d:expec_cisajs finishes: %s", "a", step);
+    else if (Def::iCalcType == TimeEvolution) {
+      TimeKeeperWithStep("%s_TimeKeeper.dat", "step %d:expec_cisajs finishes: %s", "a", step);
     }
   }
-  else if (X->Def.St == 1) {
-    TimeKeeper(X, "%s_TimeKeeper.dat", "CG expec_cisajs finishes:     %s", "a");
+  else if (Def::St == 1) {
+    TimeKeeper("%s_TimeKeeper.dat", "CG expec_cisajs finishes:     %s", "a");
     fprintf(stdoutMPI, "%s", "  End  : Calculate one body Green functions.\n\n");
   }
   free_cd_2d_allocate(prod);

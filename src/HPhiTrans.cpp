@@ -42,7 +42,7 @@
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  *
  */
-int HPhiTrans(struct BindStruct *X) {
+int HPhiTrans() {
   FILE *fp_err;
   char sdt_err[D_FileNameMax];
 
@@ -58,18 +58,18 @@ int HPhiTrans(struct BindStruct *X) {
   //Transefer
   cnt_trans = 0;
 
-  for (i = 0; i < X->Def.EDNTransfer; i++) {
+  for (i = 0; i < Def::EDNTransfer; i++) {
     // eliminate double counting
     for (k = 0; k < cnt_trans; k++) {
-      if (X->Def.EDGeneralTransfer[i][1] == X->Def.EDGeneralTransfer[k][1]
-          && X->Def.EDGeneralTransfer[i][3] == X->Def.EDGeneralTransfer[k][3]) {
-        if (X->Def.EDGeneralTransfer[i][0] == X->Def.EDGeneralTransfer[k][0]
-            && X->Def.EDGeneralTransfer[i][2] == X->Def.EDGeneralTransfer[k][2]) {
+      if (Def::EDGeneralTransfer[i][1] == Def::EDGeneralTransfer[k][1]
+          && Def::EDGeneralTransfer[i][3] == Def::EDGeneralTransfer[k][3]) {
+        if (Def::EDGeneralTransfer[i][0] == Def::EDGeneralTransfer[k][0]
+            && Def::EDGeneralTransfer[i][2] == Def::EDGeneralTransfer[k][2]) {
           sprintf(sdt_err, "WarningOnTransfer.dat");
           childfopenMPI(sdt_err, "a", &fp_err);
           fprintf(fp_err, "double conuntings in transfers: i=%d j=%d spni %d spnj %d  \n",
-                  X->Def.EDGeneralTransfer[k][0], X->Def.EDGeneralTransfer[k][2],
-                  X->Def.EDGeneralTransfer[k][1], X->Def.EDGeneralTransfer[k][3]);
+                  Def::EDGeneralTransfer[k][0], Def::EDGeneralTransfer[k][2],
+                  Def::EDGeneralTransfer[k][1], Def::EDGeneralTransfer[k][3]);
           fclose(fp_err);
         }
       }
@@ -90,20 +90,20 @@ int HPhiTrans(struct BindStruct *X) {
  *
  * @author Kota Ido (The University of Tokyo)
  */
-int TransferWithPeierls(struct BindStruct *X, const double time) {
+int TransferWithPeierls( const double time) {
   int i;
   int ri_x, rj_x;
   int ri_y, rj_y;
   std::complex<double> dir;
-  const int Mode = (int) (X->Def.ParaLaser[0]);
-  const double Avp = X->Def.ParaLaser[1];
-  const double omega = X->Def.ParaLaser[2];
-  const double time_d = X->Def.ParaLaser[3];
-  const double time_c = X->Def.ParaLaser[4];
-  const int Lx = (int) (X->Def.ParaLaser[5]);
-  const int Ly = (int) (X->Def.ParaLaser[6]);
-  const double dirX = X->Def.ParaLaser[7];
-  const double dirY = X->Def.ParaLaser[8];
+  const int Mode = (int) (Def::ParaLaser[0]);
+  const double Avp = Def::ParaLaser[1];
+  const double omega = Def::ParaLaser[2];
+  const double time_d = Def::ParaLaser[3];
+  const double time_c = Def::ParaLaser[4];
+  const int Lx = (int) (Def::ParaLaser[5]);
+  const int Ly = (int) (Def::ParaLaser[6]);
+  const double dirX = Def::ParaLaser[7];
+  const double dirY = Def::ParaLaser[8];
   const double dt = time - time_c;
   const double dt2 = time - (time_c + time_d);
   const double td = time_c / 3.0;
@@ -139,11 +139,11 @@ int TransferWithPeierls(struct BindStruct *X, const double time) {
     }
   }
 
-  for (i = 0; i < X->Def.EDNTransfer; i++) {
-    ri_x = X->Def.EDGeneralTransfer[i][0] % Lx;
-    rj_x = X->Def.EDGeneralTransfer[i][2] % Lx;
-    ri_y = X->Def.EDGeneralTransfer[i][0] / Lx;
-    rj_y = X->Def.EDGeneralTransfer[i][2] / Lx;
+  for (i = 0; i < Def::EDNTransfer; i++) {
+    ri_x = Def::EDGeneralTransfer[i][0] % Lx;
+    rj_x = Def::EDGeneralTransfer[i][2] % Lx;
+    ri_y = Def::EDGeneralTransfer[i][0] / Lx;
+    rj_y = Def::EDGeneralTransfer[i][2] / Lx;
     if (ri_x - rj_x > 1) {
       rj_x += Lx;
     } else if (ri_x - rj_x < -1) {
@@ -156,7 +156,7 @@ int TransferWithPeierls(struct BindStruct *X, const double time) {
     }
     dir = dirX * (ri_x - rj_x) + dirY * (ri_y - rj_y);
     
-    X->Def.EDParaGeneralTransfer[i] = X->Def.ParaGeneralTransfer[i] * std::exp(-I * VecPot * dir);
+    Def::EDParaGeneralTransfer[i] = Def::ParaGeneralTransfer[i] * std::exp(-I * VecPot * dir);
   }
 
   return 0;
@@ -172,16 +172,16 @@ int TransferWithPeierls(struct BindStruct *X, const double time) {
  *
  * @author Kota Ido (The University of Tokyo)
  */
-int TransferForQuench(struct BindStruct *X, const double time) {
+int TransferForQuench( const double time) {
   int i;
   int ri_x, rj_x;
   int ri_y, rj_y;
-  const int Mode = (int) (X->Def.ParaLaser[0]);
-  const double Avp = X->Def.ParaLaser[1];
-  const double time_d = X->Def.ParaLaser[3];
-  const double time_c = X->Def.ParaLaser[4];
-  const int Lx = (int) (X->Def.ParaLaser[5]);
-  const int Ly = (int) (X->Def.ParaLaser[6]);
+  const int Mode = (int) (Def::ParaLaser[0]);
+  const double Avp = Def::ParaLaser[1];
+  const double time_d = Def::ParaLaser[3];
+  const double time_c = Def::ParaLaser[4];
+  const int Lx = (int) (Def::ParaLaser[5]);
+  const int Ly = (int) (Def::ParaLaser[6]);
   const double dt = time - time_c;
   double Bessel;
 
@@ -197,11 +197,11 @@ int TransferForQuench(struct BindStruct *X, const double time) {
     }
   }
 
-  for (i = 0; i < X->Def.EDNTransfer; i++) {
-    ri_x = X->Def.EDGeneralTransfer[i][0] % Lx;
-    rj_x = X->Def.EDGeneralTransfer[i][2] % Lx;
-    ri_y = X->Def.EDGeneralTransfer[i][0] / Lx;
-    rj_y = X->Def.EDGeneralTransfer[i][2] / Lx;
+  for (i = 0; i < Def::EDNTransfer; i++) {
+    ri_x = Def::EDGeneralTransfer[i][0] % Lx;
+    rj_x = Def::EDGeneralTransfer[i][2] % Lx;
+    ri_y = Def::EDGeneralTransfer[i][0] / Lx;
+    rj_y = Def::EDGeneralTransfer[i][2] / Lx;
     if (ri_x - rj_x > 1) {
       rj_x += Lx;
     } else if (ri_x - rj_x < -1) {
@@ -213,7 +213,7 @@ int TransferForQuench(struct BindStruct *X, const double time) {
       rj_y -= Ly;
     }
 
-    X->Def.EDParaGeneralTransfer[i] = X->Def.ParaGeneralTransfer[i] * Bessel;
+    Def::EDParaGeneralTransfer[i] = Def::ParaGeneralTransfer[i] * Bessel;
   }
 
   return 0;

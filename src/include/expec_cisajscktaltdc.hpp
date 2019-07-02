@@ -25,7 +25,7 @@ std::complex<double> child_Cor_1(long int j,
                    long int irght,
                    long int ilft,
                    long int ihfbit,
-                   struct BindStruct *X,
+                   
                    std::complex<double> *vec
                    );
 
@@ -38,7 +38,7 @@ std::complex<double> child_Cor_2(long int j,
                    long int irght,
                    long int ilft,
                    long int ihfbit,
-                   struct BindStruct *X,
+                   
                    std::complex<double> *vec
                    );
 
@@ -54,14 +54,14 @@ std::complex<double> child_Cor_3(long int j,
                    long int irght,
                    long int ilft,
                    long int ihfbit,
-                   struct BindStruct *X,
+                   
                    std::complex<double> *vec
                    );
 
 
-int expec_cisajscktaltdc(struct BindStruct *X, int nstate, std::complex<double> **Xvec, std::complex<double> **vec);
+int expec_cisajscktaltdc( int nstate, std::complex<double> **Xvec, std::complex<double> **vec);
 
 void expec_cisajscktaltdc_alldiag_spin(
-                                  struct BindStruct *X,
+                                  
                                   std::complex<double> *vec
                                   );

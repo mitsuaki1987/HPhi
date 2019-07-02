@@ -42,15 +42,15 @@
  */
 int Multiply
 (
-  struct BindStruct *X
+  
 )
 {
   long int i, i_max;
   double Ns;
   int rand_i;
 
-  i_max = X->Check.idim_max;
-  Ns = 1.0*X->Def.NsiteMPI;
+  i_max = Check::idim_max;
+  Ns = 1.0*Def::NsiteMPI;
   // mltply is in expec_energy.cpp v0=H*v1
 #pragma omp parallel for default(none) private(i,rand_i)  \
   shared(v0, v1,NumAve) firstprivate(i_max, Ns, LargeValue)
@@ -78,7 +78,7 @@ shared(v0,NumAve,global_norm) firstprivate(i_max)
  */
 int MultiplyForTEM
 (
-  struct BindStruct *X,
+  
   std::complex<double> **v2
 )
 {
@@ -87,10 +87,10 @@ int MultiplyForTEM
   double dnorm = 0.0;
   std::complex<double> tmp1 = 1.0;
   std::complex<double> tmp2 = 0.0;
-  double dt = X->Def.Param.TimeSlice;
+  double dt = Param::TimeSlice;
 
   //Make |v0> = |psi(t+dt)> from |v1> = |psi(t)> and |v0> = H |psi(t)>
-  i_max = X->Check.idim_max;
+  i_max = Check::idim_max;
   // mltply is in expec_energy.cpp v0=H*v1
   if (dt < pow(10.0, -14)) {
 #pragma omp parallel for default(none) private(i) \
@@ -101,7 +101,7 @@ shared(I,v0, v1, v2) firstprivate(i_max, dt, tmp2)
       v1[i][0] = tmp2;
       v2[i][0] = 0.0 + I * 0.0;
     }
-    mltply(X, 1, v2, v1);
+    mltply(1, v2, v1);
   }
   else {
     tmp1 *= -I * dt;
@@ -113,10 +113,10 @@ shared(v0, v1, v2,I) firstprivate(i_max, dt, tmp1, tmp2)
       v1[i][0] = tmp2;
       v2[i][0] = 0.0 + I * 0.0;
     }
-    for (coef = 2; coef <= X->Def.Param.ExpandCoef; coef++) {
+    for (coef = 2; coef <= Param::ExpandCoef; coef++) {
       tmp1 *= -I * dt / (std::complex<double>)coef;
       //v2 = H*v1 = H^coef |psi(t)>
-      mltply(X, 1, v2, v1);
+      mltply(1, v2, v1);
 
 #pragma omp parallel for default(none) private(i) shared(I, v0, v1, v2) \
 firstprivate(i_max, tmp1, myrank)

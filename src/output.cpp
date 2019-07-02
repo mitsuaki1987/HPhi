@@ -24,24 +24,24 @@
 /// \retval 0 normally finished.
 /// \retval -1 abnormally finished.
 
-int output(struct BindStruct *X) {
+int output() {
 
   FILE *fp;
   char sdt[D_FileNameMax];
   long int i, i_max;
-  i_max = X->Check.idim_max;
+  i_max = Check::idim_max;
 
-  if (X->Def.iCalcType == FullDiag) {
-    switch (X->Def.iCalcModel) {
+  if (Def::iCalcType == FullDiag) {
+    switch (Def::iCalcModel) {
       case Spin:
       case Hubbard:
       case Kondo:
-        sprintf(sdt, "%s_phys_Nup%d_Ndown%d.dat", X->Def.CDataFileHead, X->Def.Nup, X->Def.Ndown);
+        sprintf(sdt, "%s_phys_Nup%d_Ndown%d.dat", Def::CDataFileHead, Def::Nup, Def::Ndown);
         break;
       case SpinGC:
       case HubbardGC:
       case KondoGC:
-        sprintf(sdt, "%s_phys.dat", X->Def.CDataFileHead);
+        sprintf(sdt, "%s_phys.dat", Def::CDataFileHead);
         break;
       default:
         break;
@@ -51,8 +51,8 @@ int output(struct BindStruct *X) {
     }
     fprintf(fp, "  <H>         <N>        <Sz>       <S2>       <D> \n");
     for (i = 0; i < i_max; i++) {
-      fprintf(fp, " %10lf %10lf %10lf %10lf %10lf\n", X->Phys.energy[i], X->Phys.num_up[i]+X->Phys.num_down[i], X->Phys.Sz[i],
-              X->Phys.s2[i], X->Phys.doublon[i]);
+      fprintf(fp, " %10lf %10lf %10lf %10lf %10lf\n", Phys::energy[i], Phys::num_up[i]+Phys::num_down[i], Phys::Sz[i],
+              Phys::s2[i], Phys::doublon[i]);
     }
     fclose(fp);
   }
@@ -70,10 +70,10 @@ int output(struct BindStruct *X) {
 /// \retval 0 normally finished.
 /// \retval -1 abnormally finished.
 
-int outputHam(struct BindStruct *X){
+int outputHam(){
   long int i=0;
   long int j=0;
-  long int imax = X->Check.idim_max;
+  long int imax = Check::idim_max;
   long int ihermite=0;
   char cHeader[256];
   FILE *fp;
@@ -89,7 +89,7 @@ int outputHam(struct BindStruct *X){
   }
 
   strcpy(cHeader, "%%%%MatrixMarket matrix coordinate complex hermitian\n");
-  sprintf(sdt,"%s_Ham.dat", X->Def.CDataFileHead);
+  sprintf(sdt,"%s_Ham.dat", Def::CDataFileHead);
   if(childfopenMPI(sdt,"w",&fp)!=0){
     return -1;
   }

@@ -16,6 +16,6 @@
 #pragma once
 #include "Common.hpp"
 
-int output(struct BindStruct *X);
+int output();
 
-int outputHam(struct BindStruct *X);
+int outputHam();

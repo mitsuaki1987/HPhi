@@ -17,7 +17,7 @@
 #include "Common.hpp"
 
 int expec_cisajs(
-  struct BindStruct *X,
+  
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec

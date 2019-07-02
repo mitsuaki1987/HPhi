@@ -154,7 +154,6 @@ void SeedSwitch(
  * @author Mitsuaki Kawamura (The University of Tokyo)
  */
 int CalcSpectrumByBiCG(
-  struct EDMainCalStruct *X,//!<[inout]
   std::complex<double> **v2,//!<[in] [CheckList::idim_max] Right hand side vector, excited state.
   std::complex<double> **v4,//!<[inout] [CheckList::idim_max] Work space for residual vector @f${\bf r}@f$
   int Nomega,//!<[in] Number of Frequencies
@@ -184,54 +183,54 @@ int CalcSpectrumByBiCG(
   <li>Malloc vector for old residual vector (@f${\bf r}_{\rm old}@f$)
   and old shadow residual vector (@f${\bf {\tilde r}}_{\rm old}@f$).</li>
   */
-  v12 = cd_2d_allocate(X->Bind.Check.idim_max + 1, 1);
-  v14 = cd_2d_allocate(X->Bind.Check.idim_max + 1, 1);
-  v3 = cd_2d_allocate(X->Bind.Check.idim_max + 1, 1);
-  v5 = cd_2d_allocate(X->Bind.Check.idim_max + 1, 1);
-  vL = cd_2d_allocate(X->Bind.Check.idim_max + 1, 1);
+  v12 = cd_2d_allocate(Check::idim_max + 1, 1);
+  v14 = cd_2d_allocate(Check::idim_max + 1, 1);
+  v3 = cd_2d_allocate(Check::idim_max + 1, 1);
+  v5 = cd_2d_allocate(Check::idim_max + 1, 1);
+  vL = cd_2d_allocate(Check::idim_max + 1, 1);
   lz_conv = i_1d_allocate(Nomega);
   /**
   <li>Set initial result vector(+shadow result vector)
   Read residual vectors if restart</li>
   */
-  if (X->Bind.Def.iFlgCalcSpec == RECALC_FROM_TMComponents_VEC ||
-      X->Bind.Def.iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC) {
+  if (Def::iFlgCalcSpec == RECALC_FROM_TMComponents_VEC ||
+      Def::iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC) {
     fprintf(stdoutMPI, "  Start: Input vectors for recalculation.\n");
-    TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Input vectors for recalculation starts: %s", "a");
+    TimeKeeper("%s_TimeKeeper.dat", "Input vectors for recalculation starts: %s", "a");
 
-    sprintf(sdt, "%s_recalcvec_rank_%d.dat", X->Bind.Def.CDataFileHead, myrank);
+    sprintf(sdt, "%s_recalcvec_rank_%d.dat", Def::CDataFileHead, myrank);
     if (childfopenALL(sdt, "rb", &fp) != 0) {
       fprintf(stdoutMPI, "INFO: File for the restart is not found.\n");
       fprintf(stdoutMPI, "      Start from SCRATCH.\n");
-      zclear(X->Bind.Check.idim_max, &v2[1][0]);
-      GetExcitedState(&(X->Bind), 1, v2, v1Org, 0);
+      zclear(Check::idim_max, &v2[1][0]);
+      GetExcitedState(1, v2, v1Org, 0);
 #pragma omp parallel for default(none) shared(v2,v4,v1Org,X) private(idim)
-      for (idim = 1; idim <= X->Bind.Check.idim_max; idim++) 
+      for (idim = 1; idim <= Check::idim_max; idim++) 
         v4[idim][0] = v2[idim][0];
     }
     else {
       byte_size = fread(&iter_old, sizeof(int), 1, fp);
       byte_size = fread(&i_max, sizeof(i_max), 1, fp);
-      if (i_max != X->Bind.Check.idim_max) {
+      if (i_max != Check::idim_max) {
         fprintf(stderr, "Error: The size of the input vector is incorrect.\n");
-        printf("%s %ld %ld %d\n", sdt, i_max, X->Bind.Check.idim_max, iter_old);
+        printf("%s %ld %ld %d\n", sdt, i_max, Check::idim_max, iter_old);
         exitMPI(-1);
       }
-      byte_size = fread(&v2[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
-      byte_size = fread(&v3[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
-      byte_size = fread(&v4[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
-      byte_size = fread(&v5[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
+      byte_size = fread(&v2[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+      byte_size = fread(&v3[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+      byte_size = fread(&v4[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+      byte_size = fread(&v5[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
       fclose(fp);
       fprintf(stdoutMPI, "  End:   Input vectors for recalculation.\n");
-      TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Input vectors for recalculation finishes: %s", "a");
+      TimeKeeper("%s_TimeKeeper.dat", "Input vectors for recalculation finishes: %s", "a");
       if (byte_size == 0) printf("byte_size : %d\n", (int)byte_size);
     }/*if (childfopenALL(sdt, "rb", &fp) == 0)*/
-  }/*if (X->Bind.Def.iFlgCalcSpec > RECALC_FROM_TMComponents)*/
+  }/*if (Def::iFlgCalcSpec > RECALC_FROM_TMComponents)*/
   else {
-    zclear(X->Bind.Check.idim_max, &v2[1][0]);
-    GetExcitedState(&(X->Bind), 1, v2, v1Org, 0);
+    zclear(Check::idim_max, &v2[1][0]);
+    GetExcitedState(1, v2, v1Org, 0);
 #pragma omp parallel for default(none) shared(v2,v4,v1Org,X) private(idim)
-    for (idim = 1; idim <= X->Bind.Check.idim_max; idim++)
+    for (idim = 1; idim <= Check::idim_max; idim++)
       v4[idim][0] = v2[idim][0];
   }
   /**
@@ -239,10 +238,10 @@ int CalcSpectrumByBiCG(
   */
   iter_old = 0;
   fp = NULL;
-  if (X->Bind.Def.iFlgCalcSpec == RECALC_FROM_TMComponents ||
-      X->Bind.Def.iFlgCalcSpec == RECALC_FROM_TMComponents_VEC ||
-      X->Bind.Def.iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC) {
-    sprintf(sdt, "%s_TMComponents.dat", X->Bind.Def.CDataFileHead);
+  if (Def::iFlgCalcSpec == RECALC_FROM_TMComponents ||
+      Def::iFlgCalcSpec == RECALC_FROM_TMComponents_VEC ||
+      Def::iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC) {
+    sprintf(sdt, "%s_TMComponents.dat", Def::CDataFileHead);
     if (childfopenALL(sdt, "rb", &fp) != 0) {
       fprintf(stdoutMPI, "INFO: File for the restart is not found.\n");
       fprintf(stdoutMPI, "      Start from SCRATCH.\n");
@@ -252,10 +251,10 @@ int CalcSpectrumByBiCG(
       sscanf(ctmp, "%d", &iter_old);
     }
   }
-  alpha = cd_1d_allocate(iter_old + X->Bind.Def.Lanczos_max + 1);
-  beta = cd_1d_allocate(iter_old + X->Bind.Def.Lanczos_max + 1);
-  res_proj = cd_2d_allocate(iter_old + X->Bind.Def.Lanczos_max + 1, NdcSpectrum);
-  pi = cd_2d_allocate(iter_old + X->Bind.Def.Lanczos_max + 1, Nomega);
+  alpha = cd_1d_allocate(iter_old + Def::Lanczos_max + 1);
+  beta = cd_1d_allocate(iter_old + Def::Lanczos_max + 1);
+  res_proj = cd_2d_allocate(iter_old + Def::Lanczos_max + 1, NdcSpectrum);
+  pi = cd_2d_allocate(iter_old + Def::Lanczos_max + 1, Nomega);
   pBiCG = cd_2d_allocate(Nomega, NdcSpectrum);
   alpha[0] = std::complex<double>(1.0, 0.0);
   beta[0] = std::complex<double>(0.0, 0.0);
@@ -268,8 +267,8 @@ int CalcSpectrumByBiCG(
   }
 
   if (fp != NULL) {
-    if (X->Bind.Def.iFlgCalcSpec > RECALC_FROM_TMComponents)
-      X->Bind.Def.Lanczos_max = 0;
+    if (Def::iFlgCalcSpec > RECALC_FROM_TMComponents)
+      Def::Lanczos_max = 0;
     fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
     sscanf(ctmp, "%lf %lf\n", &dtmp[0], &dtmp[1]);
     z_seed = std::complex<double>(dtmp[0], dtmp[1]);
@@ -292,13 +291,13 @@ int CalcSpectrumByBiCG(
         z_seed, pBiCG, res_proj, pi, dcSpectrum);
     }/*for (iter = 1; iter <= iter_old; iter++)*/
 
-    rho = VecProdMPI(X->Bind.Check.idim_max, &v5[0][0], &v3[0][0]);
+    rho = VecProdMPI(Check::idim_max, &v5[0][0], &v3[0][0]);
 
     SeedSwitch(iter, Nomega, NdcSpectrum, lz_conv, &iz_seed,
-      &z_seed, &rho, dcomega, X->Bind.Check.idim_max, v2, v3, v4, v5,
+      &z_seed, &rho, dcomega, Check::idim_max, v2, v3, v4, v5,
       pi, alpha, beta, res_proj);
 
-    resnorm = NormMPI_dc(X->Bind.Check.idim_max, &v2[0][0]);
+    resnorm = NormMPI_dc(Check::idim_max, &v2[0][0]);
 
     for (iomega = 0; iomega < Nomega; iomega++)
       if (std::abs(resnorm / pi[iter][iomega]) < eps_Lanczos)
@@ -309,40 +308,40 @@ int CalcSpectrumByBiCG(
   <ul>
   */
   fprintf(stdoutMPI, "    Start: Calculate tridiagonal matrix components.\n");
-  TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Calculating tridiagonal matrix components starts: %s", "a");
+  TimeKeeper("%s_TimeKeeper.dat", "Calculating tridiagonal matrix components starts: %s", "a");
   fprintf(stdoutMPI, "\n  Iteration     Seed     Residual-2-Norm\n");
   childfopenMPI("residual.dat", "w", &fp);
 
-  for (iter = iter_old + 1; iter <= iter_old + X->Bind.Def.Lanczos_max; iter++) {
+  for (iter = iter_old + 1; iter <= iter_old + Def::Lanczos_max; iter++) {
     /**
     <li>@f${\bf v}_{2}={\hat H}{\bf v}_{12}, {\bf v}_{4}={\hat H}{\bf v}_{14}@f$,
     where @f${\bf v}_{12}, {\bf v}_{14}@f$ are old (shadow) residual vector.</li>
     */
-    zclear(X->Bind.Check.idim_max, &v12[1][0]);
-    zclear(X->Bind.Check.idim_max, &v14[1][0]);
-    mltply(&X->Bind, 1, v12, v2);
-    mltply(&X->Bind, 1, v14, v4);
+    zclear(Check::idim_max, &v12[1][0]);
+    zclear(Check::idim_max, &v14[1][0]);
+    mltply(1, v12, v2);
+    mltply(1, v14, v4);
     
     for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
-      zclear(X->Bind.Check.idim_max, &vL[1][0]);
-      GetExcitedState(&(X->Bind), 1, vL, v1Org, idcSpectrum + 1);
-      res_proj[iter][idcSpectrum] = VecProdMPI(X->Bind.Check.idim_max, &vL[0][0], &v2[0][0]);
+      zclear(Check::idim_max, &vL[1][0]);
+      GetExcitedState(1, vL, v1Org, idcSpectrum + 1);
+      res_proj[iter][idcSpectrum] = VecProdMPI(Check::idim_max, &vL[0][0], &v2[0][0]);
     }
     /**
     <li>Update projected result vector dcSpectrum.</li>
     */
     rho_old = rho;
-    rho = VecProdMPI(X->Bind.Check.idim_max, &v4[0][0], &v2[0][0]);
+    rho = VecProdMPI(Check::idim_max, &v4[0][0], &v2[0][0]);
     if (iter == 1)
       beta[iter] = std::complex<double>(0.0, 0.0);
     else
       beta[iter] = rho / rho_old;
 
-    for (idim = 1; idim <= X->Bind.Check.idim_max; idim++) {
+    for (idim = 1; idim <= Check::idim_max; idim++) {
       v12[idim][0] = z_seed * v2[idim][0] - v12[idim][0];
       v14[idim][0] = std::conj(z_seed) * v4[idim][0] - v14[idim][0];
     }
-    alpha_denom = VecProdMPI(X->Bind.Check.idim_max, &v4[0][0], &v12[0][0]) 
+    alpha_denom = VecProdMPI(Check::idim_max, &v4[0][0], &v12[0][0]) 
       - beta[iter] * rho / alpha[iter - 1];
 
     if (std::abs(alpha_denom) < 1.0e-50) {
@@ -362,7 +361,7 @@ int CalcSpectrumByBiCG(
     /*
     Update residual
     */
-    for (idim = 1; idim <= X->Bind.Check.idim_max; idim++) {
+    for (idim = 1; idim <= Check::idim_max; idim++) {
       v12[idim][0] = (1.0 + alpha[iter] * beta[iter] / alpha[iter-1]) * v2[idim][0]
         - alpha[iter] * v12[idim][0]
         - alpha[iter] * beta[iter] / alpha[iter-1] * v3[idim][0];
@@ -373,17 +372,17 @@ int CalcSpectrumByBiCG(
         - std::conj(alpha[iter] * beta[iter] / alpha[iter-1]) * v5[idim][0];
       v5[idim][0] = v4[idim][0];
       v4[idim][0] = v14[idim][0];
-    }/*for (idim = 1; idim <= X->Bind.Check.idim_max; idim++)*/
+    }/*for (idim = 1; idim <= Check::idim_max; idim++)*/
     /*
     Seed Switching
     */
     SeedSwitch(iter, Nomega, NdcSpectrum, lz_conv, &iz_seed,
-      &z_seed, &rho, dcomega, X->Bind.Check.idim_max, v2, v3, v4, v5, 
+      &z_seed, &rho, dcomega, Check::idim_max, v2, v3, v4, v5, 
       pi, alpha, beta, res_proj);
     /*
     Convergence check
     */
-    resnorm = std::sqrt(NormMPI_dc(X->Bind.Check.idim_max, &v2[0][0]));
+    resnorm = std::sqrt(NormMPI_dc(Check::idim_max, &v2[0][0]));
     
     for (iomega = 0; iomega < Nomega; iomega++) 
       if (std::abs(resnorm / pi[iter][iomega]) < eps_Lanczos)
@@ -391,9 +390,9 @@ int CalcSpectrumByBiCG(
     
     fprintf(stdoutMPI, "  %9d  %9d %25.15e\n", iter, iz_seed, resnorm);
     if (resnorm < eps_Lanczos) break;
-  }/*for (iter = 0; iter <= X->Bind.Def.Lanczos_max; iter++)*/
+  }/*for (iter = 0; iter <= Def::Lanczos_max; iter++)*/
 
-  if (iter >= iter_old + X->Bind.Def.Lanczos_max) 
+  if (iter >= iter_old + Def::Lanczos_max) 
     fprintf(stdoutMPI, "Remark : Not converged in iteration %d.", iter);
   iter_old = iter;
   /**
@@ -401,12 +400,12 @@ int CalcSpectrumByBiCG(
   <li>@b END @b DO BiCG loop</li>
   */
   fprintf(stdoutMPI, "    End:   Calculate tridiagonal matrix components.\n\n");
-  TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Calculating tridiagonal matrix components finishes: %s", "a");
+  TimeKeeper("%s_TimeKeeper.dat", "Calculating tridiagonal matrix components finishes: %s", "a");
   /**
   <li>Save @f$\alpha, \beta[iter]@f$, projected residual</li>
   */
-  if (X->Bind.Def.iFlgCalcSpec != RECALC_FROM_TMComponents) {
-    sprintf(sdt, "%s_TMComponents.dat", X->Bind.Def.CDataFileHead);
+  if (Def::iFlgCalcSpec != RECALC_FROM_TMComponents) {
+    sprintf(sdt, "%s_TMComponents.dat", Def::CDataFileHead);
     childfopenMPI(sdt, "w", &fp);
     fprintf(fp, "%d \n", iter_old);
     fprintf(fp, "%.10lf %.10lf\n", std::real(z_seed), std::imag(z_seed));
@@ -425,25 +424,25 @@ int CalcSpectrumByBiCG(
   <li>output vectors for recalculation</li>
   </ul>
   */
-  if (X->Bind.Def.iFlgCalcSpec == RECALC_OUTPUT_TMComponents_VEC ||
-      X->Bind.Def.iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC) {
+  if (Def::iFlgCalcSpec == RECALC_OUTPUT_TMComponents_VEC ||
+      Def::iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC) {
     fprintf(stdoutMPI, "    Start: Output vectors for recalculation.\n");
-    TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Output vectors for recalculation starts: %s", "a");
-    sprintf(sdt, "%s_recalcvec_rank_%d.dat", X->Bind.Def.CDataFileHead, myrank);
+    TimeKeeper("%s_TimeKeeper.dat", "Output vectors for recalculation starts: %s", "a");
+    sprintf(sdt, "%s_recalcvec_rank_%d.dat", Def::CDataFileHead, myrank);
     if (childfopenALL(sdt, "wb", &fp) != 0) {
       exitMPI(-1);
     }
     byte_size = fwrite(&iter, sizeof(iter), 1, fp);
-    byte_size = fwrite(&X->Bind.Check.idim_max, sizeof(X->Bind.Check.idim_max), 1, fp);
-    byte_size = fwrite(&v2[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
-    byte_size = fwrite(&v3[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
-    byte_size = fwrite(&v4[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
-    byte_size = fwrite(&v5[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
+    byte_size = fwrite(&Check::idim_max, sizeof(Check::idim_max), 1, fp);
+    byte_size = fwrite(&v2[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+    byte_size = fwrite(&v3[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+    byte_size = fwrite(&v4[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+    byte_size = fwrite(&v5[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
     fclose(fp);
 
     fprintf(stdoutMPI, "    End:   Output vectors for recalculation.\n");
-    TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Output vectors for recalculation finishes: %s", "a");
-  }/*if (X->Bind.Def.iFlgCalcSpec > RECALC_FROM_TMComponents)*/
+    TimeKeeper("%s_TimeKeeper.dat", "Output vectors for recalculation finishes: %s", "a");
+  }/*if (Def::iFlgCalcSpec > RECALC_FROM_TMComponents)*/
 
   free_cd_1d_allocate(alpha);
   free_cd_1d_allocate(beta);

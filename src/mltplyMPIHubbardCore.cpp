@@ -28,10 +28,9 @@
 @return 1 if it is inter-process region, 0 if not.
 */
 int CheckPE(
-  int org_isite,//!<[in] Site index
-  struct BindStruct *X//!<[inout]
+  int org_isite//!<[in] Site index
 ){
-  if (org_isite + 1 > X->Def.Nsite) {
+  if (org_isite + 1 > Def::Nsite) {
     return TRUE;
   }
   else {
@@ -93,7 +92,7 @@ int CheckBit_InterAllPE(
   int org_isigma3,//!<[in] Spin 3
   int org_isite4,//!<[in] Site 4
   int org_isigma4,//!<[in] Spin 4
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int orgbit,//!<[in] Index of initial wavefunction
   long int *offbit//!<[out] Index of final wavefunction
 ){
@@ -103,32 +102,32 @@ int CheckBit_InterAllPE(
   tmp_org=orgbit;
   tmp_off=0;
 
-  if (CheckPE(org_isite1, X) == TRUE) {
-    tmp_ispin = X->Def.Tpow[2 * org_isite1 + org_isigma1];
+  if (CheckPE(org_isite1) == TRUE) {
+    tmp_ispin = Def::Tpow[2 * org_isite1 + org_isigma1];
     if (CheckBit_Ajt(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
       iflgBitExist = FALSE;
     }
     tmp_org = tmp_off;
   }
 
-  if (CheckPE(org_isite2, X) == TRUE ) {
-    tmp_ispin = X->Def.Tpow[2 * org_isite2 + org_isigma2];
+  if (CheckPE(org_isite2) == TRUE ) {
+    tmp_ispin = Def::Tpow[2 * org_isite2 + org_isigma2];
     if (CheckBit_Cis(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
       iflgBitExist = FALSE;
     }
     tmp_org = tmp_off;
   }
 
-  if (CheckPE(org_isite3, X) == TRUE) {
-    tmp_ispin = X->Def.Tpow[2 * org_isite3 + org_isigma3];
+  if (CheckPE(org_isite3) == TRUE) {
+    tmp_ispin = Def::Tpow[2 * org_isite3 + org_isigma3];
     if (CheckBit_Ajt(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
       iflgBitExist = FALSE;
     }
     tmp_org = tmp_off;
   }
 
-  if (CheckPE(org_isite4, X) == TRUE) {
-    tmp_ispin = X->Def.Tpow[2 * org_isite4 + org_isigma4];
+  if (CheckPE(org_isite4) == TRUE) {
+    tmp_ispin = Def::Tpow[2 * org_isite4 + org_isigma4];
     if (CheckBit_Cis(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
       iflgBitExist = FALSE;
     }
@@ -152,7 +151,6 @@ int CheckBit_PairPE(
   int org_isigma1,//!<[in] Spin 1
   int org_isite3,//!<[in] Site 3
   int org_isigma3,//!<[in] Spin 4
-  struct BindStruct *X,//!<[inout]
   long int orgbit//!<[in] Index pf intial wavefunction
 ){
   long int tmp_ispin;
@@ -160,15 +158,15 @@ int CheckBit_PairPE(
   int iflgBitExist = TRUE;
   tmp_org=orgbit;
   
-  if(CheckPE(org_isite1, X)==TRUE){
-    tmp_ispin = X->Def.Tpow[2 * org_isite1 + org_isigma1];
+  if(CheckPE(org_isite1)==TRUE){
+    tmp_ispin = Def::Tpow[2 * org_isite1 + org_isigma1];
     if (CheckBit_Ajt(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
       iflgBitExist=FALSE;
     }
   }
   
-  if (CheckPE(org_isite3, X) == TRUE) {
-    tmp_ispin = X->Def.Tpow[2 * org_isite3 + org_isigma3];
+  if (CheckPE(org_isite3) == TRUE) {
+    tmp_ispin = Def::Tpow[2 * org_isite3 + org_isigma3];
     if (CheckBit_Ajt(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
       iflgBitExist = FALSE;
     }
@@ -192,7 +190,7 @@ int GetSgnInterAll(
   long int isite3,//!<[in] Site 3
   long int isite4,//!<[in] Site 4
   int *Fsgn,//!<[out] Fermion sign
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int orgbit,//!<[in] Index of the initial state
   long int *offbit//!<[out] Index of the final state
 ){
@@ -249,7 +247,7 @@ int GetSgnInterAll(
   }
   
   *Fsgn =tmp_sgn;
-  *offbit = *offbit%X->Def.OrgTpow[2*X->Def.Nsite];
+  *offbit = *offbit%Def::OrgTpow[2*Def::Nsite];
   return TRUE;
 }/*int GetSgnInterAll*/
 /**
@@ -262,27 +260,27 @@ void X_GC_child_CisAisCjtAjt_Hubbard_MPI(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
   int iCheck;
   long int tmp_ispin1;
-  long int i_max = X->Check.idim_max;
+  long int i_max = Check::idim_max;
   long int tmp_off, j;
   int one = 1;
 
-  iCheck=CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, X, (long int) myrank);
+  iCheck=CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, (long int) myrank);
   if(iCheck != TRUE){
     return;
   }
 
-  if (org_isite1 + 1 > X->Def.Nsite && org_isite3 + 1 > X->Def.Nsite) {
+  if (org_isite1 + 1 > Def::Nsite && org_isite3 + 1 > Def::Nsite) {
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
-  }/*if (org_isite1 + 1 > X->Def.Nsite && org_isite3 + 1 > X->Def.Nsite)*/
-  else if (org_isite1 + 1 > X->Def.Nsite || org_isite3 + 1 > X->Def.Nsite) {
-    if (org_isite1 > org_isite3) tmp_ispin1 = X->Def.Tpow[2 * org_isite3 + org_ispin3];
-    else                         tmp_ispin1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
+  }/*if (org_isite1 + 1 > Def::Nsite && org_isite3 + 1 > Def::Nsite)*/
+  else if (org_isite1 + 1 > Def::Nsite || org_isite3 + 1 > Def::Nsite) {
+    if (org_isite1 > org_isite3) tmp_ispin1 = Def::Tpow[2 * org_isite3 + org_ispin3];
+    else                         tmp_ispin1 = Def::Tpow[2 * org_isite1 + org_ispin1];
 
 #pragma omp parallel  default(none) \
   shared(org_isite1,org_ispin1,org_isite3,org_ispin3,nstate,one,tmp_v0,tmp_v1,tmp_ispin1) \
@@ -307,11 +305,11 @@ void X_GC_child_CisAjtCkuAku_Hubbard_MPI(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  long int i_max = X->Check.idim_max;
+  long int i_max = Check::idim_max;
   long int idim_max_buf;
   int iCheck, Fsgn;
   long int isite1, isite2, isite3;
@@ -322,32 +320,32 @@ void X_GC_child_CisAjtCkuAku_Hubbard_MPI(
   long int org_rankbit;
   int one = 1;
 
-  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, X, (long int) myrank, &origin);
-  isite1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
-  isite2 = X->Def.Tpow[2 * org_isite2 + org_ispin2];
-  isite3 = X->Def.Tpow[2 * org_isite3 + org_ispin3];
+  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, (long int) myrank, &origin);
+  isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
+  isite2 = Def::Tpow[2 * org_isite2 + org_ispin2];
+  isite3 = Def::Tpow[2 * org_isite3 + org_ispin3];
 
   if (iCheck == TRUE) {
-    tmp_isite1 = X->Def.OrgTpow[2 * org_isite1 + org_ispin1];
-    tmp_isite2 = X->Def.OrgTpow[2 * org_isite2 + org_ispin2];
-    tmp_isite3 = X->Def.OrgTpow[2 * org_isite3 + org_ispin3];
-    tmp_isite4 = X->Def.OrgTpow[2 * org_isite3 + org_ispin3];
+    tmp_isite1 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
+    tmp_isite2 = Def::OrgTpow[2 * org_isite2 + org_ispin2];
+    tmp_isite3 = Def::OrgTpow[2 * org_isite3 + org_ispin3];
+    tmp_isite4 = Def::OrgTpow[2 * org_isite3 + org_ispin3];
     Asum = tmp_isite1 + tmp_isite2;
     if (tmp_isite2 > tmp_isite1) Adiff = tmp_isite2 - tmp_isite1 * 2;
     else Adiff = tmp_isite1 - tmp_isite2 * 2;
   }
   else {
-    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, X, (long int) myrank, &origin);
+    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, (long int) myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
-      tmp_isite4 = X->Def.OrgTpow[2 * org_isite1 + org_ispin1];
-      tmp_isite3 = X->Def.OrgTpow[2 * org_isite2 + org_ispin2];
-      tmp_isite2 = X->Def.OrgTpow[2 * org_isite3 + org_ispin3];
-      tmp_isite1 = X->Def.OrgTpow[2 * org_isite3 + org_ispin3];
+      tmp_isite4 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
+      tmp_isite3 = Def::OrgTpow[2 * org_isite2 + org_ispin2];
+      tmp_isite2 = Def::OrgTpow[2 * org_isite3 + org_ispin3];
+      tmp_isite1 = Def::OrgTpow[2 * org_isite3 + org_ispin3];
       Asum = tmp_isite3 + tmp_isite4;
       if (tmp_isite4 > tmp_isite3) Adiff = tmp_isite4 - tmp_isite3 * 2;
       else Adiff = tmp_isite3 - tmp_isite4 * 2;
-      if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) {
+      if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) {
         tmp_V = 0;
       }
     }
@@ -361,42 +359,42 @@ void X_GC_child_CisAjtCkuAku_Hubbard_MPI(
     if (CheckBit_Ajt(isite3, myrank, &tmp_off) == FALSE) return;
 
 #pragma omp parallel default(none)  \
-firstprivate(i_max,X,Asum,Adiff,isite1,isite2, tmp_V) \
+firstprivate(i_max,Asum,Adiff,isite1,isite2, tmp_V) \
   private(j,tmp_off) shared(tmp_v0, tmp_v1,nstate)
     {
 #pragma omp for
       for (j = 1; j <= i_max; j++) 
         GC_CisAjt(j, nstate, tmp_v0, tmp_v1, isite2, isite1, Asum, Adiff, tmp_V, &tmp_off);
 
-      if (X->Large.mode != M_CORR) {
+      if (Large::mode != M_CORR) {
 #pragma omp for
         for (j = 1; j <= i_max; j++) 
           GC_CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, tmp_V, &tmp_off);
-      }/*if (X->Large.mode != M_CORR)*/
+      }/*if (Large::mode != M_CORR)*/
     }/*End of paralle region*/
     return;
   }//myrank =origin
   else {
-    idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-    SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+    idim_max_buf = SendRecv_i(origin, Check::idim_max);
+    SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
 #pragma omp parallel default(none) private(j,dmv,tmp_off,Fsgn,org_rankbit,Adiff) \
   shared(v1buf,tmp_v1,nstate,one,tmp_v0,myrank,origin,isite3,org_isite3,isite1,isite2,org_isite2,org_isite1) \
-firstprivate(idim_max_buf,tmp_V,X,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4)
+firstprivate(idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4)
     {
-      if (org_isite1 + 1 > X->Def.Nsite && org_isite2 + 1 > X->Def.Nsite) {
+      if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite) {
         if (isite2 > isite1) Adiff = isite2 - isite1 * 2;
         else Adiff = isite1 - isite2 * 2;
         SgnBit(((long int) myrank & Adiff), &Fsgn);
         tmp_V *= Fsgn;
 
-        if (org_isite3 + 1 > X->Def.Nsite) {
+        if (org_isite3 + 1 > Def::Nsite) {
 #pragma omp for
           for (j = 1; j <= idim_max_buf; j++) {
             zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[j][0], &one);
           }/*for (j = 1; j <= idim_max_buf; j++)*/
         }
-        else { //org_isite3 <= X->Def.Nsite
+        else { //org_isite3 <= Def::Nsite
 #pragma omp for
           for (j = 1; j <= idim_max_buf; j++) {
             if (CheckBit_Ajt(isite3, j - 1, &tmp_off) == TRUE) {
@@ -404,12 +402,12 @@ firstprivate(idim_max_buf,tmp_V,X,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4)
             }
           }/*for (j = 1; j <= idim_max_buf; j++)*/
         }
-      }/*if (org_isite1 + 1 > X->Def.Nsite && org_isite2 + 1 > X->Def.Nsite)*/
+      }/*if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite)*/
       else {
-        org_rankbit = X->Def.OrgTpow[2 * X->Def.Nsite] * origin;
+        org_rankbit = Def::OrgTpow[2 * Def::Nsite] * origin;
 #pragma omp for
         for (j = 1; j <= idim_max_buf; j++) {
-          if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, X, (j - 1) + org_rankbit, &tmp_off) == TRUE) {
+          if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, (j - 1) + org_rankbit, &tmp_off) == TRUE) {
             dmv = tmp_V * (std::complex<double>)Fsgn;
             zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[tmp_off + 1][0], &one);
           }
@@ -430,13 +428,13 @@ void X_GC_child_CisAisCjtAku_Hubbard_MPI(
   int org_isite4,//!<[in] Site 4
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
   X_GC_child_CisAjtCkuAku_Hubbard_MPI(
     org_isite4, org_ispin4, org_isite3, org_ispin3,
-    org_isite1, org_ispin1, conj(tmp_V), X, nstate, tmp_v0, tmp_v1);
+    org_isite1, org_ispin1, conj(tmp_V), nstate, tmp_v0, tmp_v1);
 }/*std::complex<double> X_GC_child_CisAisCjtAku_Hubbard_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{jt} c_{ku}^\dagger c_{lv}@f$
@@ -452,11 +450,11 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
   int org_isite4,//!<[in] Site 4
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  long int i_max = X->Check.idim_max;
+  long int i_max = Check::idim_max;
   long int idim_max_buf;
   int iCheck, Fsgn;
   long int isite1, isite2, isite3, isite4;
@@ -470,30 +468,30 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
 
   iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2,
                                org_isite3, org_ispin3, org_isite4, org_ispin4,
-                               X, (long int) myrank, &origin);
-  isite1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
-  isite2 = X->Def.Tpow[2 * org_isite2 + org_ispin2];
-  isite3 = X->Def.Tpow[2 * org_isite3 + org_ispin3];
-  isite4 = X->Def.Tpow[2 * org_isite4 + org_ispin4];
+                               (long int) myrank, &origin);
+  isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
+  isite2 = Def::Tpow[2 * org_isite2 + org_ispin2];
+  isite3 = Def::Tpow[2 * org_isite3 + org_ispin3];
+  isite4 = Def::Tpow[2 * org_isite4 + org_ispin4];
 
   if (iCheck == TRUE) {
-    tmp_isite1 = X->Def.OrgTpow[2 * org_isite1 + org_ispin1];
-    tmp_isite2 = X->Def.OrgTpow[2 * org_isite2 + org_ispin2];
-    tmp_isite3 = X->Def.OrgTpow[2 * org_isite3 + org_ispin3];
-    tmp_isite4 = X->Def.OrgTpow[2 * org_isite4 + org_ispin4];
+    tmp_isite1 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
+    tmp_isite2 = Def::OrgTpow[2 * org_isite2 + org_ispin2];
+    tmp_isite3 = Def::OrgTpow[2 * org_isite3 + org_ispin3];
+    tmp_isite4 = Def::OrgTpow[2 * org_isite4 + org_ispin4];
   }
   else {
     iCheck = CheckBit_InterAllPE(org_isite4, org_ispin4, org_isite3, org_ispin3,
                                  org_isite2, org_ispin2, org_isite1, org_ispin1,
-                                 X, (long int) myrank, &origin);
+                                 (long int) myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
-      tmp_isite4 = X->Def.OrgTpow[2 * org_isite1 + org_ispin1];
-      tmp_isite3 = X->Def.OrgTpow[2 * org_isite2 + org_ispin2];
-      tmp_isite2 = X->Def.OrgTpow[2 * org_isite3 + org_ispin3];
-      tmp_isite1 = X->Def.OrgTpow[2 * org_isite4 + org_ispin4];
+      tmp_isite4 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
+      tmp_isite3 = Def::OrgTpow[2 * org_isite2 + org_ispin2];
+      tmp_isite2 = Def::OrgTpow[2 * org_isite3 + org_ispin3];
+      tmp_isite1 = Def::OrgTpow[2 * org_isite4 + org_ispin4];
       iFlgHermite = TRUE;
-      if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) {
+      if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) {
         tmp_V = 0;
       }
     }
@@ -505,9 +503,9 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
   if (myrank == origin) {
     if (isite1 == isite4 && isite2 == isite3) { // CisAjvCjvAis =Cis(1-njv)Ais=nis-nisnjv
             //calc nis
-      X_GC_child_CisAis_Hubbard_MPI(org_isite1, org_ispin1, tmp_V, X, nstate, tmp_v0, tmp_v1);
+      X_GC_child_CisAis_Hubbard_MPI(org_isite1, org_ispin1, tmp_V, nstate, tmp_v0, tmp_v1);
       //calc -nisniv
-      X_GC_child_CisAisCjtAjt_Hubbard_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3, -tmp_V, X, nstate, tmp_v0, tmp_v1);
+      X_GC_child_CisAisCjtAjt_Hubbard_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1);
     }/*if (isite1 == isite4 && isite2 == isite3)*/
     else if (isite2 == isite3) { // CisAjvCjvAku= Cis(1-njv)Aku=-CisAkunjv+CisAku: j is in PE
             //calc CisAku
@@ -515,40 +513,40 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
       else Adiff = isite1 - isite4 * 2;
 
 #pragma omp parallel for default(none)  private(j, tmp_off) \
-  firstprivate(i_max, tmp_V, X, isite1, isite4, Adiff) shared(tmp_v1, tmp_v0,nstate)
+  firstprivate(i_max, tmp_V, isite1, isite4, Adiff) shared(tmp_v1, tmp_v0,nstate)
       for (j = 1; j <= i_max; j++) 
         GC_CisAjt(j - 1, nstate, tmp_v0, tmp_v1, isite1, isite4, (isite1 + isite4), Adiff, tmp_V, &tmp_off);
       
       //calc -CisAku njv
       X_GC_child_CisAjtCkuAku_Hubbard_MPI(org_isite1, org_ispin1, org_isite4, org_ispin4, 
-                                          org_isite2, org_ispin2, -tmp_V, X, nstate, tmp_v0, tmp_v1);
-      if (X->Large.mode != M_CORR) { //for hermite
+                                          org_isite2, org_ispin2, -tmp_V, nstate, tmp_v0, tmp_v1);
+      if (Large::mode != M_CORR) { //for hermite
 #pragma omp parallel for default(none)  private(j, tmp_off) \
-  firstprivate(i_max, tmp_V, X, isite1, isite4, Adiff) shared(tmp_v1, tmp_v0,nstate)
+  firstprivate(i_max, tmp_V, isite1, isite4, Adiff) shared(tmp_v1, tmp_v0,nstate)
         for (j = 1; j <= i_max; j++) 
           GC_CisAjt(j - 1, nstate, tmp_v0, tmp_v1, isite4, isite1, (isite1 + isite4), Adiff, tmp_V, &tmp_off);
         
         //calc -njvCkuAis
         X_GC_child_CisAisCjtAku_Hubbard_MPI(org_isite2, org_ispin2, org_isite4, org_ispin4,
-                                            org_isite1, org_ispin1, -tmp_V, X, nstate, tmp_v0, tmp_v1);
-      }/*if (X->Large.mode != M_CORR)*/
+                                            org_isite1, org_ispin1, -tmp_V, nstate, tmp_v0, tmp_v1);
+      }/*if (Large::mode != M_CORR)*/
     }/*if (isite2 == isite3)*/
     else {// CisAjtCkuAis = -CisAisCkuAjt: i is in PE
       X_GC_child_CisAisCjtAku_Hubbard_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3,
-                                          org_isite2, org_ispin2, -tmp_V, X, nstate, tmp_v0, tmp_v1);
-      if (X->Large.mode != M_CORR) { //for hermite
+                                          org_isite2, org_ispin2, -tmp_V, nstate, tmp_v0, tmp_v1);
+      if (Large::mode != M_CORR) { //for hermite
         X_GC_child_CisAisCjtAku_Hubbard_MPI(org_isite1, org_ispin1, org_isite2, org_ispin2,
-                                            org_isite3, org_ispin3, -tmp_V, X, nstate, tmp_v0, tmp_v1);
-      }/*if (X->Large.mode != M_CORR)*/
+                                            org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1);
+      }/*if (Large::mode != M_CORR)*/
     }/*if (isite2 != isite3)*/
     return;
   }//myrank =origin
   else {
-    idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-    SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+    idim_max_buf = SendRecv_i(origin, Check::idim_max);
+    SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
-    if (org_isite1 + 1 > X->Def.Nsite && org_isite2 + 1 > X->Def.Nsite
-     && org_isite3 + 1 > X->Def.Nsite && org_isite4 + 1 > X->Def.Nsite) {
+    if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite
+     && org_isite3 + 1 > Def::Nsite && org_isite4 + 1 > Def::Nsite) {
 
       if (isite2 > isite1) Adiff = isite2 - isite1 * 2;
       else Adiff = isite1 - isite2 * 2;
@@ -569,12 +567,12 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
       zaxpy_long(i_max*nstate, tmp_V, &v1buf[1][0], &tmp_v0[1][0]);
     }
     else {
-      org_rankbit = X->Def.OrgTpow[2 * X->Def.Nsite] * origin;
+      org_rankbit = Def::OrgTpow[2 * Def::Nsite] * origin;
 #pragma omp parallel for default(none)  private(j,dmv,tmp_off,Fsgn) \
-  firstprivate(idim_max_buf,tmp_V,X,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,org_rankbit) \
+  firstprivate(idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,org_rankbit) \
   shared(v1buf,tmp_v1,tmp_v0,nstate,one)
       for (j = 1; j <= idim_max_buf; j++) {
-        if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, X, (j - 1) + org_rankbit, &tmp_off) == TRUE) {
+        if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, (j - 1) + org_rankbit, &tmp_off) == TRUE) {
           dmv = tmp_V * (std::complex<double>)Fsgn;
           zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[tmp_off + 1][0], &one);
         }
@@ -590,23 +588,23 @@ void X_GC_child_CisAis_Hubbard_MPI(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  long int i_max = X->Check.idim_max;
+  long int i_max = Check::idim_max;
   long int j, isite1, tmp_off;
   int one = 1;
 
-  isite1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
-  if (org_isite1 + 1 > X->Def.Nsite) {
+  isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
+  if (org_isite1 + 1 > Def::Nsite) {
     if (CheckBit_Ajt(isite1, (long int) myrank, &tmp_off) == FALSE) return;
 
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
-  }/*if (org_isite1 + 1 > X->Def.Nsite)*/
+  }/*if (org_isite1 + 1 > Def::Nsite)*/
   else {
 #pragma omp parallel  default(none) shared(tmp_v0, tmp_v1,nstate,one) \
-  firstprivate(i_max, tmp_V, X, isite1) private(j, tmp_off)
+  firstprivate(i_max, tmp_V, isite1) private(j, tmp_off)
     {
 #pragma omp for
       for (j = 1; j <= i_max; j++) {
@@ -615,7 +613,7 @@ void X_GC_child_CisAis_Hubbard_MPI(
         }/*if (CheckBit_Ajt(isite1, j - 1, &tmp_off) == TRUE)*/
       }/*for (j = 1; j <= i_max; j++)*/
     }/*End of parallel region*/
-  }/*if (org_isite1 + 1 <= X->Def.Nsite)*/
+  }/*if (org_isite1 + 1 <= Def::Nsite)*/
 }/*std::complex<double> X_GC_child_CisAis_Hubbard_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{jt}@f$
@@ -627,16 +625,16 @@ void X_GC_child_CisAjt_Hubbard_MPI(
   int org_isite2,//!<[in] Site 2
   int org_ispin2,//!<[in] Spin 2
   std::complex<double> tmp_trans,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
 
-  if (org_isite1 + 1 > X->Def.Nsite && org_isite2 + 1 > X->Def.Nsite) {
-    X_GC_child_general_hopp_MPIdouble(org_isite1, org_ispin1, org_isite2, org_ispin2, tmp_trans, X, nstate, tmp_v0, tmp_v1);
+  if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite) {
+    X_GC_child_general_hopp_MPIdouble(org_isite1, org_ispin1, org_isite2, org_ispin2, tmp_trans, nstate, tmp_v0, tmp_v1);
   }
-  else if (org_isite1 + 1 > X->Def.Nsite || org_isite2 + 1 > X->Def.Nsite) {
-    X_GC_child_general_hopp_MPIsingle(org_isite1, org_ispin1, org_isite2, org_ispin2, tmp_trans, X, nstate, tmp_v0, tmp_v1);
+  else if (org_isite1 + 1 > Def::Nsite || org_isite2 + 1 > Def::Nsite) {
+    X_GC_child_general_hopp_MPIsingle(org_isite1, org_ispin1, org_isite2, org_ispin2, tmp_trans, nstate, tmp_v0, tmp_v1);
   }
   else {
     //error message will be added.
@@ -653,35 +651,35 @@ void X_child_CisAisCjtAjt_Hubbard_MPI(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
   int iCheck;
   long int tmp_ispin1;
-  long int i_max = X->Check.idim_max;
+  long int i_max = Check::idim_max;
   long int tmp_off, j;
   int one = 1;
 
-  iCheck = CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, X, (long int) myrank);
+  iCheck = CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, (long int) myrank);
   if (iCheck != TRUE) return;
   
-  if (org_isite1 + 1 > X->Def.Nsite && org_isite3 + 1 > X->Def.Nsite) {
+  if (org_isite1 + 1 > Def::Nsite && org_isite3 + 1 > Def::Nsite) {
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
-  }/*if (org_isite1 + 1 > X->Def.Nsite && org_isite3 + 1 > X->Def.Nsite)*/
-  else if (org_isite1 + 1 > X->Def.Nsite || org_isite3 + 1 > X->Def.Nsite) {
-    if (org_isite1 > org_isite3) tmp_ispin1 = X->Def.Tpow[2 * org_isite3 + org_ispin3];
-    else                         tmp_ispin1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
+  }/*if (org_isite1 + 1 > Def::Nsite && org_isite3 + 1 > Def::Nsite)*/
+  else if (org_isite1 + 1 > Def::Nsite || org_isite3 + 1 > Def::Nsite) {
+    if (org_isite1 > org_isite3) tmp_ispin1 = Def::Tpow[2 * org_isite3 + org_ispin3];
+    else                         tmp_ispin1 = Def::Tpow[2 * org_isite1 + org_ispin1];
 
 #pragma omp parallel for default(none) \
 shared(tmp_v0,tmp_v1,list_1,org_isite1,org_ispin1,org_isite3,org_ispin3,nstate,one) \
-  firstprivate(i_max,tmp_V,X,tmp_ispin1) private(j,tmp_off)
+  firstprivate(i_max,tmp_V,tmp_ispin1) private(j,tmp_off)
     for (j = 1; j <= i_max; j++) {
       if (CheckBit_Ajt(tmp_ispin1, list_1[j], &tmp_off) == TRUE) {
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
       }
     }/*for (j = 1; j <= i_max; j++)*/
-  }/*if (org_isite1 + 1 > X->Def.Nsite || org_isite3 + 1 > X->Def.Nsite)*/
+  }/*if (org_isite1 + 1 > Def::Nsite || org_isite3 + 1 > Def::Nsite)*/
 }/*std::complex<double> X_child_CisAisCjtAjt_Hubbard_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{jt} c_{ku}^\dagger c_{lv}@f$
@@ -697,11 +695,11 @@ void X_child_CisAjtCkuAlv_Hubbard_MPI(
   int org_isite4,//!<[in] Site 4
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  long int i_max = X->Check.idim_max;
+  long int i_max = Check::idim_max;
   long int idim_max_buf;
   int iCheck, Fsgn;
   long int isite1, isite2, isite3, isite4;
@@ -715,31 +713,31 @@ void X_child_CisAjtCkuAlv_Hubbard_MPI(
 
   iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2,
                                org_isite3, org_ispin3, org_isite4, org_ispin4,
-                               X, (long int) myrank, &origin);
+                               (long int) myrank, &origin);
   //printf("iCheck=%d, myrank=%d, origin=%d\n", iCheck, myrank, origin);
-  isite1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
-  isite2 = X->Def.Tpow[2 * org_isite2 + org_ispin2];
-  isite3 = X->Def.Tpow[2 * org_isite3 + org_ispin3];
-  isite4 = X->Def.Tpow[2 * org_isite4 + org_ispin4];
+  isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
+  isite2 = Def::Tpow[2 * org_isite2 + org_ispin2];
+  isite3 = Def::Tpow[2 * org_isite3 + org_ispin3];
+  isite4 = Def::Tpow[2 * org_isite4 + org_ispin4];
 
   if (iCheck == TRUE) {
-    tmp_isite1 = X->Def.OrgTpow[2 * org_isite1 + org_ispin1];
-    tmp_isite2 = X->Def.OrgTpow[2 * org_isite2 + org_ispin2];
-    tmp_isite3 = X->Def.OrgTpow[2 * org_isite3 + org_ispin3];
-    tmp_isite4 = X->Def.OrgTpow[2 * org_isite4 + org_ispin4];
+    tmp_isite1 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
+    tmp_isite2 = Def::OrgTpow[2 * org_isite2 + org_ispin2];
+    tmp_isite3 = Def::OrgTpow[2 * org_isite3 + org_ispin3];
+    tmp_isite4 = Def::OrgTpow[2 * org_isite4 + org_ispin4];
   }/*if (iCheck == TRUE)*/
   else {
     iCheck = CheckBit_InterAllPE(org_isite4, org_ispin4, org_isite3, org_ispin3,
                                  org_isite2, org_ispin2, org_isite1, org_ispin1,
-                                 X, (long int) myrank, &origin);
+                                 (long int) myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
-      tmp_isite4 = X->Def.OrgTpow[2 * org_isite1 + org_ispin1];
-      tmp_isite3 = X->Def.OrgTpow[2 * org_isite2 + org_ispin2];
-      tmp_isite2 = X->Def.OrgTpow[2 * org_isite3 + org_ispin3];
-      tmp_isite1 = X->Def.OrgTpow[2 * org_isite4 + org_ispin4];
+      tmp_isite4 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
+      tmp_isite3 = Def::OrgTpow[2 * org_isite2 + org_ispin2];
+      tmp_isite2 = Def::OrgTpow[2 * org_isite3 + org_ispin3];
+      tmp_isite1 = Def::OrgTpow[2 * org_isite4 + org_ispin4];
       iFlgHermite = TRUE;
-      if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) tmp_V = 0;     
+      if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0;     
     }/*if (iCheck == TRUE)*/
     else return;
   }/*if (iCheck == FALSE)*/
@@ -747,9 +745,9 @@ void X_child_CisAjtCkuAlv_Hubbard_MPI(
   if (myrank == origin) {
     if (isite1 == isite4 && isite2 == isite3) { // CisAjvCjvAis =Cis(1-njv)Ais=nis-nisnjv
             //calc nis
-      X_child_CisAis_Hubbard_MPI(org_isite1, org_ispin1, tmp_V, X, nstate, tmp_v0, tmp_v1);
+      X_child_CisAis_Hubbard_MPI(org_isite1, org_ispin1, tmp_V, nstate, tmp_v0, tmp_v1);
       //calc -nisniv
-      X_child_CisAisCjtAjt_Hubbard_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3, -tmp_V, X, nstate, tmp_v0, tmp_v1);
+      X_child_CisAisCjtAjt_Hubbard_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1);
     }/* if (isite1 == isite4 && isite2 == isite3)*/
     else if (isite2 == isite3) { // CisAjvCjvAku= Cis(1-njv)Aku=-CisAkunjv+CisAku: j is in PE
       if (isite4 > isite1) Adiff = isite4 - isite1 * 2;
@@ -757,42 +755,42 @@ void X_child_CisAjtCkuAlv_Hubbard_MPI(
 
       //calc CisAku
 #pragma omp parallel for default(none)  private(j, tmp_off) \
-firstprivate(i_max, tmp_V, X, isite1, isite4, Adiff) shared(tmp_v1, nstate, tmp_v0, list_1)
+firstprivate(i_max, tmp_V, isite1, isite4, Adiff) shared(tmp_v1, nstate, tmp_v0, list_1)
       for (j = 1; j <= i_max; j++)
-        CisAjt(j, nstate, tmp_v0, tmp_v1, X, isite1, isite4, (isite1 + isite4), Adiff, tmp_V);
+        CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite4, (isite1 + isite4), Adiff, tmp_V);
       
       //calc -CisAku njv
       X_child_CisAjtCkuAku_Hubbard_MPI(org_isite1, org_ispin1, org_isite4, org_ispin4,
-                                       org_isite2, org_ispin2, -tmp_V, X, nstate, tmp_v0, tmp_v1);
+                                       org_isite2, org_ispin2, -tmp_V, nstate, tmp_v0, tmp_v1);
 
-      if (X->Large.mode != M_CORR) {  //for hermite
+      if (Large::mode != M_CORR) {  //for hermite
 #pragma omp parallel for default(none)  private(j, tmp_off) \
-  firstprivate(i_max, tmp_V, X, isite1, isite4, Adiff) shared(tmp_v1, tmp_v0,nstate)
+  firstprivate(i_max, tmp_V, isite1, isite4, Adiff) shared(tmp_v1, tmp_v0,nstate)
         for (j = 1; j <= i_max; j++) 
-          CisAjt(j, nstate, tmp_v0, tmp_v1, X, isite4, isite1, (isite1 + isite4), Adiff, tmp_V);
+          CisAjt(j, nstate, tmp_v0, tmp_v1, isite4, isite1, (isite1 + isite4), Adiff, tmp_V);
                 
         //calc -njvCkuAis
         X_child_CisAisCjtAku_Hubbard_MPI(org_isite2, org_ispin2, org_isite4, org_ispin4, 
-                                         org_isite1, org_ispin1, -tmp_V, X, nstate, tmp_v0, tmp_v1);
-      }/*if (X->Large.mode != M_CORR)*/
+                                         org_isite1, org_ispin1, -tmp_V, nstate, tmp_v0, tmp_v1);
+      }/*if (Large::mode != M_CORR)*/
     }/*if (isite2 == isite3)*/
     else {// CisAjtCkuAis = -CisAisCkuAjt: i is in PE
       X_child_CisAisCjtAku_Hubbard_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3, 
-                                       org_isite2, org_ispin2, -tmp_V, X, nstate, tmp_v0, tmp_v1);
+                                       org_isite2, org_ispin2, -tmp_V, nstate, tmp_v0, tmp_v1);
 
-      if (X->Large.mode != M_CORR) //for hermite: CisAkuCjtAis=-CisAisCjtAku
+      if (Large::mode != M_CORR) //for hermite: CisAkuCjtAis=-CisAisCjtAku
         X_child_CisAisCjtAku_Hubbard_MPI(org_isite1, org_ispin1, org_isite2, org_ispin2,
-                                         org_isite3, org_ispin3, -tmp_V, X, nstate, tmp_v0, tmp_v1);    
+                                         org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1);    
     }/*if (isite2 != isite3)*/
     return;
   }//myrank =origin
   else {
-    idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-    SendRecv_iv(origin, X->Check.idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
+    idim_max_buf = SendRecv_i(origin, Check::idim_max);
+    SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
 
-    SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
-    if (org_isite1 + 1 > X->Def.Nsite && org_isite2 + 1 > X->Def.Nsite
-     && org_isite3 + 1 > X->Def.Nsite && org_isite4 + 1 > X->Def.Nsite)
+    SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+    if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite
+     && org_isite3 + 1 > Def::Nsite && org_isite4 + 1 > Def::Nsite)
     {
       if (isite2 > isite1) Adiff = isite2 - isite1 * 2;
       else Adiff = isite1 - isite2 * 2;
@@ -816,28 +814,28 @@ firstprivate(idim_max_buf,tmp_V,X) \
 #pragma omp for
         for (j = 1; j <= idim_max_buf; j++) {
           if (GetOffComp(list_2_1, list_2_2, list_1buf[j],
-            X->Large.irght, X->Large.ilft, X->Large.ihfbit, &ioff) == TRUE)
+            Large::irght, Large::ilft, Large::ihfbit, &ioff) == TRUE)
           {
             zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
           }
         }/*for (j = 1; j <= idim_max_buf; j++)*/
       }/*End of parallel region*/
-    }//org_isite1+1 > X->Def.Nsite && org_isite2+1 > X->Def.Nsite
-            // && org_isite3+1 > X->Def.Nsite && org_isite4+1 > X->Def.Nsite
+    }//org_isite1+1 > Def::Nsite && org_isite2+1 > Def::Nsite
+            // && org_isite3+1 > Def::Nsite && org_isite4+1 > Def::Nsite
     else {
-      org_rankbit = X->Def.OrgTpow[2 * X->Def.Nsite] * origin;
+      org_rankbit = Def::OrgTpow[2 * Def::Nsite] * origin;
 
 #pragma omp parallel default(none)  private(j, dmv, tmp_off, Fsgn, ioff) \
-firstprivate(myrank, idim_max_buf, tmp_V, X, tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4, org_rankbit, \
+firstprivate(myrank, idim_max_buf, tmp_V, tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4, org_rankbit, \
 org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite4, org_ispin4) \
   shared(v1buf, tmp_v1, nstate,one, tmp_v0, list_1buf, list_2_1, list_2_2)
       {
 #pragma omp for
         for (j = 1; j <= idim_max_buf; j++) {
-          if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, X,
+          if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, 
             list_1buf[j] + org_rankbit, &tmp_off) == TRUE)
           {
-            if (GetOffComp(list_2_1, list_2_2, tmp_off, X->Large.irght, X->Large.ilft, X->Large.ihfbit, &ioff) == TRUE)
+            if (GetOffComp(list_2_1, list_2_2, tmp_off, Large::irght, Large::ilft, Large::ihfbit, &ioff) == TRUE)
             {
               dmv = tmp_V * (std::complex<double>)Fsgn;
               zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
@@ -860,11 +858,11 @@ void X_child_CisAjtCkuAku_Hubbard_MPI(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  long int i_max = X->Check.idim_max;
+  long int i_max = Check::idim_max;
   long int idim_max_buf, ioff;
   int iCheck, Fsgn;
   long int isite1, isite2, isite3;
@@ -875,34 +873,34 @@ void X_child_CisAjtCkuAku_Hubbard_MPI(
   long int org_rankbit;
   int one = 1;
   //printf("Deubg0-0: org_isite1=%d, org_ispin1=%d, org_isite2=%d, org_ispin2=%d, org_isite3=%d, org_ispin3=%d\n", org_isite1, org_ispin1,org_isite2, org_ispin2,org_isite3, org_ispin3);
-  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, X, (long int) myrank, &origin);
+  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, (long int) myrank, &origin);
   //printf("iCheck=%d, myrank=%d, origin=%d\n", iCheck, myrank, origin);
 
-  isite1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
-  isite2 = X->Def.Tpow[2 * org_isite2 + org_ispin2];
-  isite3 = X->Def.Tpow[2 * org_isite3 + org_ispin3];
+  isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
+  isite2 = Def::Tpow[2 * org_isite2 + org_ispin2];
+  isite3 = Def::Tpow[2 * org_isite3 + org_ispin3];
 
   if (iCheck == TRUE) {
-    tmp_isite1 = X->Def.OrgTpow[2 * org_isite1 + org_ispin1];
-    tmp_isite2 = X->Def.OrgTpow[2 * org_isite2 + org_ispin2];
-    tmp_isite3 = X->Def.OrgTpow[2 * org_isite3 + org_ispin3];
-    tmp_isite4 = X->Def.OrgTpow[2 * org_isite3 + org_ispin3];
+    tmp_isite1 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
+    tmp_isite2 = Def::OrgTpow[2 * org_isite2 + org_ispin2];
+    tmp_isite3 = Def::OrgTpow[2 * org_isite3 + org_ispin3];
+    tmp_isite4 = Def::OrgTpow[2 * org_isite3 + org_ispin3];
     Asum = tmp_isite1 + tmp_isite2;
     if (tmp_isite2 > tmp_isite1) Adiff = tmp_isite2 - tmp_isite1 * 2;
     else Adiff = tmp_isite1 - tmp_isite2 * 2;
   }/*if (iCheck == TRUE)*/
   else {
-    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, X, (long int) myrank, &origin);
+    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, (long int) myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
-      tmp_isite4 = X->Def.OrgTpow[2 * org_isite1 + org_ispin1];
-      tmp_isite3 = X->Def.OrgTpow[2 * org_isite2 + org_ispin2];
-      tmp_isite2 = X->Def.OrgTpow[2 * org_isite3 + org_ispin3];
-      tmp_isite1 = X->Def.OrgTpow[2 * org_isite3 + org_ispin3];
+      tmp_isite4 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
+      tmp_isite3 = Def::OrgTpow[2 * org_isite2 + org_ispin2];
+      tmp_isite2 = Def::OrgTpow[2 * org_isite3 + org_ispin3];
+      tmp_isite1 = Def::OrgTpow[2 * org_isite3 + org_ispin3];
       Asum = tmp_isite3 + tmp_isite4;
       if (tmp_isite4 > tmp_isite3) Adiff = tmp_isite4 - tmp_isite3 * 2;
       else Adiff = tmp_isite3 - tmp_isite4 * 2;
-      if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) tmp_V = 0;
+      if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0;
       //printf("tmp_isite1=%ld, tmp_isite2=%ld, Adiff=%ld\n", tmp_isite1, tmp_isite2, Adiff);
     }/*if (iCheck == TRUE)*/
     else return;   
@@ -916,60 +914,60 @@ firstprivate(i_max, Asum, Adiff, isite1, isite2, tmp_V, X) \
     {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        CisAjt(j, nstate, tmp_v0, tmp_v1, X, isite1, isite2, Asum, Adiff, tmp_V);
+        CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, tmp_V);
 
-      if (X->Large.mode != M_CORR) {
+      if (Large::mode != M_CORR) {
 #pragma omp for
         for (j = 1; j <= i_max; j++)
-          CisAjt(j, nstate, tmp_v0, tmp_v1, X, isite2, isite1, Asum, Adiff, tmp_V);
-      }/*if (X->Large.mode != M_CORR)*/
+          CisAjt(j, nstate, tmp_v0, tmp_v1, isite2, isite1, Asum, Adiff, tmp_V);
+      }/*if (Large::mode != M_CORR)*/
     }/*End of parallel region*/
     return;
   }//myrank =origin
   else {
-    idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-    SendRecv_iv(origin, X->Check.idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
-    SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+    idim_max_buf = SendRecv_i(origin, Check::idim_max);
+    SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
+    SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
 #pragma omp parallel default(none)  private(j,dmv,ioff,tmp_off,Fsgn,Adiff,org_rankbit) \
-firstprivate(idim_max_buf,tmp_V,X,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,isite3) \
+firstprivate(idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,isite3) \
   shared(v1buf,tmp_v1,nstate,one,tmp_v0,list_1buf,list_2_1,list_2_2,origin,org_isite3,myrank,isite1,isite2,org_isite1,org_isite2)
     {
 
-      if (org_isite1 + 1 > X->Def.Nsite && org_isite2 + 1 > X->Def.Nsite) {
+      if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite) {
         if (isite2 > isite1) Adiff = isite2 - isite1 * 2;
         else Adiff = isite1 - isite2 * 2;
         SgnBit(((long int) myrank & Adiff), &Fsgn);
         tmp_V *= Fsgn;
 
-        if (org_isite3 + 1 > X->Def.Nsite) {
+        if (org_isite3 + 1 > Def::Nsite) {
 #pragma omp for
           for (j = 1; j <= idim_max_buf; j++) {
             GetOffComp(list_2_1, list_2_2, list_1buf[j],
-              X->Large.irght, X->Large.ilft, X->Large.ihfbit, &ioff);
+              Large::irght, Large::ilft, Large::ihfbit, &ioff);
             zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
           }/*for (j = 1; j <= idim_max_buf; j++)*/
-        }/*if (org_isite3 + 1 > X->Def.Nsite)*/
-        else { //org_isite3 <= X->Def.Nsite
+        }/*if (org_isite3 + 1 > Def::Nsite)*/
+        else { //org_isite3 <= Def::Nsite
 #pragma omp for
           for (j = 1; j <= idim_max_buf; j++) {
             if (CheckBit_Ajt(isite3, list_1buf[j], &tmp_off) == TRUE) {
               GetOffComp(list_2_1, list_2_2, list_1buf[j],
-                X->Large.irght, X->Large.ilft, X->Large.ihfbit, &ioff);
+                Large::irght, Large::ilft, Large::ihfbit, &ioff);
               zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
             }
           }/*for (j = 1; j <= idim_max_buf; j++)*/
-        }/*if (org_isite3 + 1 <= X->Def.Nsite)*/
-      }/*if (org_isite1 + 1 > X->Def.Nsite && org_isite2 + 1 > X->Def.Nsite)*/
+        }/*if (org_isite3 + 1 <= Def::Nsite)*/
+      }/*if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite)*/
       else {
-        org_rankbit = X->Def.OrgTpow[2 * X->Def.Nsite] * origin;
+        org_rankbit = Def::OrgTpow[2 * Def::Nsite] * origin;
 #pragma omp for
         for (j = 1; j <= idim_max_buf; j++) {
-          if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, X,
+          if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, 
             list_1buf[j] + org_rankbit, &tmp_off) == TRUE) {
             dmv = tmp_V * (std::complex<double>)Fsgn;
             GetOffComp(list_2_1, list_2_2, tmp_off,
-              X->Large.irght, X->Large.ilft, X->Large.ihfbit, &ioff);
+              Large::irght, Large::ilft, Large::ihfbit, &ioff);
             zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
           }
         }/*for (j = 1; j <= idim_max_buf; j++)*/
@@ -989,47 +987,47 @@ void X_child_CisAisCjtAku_Hubbard_MPI(
   int org_isite4,//!<[in] Site 4
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
   X_child_CisAjtCkuAku_Hubbard_MPI(
     org_isite4, org_ispin4, org_isite3, org_ispin3,
-    org_isite1, org_ispin1, conj(tmp_V), X, nstate, tmp_v0, tmp_v1);
+    org_isite1, org_ispin1, conj(tmp_V), nstate, tmp_v0, tmp_v1);
 }/*std::complex<double> X_child_CisAisCjtAku_Hubbard_MPI*/
 
 void X_child_CisAis_Hubbard_MPI(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, 
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  long int i_max = X->Check.idim_max;
+  long int i_max = Check::idim_max;
   long int j, isite1, tmp_off;
   int one = 1;
 
-  isite1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
-  if (org_isite1 + 1 > X->Def.Nsite) {
+  isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
+  if (org_isite1 + 1 > Def::Nsite) {
     if (CheckBit_Ajt(isite1, (long int) myrank, &tmp_off) == FALSE)
       return;
 
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
-  }/*if (org_isite1 + 1 > X->Def.Nsite)*/
+  }/*if (org_isite1 + 1 > Def::Nsite)*/
   else {
 #pragma omp parallel  default(none) shared(tmp_v0, tmp_v1, list_1,nstate,one) \
-  firstprivate(i_max, tmp_V, X, isite1) private(j, tmp_off)
+  firstprivate(i_max, tmp_V, isite1) private(j, tmp_off)
     {
 #pragma omp for
       for (j = 1; j <= i_max; j++) {
         if (X_CisAis(list_1[j], isite1) != 0) {
           zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
-        }/*if (X_CisAis(list_1[j], X, isite1) != 0)*/
+        }/*if (X_CisAis(list_1[j], isite1) != 0)*/
       }/*for (j = 1; j <= i_max; j++)*/
     }/*End of parallel region*/
-  }/*if (org_isite1 + 1 <= X->Def.Nsite)*/
+  }/*if (org_isite1 + 1 <= Def::Nsite)*/
 }/*std::complex<double> X_child_CisAis_Hubbard_MPI*/
 /**
 @brief Single creation/annihilation operator

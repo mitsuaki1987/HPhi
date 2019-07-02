@@ -45,7 +45,7 @@
 /// \version 1.2
 int GetPairExcitedState
 (
-  struct BindStruct *X,
+  
   int nstate, std::complex<double> **tmp_v0,
   std::complex<double> **tmp_v1,
   int iEx
@@ -54,41 +54,41 @@ int GetPairExcitedState
   int iret;
   long int irght, ilft, ihfbit;
 
-  //  i_max = X->Check.idim_max;
-  if (X->Def.iFlgGeneralSpin == FALSE) {
-    if (GetSplitBitByModel(X->Def.Nsite, X->Def.iCalcModel, &irght, &ilft, &ihfbit) != 0) {
+  //  i_max = Check::idim_max;
+  if (Def::iFlgGeneralSpin == FALSE) {
+    if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit) != 0) {
       return -1;
     }
   }
   else {
-    if (GetSplitBitForGeneralSpin(X->Def.Nsite, &ihfbit, X->Def.SiteToBit) != 0) {
+    if (GetSplitBitForGeneralSpin(Def::Nsite, &ihfbit, Def::SiteToBit) != 0) {
       return -1;
     }
   }
 
-  X->Large.i_max = X->Check.idim_maxOrg;
-  X->Large.irght = irght;
-  X->Large.ilft = ilft;
-  X->Large.ihfbit = ihfbit;
-  X->Large.mode = M_CALCSPEC;
+  Large::i_max = Check::idim_maxOrg;
+  Large::irght = irght;
+  Large::ilft = ilft;
+  Large::ihfbit = ihfbit;
+  Large::mode = M_CALCSPEC;
 
-  switch (X->Def.iCalcModel) {
+  switch (Def::iCalcModel) {
   case HubbardGC:
-    iret = GetPairExcitedStateHubbardGC(X, nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetPairExcitedStateHubbardGC(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
   case KondoGC:
   case Hubbard:
   case Kondo:
-    iret = GetPairExcitedStateHubbard(X, nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetPairExcitedStateHubbard(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
   case Spin: // for the Sz-conserved spin system
-    iret = GetPairExcitedStateSpin(X, nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetPairExcitedStateSpin(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
   case SpinGC:
-    iret = GetPairExcitedStateSpinGC(X, nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetPairExcitedStateSpinGC(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
   default:

@@ -32,7 +32,7 @@
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int child_general_hopp_GetInfo(
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int isite1,//!<[in] Site index
   long int isite2,//!<[in] Site index
   long int sigma1,//!<[in] Spin index
@@ -42,29 +42,29 @@ int child_general_hopp_GetInfo(
   Compute mask for checking occupations of @f$(i_1,\sigma_1)@f$ (LargeList::is1_spin)
   and @f$(i_2,\sigma_2)@f$ (LargeList::is2_spin)
   */
-  X->Large.is1_spin = X->Def.Tpow[2 * isite1 - 2 + sigma1];
-  X->Large.is2_spin = X->Def.Tpow[2 * isite2 - 2 + sigma2];
+  Large::is1_spin = Def::Tpow[2 * isite1 - 2 + sigma1];
+  Large::is2_spin = Def::Tpow[2 * isite2 - 2 + sigma2];
   /**
   Compute mask for Fermion sign (LargeList::A_spin)
   */
   if (isite1 > isite2) {
-    X->Large.A_spin = (X->Def.Tpow[2 * isite1 - 2 + sigma1] - X->Def.Tpow[2 * isite2 - 1 + sigma2]);
+    Large::A_spin = (Def::Tpow[2 * isite1 - 2 + sigma1] - Def::Tpow[2 * isite2 - 1 + sigma2]);
   }
   else if (isite1 < isite2) {
-    X->Large.A_spin = (X->Def.Tpow[2 * isite2 - 2 + sigma2] - X->Def.Tpow[2 * isite1 - 1 + sigma1]);
+    Large::A_spin = (Def::Tpow[2 * isite2 - 2 + sigma2] - Def::Tpow[2 * isite1 - 1 + sigma1]);
   }
   else {
     if (sigma1 > sigma2) {
-      X->Large.A_spin = (X->Def.Tpow[2 * isite1 - 2 + sigma1] - X->Def.Tpow[2 * isite2 - 1 + sigma2]);
+      Large::A_spin = (Def::Tpow[2 * isite1 - 2 + sigma1] - Def::Tpow[2 * isite2 - 1 + sigma2]);
     }
     else {
-      X->Large.A_spin = (X->Def.Tpow[2 * isite2 - 2 + sigma2] - X->Def.Tpow[2 * isite1 - 1 + sigma1]);
+      Large::A_spin = (Def::Tpow[2 * isite2 - 2 + sigma2] - Def::Tpow[2 * isite1 - 1 + sigma1]);
     }
   }
   /**
   Compute mask for hopping (LargeList::isA_spin)
   */
-  X->Large.isA_spin = X->Large.is1_spin + X->Large.is2_spin;
+  Large::isA_spin = Large::is1_spin + Large::is2_spin;
   return 0;
 }/*int child_general_hopp_GetInfo*/
 /**
@@ -74,7 +74,7 @@ int child_general_hopp_GetInfo(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int child_general_int_GetInfo(
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int isite1,//!<[in] Site index
   long int isite2,//!<[in] Site index
   long int isite3,//!<[in] Site index
@@ -92,46 +92,46 @@ int child_general_int_GetInfo(
   Compute mask for checking occupations of @f$(i_1,\sigma_1)@f$ (LargeList::is1_spin)
   and @f$(i_2,\sigma_2)@f$ (LargeList::is2_spin)
   */
-  is1_spin = X->Def.Tpow[2 * isite1 - 2 + sigma1];
-  is2_spin = X->Def.Tpow[2 * isite2 - 2 + sigma2];
+  is1_spin = Def::Tpow[2 * isite1 - 2 + sigma1];
+  is2_spin = Def::Tpow[2 * isite2 - 2 + sigma2];
   /**
   Compute mask for Fermion sign (LargeList::A_spin)
   */
   if (isite1 > isite2) {
-    A_spin = (X->Def.Tpow[2 * isite1 - 2 + sigma1] - X->Def.Tpow[2 * isite2 - 1 + sigma2]);
+    A_spin = (Def::Tpow[2 * isite1 - 2 + sigma1] - Def::Tpow[2 * isite2 - 1 + sigma2]);
   }
   else if (isite2 > isite1) {
-    A_spin = (X->Def.Tpow[2 * isite2 - 2 + sigma2] - X->Def.Tpow[2 * isite1 - 1 + sigma1]);
+    A_spin = (Def::Tpow[2 * isite2 - 2 + sigma2] - Def::Tpow[2 * isite1 - 1 + sigma1]);
   }
   else {//isite1=isite2
     if (sigma1 > sigma2) {
-      A_spin = (X->Def.Tpow[2 * isite1 - 2 + sigma1] - X->Def.Tpow[2 * isite2 - 1 + sigma2]);
+      A_spin = (Def::Tpow[2 * isite1 - 2 + sigma1] - Def::Tpow[2 * isite2 - 1 + sigma2]);
     }
     else {
-      A_spin = (X->Def.Tpow[2 * isite2 - 2 + sigma2] - X->Def.Tpow[2 * isite1 - 1 + sigma1]);
+      A_spin = (Def::Tpow[2 * isite2 - 2 + sigma2] - Def::Tpow[2 * isite1 - 1 + sigma1]);
     }
   }
   /**
   Compute mask for checking occupations of @f$(i_3,\sigma_3)@f$ (LargeList::is3_spin)
   and @f$(i_4,\sigma_4)@f$ (LargeList::is4_spin)
   */
-  is3_spin = X->Def.Tpow[2 * isite3 - 2 + sigma3];
-  is4_spin = X->Def.Tpow[2 * isite4 - 2 + sigma4];
+  is3_spin = Def::Tpow[2 * isite3 - 2 + sigma3];
+  is4_spin = Def::Tpow[2 * isite4 - 2 + sigma4];
   /**
   Compute mask for Fermion sign (LargeList::B_spin)
   */
   if (isite3 > isite4) {
-    B_spin = (X->Def.Tpow[2 * isite3 - 2 + sigma3] - X->Def.Tpow[2 * isite4 - 1 + sigma4]);
+    B_spin = (Def::Tpow[2 * isite3 - 2 + sigma3] - Def::Tpow[2 * isite4 - 1 + sigma4]);
   }
   else if (isite3 < isite4) {
-    B_spin = (X->Def.Tpow[2 * isite4 - 2 + sigma4] - X->Def.Tpow[2 * isite3 - 1 + sigma3]);
+    B_spin = (Def::Tpow[2 * isite4 - 2 + sigma4] - Def::Tpow[2 * isite3 - 1 + sigma3]);
   }
   else {//isite3=isite4
     if (sigma3 > sigma4) {
-      B_spin = (X->Def.Tpow[2 * isite3 - 2 + sigma3] - X->Def.Tpow[2 * isite4 - 1 + sigma4]);
+      B_spin = (Def::Tpow[2 * isite3 - 2 + sigma3] - Def::Tpow[2 * isite4 - 1 + sigma4]);
     }
     else {
-      B_spin = (X->Def.Tpow[2 * isite4 - 2 + sigma4] - X->Def.Tpow[2 * isite3 - 1 + sigma3]);
+      B_spin = (Def::Tpow[2 * isite4 - 2 + sigma4] - Def::Tpow[2 * isite3 - 1 + sigma3]);
     }
   }
   /**
@@ -140,22 +140,22 @@ int child_general_int_GetInfo(
   isA_spin = is1_spin + is2_spin;
   isB_spin = is3_spin + is4_spin;
 
-  X->Large.is1_spin = is1_spin;
-  X->Large.is2_spin = is2_spin;
-  X->Large.is3_spin = is3_spin;
-  X->Large.is4_spin = is4_spin;
-  X->Large.isA_spin = isA_spin;
-  X->Large.isB_spin = isB_spin;
-  X->Large.A_spin = A_spin;
-  X->Large.B_spin = B_spin;
+  Large::is1_spin = is1_spin;
+  Large::is2_spin = is2_spin;
+  Large::is3_spin = is3_spin;
+  Large::is4_spin = is4_spin;
+  Large::isA_spin = isA_spin;
+  Large::isB_spin = isB_spin;
+  Large::A_spin = A_spin;
+  Large::B_spin = B_spin;
   /**
   Copy coupling constant (LargeList::tmp_V)
   */
-  X->Large.tmp_V = tmp_V;
-  X->Large.isite1 = isite1;
-  X->Large.isite2 = isite2;
-  X->Large.isite3 = isite3;
-  X->Large.isite4 = isite4;
+  Large::tmp_V = tmp_V;
+  Large::isite1 = isite1;
+  Large::isite2 = isite2;
+  Large::isite3 = isite3;
+  Large::isite4 = isite4;
 
   return 0;
 }/*int child_general_int_GetInfo*/
@@ -166,24 +166,23 @@ int child_general_int_GetInfo(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int child_pairhopp_GetInfo(
-  int iPairHopp,//!<[in] Index of pairhopp interaction
-  struct BindStruct *X//!<[inout]
+  int iPairHopp//!<[in] Index of pairhopp interaction
 ) {
-  int isite1 = X->Def.PairHopping[iPairHopp][0] + 1;
-  int isite2 = X->Def.PairHopping[iPairHopp][1] + 1;
+  int isite1 = Def::PairHopping[iPairHopp][0] + 1;
+  int isite2 = Def::PairHopping[iPairHopp][1] + 1;
   /**
   Copy coupling constant (LargeList::tmp_J)
   */
-  X->Large.tmp_J = X->Def.ParaPairHopping[iPairHopp];
+  Large::tmp_J = Def::ParaPairHopping[iPairHopp];
   /**
   Compute mask for checking occupations of 
   @f$(i_1,\uparrow)@f$ (LargeList::is1_up), @f$(i_1,\downarrow)@f$ (LargeList::is1_down)
   @f$(i_2,\uparrow)@f$ (LargeList::is2_up), @f$(i_2,\downarrow)@f$ (LargeList::is2_down)
   */
-  X->Large.is1_up = X->Def.Tpow[2 * isite1 - 2];
-  X->Large.is1_down = X->Def.Tpow[2 * isite1 - 1];
-  X->Large.is2_up = X->Def.Tpow[2 * isite2 - 2];
-  X->Large.is2_down = X->Def.Tpow[2 * isite2 - 1];
+  Large::is1_up = Def::Tpow[2 * isite1 - 2];
+  Large::is1_down = Def::Tpow[2 * isite1 - 1];
+  Large::is2_up = Def::Tpow[2 * isite2 - 2];
+  Large::is2_down = Def::Tpow[2 * isite2 - 1];
 
   return 0;
 }/*int child_pairhopp_GetInfo*/
@@ -194,24 +193,23 @@ int child_pairhopp_GetInfo(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int child_exchange_GetInfo(
-  int iExchange,//!<[in] Index of exchange interaction
-  struct BindStruct *X//!<[inout]
+  int iExchange//!<[in] Index of exchange interaction
 ) {
-  int isite1 = X->Def.ExchangeCoupling[iExchange][0] + 1;
-  int isite2 = X->Def.ExchangeCoupling[iExchange][1] + 1;
+  int isite1 = Def::ExchangeCoupling[iExchange][0] + 1;
+  int isite2 = Def::ExchangeCoupling[iExchange][1] + 1;
   /**
   Copy coupling constant (LargeList::tmp_J)
   */
-  X->Large.tmp_J = -X->Def.ParaExchangeCoupling[iExchange];
+  Large::tmp_J = -Def::ParaExchangeCoupling[iExchange];
   /**
   Compute mask for checking occupations of
   @f$(i_1,\uparrow)@f$ (LargeList::is1_up), @f$(i_1,\downarrow)@f$ (LargeList::is1_down)
   @f$(i_2,\uparrow)@f$ (LargeList::is2_up), @f$(i_2,\downarrow)@f$ (LargeList::is2_down)
   */
-  X->Large.is1_up = X->Def.Tpow[2 * isite1 - 2];
-  X->Large.is1_down = X->Def.Tpow[2 * isite1 - 1];
-  X->Large.is2_up = X->Def.Tpow[2 * isite2 - 2];
-  X->Large.is2_down = X->Def.Tpow[2 * isite2 - 1];
+  Large::is1_up = Def::Tpow[2 * isite1 - 2];
+  Large::is1_down = Def::Tpow[2 * isite1 - 1];
+  Large::is2_up = Def::Tpow[2 * isite2 - 2];
+  Large::is2_down = Def::Tpow[2 * isite2 - 1];
 
   return 0;
 }/*int child_exchange_GetInfo*/
@@ -292,7 +290,7 @@ void CisAjt(
   long int j,//!<[in] Index of wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f$v_0 = H v_1@f$
   std::complex<double> **tmp_v1,//!<[in] Vector to be producted
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int is1_spin,//!<[in] Mask for occupation of (is)
   long int is2_spin,//!<[in] Mask for occupation of (jt)
   long int sum_spin,//!<[in] Mask for hopping
@@ -312,7 +310,7 @@ void CisAjt(
     SgnBit(bit, &sgn); // Fermion sign
     iexchg = list_1[j] ^ sum_spin;
 
-    if(GetOffComp(list_2_1, list_2_2, iexchg, X->Large.irght, X->Large.ilft, X->Large.ihfbit, &off)==FALSE){
+    if(GetOffComp(list_2_1, list_2_2, iexchg, Large::irght, Large::ilft, Large::ihfbit, &off)==FALSE){
       return;
     }
     dmv = (std::complex<double>)sgn * tmp_V;
@@ -370,7 +368,7 @@ void GC_CisAjt(
 */
 int X_CisAjt(
   long int list_1_j,//!<[in] Similer to ::list_1 ?
-  struct BindStruct *X,//!<[in]
+  //!<[in]
   long int is1_spin,//!<[in] Mask for occupation of (is)
   long int is2_spin,//!<[in] Mask for occupation of (jt)
   long int sum_spin,//!<[in] Mask for hopping
@@ -382,7 +380,7 @@ int X_CisAjt(
 
   sgn = X_GC_CisAjt(list_1_j, is1_spin, is2_spin, sum_spin, diff_spin, tmp_off);
   if (sgn != 0) {
-    if(GetOffComp(list_2_1, list_2_2, *tmp_off, X->Large.irght, X->Large.ilft, X->Large.ihfbit, &off)!=TRUE){
+    if(GetOffComp(list_2_1, list_2_2, *tmp_off, Large::irght, Large::ilft, Large::ihfbit, &off)!=TRUE){
       *tmp_off = 0;
       return 0;
     }
@@ -443,21 +441,21 @@ void child_exchange_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f$v_0 = H v_1@f$
   std::complex<double> **tmp_v1,//!<[in] Vector to be producted
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int *tmp_off//!<[off] Index of wavefunction of final state
 ) {
   long int off;
   long int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
   std::complex<double> dmv;
   long int iexchg;
-  long int is1_up = X->Large.is1_up;
-  long int is2_up = X->Large.is2_up;
-  long int is1_down = X->Large.is1_down;
-  long int is2_down = X->Large.is2_down;
-  long int irght = X->Large.irght;
-  long int ilft = X->Large.ilft;
-  long int ihfbit = X->Large.ihfbit;
-  std::complex<double> tmp_J = X->Large.tmp_J;
+  long int is1_up = Large::is1_up;
+  long int is2_up = Large::is2_up;
+  long int is1_down = Large::is1_down;
+  long int is2_down = Large::is2_down;
+  long int irght = Large::irght;
+  long int ilft = Large::ilft;
+  long int ihfbit = Large::ihfbit;
+  std::complex<double> tmp_J = Large::tmp_J;
   int one = 1;
 
   ibit1_up = list_1[j] & is1_up;
@@ -495,21 +493,21 @@ void child_pairhopp_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   long int off;
   long int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
   std::complex<double> dmv;
   long int iexchg;
-  long int is1_up = X->Large.is1_up;
-  long int is2_up = X->Large.is2_up;
-  long int is1_down = X->Large.is1_down;
-  long int is2_down = X->Large.is2_down;
-  long int irght = X->Large.irght;
-  long int ilft = X->Large.ilft;
-  long int ihfbit = X->Large.ihfbit;
-  std::complex<double> tmp_J = X->Large.tmp_J;
+  long int is1_up = Large::is1_up;
+  long int is2_up = Large::is2_up;
+  long int is1_down = Large::is1_down;
+  long int is2_down = Large::is2_down;
+  long int irght = Large::irght;
+  long int ilft = Large::ilft;
+  long int ihfbit = Large::ihfbit;
+  std::complex<double> tmp_J = Large::tmp_J;
   int one = 1;
 
   ibit1_up = list_1[j] & is1_up;
@@ -538,18 +536,18 @@ void GC_child_exchange_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   long int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
   std::complex<double> dmv;
   long int iexchg;
-  long int is1_up = X->Large.is1_up;
-  long int is2_up = X->Large.is2_up;
-  long int is1_down = X->Large.is1_down;
-  long int is2_down = X->Large.is2_down;
+  long int is1_up = Large::is1_up;
+  long int is2_up = Large::is2_up;
+  long int is1_down = Large::is1_down;
+  long int is2_down = Large::is2_down;
   long int list_1_j, list_1_off;
-  std::complex<double> tmp_J = X->Large.tmp_J;
+  std::complex<double> tmp_J = Large::tmp_J;
   int one = 1;
 
   list_1_j = j - 1;
@@ -587,18 +585,18 @@ void GC_child_pairhopp_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   long int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
   std::complex<double> dmv;
   long int iexchg;
-  long int is1_up = X->Large.is1_up;
-  long int is2_up = X->Large.is2_up;
-  long int is1_down = X->Large.is1_down;
-  long int is2_down = X->Large.is2_down;
+  long int is1_up = Large::is1_up;
+  long int is2_up = Large::is2_up;
+  long int is1_down = Large::is1_down;
+  long int is2_down = Large::is2_down;
   long int list_1_j, list_1_off;
-  std::complex<double> tmp_J = X->Large.tmp_J;
+  std::complex<double> tmp_J = Large::tmp_J;
   int one = 1;
 
   list_1_j = j - 1;
@@ -658,13 +656,13 @@ void child_CisAisCjtAku_element(
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = X_CisAjt(list_1[j], X, isite3, isite4, Bsum, Bdiff, tmp_off);
+  tmp_sgn = X_CisAjt(list_1[j], isite3, isite4, Bsum, Bdiff, tmp_off);
   if (tmp_sgn != 0) {
     tmp_sgn *= X_CisAis(list_1[*tmp_off], isite1);
     if (tmp_sgn != 0) {
@@ -689,7 +687,7 @@ void child_CisAjtCkuAku_element(
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   int tmp_sgn;
@@ -697,7 +695,7 @@ void child_CisAjtCkuAku_element(
   int one = 1;
   tmp_sgn = X_CisAis(list_1[j], isite3);
   if (tmp_sgn != 0) {
-    tmp_sgn *= X_CisAjt(list_1[j], X, isite1, isite2, Asum, Adiff, tmp_off);
+    tmp_sgn *= X_CisAjt(list_1[j], isite1, isite2, Asum, Adiff, tmp_off);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off][0], &one);
@@ -723,7 +721,7 @@ void child_CisAjtCkuAlv_element(
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int *tmp_off_2//!<[out] Index of final wavefunction
 ) {
   int tmp_sgn;
@@ -734,7 +732,7 @@ void child_CisAjtCkuAlv_element(
   tmp_sgn = X_GC_CisAjt(list_1[j], isite3, isite4, Bsum, Bdiff, &tmp_off_1);
 
   if (tmp_sgn != 0) {
-    tmp_sgn *= X_CisAjt(tmp_off_1, X, isite1, isite2, Asum, Adiff, tmp_off_2);
+    tmp_sgn *= X_CisAjt(tmp_off_1, isite1, isite2, Asum, Adiff, tmp_off_2);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off_2][0], &one);

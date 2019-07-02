@@ -16,7 +16,7 @@
 #pragma once
 #include "Common.hpp"
 
-int GetSingleExcitedStateHubbard(struct BindStruct *X, int nstate,
+int GetSingleExcitedStateHubbard( int nstate,
   std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, int iEx);
-int GetSingleExcitedStateHubbardGC(struct BindStruct *X, int nstate,
+int GetSingleExcitedStateHubbardGC( int nstate,
   std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, int iEx);

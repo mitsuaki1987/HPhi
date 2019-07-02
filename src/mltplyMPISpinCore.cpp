@@ -75,15 +75,14 @@ General two body term:
 */
 void GC_child_CisAitCiuAiv_spin_MPIdouble(
   long int i_int /**< [in] Interaction ID*/,
-  struct BindStruct *X /**< [inout]*/,
   int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
   std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/)
 {
    X_GC_child_CisAitCiuAiv_spin_MPIdouble(
-    X->Def.InterAll_OffDiagonal[i_int][0],  X->Def.InterAll_OffDiagonal[i_int][1], 
-    X->Def.InterAll_OffDiagonal[i_int][3],  X->Def.InterAll_OffDiagonal[i_int][4], 
-    X->Def.InterAll_OffDiagonal[i_int][5],  X->Def.InterAll_OffDiagonal[i_int][7],
-    X->Def.ParaInterAll_OffDiagonal[i_int],X, nstate, tmp_v0, tmp_v1);
+    Def::InterAll_OffDiagonal[i_int][0],  Def::InterAll_OffDiagonal[i_int][1], 
+    Def::InterAll_OffDiagonal[i_int][3],  Def::InterAll_OffDiagonal[i_int][4], 
+    Def::InterAll_OffDiagonal[i_int][5],  Def::InterAll_OffDiagonal[i_int][7],
+    Def::ParaInterAll_OffDiagonal[i_int],nstate, tmp_v0, tmp_v1);
 }/*void GC_child_CisAitCiuAiv_spin_MPIdouble*/
 /**
 @brief @f$c_{is}^\dagger c_{it} c_{iu}^\dagger c_{iv}@f$ term
@@ -100,7 +99,7 @@ void X_GC_child_CisAitCiuAiv_spin_MPIdouble(
   int org_ispin3,//!<[in] spin u
   int org_ispin4,//!<[in] spin v
   std::complex<double> tmp_J,//!<[in] Copupling constatnt
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
@@ -108,14 +107,14 @@ void X_GC_child_CisAitCiuAiv_spin_MPIdouble(
   long int idim_max_buf;
   std::complex<double> Jint;
 
-  mask1 = (int)X->Def.Tpow[org_isite1];
-  mask2 = (int)X->Def.Tpow[org_isite3];
+  mask1 = (int)Def::Tpow[org_isite1];
+  mask2 = (int)Def::Tpow[org_isite3];
   if (org_isite1 != org_isite3) {
     origin = myrank ^ (mask1 + mask2);
   }
   else {
     if (org_ispin1 == org_ispin4 && org_ispin2 == org_ispin3) { //CisAitCitAis=CisAis
-      X_GC_child_CisAis_spin_MPIdouble(org_isite1, org_ispin1, tmp_J, X, nstate, tmp_v0, tmp_v1);
+      X_GC_child_CisAis_spin_MPIdouble(org_isite1, org_ispin1, tmp_J, nstate, tmp_v0, tmp_v1);
       return;
     }
     else { //CisAitCisAit=0
@@ -131,7 +130,7 @@ void X_GC_child_CisAitCiuAiv_spin_MPIdouble(
   }
   else if (state1 == org_ispin1 && state2 == org_ispin3) {
     Jint = conj(tmp_J);
-    if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) {
+    if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) {
       Jint = 0;
     }
   }
@@ -139,8 +138,8 @@ void X_GC_child_CisAitCiuAiv_spin_MPIdouble(
     return;
   }
 
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-  SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  idim_max_buf = SendRecv_i(origin, Check::idim_max);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
   zaxpy_long(nstate * idim_max_buf, Jint, &v1buf[1][0], &tmp_v0[1][0]);
 }/*void GC_child_CisAitCiuAiv_spin_MPIdouble*/
@@ -151,14 +150,13 @@ void X_GC_child_CisAitCiuAiv_spin_MPIdouble(
 */
 void GC_child_CisAisCjuAjv_spin_MPIdouble(
   long int i_int /**< [in] Interaction ID*/,
-  struct BindStruct *X /**< [inout]*/,
   int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
   std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
 ){
   X_GC_child_CisAisCjuAjv_spin_MPIdouble(
-    X->Def.InterAll_OffDiagonal[i_int][0], X->Def.InterAll_OffDiagonal[i_int][1],
-    X->Def.InterAll_OffDiagonal[i_int][4], X->Def.InterAll_OffDiagonal[i_int][5],
-    X->Def.InterAll_OffDiagonal[i_int][7], X->Def.ParaInterAll_OffDiagonal[i_int], X, nstate, tmp_v0, tmp_v1);
+    Def::InterAll_OffDiagonal[i_int][0], Def::InterAll_OffDiagonal[i_int][1],
+    Def::InterAll_OffDiagonal[i_int][4], Def::InterAll_OffDiagonal[i_int][5],
+    Def::InterAll_OffDiagonal[i_int][7], Def::ParaInterAll_OffDiagonal[i_int], nstate, tmp_v0, tmp_v1);
 }/*void GC_child_CisAitCiuAiv_spin_MPIdouble*/
 /**
 @brief CisAisCjuAjv term in Spin model + GC
@@ -172,7 +170,7 @@ void X_GC_child_CisAisCjuAjv_spin_MPIdouble(
   int org_ispin3,//!<[in] Spin 3
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_J,//!<[in] Copupling constatnt
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
@@ -185,8 +183,8 @@ void X_GC_child_CisAisCjuAjv_spin_MPIdouble(
       return;
   }
 
-  mask1 = (int)X->Def.Tpow[org_isite1];
-  mask2 = (int)X->Def.Tpow[org_isite3];
+  mask1 = (int)Def::Tpow[org_isite1];
+  mask2 = (int)Def::Tpow[org_isite3];
   origin = myrank ^ mask2;
   state2 = (origin & mask2) / mask2;
   num1 = X_SpinGC_CisAis((long int) myrank + 1, mask1, org_ispin1);
@@ -195,16 +193,16 @@ void X_GC_child_CisAisCjuAjv_spin_MPIdouble(
   }
   else if (X_SpinGC_CisAis(origin + 1, mask1, org_ispin1) == TRUE && state2 == org_ispin3) {
     Jint = conj(tmp_J);
-    if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) Jint = 0;
+    if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) Jint = 0;
   }
   else {
     return;
   }
 
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-  SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  idim_max_buf = SendRecv_i(origin, Check::idim_max);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
-  zaxpy_long(X->Check.idim_max*nstate, Jint, &v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, Jint, &v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_GC_child_CisAisCjuAjv_spin_MPIdouble*/
 /**
 @brief Wrapper for calculating CisAitCjuAju term in Spin model + GC
@@ -213,15 +211,15 @@ void X_GC_child_CisAisCjuAjv_spin_MPIdouble(
 */
 void GC_child_CisAitCjuAju_spin_MPIdouble(
   long int i_int,//!<[in] Interaction ID
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 )
 {
   X_GC_child_CisAitCjuAju_spin_MPIdouble(
-    X->Def.InterAll_OffDiagonal[i_int][0], X->Def.InterAll_OffDiagonal[i_int][1],
-    X->Def.InterAll_OffDiagonal[i_int][3], X->Def.InterAll_OffDiagonal[i_int][4], 
-    X->Def.InterAll_OffDiagonal[i_int][5], X->Def.ParaInterAll_OffDiagonal[i_int], X, nstate, tmp_v0, tmp_v1);
+    Def::InterAll_OffDiagonal[i_int][0], Def::InterAll_OffDiagonal[i_int][1],
+    Def::InterAll_OffDiagonal[i_int][3], Def::InterAll_OffDiagonal[i_int][4], 
+    Def::InterAll_OffDiagonal[i_int][5], Def::ParaInterAll_OffDiagonal[i_int], nstate, tmp_v0, tmp_v1);
 }/*void GC_child_CisAitCiuAiv_spin_MPIdouble*/
 /**
 @brief CisAisCjuAjv term in Spin model + GC
@@ -235,7 +233,7 @@ void X_GC_child_CisAitCjuAju_spin_MPIdouble(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_J,//!<[in] Copupling constatnt
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
@@ -248,10 +246,10 @@ void X_GC_child_CisAitCjuAju_spin_MPIdouble(
     return;
   }
 
-  mask1 = (int)X->Def.Tpow[org_isite1];
+  mask1 = (int)Def::Tpow[org_isite1];
   origin = myrank ^ mask1;
   state1 = (origin & mask1) / mask1;
-  mask2 = (int)X->Def.Tpow[org_isite3];
+  mask2 = (int)Def::Tpow[org_isite3];
   num1 = X_SpinGC_CisAis(origin + 1, mask2, org_ispin3);
   if (state1 == org_ispin2) {
     if (num1 != 0) {
@@ -265,7 +263,7 @@ void X_GC_child_CisAitCjuAju_spin_MPIdouble(
     num1 = X_SpinGC_CisAis((long int) myrank + 1, mask2, org_ispin3);
     if (num1 != 0) {
       Jint = conj(tmp_J);
-      if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) {
+      if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) {
         Jint = 0;
       }
     }
@@ -274,10 +272,10 @@ void X_GC_child_CisAitCjuAju_spin_MPIdouble(
     }
   }
 
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-  SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  idim_max_buf = SendRecv_i(origin, Check::idim_max);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
-  zaxpy_long(X->Check.idim_max*nstate, Jint, &v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, Jint, &v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_GC_child_CisAisCjuAjv_spin_MPIdouble*/
 /**
 @brief CisAisCjuAjv term in Spin model + GC
@@ -290,7 +288,7 @@ void X_GC_child_CisAisCjuAju_spin_MPIdouble(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_J,//!<[in] Copupling constatnt
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ){
@@ -298,19 +296,19 @@ void X_GC_child_CisAisCjuAju_spin_MPIdouble(
   long int  j;
   std::complex<double> dmv;
   int one = 1;
-  mask1 = (int)X->Def.Tpow[org_isite1];
-  mask2 = (int)X->Def.Tpow[org_isite3];
+  mask1 = (int)Def::Tpow[org_isite1];
+  mask2 = (int)Def::Tpow[org_isite3];
   num1 = X_SpinGC_CisAis((long int)myrank + 1, mask1, org_ispin1);
   num2 = X_SpinGC_CisAis((long int)myrank + 1, mask2, org_ispin3);
   
 #pragma omp parallel default(none)  private(j, dmv) \
-  firstprivate(tmp_J, X, num1, num2) shared(tmp_v1, tmp_v0,nstate,one)
+  firstprivate(tmp_J, num1, num2) shared(tmp_v1, tmp_v0,nstate,one)
   {
 #pragma omp for
-    for (j = 1; j <= X->Check.idim_max; j++) {
+    for (j = 1; j <= Check::idim_max; j++) {
       dmv = (std::complex<double>)(num1 * num2) * tmp_J;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
-    }/*for (j = 1; j <= X->Check.idim_max; j++) */
+    }/*for (j = 1; j <= Check::idim_max; j++) */
   }/*End of parallel region*/
 }/*std::complex<double> X_GC_child_CisAisCjuAju_spin_MPIdouble*/
 /**
@@ -324,7 +322,7 @@ void X_GC_child_CisAisCjuAju_spin_MPIsingle(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_J,//!<[in] Copupling constatnt
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
@@ -333,19 +331,19 @@ void X_GC_child_CisAisCjuAju_spin_MPIsingle(
   std::complex<double> Jint, dmv;
   int one = 1;
   Jint = tmp_J;
-  mask1 = (int)X->Def.Tpow[org_isite1];
-  mask2 = (int)X->Def.Tpow[org_isite3];
+  mask1 = (int)Def::Tpow[org_isite1];
+  mask2 = (int)Def::Tpow[org_isite3];
   num2 = X_SpinGC_CisAis((long int) myrank + 1, mask2, org_ispin3);
 
 #pragma omp parallel default(none)  private(j, dmv, num1) \
-  firstprivate(Jint, X, num2, mask1, org_ispin1) shared(tmp_v1, tmp_v0,nstate,one)
+  firstprivate(Jint, num2, mask1, org_ispin1) shared(tmp_v1, tmp_v0,nstate,one)
   {
 #pragma omp for
-    for (j = 1; j <= X->Check.idim_max; j++) {
+    for (j = 1; j <= Check::idim_max; j++) {
       num1 = X_SpinGC_CisAis(j, mask1, org_ispin1);
       dmv = Jint * (std::complex<double>)(num1 * num2);
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
-    }/*for (j = 1; j <= X->Check.idim_max; j++)*/
+    }/*for (j = 1; j <= Check::idim_max; j++)*/
   }/*End of parallel region*/
 }/*std::complex<double> X_GC_child_CisAisCjuAju_spin_MPIdouble*/
 /**
@@ -355,15 +353,15 @@ void X_GC_child_CisAisCjuAju_spin_MPIsingle(
 */
 void GC_child_CisAitCiuAiv_spin_MPIsingle(
   long int i_int,//!<[in] Interaction ID
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   X_GC_child_CisAitCiuAiv_spin_MPIsingle(
-    X->Def.InterAll_OffDiagonal[i_int][0], X->Def.InterAll_OffDiagonal[i_int][1],
-    X->Def.InterAll_OffDiagonal[i_int][3], X->Def.InterAll_OffDiagonal[i_int][4],
-    X->Def.InterAll_OffDiagonal[i_int][5], X->Def.InterAll_OffDiagonal[i_int][7],
-    X->Def.ParaInterAll_OffDiagonal[i_int], X, nstate, tmp_v0, tmp_v1);
+    Def::InterAll_OffDiagonal[i_int][0], Def::InterAll_OffDiagonal[i_int][1],
+    Def::InterAll_OffDiagonal[i_int][3], Def::InterAll_OffDiagonal[i_int][4],
+    Def::InterAll_OffDiagonal[i_int][5], Def::InterAll_OffDiagonal[i_int][7],
+    Def::ParaInterAll_OffDiagonal[i_int], nstate, tmp_v0, tmp_v1);
 }/*void GC_child_CisAitCiuAiv_spin_MPIsingle*/
 /**
 @brief Exchange and Pairlifting term in Spin model + GC
@@ -378,7 +376,7 @@ void X_GC_child_CisAitCiuAiv_spin_MPIsingle(
   int org_ispin3,//!<[in] Spin 3
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_J,//!<[in] Copupling constatnt
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
@@ -389,7 +387,7 @@ void X_GC_child_CisAitCiuAiv_spin_MPIsingle(
   /*
   Prepare index in the inter PE
   */
-  mask2 = (int)X->Def.Tpow[org_isite3];
+  mask2 = (int)Def::Tpow[org_isite3];
   origin = myrank ^ mask2;
   state2 = (origin & mask2) / mask2;
 
@@ -400,21 +398,21 @@ void X_GC_child_CisAitCiuAiv_spin_MPIsingle(
   else if (state2 == org_ispin3) {
     state1check = (long int) org_ispin1;
     Jint = conj(tmp_J);
-    if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) {
+    if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) {
       Jint = 0;
     }
   }
   else return;
 
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-  SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  idim_max_buf = SendRecv_i(origin, Check::idim_max);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
   /*
   Index in the intra PE
   */
-  mask1 = X->Def.Tpow[org_isite1];
+  mask1 = Def::Tpow[org_isite1];
 
 #pragma omp parallel default(none)  private(j, state1, ioff) \
-  firstprivate(idim_max_buf, Jint, X, state1check, mask1) \
+  firstprivate(idim_max_buf, Jint, state1check, mask1) \
   shared(v1buf, tmp_v1, tmp_v0,nstate,one)
   {
 #pragma omp for
@@ -433,14 +431,14 @@ void X_GC_child_CisAitCiuAiv_spin_MPIsingle(
 */
 void GC_child_CisAisCjuAjv_spin_MPIsingle(
   long int i_int,//!<[in] Interaction ID
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   X_GC_child_CisAisCjuAjv_spin_MPIsingle(
-    X->Def.InterAll_OffDiagonal[i_int][0], X->Def.InterAll_OffDiagonal[i_int][1],
-    X->Def.InterAll_OffDiagonal[i_int][4], X->Def.InterAll_OffDiagonal[i_int][5],
-    X->Def.InterAll_OffDiagonal[i_int][7], X->Def.ParaInterAll_OffDiagonal[i_int], X, nstate, tmp_v0, tmp_v1);
+    Def::InterAll_OffDiagonal[i_int][0], Def::InterAll_OffDiagonal[i_int][1],
+    Def::InterAll_OffDiagonal[i_int][4], Def::InterAll_OffDiagonal[i_int][5],
+    Def::InterAll_OffDiagonal[i_int][7], Def::ParaInterAll_OffDiagonal[i_int], nstate, tmp_v0, tmp_v1);
 }/*void GC_child_CisAisCjuAjv_spin_MPIsingle*/
 /**
 @brief CisAisCjuAjv term in Spin model + GC
@@ -454,7 +452,7 @@ void X_GC_child_CisAisCjuAjv_spin_MPIsingle(
   int org_ispin3,//!<[in] Spin 2
   int org_ispin4,//!<[in] Spin 2
   std::complex<double> tmp_J,//!<[in] Copupling constatnt
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
@@ -465,7 +463,7 @@ void X_GC_child_CisAisCjuAjv_spin_MPIsingle(
   /*
   Prepare index in the inter PE
   */
-  mask2 = (int)X->Def.Tpow[org_isite3];
+  mask2 = (int)Def::Tpow[org_isite3];
   origin = myrank ^ mask2;
   state2 = (origin & mask2) / mask2;
   if (state2 == org_ispin4) {
@@ -475,21 +473,21 @@ void X_GC_child_CisAisCjuAjv_spin_MPIsingle(
   else if (state2 == org_ispin3) {
     state1check = (long int) org_ispin1;
     Jint = conj(tmp_J);
-    if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) {
+    if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) {
       Jint = 0;
     }
   }
   else return;
 
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-  SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  idim_max_buf = SendRecv_i(origin, Check::idim_max);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
   /*
   Index in the intra PE
   */
-  mask1 = X->Def.Tpow[org_isite1];
+  mask1 = Def::Tpow[org_isite1];
 
 #pragma omp parallel default(none)  private(j, state1) \
-  firstprivate(idim_max_buf, Jint, X, state1check, mask1) \
+  firstprivate(idim_max_buf, Jint, state1check, mask1) \
   shared(v1buf, tmp_v1, tmp_v0,nstate,one)
   {
 #pragma omp for
@@ -508,14 +506,14 @@ void X_GC_child_CisAisCjuAjv_spin_MPIsingle(
 */
 void GC_child_CisAitCjuAju_spin_MPIsingle(
   long int i_int,//!<[in] Interaction ID
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   X_GC_child_CisAitCjuAju_spin_MPIsingle(
-    X->Def.InterAll_OffDiagonal[i_int][0], 
-    X->Def.InterAll_OffDiagonal[i_int][3], X->Def.InterAll_OffDiagonal[i_int][4],
-    X->Def.InterAll_OffDiagonal[i_int][5], X->Def.ParaInterAll_OffDiagonal[i_int], X, nstate, tmp_v0, tmp_v1);
+    Def::InterAll_OffDiagonal[i_int][0], 
+    Def::InterAll_OffDiagonal[i_int][3], Def::InterAll_OffDiagonal[i_int][4],
+    Def::InterAll_OffDiagonal[i_int][5], Def::ParaInterAll_OffDiagonal[i_int], nstate, tmp_v0, tmp_v1);
 }/*void GC_child_CisAisCjuAjv_spin_MPIsingle*/
 /**
 @brief CisAisCjuAjv term in Spin model + GC
@@ -528,7 +526,7 @@ void X_GC_child_CisAitCjuAju_spin_MPIsingle(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_J,//!<[in] Copupling constatnt
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
@@ -539,7 +537,7 @@ void X_GC_child_CisAitCjuAju_spin_MPIsingle(
   /*
   Prepare index in the inter PE
   */
-  mask2 = (int)X->Def.Tpow[org_isite3];
+  mask2 = (int)Def::Tpow[org_isite3];
   state2 = (myrank & mask2) / mask2;
 
   if (state2 == org_ispin3) {
@@ -550,13 +548,13 @@ void X_GC_child_CisAitCjuAju_spin_MPIsingle(
     return;
   }
 
-  mask1 = (int)X->Def.Tpow[org_isite1];
+  mask1 = (int)Def::Tpow[org_isite1];
 
 #pragma omp parallel default(none)  private(j, dmv, state1, ioff) \
-  firstprivate(Jint, X, state1check, mask1) shared(tmp_v1, tmp_v0,nstate,one)
+  firstprivate(Jint, state1check, mask1) shared(tmp_v1, tmp_v0,nstate,one)
   {
 #pragma omp for
-    for (j = 0; j < X->Check.idim_max; j++) {
+    for (j = 0; j < Check::idim_max; j++) {
 
       state1 = (j & mask1) / mask1;
       ioff = j ^ mask1;
@@ -567,7 +565,7 @@ void X_GC_child_CisAitCjuAju_spin_MPIsingle(
         dmv = conj(Jint);
       }
       zaxpy_(&nstate, &dmv, &tmp_v1[j + 1][0], &one, &tmp_v0[ioff + 1][0], &one);
-    }/*for (j = 0; j < X->Check.idim_max; j++)*/
+    }/*for (j = 0; j < Check::idim_max; j++)*/
   }/*End of parallel region*/
 }/*void GC_child_CisAitCiuAiv_spin_MPIsingle*/
 /**
@@ -581,7 +579,7 @@ void X_GC_child_CisAisCjuAjv_GeneralSpin_MPIdouble(
   int org_ispin3,//!<[in] Spin 3
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_J,//!<[in] Copupling constatnt
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
@@ -592,28 +590,28 @@ void X_GC_child_CisAisCjuAjv_GeneralSpin_MPIdouble(
     return;
   }
 
-  if (BitCheckGeneral(myrank, org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow) == TRUE
+  if (BitCheckGeneral(myrank, org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow) == TRUE
     && GetOffCompGeneralSpin((long int) myrank, org_isite3 + 1, org_ispin3, org_ispin4,
-      &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+      &off, Def::SiteToBit, Def::Tpow) == TRUE)
     tmp_V = tmp_J;
   else {
     if (GetOffCompGeneralSpin((long int) myrank, org_isite3 + 1, org_ispin4, org_ispin3,
-      &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+      &off, Def::SiteToBit, Def::Tpow) == TRUE)
     {
-      if (BitCheckGeneral((long int)off, org_isite1 + 1, org_ispin1, X->Def.SiteToBit,
-        X->Def.Tpow) == TRUE)
+      if (BitCheckGeneral((long int)off, org_isite1 + 1, org_ispin1, Def::SiteToBit,
+        Def::Tpow) == TRUE)
       {
         tmp_V = conj(tmp_J);
-        if(X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) tmp_V = 0.0;
+        if(Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
       }/*BitCheckGeneral(off, org_isite1 + 1, org_ispin1)*/
       else return;
     }/*GetOffCompGeneralSpin(myrank, org_isite3 + 1, org_ispin4, org_ispin3, &off)*/
     else return;
   }
   origin = (int)off;
-  SendRecv_cv(origin, X->Check.idim_max*nstate, X->Check.idim_max*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
-  zaxpy_long(X->Check.idim_max*nstate, tmp_V, &v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, tmp_V, &v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_GC_child_CisAisCjuAjv_GeneralSpin_MPIdouble*/
 /**
 @brief @f$c_{is}^\dagger c_{it} c_{ju}^\dagger c_{ju}@f$ term in Spin model.
@@ -626,7 +624,7 @@ void X_GC_child_CisAitCjuAju_GeneralSpin_MPIdouble(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_J,//!<[in] Copupling constatnt
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f${\bf v}_0=H {\bf v}_1@f$
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
@@ -638,18 +636,18 @@ void X_GC_child_CisAitCjuAju_GeneralSpin_MPIdouble(
     return;
   }
 
-  if (BitCheckGeneral(myrank, org_isite3 + 1, org_ispin3, X->Def.SiteToBit, X->Def.Tpow) == TRUE
+  if (BitCheckGeneral(myrank, org_isite3 + 1, org_ispin3, Def::SiteToBit, Def::Tpow) == TRUE
     && GetOffCompGeneralSpin((long int) myrank, org_isite1 + 1, org_ispin2, org_ispin1, &off,
-      X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+      Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = conj(tmp_J);
-    if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) tmp_V = 0.0;
+    if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
   }
   else if (GetOffCompGeneralSpin((long int) myrank, org_isite1 + 1, org_ispin1, org_ispin2,
-    &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+    &off, Def::SiteToBit, Def::Tpow) == TRUE)
   {
     if (BitCheckGeneral((long int)off, org_isite3 + 1, org_ispin3,
-      X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
+      Def::SiteToBit, Def::Tpow) == TRUE) {
       tmp_V = tmp_J;
     }
     else return;
@@ -658,9 +656,9 @@ void X_GC_child_CisAitCjuAju_GeneralSpin_MPIdouble(
 
   origin = (int)off;
 
-  SendRecv_cv(origin, X->Check.idim_max*nstate, X->Check.idim_max*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
-  zaxpy_long(X->Check.idim_max*nstate, tmp_V, &v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, tmp_V, &v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_GC_child_CisAitCjuAju_GeneralSpin_MPIdouble*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{it} c_{ju}^\dagger c_{jv}@f$ term in the
@@ -674,7 +672,7 @@ void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIdouble(
   int org_ispin3,//!<[in] Spin 3
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_J,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ) {
@@ -686,15 +684,15 @@ void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIdouble(
 
   if (org_isite1 == org_isite3 && org_ispin1 == org_ispin4 &&
     org_ispin2 == org_ispin3) { //cisaitcitais=cisais && cisaitcitais =cisais
-    X_GC_child_CisAis_GeneralSpin_MPIdouble(org_isite1, org_ispin1, tmp_J, X, nstate, tmp_v0, tmp_v1);
+    X_GC_child_CisAis_GeneralSpin_MPIdouble(org_isite1, org_ispin1, tmp_J, nstate, tmp_v0, tmp_v1);
     return;
   }
   //cisaitcisait
   if (GetOffCompGeneralSpin((long int) myrank, org_isite1 + 1, org_ispin1, org_ispin2,
-    &tmp_off, X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
+    &tmp_off, Def::SiteToBit, Def::Tpow) == TRUE) {
 
     if (GetOffCompGeneralSpin(tmp_off, org_isite3 + 1, org_ispin3, org_ispin4,
-      &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
+      &off, Def::SiteToBit, Def::Tpow) == TRUE) {
 
       tmp_V = tmp_J;
     }
@@ -706,12 +704,12 @@ void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIdouble(
 
   if (ihermite == FALSE) {
     if (GetOffCompGeneralSpin((long int) myrank, org_isite3 + 1, org_ispin4, org_ispin3, &tmp_off,
-      X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
+      Def::SiteToBit, Def::Tpow) == TRUE) {
 
-      if (GetOffCompGeneralSpin(tmp_off, org_isite1 + 1, org_ispin2, org_ispin1, &off, X->Def.SiteToBit,
-                                      X->Def.Tpow) == TRUE) {
+      if (GetOffCompGeneralSpin(tmp_off, org_isite1 + 1, org_ispin2, org_ispin1, &off, Def::SiteToBit,
+                                      Def::Tpow) == TRUE) {
         tmp_V = conj(tmp_J);
-        if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) tmp_V = 0.0;
+        if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
       }
       else return;
     }
@@ -720,9 +718,9 @@ void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIdouble(
 
   origin = (int)off;
 
-  SendRecv_cv(origin, X->Check.idim_max*nstate, X->Check.idim_max*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
-  zaxpy_long(X->Check.idim_max*nstate, tmp_V, &v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, tmp_V, &v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_GC_child_CisAitCjuAjv_GeneralSpin_MPIdouble*/
  /**
  @brief Compute @f$c_{is}^\dagger c_{is} c_{ju}^\dagger c_{ju}@f$ term in the
@@ -734,17 +732,17 @@ void X_GC_child_CisAisCjuAju_GeneralSpin_MPIdouble(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_J,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ) {
   long int num1;
   std::complex<double> tmp_V;
 
-  num1 = BitCheckGeneral((long int) myrank, org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
+  num1 = BitCheckGeneral((long int) myrank, org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
 
   if (num1 == TRUE) {
-    num1 = BitCheckGeneral((long int) myrank, org_isite3 + 1, org_ispin3, X->Def.SiteToBit, X->Def.Tpow);
+    num1 = BitCheckGeneral((long int) myrank, org_isite3 + 1, org_ispin3, Def::SiteToBit, Def::Tpow);
     if (num1 == TRUE) {
       tmp_V = tmp_J;
     }
@@ -752,7 +750,7 @@ void X_GC_child_CisAisCjuAju_GeneralSpin_MPIdouble(
   }
   else return;
 
-  zaxpy_long(X->Check.idim_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_GC_child_CisAisCjuAju_GeneralSpin_MPIdouble*/
  /**
  @brief Compute @f$c_{is}^\dagger c_{it}@f$ term in the
@@ -763,7 +761,7 @@ void X_GC_child_CisAit_GeneralSpin_MPIdouble(
   int org_ispin1,//!<[in] Spin 1
   int org_ispin2,//!<[in] Spin 2
   std::complex<double> tmp_trans,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ) {
@@ -772,22 +770,22 @@ void X_GC_child_CisAit_GeneralSpin_MPIdouble(
   std::complex<double> tmp_V;
 
   if (GetOffCompGeneralSpin((long int) myrank, org_isite1 + 1, org_ispin1, org_ispin2,
-    &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
+    &off, Def::SiteToBit, Def::Tpow) == TRUE) {
     tmp_V = tmp_trans;
   }
   else if (GetOffCompGeneralSpin((long int) myrank,
     org_isite1 + 1, org_ispin2, org_ispin1, &off,
-    X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
+    Def::SiteToBit, Def::Tpow) == TRUE) {
     tmp_V = conj(tmp_trans);
-    if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) tmp_V = 0.0;
+    if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
   }
   else return;
 
   origin = (int)off;
 
-  SendRecv_cv(origin, X->Check.idim_max*nstate, X->Check.idim_max*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
-  zaxpy_long(X->Check.idim_max*nstate, tmp_V, &v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, tmp_V, &v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_GC_child_CisAit_GeneralSpin_MPIdouble*/
  /**
  @brief Compute @f$c_{is}^\dagger c_{is}@f$ term in the
@@ -797,7 +795,7 @@ void X_GC_child_CisAis_GeneralSpin_MPIdouble(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   std::complex<double> tmp_trans,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ) {
@@ -805,13 +803,13 @@ void X_GC_child_CisAis_GeneralSpin_MPIdouble(
   std::complex<double> tmp_V;
 
   num1 = BitCheckGeneral((long int) myrank,
-    org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
+    org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
   if (num1 != 0) {
     tmp_V = tmp_trans;
   }
   else return;
 
-  zaxpy_long(X->Check.idim_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_GC_child_CisAis_GeneralSpin_MPIdouble*/
  /**
  @brief Compute @f$c_{is} c_{is}^\dagger@f$ term in the
@@ -821,7 +819,7 @@ void X_GC_child_AisCis_GeneralSpin_MPIdouble(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   std::complex<double> tmp_trans,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ) {
@@ -829,13 +827,13 @@ void X_GC_child_AisCis_GeneralSpin_MPIdouble(
   std::complex<double> tmp_V;
 
   num1 = BitCheckGeneral((long int) myrank,
-    org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
+    org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
   if (num1 == 0) {
     tmp_V = tmp_trans;
   }
   else return;
 
-  zaxpy_long(X->Check.idim_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_GC_child_AisCis_GeneralSpin_MPIdouble*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{it}@f$ term in the
@@ -846,7 +844,7 @@ void X_child_CisAit_GeneralSpin_MPIdouble(
   int org_ispin1,//!<[in] Spin 1
   int org_ispin2,//!<[in] Spin 2
   std::complex<double> tmp_trans,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, 
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Input wavefunction
@@ -858,14 +856,14 @@ void X_child_CisAit_GeneralSpin_MPIdouble(
   std::complex<double> tmp_V;
   
   if (GetOffCompGeneralSpin((long int) myrank, org_isite1 + 1, org_ispin1, org_ispin2,
-                            &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
+                            &off, Def::SiteToBit, Def::Tpow) == TRUE) {
     tmp_V = tmp_trans;
   }
   else if (GetOffCompGeneralSpin((long int) myrank,
                                  org_isite1 + 1, org_ispin2, org_ispin1, &off,
-                                 X->Def.SiteToBit, X->Def.Tpow) == TRUE) {
+                                 Def::SiteToBit, Def::Tpow) == TRUE) {
     tmp_V = conj(tmp_trans);
-    if (X->Large.mode == M_CORR || X->Large.mode ==M_CALCSPEC) tmp_V = 0.0;
+    if (Large::mode == M_CORR || Large::mode ==M_CALCSPEC) tmp_V = 0.0;
   }
   else return;
   
@@ -876,10 +874,10 @@ void X_child_CisAit_GeneralSpin_MPIdouble(
   SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
 #pragma omp parallel for default(none)\
-firstprivate(X, tmp_V, idim_max_buf, list_1buf_org) private(j, tmp_off) \
+firstprivate(tmp_V, idim_max_buf, list_1buf_org) private(j, tmp_off) \
 shared (tmp_v0, tmp_v1, v1buf,nstate,one)
   for (j = 1; j <= idim_max_buf; j++) {
-    ConvertToList1GeneralSpin(list_1buf_org[j], X->Large.ihfbit, &tmp_off);
+    ConvertToList1GeneralSpin(list_1buf_org[j], Large::ihfbit, &tmp_off);
     zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[tmp_off][0], &one);
   }/*for (j = 1; j <= idim_max_buf; j++)*/
 }/*std::complex<double> X_child_CisAit_GeneralSpin_MPIdouble*/
@@ -894,7 +892,7 @@ void X_GC_child_CisAisCjuAjv_GeneralSpin_MPIsingle(
   int org_ispin3,//!<[in] Spin 3
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_J,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ){
@@ -904,7 +902,7 @@ void X_GC_child_CisAisCjuAjv_GeneralSpin_MPIsingle(
 
   if (GetOffCompGeneralSpin((long int)myrank,
     org_isite3 + 1, org_ispin3, org_ispin4, &off,
-    X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+    Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = tmp_J;
     isite = org_isite1 + 1;
@@ -912,10 +910,10 @@ void X_GC_child_CisAisCjuAjv_GeneralSpin_MPIsingle(
   }
   else if (GetOffCompGeneralSpin((long int)myrank,
     org_isite3 + 1, org_ispin4, org_ispin3, &off,
-    X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+    Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = conj(tmp_J);
-    if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) tmp_V = 0.0;
+    if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
     isite = org_isite1 + 1;
     IniSpin = org_ispin1;
   }
@@ -923,16 +921,16 @@ void X_GC_child_CisAisCjuAjv_GeneralSpin_MPIsingle(
   
   origin = (int)off;
   
-  SendRecv_cv(origin, X->Check.idim_max*nstate, X->Check.idim_max*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
-#pragma omp parallel default(none)  firstprivate(X, tmp_V, isite, IniSpin) \
+#pragma omp parallel default(none)  firstprivate(tmp_V, isite, IniSpin) \
 private(j, num1) shared (tmp_v0, tmp_v1, v1buf,nstate,one)
   {
 #pragma omp for
-    for (j = 1; j <= X->Check.idim_max; j++) {
-      num1 = BitCheckGeneral(j - 1, isite, IniSpin, X->Def.SiteToBit, X->Def.Tpow);
+    for (j = 1; j <= Check::idim_max; j++) {
+      num1 = BitCheckGeneral(j - 1, isite, IniSpin, Def::SiteToBit, Def::Tpow);
       if (num1 != 0) zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[j][0], &one);
-    }/*for (j = 1; j <= X->Check.idim_max; j++)*/
+    }/*for (j = 1; j <= Check::idim_max; j++)*/
   }/*End of parallel region*/
 }/*std::complex<double> X_GC_child_CisAisCjuAjv_GeneralSpin_MPIsingle*/
 /**
@@ -946,7 +944,7 @@ void X_GC_child_CisAitCjuAju_GeneralSpin_MPIsingle(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_J,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ){
@@ -955,7 +953,7 @@ void X_GC_child_CisAitCjuAju_GeneralSpin_MPIsingle(
   std::complex<double> tmp_V, dmv;
 
   num1 = BitCheckGeneral((long int)myrank, 
-    org_isite3+1, org_ispin3, X->Def.SiteToBit, X->Def.Tpow);
+    org_isite3+1, org_ispin3, Def::SiteToBit, Def::Tpow);
   if(num1 != 0){
     tmp_V = tmp_J;
     isite = org_isite1 + 1;
@@ -965,24 +963,24 @@ void X_GC_child_CisAitCjuAju_GeneralSpin_MPIsingle(
   else return;
 
 #pragma omp parallel default(none)  \
-firstprivate(X, tmp_V, isite, IniSpin, FinSpin) private(j, dmv, num1, off) \
+firstprivate(tmp_V, isite, IniSpin, FinSpin) private(j, dmv, num1, off) \
 shared (tmp_v0, tmp_v1, v1buf,nstate,one)
   {
 #pragma omp for
-    for (j = 1; j <= X->Check.idim_max; j++) {
+    for (j = 1; j <= Check::idim_max; j++) {
       if (GetOffCompGeneralSpin(j - 1, isite, IniSpin, FinSpin, &off,
-        X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+        Def::SiteToBit, Def::Tpow) == TRUE)
       {
         dmv = tmp_V;
         zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[off + 1][0], &one);
       }
       else if (GetOffCompGeneralSpin(j - 1, isite, FinSpin, IniSpin, &off,
-        X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+        Def::SiteToBit, Def::Tpow) == TRUE)
       {
         dmv = conj(tmp_V);
         zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[off + 1][0], &one);
       }
-    }/*for (j = 1; j <= X->Check.idim_max; j++)*/
+    }/*for (j = 1; j <= Check::idim_max; j++)*/
   }/*End of parallel region*/
 }/*std::complex<double> X_GC_child_CisAitCjuAju_GeneralSpin_MPIsingle*/
 /**
@@ -997,7 +995,7 @@ void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIsingle(
   int org_ispin3,//!<[in] Spin 3
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_J,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ){
@@ -1007,7 +1005,7 @@ void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIsingle(
 
   if (GetOffCompGeneralSpin((long int)myrank,
     org_isite3 + 1, org_ispin3, org_ispin4, &off,
-    X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+    Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = tmp_J;
     isite = org_isite1 + 1;
@@ -1016,10 +1014,10 @@ void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIsingle(
   }
   else if (GetOffCompGeneralSpin((long int)myrank,
     org_isite3 + 1, org_ispin4, org_ispin3, &off,
-    X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+    Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = conj(tmp_J);
-    if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) tmp_V = 0.0;
+    if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
     isite = org_isite1 + 1;
     IniSpin = org_ispin1;
     FinSpin = org_ispin2;
@@ -1028,20 +1026,20 @@ void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIsingle(
 
   origin = (int)off;
 
-  SendRecv_cv(origin, X->Check.idim_max*nstate, X->Check.idim_max*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
 #pragma omp parallel default(none)  \
-firstprivate(X, tmp_V, isite, IniSpin, FinSpin) private(j, off) \
+firstprivate(tmp_V, isite, IniSpin, FinSpin) private(j, off) \
   shared (tmp_v0, tmp_v1, v1buf,nstate,one)
   {
 #pragma omp for
-    for (j = 1; j <= X->Check.idim_max; j++) {
+    for (j = 1; j <= Check::idim_max; j++) {
       if (GetOffCompGeneralSpin(j - 1, isite, IniSpin, FinSpin, &off,
-        X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+        Def::SiteToBit, Def::Tpow) == TRUE)
       {
         zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[off + 1][0], &one);
       }
-    }/*for (j = 1; j <= X->Check.idim_max; j++)*/
+    }/*for (j = 1; j <= Check::idim_max; j++)*/
   }/*End of parallel region*/
 }/*std::complex<double> X_GC_child_CisAitCjuAjv_GeneralSpin_MPIsingle*/
 /**
@@ -1054,7 +1052,7 @@ void X_GC_child_CisAisCjuAju_GeneralSpin_MPIsingle(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_J,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ){
@@ -1062,23 +1060,23 @@ void X_GC_child_CisAisCjuAju_GeneralSpin_MPIsingle(
   std::complex<double> tmp_V, dmv;
   int one = 1;
 
-  num1 = BitCheckGeneral((long int)myrank, org_isite3+1, org_ispin3, X->Def.SiteToBit, X->Def.Tpow);
+  num1 = BitCheckGeneral((long int)myrank, org_isite3+1, org_ispin3, Def::SiteToBit, Def::Tpow);
   if (num1 != FALSE) {
     tmp_V = tmp_J;
   }
   else return;
   
 #pragma omp parallel default(none)  \
-firstprivate(X, tmp_V, org_isite1, org_ispin1) private(j, dmv, num1) \
+firstprivate(tmp_V, org_isite1, org_ispin1) private(j, dmv, num1) \
   shared (tmp_v0, tmp_v1,nstate,one)
   {
 #pragma omp for
-    for (j = 1; j <= X->Check.idim_max; j++) {
-      num1 = BitCheckGeneral(j - 1, org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
+    for (j = 1; j <= Check::idim_max; j++) {
+      num1 = BitCheckGeneral(j - 1, org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
 
       dmv = tmp_V * (std::complex<double>)num1;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
-    }/*for (j = 1; j <= X->Check.idim_max; j++)*/
+    }/*for (j = 1; j <= Check::idim_max; j++)*/
   }/*End of parallel region*/
 }/*std::complex<double> X_GC_child_CisAisCjuAju_GeneralSpin_MPIsingle*/
 /**
@@ -1093,7 +1091,7 @@ void X_child_CisAitCjuAjv_GeneralSpin_MPIdouble(
   int org_ispin3,//!<[in] Spin 3
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_J,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ){
@@ -1102,9 +1100,9 @@ void X_child_CisAitCjuAjv_GeneralSpin_MPIdouble(
   std::complex<double> tmp_V;
   int ihermite=TRUE;
 
-  if (GetOffCompGeneralSpin((long int)myrank, org_isite1 + 1, org_ispin1, org_ispin2, &tmp_off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+  if (GetOffCompGeneralSpin((long int)myrank, org_isite1 + 1, org_ispin1, org_ispin2, &tmp_off, Def::SiteToBit, Def::Tpow) == TRUE)
   {
-    if (GetOffCompGeneralSpin(tmp_off, org_isite3 + 1, org_ispin3, org_ispin4, &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+    if (GetOffCompGeneralSpin(tmp_off, org_isite3 + 1, org_ispin3, org_ispin4, &off, Def::SiteToBit, Def::Tpow) == TRUE)
     {
       tmp_V = tmp_J;
     }
@@ -1117,12 +1115,12 @@ void X_child_CisAitCjuAjv_GeneralSpin_MPIdouble(
   }
   
   if (ihermite == FALSE) {
-    if (GetOffCompGeneralSpin((long int)myrank, org_isite3 + 1, org_ispin4, org_ispin3, &tmp_off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+    if (GetOffCompGeneralSpin((long int)myrank, org_isite3 + 1, org_ispin4, org_ispin3, &tmp_off, Def::SiteToBit, Def::Tpow) == TRUE)
     {
-      if (GetOffCompGeneralSpin(tmp_off, org_isite1 + 1, org_ispin2, org_ispin1, &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+      if (GetOffCompGeneralSpin(tmp_off, org_isite1 + 1, org_ispin2, org_ispin1, &off, Def::SiteToBit, Def::Tpow) == TRUE)
       {
         tmp_V = conj(tmp_J);
-        if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) {
+        if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) {
           tmp_V = 0.0;
         }
       }
@@ -1133,16 +1131,16 @@ void X_child_CisAitCjuAjv_GeneralSpin_MPIdouble(
   
   origin = (int)off;
 
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-  SendRecv_iv(origin, X->Check.idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
-  SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  idim_max_buf = SendRecv_i(origin, Check::idim_max);
+  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
-#pragma omp parallel default(none)  firstprivate(X, tmp_V, idim_max_buf) \
+#pragma omp parallel default(none)  firstprivate(tmp_V, idim_max_buf) \
 private(j, off) shared (tmp_v0, tmp_v1, list_1buf, v1buf,nstate,one)
   {
 #pragma omp for
     for (j = 1; j <= idim_max_buf; j++) {
-      ConvertToList1GeneralSpin(list_1buf[j], X->Check.sdim, &off);
+      ConvertToList1GeneralSpin(list_1buf[j], Check::sdim, &off);
       zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[off][0], &one);
     }/*for (j = 1; j <= idim_max_buf; j++)*/
   }/*End of parallel region*/
@@ -1157,7 +1155,7 @@ void X_child_CisAisCjuAju_GeneralSpin_MPIdouble(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_J,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ) {
@@ -1165,7 +1163,7 @@ void X_child_CisAisCjuAju_GeneralSpin_MPIdouble(
   std::complex<double> tmp_V;
 
   if (org_isite1 == org_isite3 && org_ispin1 == org_ispin3) {
-    num1 = BitCheckGeneral((long int) myrank, org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
+    num1 = BitCheckGeneral((long int) myrank, org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
     if (num1 != FALSE) {
       tmp_V = tmp_J;
     }
@@ -1174,10 +1172,10 @@ void X_child_CisAisCjuAju_GeneralSpin_MPIdouble(
     }
   }
   else {
-    num1 = BitCheckGeneral((long int) myrank, org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
+    num1 = BitCheckGeneral((long int) myrank, org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
     if (num1 != FALSE) {
-      num1 = BitCheckGeneral((long int) myrank, org_isite3 + 1, org_ispin3, X->Def.SiteToBit,
-        X->Def.Tpow);
+      num1 = BitCheckGeneral((long int) myrank, org_isite3 + 1, org_ispin3, Def::SiteToBit,
+        Def::Tpow);
       if (num1 != FALSE) {
         tmp_V = tmp_J;
       }
@@ -1190,7 +1188,7 @@ void X_child_CisAisCjuAju_GeneralSpin_MPIdouble(
     }
   }
 
-  zaxpy_long(X->Check.idim_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_child_CisAisCjuAju_GeneralSpin_MPIdouble*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{is}c_{ju}^\dagger c_{ju}@f$ term in the
@@ -1202,7 +1200,7 @@ void X_child_CisAisCjuAju_GeneralSpin_MPIsingle(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_J,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 )
@@ -1211,23 +1209,23 @@ void X_child_CisAisCjuAju_GeneralSpin_MPIsingle(
   std::complex<double> tmp_V, dmv;
   int one = 1;
 
-  num1 = BitCheckGeneral((long int) myrank, org_isite3 + 1, org_ispin3, X->Def.SiteToBit, X->Def.Tpow);
+  num1 = BitCheckGeneral((long int) myrank, org_isite3 + 1, org_ispin3, Def::SiteToBit, Def::Tpow);
   if (num1 != FALSE) {
     tmp_V = tmp_J;
   }
   else return;
 
 #pragma omp parallel default(none)  \
-firstprivate(X, tmp_V, org_isite1, org_ispin1) private(j, dmv, num1) \
+firstprivate(tmp_V, org_isite1, org_ispin1) private(j, dmv, num1) \
   shared (tmp_v0, tmp_v1, list_1,nstate,one)
   {
 #pragma omp for
-    for (j = 1; j <= X->Check.idim_max; j++) {
-      num1 = BitCheckGeneral(list_1[j], org_isite1 + 1, org_ispin1, X->Def.SiteToBit, X->Def.Tpow);
+    for (j = 1; j <= Check::idim_max; j++) {
+      num1 = BitCheckGeneral(list_1[j], org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
 
       dmv = tmp_V * (std::complex<double>)num1;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
-    }/*for (j = 1; j <= X->Check.idim_max; j++)*/
+    }/*for (j = 1; j <= Check::idim_max; j++)*/
   }/*End of parallel region*/
 }/*std::complex<double> X_child_CisAisCjuAju_GeneralSpin_MPIsingle*/
  /**
@@ -1242,7 +1240,7 @@ void X_child_CisAitCjuAjv_GeneralSpin_MPIsingle(
   int org_ispin3,//!<[in] Spin 3
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_J,//!<[in] Coupling constant
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[in] Input wavefunction
 ){
@@ -1252,7 +1250,7 @@ void X_child_CisAitCjuAjv_GeneralSpin_MPIsingle(
   
   if (GetOffCompGeneralSpin((long int)myrank,
     org_isite3 + 1, org_ispin3, org_ispin4, &off,
-    X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+    Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = tmp_J;
     isite = org_isite1 + 1;
@@ -1260,10 +1258,10 @@ void X_child_CisAitCjuAjv_GeneralSpin_MPIsingle(
     FinSpin = org_ispin1;
   }
   else if (GetOffCompGeneralSpin((long int)myrank,
-    org_isite3 + 1, org_ispin4, org_ispin3, &off, X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+    org_isite3 + 1, org_ispin4, org_ispin3, &off, Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = conj(tmp_J);
-    if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) tmp_V = 0.0;
+    if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
     isite = org_isite1 + 1;
     IniSpin = org_ispin1;
     FinSpin = org_ispin2;
@@ -1272,21 +1270,21 @@ void X_child_CisAitCjuAjv_GeneralSpin_MPIsingle(
 
   origin = (int)off;
   
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-  SendRecv_iv(origin, X->Check.idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
-  SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  idim_max_buf = SendRecv_i(origin, Check::idim_max);
+  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
 #pragma omp parallel default(none)  \
-firstprivate(X, tmp_V, idim_max_buf, IniSpin, FinSpin, isite) \
+firstprivate(tmp_V, idim_max_buf, IniSpin, FinSpin, isite) \
 private(j, off, tmp_off) shared (tmp_v0, tmp_v1, list_1buf, v1buf,nstate,one)
   {
 #pragma omp for
     for (j = 1; j <= idim_max_buf; j++) {
 
       if (GetOffCompGeneralSpin(list_1buf[j], isite, IniSpin, FinSpin, &tmp_off,
-        X->Def.SiteToBit, X->Def.Tpow) == TRUE)
+        Def::SiteToBit, Def::Tpow) == TRUE)
       {
-        ConvertToList1GeneralSpin(tmp_off, X->Check.sdim, &off);
+        ConvertToList1GeneralSpin(tmp_off, Check::sdim, &off);
         zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[off][0], &one);
       }
     }/*for (j = 1; j <= idim_max_buf; j++)*/
@@ -1302,7 +1300,6 @@ void X_GC_child_CisAit_spin_MPIdouble(
   int org_ispin1,//!<[in] Spin 1
   int org_ispin2,//!<[in] Spin 2
   std::complex<double> tmp_trans,//!<[in] Coupling constant
-  struct BindStruct *X /**< [inout]*/,
   int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
   std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/)
 {
@@ -1310,7 +1307,7 @@ void X_GC_child_CisAit_spin_MPIdouble(
   long int idim_max_buf;
   std::complex<double> trans;
   
-  mask1 = (int)X->Def.Tpow[org_isite1];
+  mask1 = (int)Def::Tpow[org_isite1];
   origin = myrank ^ mask1;
   state1 = (origin & mask1)/mask1;
 
@@ -1319,7 +1316,7 @@ void X_GC_child_CisAit_spin_MPIdouble(
   }
   else if(state1 == org_ispin1) {
     trans = conj(tmp_trans);
-    if(X->Large.mode == M_CORR|| X->Large.mode ==M_CALCSPEC){
+    if(Large::mode == M_CORR|| Large::mode ==M_CALCSPEC){
       trans = 0.0;
     }
   }
@@ -1327,10 +1324,10 @@ void X_GC_child_CisAit_spin_MPIdouble(
     return;
   }
 
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-  SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  idim_max_buf = SendRecv_i(origin, Check::idim_max);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
-  zaxpy_long(X->Check.idim_max*nstate, trans, &v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, trans, &v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double>  X_GC_child_CisAit_spin_MPIdouble*/
 /**
 @brief Hopping term in Spin + Canonical for CalcSpectrum
@@ -1341,7 +1338,6 @@ void X_child_CisAit_spin_MPIdouble(
   int org_isite1,//!<[in] Site 1
   int org_ispin2,//!<[in] Spin 2
   std::complex<double> tmp_trans,//!<[in] Coupling constant
-  struct BindStruct *X /**< [inout]*/,
   int nstate, 
   std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
@@ -1352,7 +1348,7 @@ void X_child_CisAit_spin_MPIdouble(
   long int tmp_off;
   std::complex<double> trans;
   
-  mask1 = (int)X->Def.Tpow[org_isite1];
+  mask1 = (int)Def::Tpow[org_isite1];
   origin = myrank ^ mask1;
   state1 = (origin & mask1)/mask1;
 
@@ -1370,10 +1366,10 @@ void X_child_CisAit_spin_MPIdouble(
   SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
     
 #pragma omp parallel for default(none) private(j, tmp_off) \
-firstprivate(idim_max_buf, trans, X, list_1buf_org, list_2_1, list_2_2) \
+firstprivate(idim_max_buf, trans, list_1buf_org, list_2_1, list_2_2) \
 shared(v1buf, tmp_v0,nstate,one)
   for (j = 1; j <= idim_max_buf; j++) {
-    GetOffComp(list_2_1, list_2_2, list_1buf_org[j], X->Large.irght, X->Large.ilft, X->Large.ihfbit, &tmp_off);
+    GetOffComp(list_2_1, list_2_2, list_1buf_org[j], Large::irght, Large::ilft, Large::ihfbit, &tmp_off);
     zaxpy_(&nstate, &trans, &v1buf[j][0], &one, &tmp_v0[tmp_off][0], &one);
   }
 }/*std::complex<double>  X_child_CisAit_spin_MPIdouble*/
@@ -1386,15 +1382,14 @@ void X_GC_child_CisAis_spin_MPIdouble(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   std::complex<double> tmp_trans,//!<[in] Coupling constant
-  struct BindStruct *X /**< [inout]*/,
   int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
  std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
 ){
   int mask1, ibit1;
-  mask1 = (int)X->Def.Tpow[org_isite1];
+  mask1 = (int)Def::Tpow[org_isite1];
   ibit1 = (((long int)myrank& mask1)/mask1)^(1-org_ispin1);
   if (ibit1 != 0) 
-    zaxpy_long(X->Check.idim_max*nstate, tmp_trans, &tmp_v1[1][0], &tmp_v0[1][0]);
+    zaxpy_long(Check::idim_max*nstate, tmp_trans, &tmp_v1[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_GC_child_CisAis_spin_MPIdouble*/
 /**
 @brief Hopping term in Spin + GC
@@ -1405,16 +1400,15 @@ void X_GC_child_AisCis_spin_MPIdouble(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   std::complex<double> tmp_trans,//!<[in] Coupling constant
-  struct BindStruct *X /**< [inout]*/,
   int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
   std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
 ){
   int mask1;
   int ibit1;
-  mask1 = (int)X->Def.Tpow[org_isite1];
+  mask1 = (int)Def::Tpow[org_isite1];
   ibit1 = (((long int)myrank& mask1) / mask1) ^ (1 - org_ispin1);
 
   if (ibit1 == 0) {
-    zaxpy_long(X->Check.idim_max*nstate, tmp_trans, &tmp_v1[1][0], &tmp_v0[1][0]);
+    zaxpy_long(Check::idim_max*nstate, tmp_trans, &tmp_v1[1][0], &tmp_v0[1][0]);
   }/*if (ibit1 == 0)*/
 }/*std::complex<double> X_GC_child_AisCis_spin_MPIdouble*/

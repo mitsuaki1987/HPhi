@@ -16,8 +16,4 @@
 #pragma once
 #include "Common.hpp"
 
-int CalcByTPQ(
-              const int NumAve,
-              const int ExpecInterval,
-              struct EDMainCalStruct *X
-);
+int CalcByTPQ(const int NumAve, const int ExpecInterval);

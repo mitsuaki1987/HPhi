@@ -16,4 +16,4 @@
 #pragma once
 #include "Common.hpp"
 
-int inputHam(struct BindStruct *X);
+int inputHam();

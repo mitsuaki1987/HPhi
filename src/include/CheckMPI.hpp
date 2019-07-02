@@ -15,7 +15,6 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #pragma once
-#include "struct.hpp"
-int CheckMPI(struct BindStruct *X);
-void CheckMPI_Summary(struct BindStruct *X);
+int CheckMPI();
+void CheckMPI_Summary();
 

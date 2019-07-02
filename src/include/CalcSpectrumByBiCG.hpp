@@ -17,7 +17,6 @@
 #include "Common.hpp"
 
 int CalcSpectrumByBiCG(
-  struct EDMainCalStruct *X,
   std::complex<double> **v2,
   std::complex<double> **v4,
   int Nomega,

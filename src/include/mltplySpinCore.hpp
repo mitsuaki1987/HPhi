@@ -19,11 +19,11 @@
 
 #include "Common.hpp"
 
-void child_exchange_spin_element(long int j, int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, struct BindStruct *X, long int *tmp_off);
+void child_exchange_spin_element(long int j, int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1,  long int *tmp_off);
 
-void GC_child_pairlift_spin_element(long int j, int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, struct BindStruct *X, long int *tmp_off);
-void GC_child_exchange_spin_element(long int j, int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, struct BindStruct *X, long int *tmp_off);
-int X_child_exchange_spin_element(long int j, struct BindStruct *X, long int isA_up, long int isB_up, long int sigmaA, long int sigmaB, long int *tmp_off);
+void GC_child_pairlift_spin_element(long int j, int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1,  long int *tmp_off);
+void GC_child_exchange_spin_element(long int j, int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1,  long int *tmp_off);
+int X_child_exchange_spin_element(long int j,  long int isA_up, long int isB_up, long int sigmaA, long int sigmaB, long int *tmp_off);
 //[s]Spin
 void child_CisAisCisAis_spin_element(long int j, long int isA_up, long int isB_up, long int org_sigma2, long int org_sigma4, std::complex<double> tmp_V, int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1);
 //[e]Spin
@@ -47,13 +47,13 @@ void GC_child_CisAitCiuAiv_spin_element(
   std::complex<double> **tmp_v1, long int *tmp_off_2);
 //[e]GC Spin
 
-int child_general_int_spin_GetInfo(struct BindStruct *X, 
+int child_general_int_spin_GetInfo( 
   long int isite1, long int isite2, long int sigma1, long int sigma2, long int sigma3, 
   long int sigma4, std::complex<double> tmp_V);
-int child_exchange_spin_GetInfo(int iExchange, struct BindStruct *X);
-int child_pairlift_spin_GetInfo(int iPairLift, struct BindStruct *X);
+int child_exchange_spin_GetInfo(int iExchange);
+int child_pairlift_spin_GetInfo(int iPairLift);
 int X_SpinGC_CisAit(long int j,long int is1_spin,long int sigma2,long int *tmp_off);
-int X_Spin_CisAit(long int j, struct BindStruct *X, long int is1_spin, long int sigma2, long int *tmp_off);
+int X_Spin_CisAit(long int j,  long int is1_spin, long int sigma2, long int *tmp_off);
 int X_Spin_CisAis(long int j,long int is1_spin,long int sigma1);
 int X_SpinGC_CisAis(long int j,long int is1_spin,long int sigma1);
 

@@ -23,4 +23,4 @@
 void InitTimer();
 void StartTimer(int n);
 void StopTimer(int n);
-void OutputTimer(struct BindStruct *X);
+void OutputTimer();

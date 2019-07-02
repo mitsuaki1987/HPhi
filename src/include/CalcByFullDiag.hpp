@@ -19,6 +19,4 @@
 #include "phys.hpp"
 #include "output.hpp"
 
-int CalcByFullDiag(
-       struct EDMainCalStruct *X
-       );
+int CalcByFullDiag();

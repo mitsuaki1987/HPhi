@@ -15,7 +15,7 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #pragma once
 
-void setmem_HEAD(struct BindStruct *X);
-void setmem_def(struct BindStruct *X, struct BoostList *xBoost);
-int setmem_large( struct BindStruct *X);
-int GetlistSize(struct BindStruct *X);
+void setmem_HEAD();
+void setmem_def();
+int setmem_large();
+int GetlistSize();

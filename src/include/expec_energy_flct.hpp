@@ -16,4 +16,4 @@
 #pragma once
 #include "Common.hpp"
 
-int expec_energy_flct(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1);
+int expec_energy_flct( int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1);

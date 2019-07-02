@@ -15,8 +15,7 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #pragma once
 
-#include "struct.hpp"
 
 int CalcSpectrumByFullDiag(
-  struct EDMainCalStruct *X, int Nomega, int NdcSpectrum,
+  int Nomega, int NdcSpectrum,
   std::complex<double> **dcSpectrum, std::complex<double> *dcomega, std::complex<double> **v1org);

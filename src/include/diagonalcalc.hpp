@@ -18,12 +18,12 @@
 
 int diagonalcalc
 (
- struct BindStruct *X
+ 
  );
 
 int diagonalcalcForTE(
         const int _istep,
-        struct BindStruct *X,
+        
         std::complex<double> *tmp_v0,
         std::complex<double> *tmp_v1
 );

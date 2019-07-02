@@ -24,7 +24,6 @@ void child_pairhopp_element
  long int j,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- struct BindStruct *X,
  long int *tmp_off
  );
 
@@ -33,7 +32,6 @@ void GC_child_exchange_element
  long int j,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- struct BindStruct *X,
  long int *tmp_off
  );
 
@@ -42,7 +40,6 @@ void GC_child_pairhopp_element
  long int j,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- struct BindStruct *X,
  long int *tmp_off
  );
 
@@ -51,7 +48,6 @@ void child_exchange_element
  long int j,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- struct BindStruct *X,
  long int *tmp_off
  );
 
@@ -65,53 +61,20 @@ void child_CisAisCisAis_element
  std::complex<double> **tmp_v1
  );
 
-void child_CisAisCjtAku_element
-        (
-                long int j,
-                long int isite1,
-                long int isite3,
-                long int isite4,
-                long int Bsum,
-                long int Bdiff,
-                std::complex<double> tmp_V,
-                int nstate, std::complex<double> **tmp_v0,
-                std::complex<double> **tmp_v1,
-                struct BindStruct *X,
-                long int *tmp_off
-        );
+void child_CisAisCjtAku_element(long int j, long int isite1, long int isite3, long int isite4,
+  long int Bsum, long int Bdiff, std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0,
+  std::complex<double>** tmp_v1, long int* tmp_off);
 
-void child_CisAjtCkuAku_element
-        (
-                long int j,
-                long int isite1,
-                long int isite2,
-                long int isite3,
-                long int Asum,
-                long int Adiff,
-                std::complex<double> tmp_V,
-                int nstate, std::complex<double> **tmp_v0,
-                std::complex<double> **tmp_v1,
-                struct BindStruct *X,
-                long int *tmp_off
-        );
+void child_CisAjtCkuAku_element(
+  long int j, long int isite1, long int isite2, long int isite3,
+  long int Asum, long int Adiff, std::complex<double> tmp_V,
+  int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int* tmp_off);
 
-void child_CisAjtCkuAlv_element
-        (
-                long int j,
-                long int isite1,
-                long int isite2,
-                long int isite3,
-                long int isite4,
-                long int Asum,
-                long int Adiff,
-                long int Bsum,
-                long int Bdiff,
-                std::complex<double> tmp_V,
-                int nstate, std::complex<double> **tmp_v0,
-                std::complex<double> **tmp_v1,
-                struct BindStruct *X,
-                long int *tmp_off_2
-        );
+void child_CisAjtCkuAlv_element        (
+  long int j, long int isite1, long int isite2, long int isite3, long int isite4,
+  long int Asum, long int Adiff, long int Bsum, long int Bdiff,
+  std::complex<double> tmp_V, int nstate,
+  std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int* tmp_off_2);
 //[s]Grand canonical
 void GC_child_CisAisCisAis_element(
   long int j, long int isite1, long int isite3,
@@ -165,7 +128,6 @@ int X_CisAis
 int X_CisAjt
 (
  long int list_1_j,
- struct BindStruct *X,
  long int is1_spin,
  long int is2_spin,
  long int sum_spin,
@@ -191,7 +153,6 @@ void CisAjt
  int nstate, 
  std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1,
- struct BindStruct *X,
  long int is1_spin,
  long int is2_spin,
  long int sum_spin,
@@ -217,7 +178,6 @@ void GC_CisAjt
 
 int child_general_hopp_GetInfo
 (
- struct BindStruct *X,
  long int isite1,
  long int isite2,
  long int sigma1,
@@ -226,7 +186,6 @@ int child_general_hopp_GetInfo
 
 int child_general_int_GetInfo
 (
- struct BindStruct *X,
  long int isite1,
  long int isite2,
  long int isite3,
@@ -238,19 +197,8 @@ int child_general_int_GetInfo
  std::complex<double> tmp_V
  );
 
-
-int child_pairhopp_GetInfo
-(
- int iPairHopp,
- struct BindStruct *X 
-  );
-
-int child_exchange_GetInfo
-(
- int iExchange,
- struct BindStruct *X 
- );
-
+int child_pairhopp_GetInfo(int iPairHopp);
+int child_exchange_GetInfo(int iExchange);
 
 void GC_Ajt
 (
@@ -271,8 +219,6 @@ void GC_Cis
  std::complex<double> tmp_V,
  long int *tmp_off
  );
-
-
 
 void GC_Ajt
 (
@@ -296,8 +242,6 @@ int X_Cis
  long int _ilft,
  long int _ihfbit
  );
-
-
 
 int X_Ajt
 (

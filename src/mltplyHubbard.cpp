@@ -148,7 +148,7 @@ Other
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int mltplyHubbard(
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ){
@@ -170,82 +170,82 @@ int mltplyHubbard(
   Transfer
   */
   StartTimer(310);
-  for (i = 0; i < X->Def.EDNTransfer; i+=2) {
-    if (X->Def.EDGeneralTransfer[i][0] + 1 > X->Def.Nsite &&
-        X->Def.EDGeneralTransfer[i][2] + 1 > X->Def.Nsite) {
+  for (i = 0; i < Def::EDNTransfer; i+=2) {
+    if (Def::EDGeneralTransfer[i][0] + 1 > Def::Nsite &&
+        Def::EDGeneralTransfer[i][2] + 1 > Def::Nsite) {
       StartTimer(311);
-      child_general_hopp_MPIdouble(i, X, nstate, tmp_v0, tmp_v1);
+      child_general_hopp_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(311);
     }
-    else if (X->Def.EDGeneralTransfer[i][2] + 1 > X->Def.Nsite) {
+    else if (Def::EDGeneralTransfer[i][2] + 1 > Def::Nsite) {
       StartTimer(312);
-      child_general_hopp_MPIsingle(i, X, nstate, tmp_v0, tmp_v1);
+      child_general_hopp_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(312);
     }
-    else if (X->Def.EDGeneralTransfer[i][0] + 1 > X->Def.Nsite) {
+    else if (Def::EDGeneralTransfer[i][0] + 1 > Def::Nsite) {
       StartTimer(312);
-      child_general_hopp_MPIsingle(i + 1, X, nstate, tmp_v0, tmp_v1);
+      child_general_hopp_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
       StopTimer(312);
     }
     else {
       StartTimer(313);
       for (ihermite = 0; ihermite<2; ihermite++) {
         idx = i + ihermite;
-        isite1 = X->Def.EDGeneralTransfer[idx][0] + 1;
-        isite2 = X->Def.EDGeneralTransfer[idx][2] + 1;
-        sigma1 = X->Def.EDGeneralTransfer[idx][1];
-        sigma2 = X->Def.EDGeneralTransfer[idx][3];
-        if (child_general_hopp_GetInfo(X, isite1, isite2, sigma1, sigma2) != 0) {
+        isite1 = Def::EDGeneralTransfer[idx][0] + 1;
+        isite2 = Def::EDGeneralTransfer[idx][2] + 1;
+        sigma1 = Def::EDGeneralTransfer[idx][1];
+        sigma2 = Def::EDGeneralTransfer[idx][3];
+        if (child_general_hopp_GetInfo(isite1, isite2, sigma1, sigma2) != 0) {
           return -1;
         }
-        tmp_trans = -X->Def.EDParaGeneralTransfer[idx];
-        X->Large.tmp_trans = tmp_trans;
-        child_general_hopp(nstate, tmp_v0, tmp_v1, X, tmp_trans);
+        tmp_trans = -Def::EDParaGeneralTransfer[idx];
+        Large::tmp_trans = tmp_trans;
+        child_general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
       }
       StopTimer(313);
     }
-  }/*for (i = 0; i < X->Def.EDNTransfer; i+=2)*/
+  }/*for (i = 0; i < Def::EDNTransfer; i+=2)*/
   StopTimer(310);
   /**
   InterAll
   */
   StartTimer(320);
-  for (i = 0; i < X->Def.NInterAll_OffDiagonal; i+=2) {
+  for (i = 0; i < Def::NInterAll_OffDiagonal; i+=2) {
         
-    isite1 = X->Def.InterAll_OffDiagonal[i][0] + 1;
-    isite2 = X->Def.InterAll_OffDiagonal[i][2] + 1;
-    isite3 = X->Def.InterAll_OffDiagonal[i][4] + 1;
-    isite4 = X->Def.InterAll_OffDiagonal[i][6] + 1;
-    sigma1 = X->Def.InterAll_OffDiagonal[i][1];
-    sigma2 = X->Def.InterAll_OffDiagonal[i][3];
-    sigma3 = X->Def.InterAll_OffDiagonal[i][5];
-    sigma4 = X->Def.InterAll_OffDiagonal[i][7];
-    tmp_V = X->Def.ParaInterAll_OffDiagonal[i];
+    isite1 = Def::InterAll_OffDiagonal[i][0] + 1;
+    isite2 = Def::InterAll_OffDiagonal[i][2] + 1;
+    isite3 = Def::InterAll_OffDiagonal[i][4] + 1;
+    isite4 = Def::InterAll_OffDiagonal[i][6] + 1;
+    sigma1 = Def::InterAll_OffDiagonal[i][1];
+    sigma2 = Def::InterAll_OffDiagonal[i][3];
+    sigma3 = Def::InterAll_OffDiagonal[i][5];
+    sigma4 = Def::InterAll_OffDiagonal[i][7];
+    tmp_V = Def::ParaInterAll_OffDiagonal[i];
 
-    if (CheckPE(isite1 - 1, X) == TRUE || CheckPE(isite2 - 1, X) == TRUE ||
-        CheckPE(isite3 - 1, X) == TRUE || CheckPE(isite4 - 1, X) == TRUE) {
+    if (CheckPE(isite1 - 1) == TRUE || CheckPE(isite2 - 1) == TRUE ||
+        CheckPE(isite3 - 1) == TRUE || CheckPE(isite4 - 1) == TRUE) {
       StartTimer(321);
-      ibitsite1 = X->Def.OrgTpow[2*isite1-2+sigma1] ;
-      ibitsite2 = X->Def.OrgTpow[2 * isite2 - 2 + sigma2];
-      ibitsite3 = X->Def.OrgTpow[2 * isite3 - 2 + sigma3];
-      ibitsite4 = X->Def.OrgTpow[2 * isite4 - 2 + sigma4];
+      ibitsite1 = Def::OrgTpow[2*isite1-2+sigma1] ;
+      ibitsite2 = Def::OrgTpow[2 * isite2 - 2 + sigma2];
+      ibitsite3 = Def::OrgTpow[2 * isite3 - 2 + sigma3];
+      ibitsite4 = Def::OrgTpow[2 * isite4 - 2 + sigma4];
       if (ibitsite1 == ibitsite2 && ibitsite3 == ibitsite4) {
         X_child_CisAisCjtAjt_Hubbard_MPI(isite1 - 1, sigma1,
           isite3 - 1, sigma3,
-          tmp_V, X, nstate, tmp_v0, tmp_v1);
+          tmp_V, nstate, tmp_v0, tmp_v1);
       }
       else if (ibitsite1 == ibitsite2 && ibitsite3 != ibitsite4) {
         X_child_CisAisCjtAku_Hubbard_MPI(isite1 - 1, sigma1,
           isite3 - 1, sigma3, isite4 - 1, sigma4,
-          tmp_V, X, nstate, tmp_v0, tmp_v1);
+          tmp_V, nstate, tmp_v0, tmp_v1);
       }
       else if (ibitsite1 != ibitsite2 && ibitsite3 == ibitsite4) {
         X_child_CisAjtCkuAku_Hubbard_MPI(isite1 - 1, sigma1, isite2 - 1, sigma2,
-          isite3 - 1, sigma3, tmp_V, X, nstate, tmp_v0, tmp_v1);
+          isite3 - 1, sigma3, tmp_V, nstate, tmp_v0, tmp_v1);
       }
       else if (ibitsite1 != ibitsite2 && ibitsite3 != ibitsite4) {
         X_child_CisAjtCkuAlv_Hubbard_MPI(isite1 - 1, sigma1, isite2 - 1, sigma2,
-          isite3 - 1, sigma3, isite4 - 1, sigma4, tmp_V, X, nstate, tmp_v0, tmp_v1);
+          isite3 - 1, sigma3, isite4 - 1, sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
       }
       StopTimer(321);
     }
@@ -253,78 +253,78 @@ int mltplyHubbard(
       StartTimer(322);
       for (ihermite = 0; ihermite < 2; ihermite++) {
         idx = i + ihermite;
-        isite1 = X->Def.InterAll_OffDiagonal[idx][0] + 1;
-        isite2 = X->Def.InterAll_OffDiagonal[idx][2] + 1;
-        isite3 = X->Def.InterAll_OffDiagonal[idx][4] + 1;
-        isite4 = X->Def.InterAll_OffDiagonal[idx][6] + 1;
-        sigma1 = X->Def.InterAll_OffDiagonal[idx][1];
-        sigma2 = X->Def.InterAll_OffDiagonal[idx][3];
-        sigma3 = X->Def.InterAll_OffDiagonal[idx][5];
-        sigma4 = X->Def.InterAll_OffDiagonal[idx][7];
-        tmp_V = X->Def.ParaInterAll_OffDiagonal[idx];
+        isite1 = Def::InterAll_OffDiagonal[idx][0] + 1;
+        isite2 = Def::InterAll_OffDiagonal[idx][2] + 1;
+        isite3 = Def::InterAll_OffDiagonal[idx][4] + 1;
+        isite4 = Def::InterAll_OffDiagonal[idx][6] + 1;
+        sigma1 = Def::InterAll_OffDiagonal[idx][1];
+        sigma2 = Def::InterAll_OffDiagonal[idx][3];
+        sigma3 = Def::InterAll_OffDiagonal[idx][5];
+        sigma4 = Def::InterAll_OffDiagonal[idx][7];
+        tmp_V = Def::ParaInterAll_OffDiagonal[idx];
 
-        child_general_int_GetInfo(X, isite1, isite2, isite3, isite4, 
+        child_general_int_GetInfo(isite1, isite2, isite3, isite4, 
           sigma1, sigma2, sigma3, sigma4, tmp_V);
 
-        child_general_int(nstate, tmp_v0, tmp_v1, X);
+        child_general_int(nstate, tmp_v0, tmp_v1);
       }/*for (ihermite = 0; ihermite < 2; ihermite++)*/
       StopTimer(322);
     }
-  }/*for (i = 0; i < X->Def.NInterAll_OffDiagonal; i+=2)*/
+  }/*for (i = 0; i < Def::NInterAll_OffDiagonal; i+=2)*/
   StopTimer(320);
   /**
   Pair hopping
   */
   StartTimer(330);
-  for (i = 0; i < X->Def.NPairHopping; i +=2) {
+  for (i = 0; i < Def::NPairHopping; i +=2) {
     sigma1=0;
     sigma2=1;
         
-    if ( X->Def.PairHopping[i][0] + 1 > X->Def.Nsite 
-      || X->Def.PairHopping[i][1] + 1 > X->Def.Nsite)
+    if ( Def::PairHopping[i][0] + 1 > Def::Nsite 
+      || Def::PairHopping[i][1] + 1 > Def::Nsite)
     {
       StartTimer(331);
       X_child_CisAjtCkuAlv_Hubbard_MPI(
-        X->Def.PairHopping[i][0], sigma1, X->Def.PairHopping[i][1], sigma1, 
-        X->Def.PairHopping[i][0], sigma2, X->Def.PairHopping[i][1], sigma2, 
-        X->Def.ParaPairHopping[i], X, nstate, tmp_v0, tmp_v1);
+        Def::PairHopping[i][0], sigma1, Def::PairHopping[i][1], sigma1, 
+        Def::PairHopping[i][0], sigma2, Def::PairHopping[i][1], sigma2, 
+        Def::ParaPairHopping[i], nstate, tmp_v0, tmp_v1);
         StopTimer(331);
     }
     else {
       StartTimer(332);
       for (ihermite = 0; ihermite<2; ihermite++) {
         idx = i + ihermite;
-        child_pairhopp_GetInfo(idx, X);
-        child_pairhopp(nstate, tmp_v0, tmp_v1, X);            
+        child_pairhopp_GetInfo(idx);
+        child_pairhopp(nstate, tmp_v0, tmp_v1);
       }/*for (ihermite = 0; ihermite<2; ihermite++)*/
       StopTimer(332);
     }
-  }/*for (i = 0; i < X->Def.NPairHopping; i += 2)*/
+  }/*for (i = 0; i < Def::NPairHopping; i += 2)*/
   StopTimer(330);  
   /**
   Exchange
   */
   StartTimer(340);
-  for (i = 0; i < X->Def.NExchangeCoupling; i ++) {
+  for (i = 0; i < Def::NExchangeCoupling; i ++) {
     sigma1 = 0;
     sigma2 = 1;
-    if (X->Def.ExchangeCoupling[i][0] + 1 > X->Def.Nsite ||
-        X->Def.ExchangeCoupling[i][1] + 1 > X->Def.Nsite) 
+    if (Def::ExchangeCoupling[i][0] + 1 > Def::Nsite ||
+        Def::ExchangeCoupling[i][1] + 1 > Def::Nsite) 
     {
       StartTimer(341);
       X_child_CisAjtCkuAlv_Hubbard_MPI(
-        X->Def.ExchangeCoupling[i][0], sigma1, X->Def.ExchangeCoupling[i][1], sigma1,
-        X->Def.ExchangeCoupling[i][1], sigma2, X->Def.ExchangeCoupling[i][0], sigma2,
-        X->Def.ParaExchangeCoupling[i], X, nstate, tmp_v0, tmp_v1);
+        Def::ExchangeCoupling[i][0], sigma1, Def::ExchangeCoupling[i][1], sigma1,
+        Def::ExchangeCoupling[i][1], sigma2, Def::ExchangeCoupling[i][0], sigma2,
+        Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
       StopTimer(341);
     }
     else {
       StartTimer(342);
-      child_exchange_GetInfo(i, X);
-      child_exchange(nstate, tmp_v0, tmp_v1, X);
+      child_exchange_GetInfo(i);
+      child_exchange(nstate, tmp_v0, tmp_v1);
       StopTimer(342);
     }
-  }/*for (i = 0; i < X->Def.NExchangeCoupling; i ++)*/
+  }/*for (i = 0; i < Def::NExchangeCoupling; i ++)*/
   StopTimer(340);
 
   StopTimer(300);
@@ -337,7 +337,7 @@ int mltplyHubbard(
 @return errorcode. 0 for normal, other error
 */
 int mltplyHubbardGC(
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ){
@@ -359,152 +359,152 @@ int mltplyHubbardGC(
   Transfer
   */
   StartTimer(210);
-  for (i = 0; i < X->Def.EDNTransfer; i += 2) {
-    if (X->Def.EDGeneralTransfer[i][0] + 1 > X->Def.Nsite &&
-        X->Def.EDGeneralTransfer[i][2] + 1 > X->Def.Nsite) {
+  for (i = 0; i < Def::EDNTransfer; i += 2) {
+    if (Def::EDGeneralTransfer[i][0] + 1 > Def::Nsite &&
+        Def::EDGeneralTransfer[i][2] + 1 > Def::Nsite) {
       StartTimer(211);
-      GC_child_general_hopp_MPIdouble(i, X, nstate, tmp_v0, tmp_v1);
+      GC_child_general_hopp_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(211);
     }
-    else if (X->Def.EDGeneralTransfer[i][2] + 1 > X->Def.Nsite){
+    else if (Def::EDGeneralTransfer[i][2] + 1 > Def::Nsite){
       StartTimer(212);
-      GC_child_general_hopp_MPIsingle(i, X, nstate, tmp_v0, tmp_v1);
+      GC_child_general_hopp_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(212);
     }
-    else if (X->Def.EDGeneralTransfer[i][0] + 1 > X->Def.Nsite) {
+    else if (Def::EDGeneralTransfer[i][0] + 1 > Def::Nsite) {
       StartTimer(212);
-      GC_child_general_hopp_MPIsingle(i+1, X, nstate, tmp_v0, tmp_v1);
+      GC_child_general_hopp_MPIsingle(i+1, nstate, tmp_v0, tmp_v1);
       StopTimer(212);
     }
     else {
       StartTimer(213);
       for (ihermite = 0; ihermite<2; ihermite++) {
         idx = i + ihermite;
-        isite1 = X->Def.EDGeneralTransfer[idx][0] + 1;
-        isite2 = X->Def.EDGeneralTransfer[idx][2] + 1;
-        sigma1 = X->Def.EDGeneralTransfer[idx][1];
-        sigma2 = X->Def.EDGeneralTransfer[idx][3];
-        if (child_general_hopp_GetInfo(X, isite1, isite2, sigma1, sigma2) != 0) {
+        isite1 = Def::EDGeneralTransfer[idx][0] + 1;
+        isite2 = Def::EDGeneralTransfer[idx][2] + 1;
+        sigma1 = Def::EDGeneralTransfer[idx][1];
+        sigma2 = Def::EDGeneralTransfer[idx][3];
+        if (child_general_hopp_GetInfo(isite1, isite2, sigma1, sigma2) != 0) {
           return -1;
         }
-        tmp_trans = -X->Def.EDParaGeneralTransfer[idx];
-        GC_child_general_hopp(nstate, tmp_v0, tmp_v1, X, tmp_trans);
+        tmp_trans = -Def::EDParaGeneralTransfer[idx];
+        GC_child_general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
       }
       StopTimer(213);
     }
-  }/*for (i = 0; i < X->Def.EDNTransfer; i += 2)*/
+  }/*for (i = 0; i < Def::EDNTransfer; i += 2)*/
   StopTimer(210);
   /**
   Inter All
   */
   StartTimer(220);
-  for (i = 0; i < X->Def.NInterAll_OffDiagonal; i+=2) {
-    isite1 = X->Def.InterAll_OffDiagonal[i][0] + 1;
-    isite2 = X->Def.InterAll_OffDiagonal[i][2] + 1;
-    isite3 = X->Def.InterAll_OffDiagonal[i][4] + 1;
-    isite4 = X->Def.InterAll_OffDiagonal[i][6] + 1;
-    sigma1 = X->Def.InterAll_OffDiagonal[i][1];
-    sigma2 = X->Def.InterAll_OffDiagonal[i][3];
-    sigma3 = X->Def.InterAll_OffDiagonal[i][5];
-    sigma4 = X->Def.InterAll_OffDiagonal[i][7];
-    tmp_V = X->Def.ParaInterAll_OffDiagonal[i];
+  for (i = 0; i < Def::NInterAll_OffDiagonal; i+=2) {
+    isite1 = Def::InterAll_OffDiagonal[i][0] + 1;
+    isite2 = Def::InterAll_OffDiagonal[i][2] + 1;
+    isite3 = Def::InterAll_OffDiagonal[i][4] + 1;
+    isite4 = Def::InterAll_OffDiagonal[i][6] + 1;
+    sigma1 = Def::InterAll_OffDiagonal[i][1];
+    sigma2 = Def::InterAll_OffDiagonal[i][3];
+    sigma3 = Def::InterAll_OffDiagonal[i][5];
+    sigma4 = Def::InterAll_OffDiagonal[i][7];
+    tmp_V = Def::ParaInterAll_OffDiagonal[i];
 
-    if ( CheckPE(isite1 - 1, X) == TRUE || CheckPE(isite2 - 1, X) == TRUE
-      || CheckPE(isite3 - 1, X) == TRUE || CheckPE(isite4 - 1, X) == TRUE) 
+    if ( CheckPE(isite1 - 1) == TRUE || CheckPE(isite2 - 1) == TRUE
+      || CheckPE(isite3 - 1) == TRUE || CheckPE(isite4 - 1) == TRUE) 
     {
       StartTimer(221);
-      ibitsite1 = X->Def.OrgTpow[2 * isite1 - 2 + sigma1];
-      ibitsite2 = X->Def.OrgTpow[2 * isite2 - 2 + sigma2];
-      ibitsite3 = X->Def.OrgTpow[2 * isite3 - 2 + sigma3];
-      ibitsite4 = X->Def.OrgTpow[2 * isite4 - 2 + sigma4];
+      ibitsite1 = Def::OrgTpow[2 * isite1 - 2 + sigma1];
+      ibitsite2 = Def::OrgTpow[2 * isite2 - 2 + sigma2];
+      ibitsite3 = Def::OrgTpow[2 * isite3 - 2 + sigma3];
+      ibitsite4 = Def::OrgTpow[2 * isite4 - 2 + sigma4];
       if (ibitsite1 == ibitsite2 && ibitsite3 == ibitsite4) 
         X_GC_child_CisAisCjtAjt_Hubbard_MPI(
-          isite1 - 1, sigma1, isite3 - 1, sigma3, tmp_V, X, nstate, tmp_v0, tmp_v1);
+          isite1 - 1, sigma1, isite3 - 1, sigma3, tmp_V, nstate, tmp_v0, tmp_v1);
       else if (ibitsite1 == ibitsite2 && ibitsite3 != ibitsite4) 
         X_GC_child_CisAisCjtAku_Hubbard_MPI(
-          isite1 - 1, sigma1, isite3 - 1, sigma3, isite4 - 1, sigma4, tmp_V, X, nstate, tmp_v0, tmp_v1);
+          isite1 - 1, sigma1, isite3 - 1, sigma3, isite4 - 1, sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
       else if (ibitsite1 != ibitsite2 && ibitsite3 == ibitsite4) 
         X_GC_child_CisAjtCkuAku_Hubbard_MPI(
-          isite1 - 1, sigma1, isite2 - 1, sigma2, isite3 - 1, sigma3, tmp_V, X, nstate, tmp_v0, tmp_v1);
+          isite1 - 1, sigma1, isite2 - 1, sigma2, isite3 - 1, sigma3, tmp_V, nstate, tmp_v0, tmp_v1);
       else if (ibitsite1 != ibitsite2 && ibitsite3 != ibitsite4) 
         X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
-          isite1 - 1, sigma1, isite2 - 1, sigma2, isite3 - 1, sigma3, isite4 - 1, sigma4, tmp_V, X, nstate, tmp_v0, tmp_v1);
+          isite1 - 1, sigma1, isite2 - 1, sigma2, isite3 - 1, sigma3, isite4 - 1, sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
       StopTimer(221);
     }//InterPE
     else{
       StartTimer(222);
       for(ihermite=0; ihermite<2; ihermite++){
         idx=i+ihermite;
-        isite1 = X->Def.InterAll_OffDiagonal[idx][0] + 1;
-        isite2 = X->Def.InterAll_OffDiagonal[idx][2] + 1;
-        isite3 = X->Def.InterAll_OffDiagonal[idx][4] + 1;
-        isite4 = X->Def.InterAll_OffDiagonal[idx][6] + 1;
-        sigma1 = X->Def.InterAll_OffDiagonal[idx][1];
-        sigma2 = X->Def.InterAll_OffDiagonal[idx][3];
-        sigma3 = X->Def.InterAll_OffDiagonal[idx][5];
-        sigma4 = X->Def.InterAll_OffDiagonal[idx][7];
-        tmp_V = X->Def.ParaInterAll_OffDiagonal[idx];
+        isite1 = Def::InterAll_OffDiagonal[idx][0] + 1;
+        isite2 = Def::InterAll_OffDiagonal[idx][2] + 1;
+        isite3 = Def::InterAll_OffDiagonal[idx][4] + 1;
+        isite4 = Def::InterAll_OffDiagonal[idx][6] + 1;
+        sigma1 = Def::InterAll_OffDiagonal[idx][1];
+        sigma2 = Def::InterAll_OffDiagonal[idx][3];
+        sigma3 = Def::InterAll_OffDiagonal[idx][5];
+        sigma4 = Def::InterAll_OffDiagonal[idx][7];
+        tmp_V = Def::ParaInterAll_OffDiagonal[idx];
           
-        child_general_int_GetInfo(X, isite1, isite2, isite3, isite4, 
+        child_general_int_GetInfo(isite1, isite2, isite3, isite4, 
                                         sigma1, sigma2, sigma3, sigma4, tmp_V); 
-        GC_child_general_int(nstate, tmp_v0, tmp_v1, X);
+        GC_child_general_int(nstate, tmp_v0, tmp_v1);
       }/*for(ihermite=0; ihermite<2; ihermite++)*/
       StopTimer(222);
     }
-  }/*for (i = 0; i < X->Def.NInterAll_OffDiagonal; i+=2)*/
+  }/*for (i = 0; i < Def::NInterAll_OffDiagonal; i+=2)*/
   StopTimer(220);
   /**
   Pair hopping
   */
   StartTimer(230);
-  for (i = 0; i < X->Def.NPairHopping; i +=2) {
+  for (i = 0; i < Def::NPairHopping; i +=2) {
     sigma1 = 0;
     sigma2 = 1;
-    if ( X->Def.PairHopping[i][0] + 1 > X->Def.Nsite
-      || X->Def.PairHopping[i][1] + 1 > X->Def.Nsite) 
+    if ( Def::PairHopping[i][0] + 1 > Def::Nsite
+      || Def::PairHopping[i][1] + 1 > Def::Nsite) 
     {
       StartTimer(231);
       X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
-        X->Def.PairHopping[i][0], sigma1, X->Def.PairHopping[i][1], sigma1,
-        X->Def.PairHopping[i][0], sigma2, X->Def.PairHopping[i][1], sigma2,
-        X->Def.ParaPairHopping[i], X, nstate, tmp_v0, tmp_v1);
+        Def::PairHopping[i][0], sigma1, Def::PairHopping[i][1], sigma1,
+        Def::PairHopping[i][0], sigma2, Def::PairHopping[i][1], sigma2,
+        Def::ParaPairHopping[i], nstate, tmp_v0, tmp_v1);
       StopTimer(231);
     }
     else {
       StartTimer(232);
       for (ihermite = 0; ihermite<2; ihermite++) {
         idx = i + ihermite;
-        child_pairhopp_GetInfo(idx, X);
-        GC_child_pairhopp(nstate, tmp_v0, tmp_v1, X);
+        child_pairhopp_GetInfo(idx);
+        GC_child_pairhopp(nstate, tmp_v0, tmp_v1);
       }/*for (ihermite = 0; ihermite<2; ihermite++)*/
       StopTimer(232);
     }
-  }/*for (i = 0; i < X->Def.NPairHopping; i += 2)*/
+  }/*for (i = 0; i < Def::NPairHopping; i += 2)*/
   StopTimer(230);
   /**
   Exchange
   */
   StartTimer(240);
-  for (i = 0; i < X->Def.NExchangeCoupling; i++) {
+  for (i = 0; i < Def::NExchangeCoupling; i++) {
     sigma1=0;
     sigma2=1;
-    if ( X->Def.ExchangeCoupling[i][0] + 1 > X->Def.Nsite
-      || X->Def.ExchangeCoupling[i][1] + 1 > X->Def.Nsite) 
+    if ( Def::ExchangeCoupling[i][0] + 1 > Def::Nsite
+      || Def::ExchangeCoupling[i][1] + 1 > Def::Nsite) 
     {
       StartTimer(241);
       X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
-        X->Def.ExchangeCoupling[i][0], sigma1, X->Def.ExchangeCoupling[i][1], sigma1,
-        X->Def.ExchangeCoupling[i][1], sigma2, X->Def.ExchangeCoupling[i][0], sigma2,
-        X->Def.ParaExchangeCoupling[i], X, nstate, tmp_v0, tmp_v1);
+        Def::ExchangeCoupling[i][0], sigma1, Def::ExchangeCoupling[i][1], sigma1,
+        Def::ExchangeCoupling[i][1], sigma2, Def::ExchangeCoupling[i][0], sigma2,
+        Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
       StopTimer(241);
     }
     else {
       StartTimer(242);
-      child_exchange_GetInfo(i, X);
-      GC_child_exchange(nstate, tmp_v0, tmp_v1, X);
+      child_exchange_GetInfo(i);
+      GC_child_exchange(nstate, tmp_v0, tmp_v1);
       StopTimer(242);
     }
-  }/*for (i = 0; i < X->Def.NExchangeCoupling; i++)*/
+  }/*for (i = 0; i < Def::NExchangeCoupling; i++)*/
   StopTimer(240);
 
   StopTimer(200);
@@ -522,17 +522,16 @@ int mltplyHubbardGC(
 */
 void child_pairhopp(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
-  std::complex<double> **tmp_v1,//!<[in] Input producted vector
-  struct BindStruct *X//!<[inout]
+  std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
   long int j;
-  long int i_max = X->Large.i_max;
+  long int i_max = Large::i_max;
   long int off = 0;
 
 #pragma omp parallel for default(none) \
-  firstprivate(i_max, X,off) private(j) shared(tmp_v0, tmp_v1,nstate)
+  firstprivate(i_max, off) private(j) shared(tmp_v0, tmp_v1,nstate)
   for (j = 1; j <= i_max; j++) 
-    child_pairhopp_element(j, nstate, tmp_v0, tmp_v1, X, &off);
+    child_pairhopp_element(j, nstate, tmp_v0, tmp_v1, &off);
   return;
 }/*std::complex<double> child_pairhopp*/
 /**
@@ -542,17 +541,16 @@ void child_pairhopp(
 */
 void child_exchange(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
-  std::complex<double> **tmp_v1,//!<[in] Input producted vector
-  struct BindStruct *X//!<[inout]
+  std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
   long int j;
-  long int i_max = X->Large.i_max;
+  long int i_max = Large::i_max;
   long int off = 0;
 
 #pragma omp parallel for default(none) \
-  firstprivate(i_max, X,off) private(j) shared(tmp_v0, tmp_v1,nstate)
+  firstprivate(i_max, off) private(j) shared(tmp_v0, tmp_v1,nstate)
   for (j = 1; j <= i_max; j++) 
-    child_exchange_element(j, nstate, tmp_v0, tmp_v1, X, &off);
+    child_exchange_element(j, nstate, tmp_v0, tmp_v1, &off);
   return;
 }/*std::complex<double> child_exchange*/
 /**
@@ -564,20 +562,20 @@ void child_general_hopp(
   int nstate,
   std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1,//!<[in] Input producted vector
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   std::complex<double> trans//!<[in] Hopping integral
 ) {
   long int j, isite1, isite2, Asum, Adiff;
-  long int i_max = X->Large.i_max;
+  long int i_max = Large::i_max;
 
-  isite1 = X->Large.is1_spin;
-  isite2 = X->Large.is2_spin;
-  Asum = X->Large.isA_spin;
-  Adiff = X->Large.A_spin;
+  isite1 = Large::is1_spin;
+  isite2 = Large::is2_spin;
+  Asum = Large::isA_spin;
+  Adiff = Large::A_spin;
 #pragma omp parallel for default(none) private(j) shared(tmp_v0, tmp_v1,nstate) \
-firstprivate(i_max,X,Asum,Adiff,isite1,isite2,trans) 
+firstprivate(i_max,Asum,Adiff,isite1,isite2,trans) 
   for (j = 1; j <= i_max; j++)
-    CisAjt(j, nstate, tmp_v0, tmp_v1, X, isite1, isite2, Asum, Adiff, trans);
+    CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, trans);
   return;
 }/*std::complex<double> child_general_hopp*/
 /**
@@ -588,27 +586,27 @@ firstprivate(i_max,X,Asum,Adiff,isite1,isite2,trans)
 void GC_child_general_hopp(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1,//!<[in] Input producted vector
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   std::complex<double> trans//!<[in] Hopping integral
 ) {
   long int j, isite1, isite2, Asum, Adiff;
   long int tmp_off;
-  long int i_max = X->Large.i_max;
+  long int i_max = Large::i_max;
 
-  isite1 = X->Large.is1_spin;
-  isite2 = X->Large.is2_spin;
-  Asum = X->Large.isA_spin;
-  Adiff = X->Large.A_spin;
+  isite1 = Large::is1_spin;
+  isite2 = Large::is2_spin;
+  Asum = Large::isA_spin;
+  Adiff = Large::A_spin;
 
   if (isite1 == isite2) {
 #pragma omp parallel for default(none)  \
-  private(j) firstprivate(i_max,X,isite1, trans) shared(tmp_v0, tmp_v1,nstate)
+  private(j) firstprivate(i_max,isite1, trans) shared(tmp_v0, tmp_v1,nstate)
     for (j = 1; j <= i_max; j++)
       GC_CisAis(j, nstate, tmp_v0, tmp_v1, isite1, trans);
   }/*if (isite1 == isite2)*/
   else {
 #pragma omp parallel for default(none) private(j,tmp_off) shared(tmp_v0,tmp_v1,nstate) \
-firstprivate(i_max,X,Asum,Adiff,isite1,isite2,trans)
+firstprivate(i_max,Asum,Adiff,isite1,isite2,trans)
     for (j = 1; j <= i_max; j++) 
       GC_CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, trans, &tmp_off);
   }
@@ -621,8 +619,7 @@ firstprivate(i_max,X,Asum,Adiff,isite1,isite2,trans)
 */
 void child_general_int(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
-  std::complex<double> **tmp_v1,//!<[in] Input producted vector
-  struct BindStruct *X//!<[inout]
+  std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
   std::complex<double> tmp_V;
   long int j, i_max;
@@ -632,22 +629,22 @@ void child_general_int(
   long int tmp_off_2 = 0;
 
   //note: this site is labeled for not only site but site with spin.
-  i_max = X->Large.i_max;
-  isite1 = X->Large.is1_spin;
-  isite2 = X->Large.is2_spin;
-  Asum = X->Large.isA_spin;
-  Adiff = X->Large.A_spin;
+  i_max = Large::i_max;
+  isite1 = Large::is1_spin;
+  isite2 = Large::is2_spin;
+  Asum = Large::isA_spin;
+  Adiff = Large::A_spin;
 
-  isite3 = X->Large.is3_spin;
-  isite4 = X->Large.is4_spin;
-  Bsum = X->Large.isB_spin;
-  Bdiff = X->Large.B_spin;
+  isite3 = Large::is3_spin;
+  isite4 = Large::is4_spin;
+  Bsum = Large::isB_spin;
+  Bdiff = Large::B_spin;
 
-  tmp_V = X->Large.tmp_V;
+  tmp_V = Large::tmp_V;
 
 #pragma omp parallel default(none)  \
 private(j, tmp_off, tmp_off_2) \
-firstprivate(i_max, X, isite1, isite2, isite3, isite4, Asum, Bsum, Adiff, Bdiff, tmp_V) \
+firstprivate(i_max, isite1, isite2, isite3, isite4, Asum, Bsum, Adiff, Bdiff, tmp_V) \
   shared(tmp_v0, tmp_v1,nstate)
   {
     if (isite1 == isite2 && isite3 == isite4) {
@@ -659,18 +656,18 @@ firstprivate(i_max, X, isite1, isite2, isite3, isite4, Asum, Bsum, Adiff, Bdiff,
 #pragma omp for
       for (j = 1; j <= i_max; j++)
         child_CisAisCjtAku_element(
-          j, isite1, isite3, isite4, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, X, &tmp_off);
+          j, isite1, isite3, isite4, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 == isite2 && isite3 != isite4)*/
     else if (isite1 != isite2 && isite3 == isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        child_CisAjtCkuAku_element(j, isite1, isite2, isite3, Asum, Adiff, tmp_V, nstate, tmp_v0, tmp_v1, X, &tmp_off);
+        child_CisAjtCkuAku_element(j, isite1, isite2, isite3, Asum, Adiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 != isite2 && isite3 == isite4)*/
     else if (isite1 != isite2 && isite3 != isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
         child_CisAjtCkuAlv_element(
-          j, isite1, isite2, isite3, isite4, Asum, Adiff, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, X, &tmp_off_2);
+          j, isite1, isite2, isite3, isite4, Asum, Adiff, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off_2);
     }/*if (isite1 != isite2 && isite3 != isite4)*/
   }/*End of parallel region*/
   return;
@@ -682,8 +679,7 @@ firstprivate(i_max, X, isite1, isite2, isite3, isite4, Asum, Bsum, Adiff, Bdiff,
 */
 void GC_child_general_int(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
-  std::complex<double> **tmp_v1,//!<[in] Input producted vector
-  struct BindStruct *X//!<[inout]
+  std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
   std::complex<double> tmp_V;
   long int j, i_max;
@@ -692,21 +688,21 @@ void GC_child_general_int(
   long int tmp_off = 0;
   long int tmp_off_2 = 0;
 
-  i_max = X->Large.i_max;
-  isite1 = X->Large.is1_spin;
-  isite2 = X->Large.is2_spin;
-  Asum = X->Large.isA_spin;
-  Adiff = X->Large.A_spin;
+  i_max = Large::i_max;
+  isite1 = Large::is1_spin;
+  isite2 = Large::is2_spin;
+  Asum = Large::isA_spin;
+  Adiff = Large::A_spin;
 
-  isite3 = X->Large.is3_spin;
-  isite4 = X->Large.is4_spin;
-  Bsum = X->Large.isB_spin;
-  Bdiff = X->Large.B_spin;
+  isite3 = Large::is3_spin;
+  isite4 = Large::is4_spin;
+  Bsum = Large::isB_spin;
+  Bdiff = Large::B_spin;
 
-  tmp_V = X->Large.tmp_V;
+  tmp_V = Large::tmp_V;
 
 #pragma omp parallel default(none)  private(j) \
-firstprivate(i_max, X, isite1, isite2, isite4, isite3, Asum, Bsum, Adiff, Bdiff, tmp_off, tmp_off_2, tmp_V) \
+firstprivate(i_max, isite1, isite2, isite4, isite3, Asum, Bsum, Adiff, Bdiff, tmp_off, tmp_off_2, tmp_V) \
 shared(tmp_v0, tmp_v1,nstate)
   {
     if (isite1 == isite2 && isite3 == isite4) {
@@ -742,17 +738,16 @@ shared(tmp_v0, tmp_v1,nstate)
 */
 void GC_child_pairhopp(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
-  std::complex<double> **tmp_v1,//!<[in] Input producted vector
-  struct BindStruct *X//!<[inout]
+  std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
   long int j;
-  long int i_max = X->Large.i_max;
+  long int i_max = Large::i_max;
   long int off = 0;
 
 #pragma omp parallel for default(none) \
-firstprivate(i_max,X,off) private(j) shared(tmp_v0, tmp_v1,nstate)
+firstprivate(i_max,off) private(j) shared(tmp_v0, tmp_v1,nstate)
   for (j = 1; j <= i_max; j++) 
-    GC_child_pairhopp_element(j, nstate, tmp_v0, tmp_v1, X, &off);
+    GC_child_pairhopp_element(j, nstate, tmp_v0, tmp_v1, &off);
 
   return;
 }/*std::complex<double> GC_child_pairhopp*/
@@ -763,17 +758,16 @@ firstprivate(i_max,X,off) private(j) shared(tmp_v0, tmp_v1,nstate)
 */
 void GC_child_exchange(
   int nstate, std::complex<double> **tmp_v0,
-  std::complex<double> **tmp_v1,
-  struct BindStruct *X
+  std::complex<double> **tmp_v1
 ) {
   long int j;
-  long int i_max = X->Large.i_max;
+  long int i_max = Large::i_max;
   long int off = 0;
 
 #pragma omp parallel for default(none) \
- firstprivate(i_max, X,off) private(j) shared(tmp_v0, tmp_v1,nstate)
+ firstprivate(i_max, off) private(j) shared(tmp_v0, tmp_v1,nstate)
   for (j = 1; j <= i_max; j++) 
-    GC_child_exchange_element(j, nstate, tmp_v0, tmp_v1, X, &off);
+    GC_child_exchange_element(j, nstate, tmp_v0, tmp_v1, &off);
   return;
 }/*std::complex<double> GC_child_exchange*/
 /******************************************************************************/

@@ -28,7 +28,6 @@
 #endif
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "struct.hpp"
 #include "log.hpp"
 #include "dSFMT.hpp"
 

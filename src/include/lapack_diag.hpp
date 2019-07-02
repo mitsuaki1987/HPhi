@@ -16,4 +16,4 @@
 #pragma once
 #include "Common.hpp"
 
-int lapack_diag(struct BindStruct *X);
+int lapack_diag();

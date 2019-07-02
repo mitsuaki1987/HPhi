@@ -18,7 +18,7 @@
 
 int TimeKeeper
 (
- struct BindStruct *X,
+ 
  const char *cFileName,
  const char *cTimeKeeper_Message,
  const char *cWriteType
@@ -26,7 +26,7 @@ int TimeKeeper
 
 int TimeKeeperWithStep
 (
- struct BindStruct *X,
+ 
  const char *cFileName,
  const char *cTimeKeeper_Message,
  const char *cWriteType,
@@ -36,7 +36,7 @@ int TimeKeeperWithStep
 
 int TimeKeeperWithRandAndStep
 (
- struct BindStruct *X,
+ 
  const char *cFileName,
  const char *cTimeKeeper_Message,
  const char *cWriteType,

@@ -16,6 +16,6 @@
 #pragma once
 #include "Common.hpp"
 
-int CalcSpectrum(struct EDMainCalStruct *X);
-int GetExcitedState(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, int iEx);
+int CalcSpectrum();
+int GetExcitedState(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, int iEx);
 

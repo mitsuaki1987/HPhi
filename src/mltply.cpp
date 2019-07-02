@@ -53,7 +53,7 @@
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
-int mltply(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1) {
+int mltply( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1) {
   int one = 1;
   long int j=0;
   long int irght=0;
@@ -65,26 +65,26 @@ int mltply(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::
   long int i_max;
 
   StartTimer(1);
-  i_max = X->Check.idim_max;
+  i_max = Check::idim_max;
 
-  if (X->Def.iFlgGeneralSpin == FALSE) {
-    if (GetSplitBitByModel(X->Def.Nsite, X->Def.iCalcModel, &irght, &ilft, &ihfbit) != 0) {
+  if (Def::iFlgGeneralSpin == FALSE) {
+    if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit) != 0) {
       return -1;
     }
   }
   else {
-    if (X->Def.iCalcModel == Spin) {
-      if (GetSplitBitForGeneralSpin(X->Def.Nsite, &ihfbit, X->Def.SiteToBit) != 0) {
+    if (Def::iCalcModel == Spin) {
+      if (GetSplitBitForGeneralSpin(Def::Nsite, &ihfbit, Def::SiteToBit) != 0) {
         return -1;
       }
     }
   }  
  
-  X->Large.i_max = i_max;
-  X->Large.irght = irght;
-  X->Large.ilft = ilft;
-  X->Large.ihfbit = ihfbit;
-  X->Large.mode = M_MLTPLY;
+  Large::i_max = i_max;
+  Large::irght = irght;
+  Large::ilft = ilft;
+  Large::ihfbit = ihfbit;
+  Large::mode = M_MLTPLY;
 
   StartTimer(100);
 #pragma omp parallel for default(none) private(dmv) \
@@ -94,25 +94,25 @@ int mltply(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
   }
   StopTimer(100);
-  if (X->Def.iCalcType == TimeEvolution) diagonalcalcForTE(step_i, X, &tmp_v0[0][0], &tmp_v1[0][0]);
+  if (Def::iCalcType == TimeEvolution) diagonalcalcForTE(step_i, &tmp_v0[0][0], &tmp_v1[0][0]);
   
-  switch (X->Def.iCalcModel) {
+  switch (Def::iCalcModel) {
   case HubbardGC:
-    mltplyHubbardGC(X, nstate, tmp_v0, tmp_v1);
+    mltplyHubbardGC(nstate, tmp_v0, tmp_v1);
     break;
       
   case KondoGC:
   case Hubbard:
   case Kondo:
-    mltplyHubbard(X, nstate, tmp_v0, tmp_v1);
+    mltplyHubbard(nstate, tmp_v0, tmp_v1);
     break;
       
   case Spin:
-    mltplySpin(X, nstate, tmp_v0, tmp_v1);
+    mltplySpin(nstate, tmp_v0, tmp_v1);
     break;
       
   case SpinGC:
-    mltplySpinGC(X, nstate, tmp_v0, tmp_v1);
+    mltplySpinGC(nstate, tmp_v0, tmp_v1);
     break;
       
   default:

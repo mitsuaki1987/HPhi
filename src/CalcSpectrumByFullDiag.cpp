@@ -20,7 +20,6 @@ full-diagonalization method.
 #include <complex>
 #include "global.hpp"
 #include <ctime>
-#include "struct.hpp"
 #include "lapack_diag.hpp"
 #include "mltply.hpp"
 #include "mltplyCommon.hpp"
@@ -35,7 +34,6 @@ G(z) = \sum_n \frac{|\langle n|c|0\rangle|^2}{z - E_n}
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 int CalcSpectrumByFullDiag(
-  struct EDMainCalStruct *X,//!<[inout]
   int Nomega,//!<[in] Number of frequencies
   int NdcSpectrum,
   std::complex<double> **dcSpectrum,//!<[out] [Nomega] Spectrum
@@ -50,34 +48,34 @@ int CalcSpectrumByFullDiag(
   <li>Generate fully stored Hamiltonian. Because ::v0 & ::v1 are overwritten,
   copy ::v0 into ::vg.</li>
   */
-  idim_max_int = (int)X->Bind.Check.idim_max;
+  idim_max_int = (int)Check::idim_max;
   vR = cd_2d_allocate(idim_max_int, 1);
   vL = cd_2d_allocate(idim_max_int, 1);
   vLvvRv = cd_1d_allocate(idim_max_int);
 
   StartTimer(6301);
-  zclear((X->Bind.Check.idim_max + 1)*(X->Bind.Check.idim_max + 1), &v0[0][0]);
-  zclear((X->Bind.Check.idim_max + 1)*(X->Bind.Check.idim_max + 1), &v1[0][0]);
-  for (idim = 1; idim <= X->Bind.Check.idim_max; idim++) v1[idim][idim] = 1.0;
-  mltply(&(X->Bind), X->Bind.Check.idim_max, v0, v1);
+  zclear((Check::idim_max + 1)*(Check::idim_max + 1), &v0[0][0]);
+  zclear((Check::idim_max + 1)*(Check::idim_max + 1), &v1[0][0]);
+  for (idim = 1; idim <= Check::idim_max; idim++) v1[idim][idim] = 1.0;
+  mltply(Check::idim_max, v0, v1);
   StopTimer(6301);
   /**
   <li>::v0 becomes eigenvalues in lapack_diag(), and
    ::v1 becomes eigenvectors</li>
   */
   StartTimer(6302);
-  lapack_diag(&(X->Bind));
+  lapack_diag();
   StopTimer(6302);
   /**
   <li>Compute @f$|\langle n|c|0\rangle|^2@f$ for all @f$n@f$ and store them into ::v1,
   where @f$c|0\rangle@f$ is ::vg.</li>
   */
-  zclear(X->Bind.Check.idim_max, &vR[1][0]);
-  GetExcitedState(&(X->Bind), 1, vR, v1Org, 0);
+  zclear(Check::idim_max, &vR[1][0]);
+  GetExcitedState(1, vR, v1Org, 0);
   for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
     StartTimer(6303);
-    zclear(X->Bind.Check.idim_max, &vL[1][0]);
-    GetExcitedState(&(X->Bind), 1, vL, v1Org, idcSpectrum + 1);
+    zclear(Check::idim_max, &vL[1][0]);
+    GetExcitedState(1, vL, v1Org, idcSpectrum + 1);
     for (idim = 0; idim < idim_max_int; idim++) {
       vRv = 0.0;
       vLv = 0.0;
@@ -100,7 +98,7 @@ int CalcSpectrumByFullDiag(
     for (iomega = 0; iomega < Nomega; iomega++) {
       dcSpectrum[iomega][idcSpectrum] = 0.0;
       for (idim = 0; idim < idim_max_int; idim++) {
-        dcSpectrum[iomega][idcSpectrum] += vLvvRv[idim] / (dcomega[iomega] - X->Bind.Phys.energy[idim]);
+        dcSpectrum[iomega][idcSpectrum] += vLvvRv[idim] / (dcomega[iomega] - Phys::energy[idim]);
       }/*for (idim = 0; idim < idim_max_int; idim++)*/
     }/*for (iomega = 0; iomega < Nomega; iomega++)*/
     StopTimer(6304);

@@ -29,14 +29,14 @@ When both site1 and site2 are in the inter process region.
 void GC_child_general_hopp_MPIdouble
 (
  long int itrans,//!<[in] Transfer ID
- struct BindStruct *X,//!<[inout]
+ //!<[inout]
  int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
  std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   X_GC_child_general_hopp_MPIdouble(
-    X->Def.EDGeneralTransfer[itrans][0], X->Def.EDGeneralTransfer[itrans][1],
-    X->Def.EDGeneralTransfer[itrans][2], X->Def.EDGeneralTransfer[itrans][3],
-    X->Def.EDParaGeneralTransfer[itrans], X, nstate, tmp_v0, tmp_v1);
+    Def::EDGeneralTransfer[itrans][0], Def::EDGeneralTransfer[itrans][1],
+    Def::EDGeneralTransfer[itrans][2], Def::EDGeneralTransfer[itrans][3],
+    Def::EDParaGeneralTransfer[itrans], nstate, tmp_v0, tmp_v1);
 }/*void GC_child_general_hopp_MPIdouble*/
 /**
 @brief Hopping term in Hubbard + GC
@@ -50,7 +50,7 @@ void X_GC_child_general_hopp_MPIdouble(
   int org_isite2,//!<[in] @f$i_2@f$ of @f$c_{i_1 \sigma_1}^\dagger c_{i_2 \sigma_2}@f$
   int org_ispin2,//!<[in] @f$\sigma_2@f$ of @f$c_{i_1 \sigma_1}^\dagger c_{i_2 \sigma_2}@f$
   std::complex<double> tmp_trans,//!<[in] Transfer @f$t@f$
-  struct BindStruct *X,//!< [inout]
+  //!< [inout]
   int nstate, std::complex<double> **tmp_v0,//!< [out] Result v0 = H v1
   std::complex<double> **tmp_v1 //!< [in] v0 = H v1
 ) {
@@ -58,8 +58,8 @@ void X_GC_child_general_hopp_MPIdouble(
   long int idim_max_buf;
   std::complex<double> trans;
 
-  mask1 = (int)X->Def.Tpow[2 * org_isite1 + org_ispin1];
-  mask2 = (int)X->Def.Tpow[2 * org_isite2 + org_ispin2];
+  mask1 = (int)Def::Tpow[2 * org_isite1 + org_ispin1];
+  mask2 = (int)Def::Tpow[2 * org_isite2 + org_ispin2];
   if (mask2 > mask1) bitdiff = mask2 - mask1 * 2;
   else bitdiff = mask1 - mask2 * 2;
   origin = myrank ^ (mask1 + mask2);
@@ -74,14 +74,14 @@ void X_GC_child_general_hopp_MPIdouble(
   }/*if (state1 == 0 && state2 == mask2)*/
   else if (state1 == mask1 && state2 == 0) {
     trans = -(double)Fsgn * conj(tmp_trans);
-    if (X->Large.mode == M_CORR || X->Large.mode == M_CALCSPEC) trans = 0.0;
+    if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) trans = 0.0;
   }/*if (state1 == mask1 && state2 == 0)*/
   else return;
 
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-  SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  idim_max_buf = SendRecv_i(origin, Check::idim_max);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
-  zaxpy_long(X->Check.idim_max*nstate, trans, &v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, trans, &v1buf[1][0], &tmp_v0[1][0]);
 }/*void GC_child_general_hopp_MPIdouble*/
 /**
 @brief Hopping term in Hubbard + MPI
@@ -95,7 +95,7 @@ void X_child_CisAjt_MPIdouble(
   int org_isite2,//!<[in] @f$i_2@f$ of @f$c_{i_1 \sigma_1}^\dagger c_{i_2 \sigma_2}@f$
   int org_ispin2,//!<[in] @f$\sigma_2@f$ of @f$c_{i_1 \sigma_1}^\dagger c_{i_2 \sigma_2}@f$
   std::complex<double> tmp_trans,//!<[in] Transfer @f$t@f$
-  struct BindStruct *X,//!< [inout]
+  //!< [inout]
   int nstate, std::complex<double> **tmp_v0,//!< [out] Result v0 = H v1
   std::complex<double> **tmp_v1//!< [in] v0 = H v1
 ) {
@@ -104,8 +104,8 @@ void X_child_CisAjt_MPIdouble(
   std::complex<double> trans;
   int one = 1;
 
-  mask1 = (int) X->Def.Tpow[2 * org_isite1 + org_ispin1];
-  mask2 = (int) X->Def.Tpow[2 * org_isite2 + org_ispin2];
+  mask1 = (int) Def::Tpow[2 * org_isite1 + org_ispin1];
+  mask2 = (int) Def::Tpow[2 * org_isite2 + org_ispin2];
   if (mask2 > mask1) bitdiff = mask2 - mask1 * 2;
   else bitdiff = mask1 - mask2 * 2;
   origin = myrank ^ (mask1 + mask2);
@@ -120,22 +120,22 @@ void X_child_CisAjt_MPIdouble(
   }/*if (state1 == 0 && state2 == mask2)*/
   else if (state1 == mask1 && state2 == 0) {
     trans = -(double) Fsgn * conj(tmp_trans);
-    if (X->Large.mode == M_CORR|| X->Large.mode == M_CALCSPEC) {
+    if (Large::mode == M_CORR|| Large::mode == M_CALCSPEC) {
       trans = 0;
     }
   }/*if (state1 == mask1 && state2 == 0)*/
   else return;
 
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_maxOrg);
-  SendRecv_iv(origin, X->Check.idim_maxOrg + 1, idim_max_buf + 1, list_1_org, list_1buf_org);
-  SendRecv_cv(origin, X->Check.idim_maxOrg*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  idim_max_buf = SendRecv_i(origin, Check::idim_maxOrg);
+  SendRecv_iv(origin, Check::idim_maxOrg + 1, idim_max_buf + 1, list_1_org, list_1buf_org);
+  SendRecv_cv(origin, Check::idim_maxOrg*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
   
 #pragma omp parallel for default(none) private(j, ioff) \
-  firstprivate(idim_max_buf, trans, X, list_2_1, list_2_2, list_1buf_org) \
+  firstprivate(idim_max_buf, trans, list_2_1, list_2_2, list_1buf_org) \
   shared(v1buf, tmp_v0,nstate,one)
   for (j = 1; j <= idim_max_buf; j++) {
     GetOffComp(list_2_1, list_2_2, list_1buf_org[j],
-               X->Large.irght, X->Large.ilft, X->Large.ihfbit, &ioff);
+               Large::irght, Large::ilft, Large::ihfbit, &ioff);
     zaxpy_(&nstate, &trans, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
   }/*for (j = 1; j <= idim_max_buf; j++)*/
 }/*void child_CisAjt_MPIdouble*/
@@ -146,14 +146,14 @@ void X_child_CisAjt_MPIdouble(
 */
 void GC_child_general_hopp_MPIsingle(
   long int itrans,//!<[in] Transfer ID
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   X_GC_child_general_hopp_MPIsingle(
-    X->Def.EDGeneralTransfer[itrans][0], X->Def.EDGeneralTransfer[itrans][1],
-    X->Def.EDGeneralTransfer[itrans][2], X->Def.EDGeneralTransfer[itrans][3],
-    X->Def.EDParaGeneralTransfer[itrans], X, nstate, tmp_v0, tmp_v1       );
+    Def::EDGeneralTransfer[itrans][0], Def::EDGeneralTransfer[itrans][1],
+    Def::EDGeneralTransfer[itrans][2], Def::EDGeneralTransfer[itrans][3],
+    Def::EDParaGeneralTransfer[itrans], nstate, tmp_v0, tmp_v1       );
 }/*void GC_child_general_hopp_MPIsingle*/
 /**
 @brief Hopping term in Hubbard + GC
@@ -167,7 +167,7 @@ void X_GC_child_general_hopp_MPIsingle(
   int org_isite2,//!<[in] Site 2
   int org_ispin2,//!<[in] Spin 2
   std::complex<double> tmp_trans,//!<[in] Hopping integral
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ) {
@@ -178,21 +178,21 @@ void X_GC_child_general_hopp_MPIsingle(
   /*
     Prepare index in the inter PE
   */
-  mask2 = (int) X->Def.Tpow[2 * org_isite2 + org_ispin2];
+  mask2 = (int) Def::Tpow[2 * org_isite2 + org_ispin2];
   bit2diff = mask2 - 1;
   origin = myrank ^ mask2;
   state2 = origin & mask2;
 
   SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
 
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
+  idim_max_buf = SendRecv_i(origin, Check::idim_max);
 
-  SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
   /*
     Index in the intra PE
   */
-  mask1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
+  mask1 = Def::Tpow[2 * org_isite1 + org_ispin1];
 
   if (state2 == mask2) {
     trans = -(double) Fsgn * tmp_trans;
@@ -201,14 +201,14 @@ void X_GC_child_general_hopp_MPIsingle(
   else if (state2 == 0) {
     state1check = mask1;
     trans = -(double) Fsgn * conj(tmp_trans);
-    if (X->Large.mode == M_CORR|| X->Large.mode == M_CALCSPEC) trans = 0;
+    if (Large::mode == M_CORR|| Large::mode == M_CALCSPEC) trans = 0;
   }/*if (state2 != mask2)*/
   else return;
 
-  bit1diff = X->Def.Tpow[2 * X->Def.Nsite - 1] * 2 - mask1 * 2;
+  bit1diff = Def::Tpow[2 * Def::Nsite - 1] * 2 - mask1 * 2;
 
 #pragma omp parallel default(none)  private(j,dmv,state1,Fsgn,ioff) \
-  firstprivate(idim_max_buf,trans,X,mask1,state1check,bit1diff) \
+  firstprivate(idim_max_buf,trans,mask1,state1check,bit1diff) \
   shared(v1buf,tmp_v1,tmp_v0,nstate,one)
   {
 #pragma omp for
@@ -235,14 +235,14 @@ void X_GC_child_general_hopp_MPIsingle(
 */
 void child_general_hopp_MPIdouble(
   long int itrans,//!<[in] Transfer ID
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   X_child_general_hopp_MPIdouble( 
-    X->Def.EDGeneralTransfer[itrans][0], X->Def.EDGeneralTransfer[itrans][1],
-    X->Def.EDGeneralTransfer[itrans][2], X->Def.EDGeneralTransfer[itrans][3],
-    X->Def.EDParaGeneralTransfer[itrans], X, nstate, tmp_v0, tmp_v1);
+    Def::EDGeneralTransfer[itrans][0], Def::EDGeneralTransfer[itrans][1],
+    Def::EDGeneralTransfer[itrans][2], Def::EDGeneralTransfer[itrans][3],
+    Def::EDParaGeneralTransfer[itrans], nstate, tmp_v0, tmp_v1);
 }/*void child_general_hopp_MPIdouble*/
 /**
 @brief Hopping term in Hubbard (Kondo) + Canonical ensemble
@@ -255,7 +255,7 @@ void X_child_general_hopp_MPIdouble(
   int org_isite2,//!<[in] Site 2
   int org_ispin2,//!<[in] Spin 2
   std::complex<double> tmp_trans,//!<[in] Hopping integral
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ) {
@@ -264,8 +264,8 @@ void X_child_general_hopp_MPIdouble(
   std::complex<double> trans;
   int one = 1;
 
-  mask1 = (int) X->Def.Tpow[2 * org_isite1 + org_ispin1];
-  mask2 = (int) X->Def.Tpow[2 * org_isite2 + org_ispin2];
+  mask1 = (int) Def::Tpow[2 * org_isite1 + org_ispin1];
+  mask2 = (int) Def::Tpow[2 * org_isite2 + org_ispin2];
 
   if (mask2 > mask1) bitdiff = mask2 - mask1 * 2;
   else bitdiff = mask1 - mask2 * 2;
@@ -281,13 +281,13 @@ void X_child_general_hopp_MPIdouble(
   }
   else if (state1 == mask1 && state2 == 0) {
     trans = -(double) Fsgn * conj(tmp_trans);
-    if (X->Large.mode == M_CORR|| X->Large.mode == M_CALCSPEC) trans = 0;
+    if (Large::mode == M_CORR|| Large::mode == M_CALCSPEC) trans = 0;
   }
   else return;
 
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-  SendRecv_iv(origin, X->Check.idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
-  SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  idim_max_buf = SendRecv_i(origin, Check::idim_max);
+  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
 #pragma omp parallel default(none) private(j,Fsgn,ioff) \
   firstprivate(idim_max_buf,trans,X) \
@@ -296,7 +296,7 @@ void X_child_general_hopp_MPIdouble(
 #pragma omp for
     for (j = 1; j <= idim_max_buf; j++) {
       GetOffComp(list_2_1, list_2_2, list_1buf[j],
-                 X->Large.irght, X->Large.ilft, X->Large.ihfbit, &ioff);
+                 Large::irght, Large::ilft, Large::ihfbit, &ioff);
       zaxpy_(&nstate, &trans, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
     }/*for (j = 1; j <= idim_max_buf; j++)*/
   }/*End of parallel region*/
@@ -308,14 +308,14 @@ void X_child_general_hopp_MPIdouble(
 */
 void child_general_hopp_MPIsingle(
   long int itrans,//!<[in] Transfer ID
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   X_child_general_hopp_MPIsingle(
-    X->Def.EDGeneralTransfer[itrans][0], X->Def.EDGeneralTransfer[itrans][1],
-    X->Def.EDGeneralTransfer[itrans][2], X->Def.EDGeneralTransfer[itrans][3],
-    X->Def.EDParaGeneralTransfer[itrans], X, nstate, tmp_v0, tmp_v1);
+    Def::EDGeneralTransfer[itrans][0], Def::EDGeneralTransfer[itrans][1],
+    Def::EDGeneralTransfer[itrans][2], Def::EDGeneralTransfer[itrans][3],
+    Def::EDParaGeneralTransfer[itrans], nstate, tmp_v0, tmp_v1);
 }/*void child_general_hopp_MPIsingle*/
 /**
 @brief Hopping term in Hubbard (Kondo) + Canonical ensemble
@@ -328,7 +328,7 @@ void X_child_general_hopp_MPIsingle(
   int org_isite2,//!<[in] Site 2
   int org_ispin2,//!<[in] Spin 2
   std::complex<double> tmp_trans,//!<[in] Hopping integral
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ) {
@@ -339,7 +339,7 @@ void X_child_general_hopp_MPIsingle(
   /*
     Prepare index in the inter PE
   */
-  mask2 = (int)X->Def.Tpow[2 * org_isite2+org_ispin2];
+  mask2 = (int)Def::Tpow[2 * org_isite2+org_ispin2];
   bit2diff = mask2 - 1;
   origin = myrank ^ mask2;
 
@@ -347,13 +347,13 @@ void X_child_general_hopp_MPIsingle(
 
   SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
 
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_max);
-  SendRecv_iv(origin, X->Check.idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
-  SendRecv_cv(origin, X->Check.idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  idim_max_buf = SendRecv_i(origin, Check::idim_max);
+  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
   /*
     Index in the intra PE
   */
-  mask1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
+  mask1 = Def::Tpow[2 * org_isite1 + org_ispin1];
   if (state2 == mask2) {
     trans = -(double) Fsgn * tmp_trans;
     state1check = 0;
@@ -361,16 +361,16 @@ void X_child_general_hopp_MPIsingle(
   else if (state2 == 0) {
     state1check = mask1;
     trans = -(double) Fsgn * conj(tmp_trans);
-    if (X->Large.mode == M_CORR|| X->Large.mode == M_CALCSPEC) {
+    if (Large::mode == M_CORR|| Large::mode == M_CALCSPEC) {
       trans = 0;
     }
   }
   else return;
 
-  bit1diff = X->Def.Tpow[2 * X->Def.Nsite - 1] * 2 - mask1 * 2;
+  bit1diff = Def::Tpow[2 * Def::Nsite - 1] * 2 - mask1 * 2;
 
 #pragma omp parallel default(none)  private(j,dmv,Fsgn,ioff,jreal,state1) \
-  firstprivate(idim_max_buf,trans,X,mask1,state1check,bit1diff,myrank) \
+  firstprivate(idim_max_buf,trans,mask1,state1check,bit1diff,myrank) \
   shared(list_1,list_2_1,list_2_2,list_1buf,v1buf,tmp_v1,tmp_v0,nstate,one)
   {
 #pragma omp for
@@ -382,7 +382,7 @@ void X_child_general_hopp_MPIsingle(
       if (state1 == state1check) {
         SgnBit(jreal & bit1diff,&Fsgn);
         GetOffComp(list_2_1, list_2_2, jreal ^ mask1,
-            X->Large.irght, X->Large.ilft, X->Large.ihfbit, &ioff);
+            Large::irght, Large::ilft, Large::ihfbit, &ioff);
 
         dmv = (double)Fsgn * trans;
         zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
@@ -401,7 +401,7 @@ void X_child_CisAjt_MPIsingle(
   int org_isite2,//!<[in] Site 2
   int org_ispin2,//!<[in] Spin 2
   std::complex<double> tmp_trans,//!<[in] Hopping integral
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
@@ -413,7 +413,7 @@ void X_child_CisAjt_MPIsingle(
   /*
     Prepare index in the inter PE
   */
-  mask2 = (int)X->Def.Tpow[2 * org_isite2+org_ispin2];
+  mask2 = (int)Def::Tpow[2 * org_isite2+org_ispin2];
   bit2diff = mask2 - 1;
   origin = myrank ^ mask2;
 
@@ -421,13 +421,13 @@ void X_child_CisAjt_MPIsingle(
 
   SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
 
-  idim_max_buf = SendRecv_i(origin, X->Check.idim_maxOrg);
-  SendRecv_iv(origin, X->Check.idim_maxOrg + 1, idim_max_buf + 1, list_1_org, list_1buf_org);
-  SendRecv_cv(origin, X->Check.idim_maxOrg*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  idim_max_buf = SendRecv_i(origin, Check::idim_maxOrg);
+  SendRecv_iv(origin, Check::idim_maxOrg + 1, idim_max_buf + 1, list_1_org, list_1buf_org);
+  SendRecv_cv(origin, Check::idim_maxOrg*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
   /*
     Index in the intra PE
   */
-  mask1 = X->Def.Tpow[2 * org_isite1 + org_ispin1];
+  mask1 = Def::Tpow[2 * org_isite1 + org_ispin1];
   if (state2 == mask2) {
     trans = -(double) Fsgn * tmp_trans;
     state1check = 0;
@@ -438,10 +438,10 @@ void X_child_CisAjt_MPIsingle(
   }
   else return;
 
-  bit1diff = X->Def.Tpow[2 * X->Def.Nsite - 1] * 2 - mask1 * 2;
+  bit1diff = Def::Tpow[2 * Def::Nsite - 1] * 2 - mask1 * 2;
 
 #pragma omp parallel for default(none) private(j,dmv,Fsgn,ioff,jreal,state1) \
-  firstprivate(idim_max_buf,trans,X,mask1,state1check,bit1diff,list_2_1,list_2_2,list_1buf_org,list_1) \
+  firstprivate(idim_max_buf,trans,mask1,state1check,bit1diff,list_2_1,list_2_2,list_1buf_org,list_1) \
   shared(v1buf, tmp_v0,nstate,one)
   for (j = 1; j <= idim_max_buf; j++) {
     jreal = list_1buf_org[j];
@@ -449,7 +449,7 @@ void X_child_CisAjt_MPIsingle(
     if (state1 == state1check) {
       SgnBit(jreal & bit1diff, &Fsgn);
       GetOffComp(list_2_1, list_2_2, jreal ^ mask1,
-        X->Large.irght, X->Large.ilft, X->Large.ihfbit, &ioff);
+        Large::irght, Large::ilft, Large::ihfbit, &ioff);
       if (ioff != 0) {
         dmv = (double)Fsgn * trans;
         zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);

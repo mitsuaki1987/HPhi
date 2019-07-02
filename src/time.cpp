@@ -92,7 +92,7 @@ void StopTimer(int n) {
  * 
  * @version 2.0
  */
-void OutputTimer(struct BindStruct* X) {
+void OutputTimer() {
 
 #ifdef __MPI
   char fileName[D_FileNameMax];
@@ -104,8 +104,8 @@ void OutputTimer(struct BindStruct* X) {
   StampTime(fp, "All", 0);
   StampTime(fp, "  sz", 1000);
   StampTime(fp, "  diagonalcalc", 2000);
-  if (X->Def.iFlgCalcSpec == CALCSPEC_NOT) {
-    if (X->Def.iCalcType == TPQCalc) {
+  if (Def::iFlgCalcSpec == CALCSPEC_NOT) {
+    if (Def::iCalcType == TPQCalc) {
       StampTime(fp, "  CalcByTPQ", 3000);
       StampTime(fp, "    FirstMultiply", 3100);
       StampTime(fp, "      rand   in FirstMultiply", 3101);
@@ -118,7 +118,7 @@ void OutputTimer(struct BindStruct* X) {
       StampTime(fp, "    Multiply                 ", 3500);
       StampTime(fp, "    FileIO                   ", 3600);
     }
-    else if (X->Def.iCalcType == Lanczos) {
+    else if (Def::iCalcType == Lanczos) {
       StampTime(fp, "  CalcByLanczos", 4000);
       StampTime(fp, "    LanczosEigenValue", 4100);
       StampTime(fp, "      mltply      in LanczosEigenValue", 4101);
@@ -137,7 +137,7 @@ void OutputTimer(struct BindStruct* X) {
       StampTime(fp, "    FileIO                   ", 4800);
       StampTime(fp, "      Read Input Eigenvec ", 4801);
     }
-    else if (X->Def.iCalcType == FullDiag) {
+    else if (Def::iCalcType == FullDiag) {
       StampTime(fp, "  CalcByFullDiag", 5000);
       StampTime(fp, "    MakeHam", 5100);
       StampTime(fp, "    LapackDiag", 5200);
@@ -154,7 +154,7 @@ void OutputTimer(struct BindStruct* X) {
     StampTime(fp, "      Read origin state", 6101);
     StampTime(fp, "      Multiply excited operator", 6102);
     StampTime(fp, "    Calculate spectrum", 6200);
-    if (X->Def.iCalcType == Lanczos) {
+    if (Def::iCalcType == Lanczos) {
       StampTime(fp, "      Read vector for recalculation", 6201);
       StampTime(fp, "      Read tridiagonal components for recalculation", 6202);
       StampTime(fp, "      Calculate tridiagonal components", 6203);
@@ -162,7 +162,7 @@ void OutputTimer(struct BindStruct* X) {
       StampTime(fp, "      Calculate spectrum by Lanczos method", 6205);
       StampTime(fp, "      Output vectors for recalculation", 6206);
     }
-    else if (X->Def.iCalcType == FullDiag) {
+    else if (Def::iCalcType == FullDiag) {
       StampTime(fp, "      MakeHam", 6301);
       StampTime(fp, "      lapackdiag", 6302);
       StampTime(fp, "      Calculate v1", 6303);
@@ -175,7 +175,7 @@ void OutputTimer(struct BindStruct* X) {
   StampTime(fp, "All mltply", 1);
   StampTime(fp, "  diagonal", 100);
 
-  switch (X->Def.iCalcModel) {
+  switch (Def::iCalcModel) {
   case HubbardGC:
     StampTime(fp, "  HubbardGC", 200);
     StampTime(fp, "    trans    in HubbardGC", 210);

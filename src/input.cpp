@@ -17,12 +17,12 @@
 #include "FileIO.hpp"
 #include "wrapperMPI.hpp"
 
-int inputHam(struct BindStruct *X){
+int inputHam(){
   //Input Ham
   long int i=0;
   long int ham_i=0;
   long int ham_j=0;
-  long int imax = X->Check.idim_max;
+  long int imax = Check::idim_max;
   long int ihermite=0;
   long int itmp;
   double dHam_re, dHam_im;
@@ -31,7 +31,7 @@ int inputHam(struct BindStruct *X){
   FILE *fp;
   char sdt[D_FileNameMax];
 
-  sprintf(sdt,"%s_Ham.dat", X->Def.CDataFileHead);
+  sprintf(sdt,"%s_Ham.dat", Def::CDataFileHead);
   if(childfopenMPI(sdt,"r",&fp)!=0){
     return -1;
   }

@@ -37,24 +37,24 @@
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
-int output_list(struct BindStruct *X){
+int output_list(){
   
   FILE *fp;
   char sdt[D_FileNameMax];
   int i,i_max;
   
   fprintf(stdoutMPI, "%s", "  Start: output list. \n");
-  i_max=X->Check.idim_max;
-  switch(X->Def.iCalcModel){
+  i_max=Check::idim_max;
+  switch(Def::iCalcModel){
   case HubbardGC:
   case Hubbard:
   case Spin:
   case SpinGC:
-    sprintf(sdt, "ListForModel_Ns%d_Nup%dNdown%d.dat", X->Def.Nsite,X->Def.Nup,X->Def.Ndown);
+    sprintf(sdt, "ListForModel_Ns%d_Nup%dNdown%d.dat", Def::Nsite,Def::Nup,Def::Ndown);
   break;
   case Kondo:
   case KondoGC:
-    sprintf(sdt, "ListForKondo_Ns%d_Ncond%d", X->Def.Nsite,X->Def.Ne);
+    sprintf(sdt, "ListForKondo_Ns%d_Ncond%d", Def::Nsite,Def::Ne);
     break;
   default:
     return -1;

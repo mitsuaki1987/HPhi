@@ -16,4 +16,4 @@
 #pragma once
 #include "Common.hpp"
 
-int output_list(struct BindStruct *X);
+int output_list();

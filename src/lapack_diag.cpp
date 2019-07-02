@@ -33,7 +33,7 @@
  * @return 
  */
 int lapack_diag(
-struct BindStruct *X//!<[inout]
+//!<[inout]
 ) {
 
   FILE *fp;
@@ -46,7 +46,7 @@ struct BindStruct *X//!<[inout]
   int dims[2]={0,0};
 #endif
 
-  i_max = X->Check.idim_max;
+  i_max = Check::idim_max;
 
   for (i = 0; i < i_max; i++) {
     for (j = 0; j < i_max; j++) {
@@ -54,7 +54,7 @@ struct BindStruct *X//!<[inout]
     }
   }
   xMsize = i_max;
-  if (X->Def.iNGPU == 0) {
+  if (Def::iNGPU == 0) {
 #ifdef _SCALAPACK
     if(nproc >1) {
       fprintf(stdoutMPI, "Using SCALAPACK\n\n");
@@ -87,18 +87,18 @@ struct BindStruct *X//!<[inout]
       ZHEEVall(xMsize, Ham, v0, v1);
     }
 #else
-    ZHEEVall(xMsize, v0, X->Phys.energy, v1);
+    ZHEEVall(xMsize, v0, Phys::energy, v1);
 #endif
   } else {
 #ifdef _MAGMA
     if(myrank==0){
-      if(diag_magma_cmp(xMsize, Ham, v0, v1, X->Def.iNGPU) != 0) {
+      if(diag_magma_cmp(xMsize, Ham, v0, v1, Def::iNGPU) != 0) {
         return -1;
       }
     }
 #else
     fprintf(stdoutMPI, "Warning: MAGMA is not used in this calculation.");
-    ZHEEVall(xMsize, v0, X->Phys.energy, v1);
+    ZHEEVall(xMsize, v0, Phys::energy, v1);
 #endif
   }
   for (i = 0; i < i_max; i++) {
@@ -112,7 +112,7 @@ struct BindStruct *X//!<[inout]
     return -1;
   }
   for (i = 0; i < i_max; i++) {
-    fprintf(fp, " %ld %.10lf \n", i, X->Phys.energy[i]);
+    fprintf(fp, " %ld %.10lf \n", i, Phys::energy[i]);
   }
   fclose(fp);
   return 0;

@@ -24,7 +24,7 @@ long int Binomial(
          );
 
 int sz(
-       struct BindStruct *X,
+       
        long int *list_1_,
        long int *list_2_1_,
        long int *list_2_2_
@@ -32,7 +32,7 @@ int sz(
 
 int Read_sz
 (
- struct BindStruct *X,
+ 
  const long int irght,
  const long int ilft,
  const long int ihfbit,

@@ -21,11 +21,9 @@
 #include "mltply.hpp"
 
  /// \brief Parent function for FullDiag mode
- /// \param X [in,out] Struct to get information about file header names, dimension of hirbert space, calc type, physical quantities.
  /// \retval TRUE(=1) normally finished.
  /// \retval FALSE(=0) abnormally finished.
 int CalcByFullDiag(
-  struct EDMainCalStruct *X
 )
 {
   int iret=0;
@@ -33,15 +31,15 @@ int CalcByFullDiag(
 
   fprintf(stdoutMPI, "%s", "######  Start: Setting Hamiltonian.  ######\n\n");
   StartTimer(5100);
-  if(X->Bind.Def.iInputHam==FALSE){
-    zclear((X->Bind.Check.idim_max + 1)*X->Bind.Check.idim_max, &v0[0][0]);
-    zclear((X->Bind.Check.idim_max + 1)*X->Bind.Check.idim_max, &v1[0][0]);
-    for (idim = 1; idim <= X->Bind.Check.idim_max; idim++) v1[idim][idim-1] = 1.0;
-    mltply(&(X->Bind), X->Bind.Check.idim_max, v0, v1);
+  if(Def::iInputHam==FALSE){
+    zclear((Check::idim_max + 1)*Check::idim_max, &v0[0][0]);
+    zclear((Check::idim_max + 1)*Check::idim_max, &v1[0][0]);
+    for (idim = 1; idim <= Check::idim_max; idim++) v1[idim][idim-1] = 1.0;
+    mltply(Check::idim_max, v0, v1);
   }
-  else if(X->Bind.Def.iInputHam==TRUE){
+  else if(Def::iInputHam==TRUE){
     fprintf(stdoutMPI, "%s", "######  Start: Input Hamiltonian.  ######\n\n");
-    inputHam(&(X->Bind));
+    inputHam();
     fprintf(stdoutMPI, "%s", "######  End  : Input Hamiltonian.  ######\n\n");
   }
   StopTimer(5100);
@@ -49,10 +47,10 @@ int CalcByFullDiag(
   if(iret != 0) return FALSE;
 
 
-  if(X->Bind.Def.iOutputHam == TRUE){
+  if(Def::iOutputHam == TRUE){
     fprintf(stdoutMPI, "%s", "######  Start: Output Hamiltonian.  ######\n\n");
     StartTimer(5500);
-    iret=outputHam(&(X->Bind));
+    iret=outputHam();
     StopTimer(5500);
     fprintf(stdoutMPI, "%s", "######  End  : Output Hamiltonian.  ######\n\n");
     if(iret != 0) return FALSE;
@@ -61,20 +59,20 @@ int CalcByFullDiag(
 
   fprintf(stdoutMPI, "%s", "######  Start: Diagonalization.  ######\n\n");
   StartTimer(5200);
-  iret=lapack_diag(&(X->Bind));
+  iret=lapack_diag();
   StopTimer(5200);
   fprintf(stdoutMPI, "%s", "######  End  : Diagonalization.  ######\n\n");
   if(iret != 0) return FALSE;
 
-  X->Bind.Def.St=0;
+  Def::St=0;
   fprintf(stdoutMPI, "%s", "######  Start: Calc Expected value.  ######\n\n");
   StartTimer(5300);
-  phys(&(X->Bind), X->Bind.Check.idim_max);
+  phys(Check::idim_max);
   StopTimer(5300);
   fprintf(stdoutMPI, "%s", "######  End  : Calc Expected value.  ######\n\n");
 
   StartTimer(5400);
-  iret=output(&(X->Bind));
+  iret=output();
   StopTimer(5400);  
   fprintf(stdoutMPI, "%s", "######  Finish Calculation.  ######\n");
   if(iret != 0) return FALSE;

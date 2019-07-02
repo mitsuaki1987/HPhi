@@ -33,51 +33,49 @@
  /// \brief Set transfer integrals at timeidx-th time
  /// \param X struct for getting information of transfer integrals
  /// \param timeidx index of time
-void MakeTEDTransfer(struct BindStruct *X, const int timeidx) {
+void MakeTEDTransfer( const int timeidx) {
   int i, j;
   //Clear values
-  for (i = 0; i < X->Def.NTETransferMax; i++) {
+  for (i = 0; i < Def::NTETransferMax; i++) {
     for (j = 0; j < 4; j++) {
-      X->Def.EDGeneralTransfer[i + X->Def.EDNTransfer][j] = 0;
+      Def::EDGeneralTransfer[i + Def::EDNTransfer][j] = 0;
     }
-    X->Def.EDParaGeneralTransfer[i + X->Def.EDNTransfer] = 0.0;
+    Def::EDParaGeneralTransfer[i + Def::EDNTransfer] = 0.0;
   }
 
   //Input values
-  for (i = 0; i < X->Def.NTETransfer[timeidx]; i++) {
+  for (i = 0; i < Def::NTETransfer[timeidx]; i++) {
     for (j = 0; j < 4; j++) {
-      X->Def.EDGeneralTransfer[i + X->Def.EDNTransfer][j] = X->Def.TETransfer[timeidx][i][j];
+      Def::EDGeneralTransfer[i + Def::EDNTransfer][j] = Def::TETransfer[timeidx][i][j];
     }
-    X->Def.EDParaGeneralTransfer[i + X->Def.EDNTransfer] = X->Def.ParaTETransfer[timeidx][i];
+    Def::EDParaGeneralTransfer[i + Def::EDNTransfer] = Def::ParaTETransfer[timeidx][i];
   }
-  X->Def.EDNTransfer += X->Def.NTETransfer[timeidx];
+  Def::EDNTransfer += Def::NTETransfer[timeidx];
 }
 /// \brief Set interall interactions at timeidx-th time
 /// \param X struct for getting information of interall interactions
 /// \param timeidx index of time
-void MakeTEDInterAll(struct BindStruct *X, const int timeidx) {
+void MakeTEDInterAll( const int timeidx) {
   int i, j;
   //Clear values
-  for (i = 0; i < X->Def.NTEInterAllMax; i++) {
+  for (i = 0; i < Def::NTEInterAllMax; i++) {
     for (j = 0; j < 8; j++) {
-      X->Def.InterAll_OffDiagonal[i + X->Def.NInterAll_OffDiagonal][j] = 0;
+      Def::InterAll_OffDiagonal[i + Def::NInterAll_OffDiagonal][j] = 0;
     }
-    X->Def.ParaInterAll_OffDiagonal[i + X->Def.NInterAll_OffDiagonal] = 0.0;
+    Def::ParaInterAll_OffDiagonal[i + Def::NInterAll_OffDiagonal] = 0.0;
   }
   //Input values
-  for (i = 0; i < X->Def.NTEInterAllOffDiagonal[timeidx]; i++) {
+  for (i = 0; i < Def::NTEInterAllOffDiagonal[timeidx]; i++) {
     for (j = 0; j < 8; j++) {
-      X->Def.InterAll_OffDiagonal[i + X->Def.NInterAll_OffDiagonal][j] = X->Def.TEInterAllOffDiagonal[timeidx][i][j];
+      Def::InterAll_OffDiagonal[i + Def::NInterAll_OffDiagonal][j] = Def::TEInterAllOffDiagonal[timeidx][i][j];
     }
-    X->Def.ParaInterAll_OffDiagonal[i + X->Def.NInterAll_OffDiagonal] = X->Def.ParaTEInterAllOffDiagonal[timeidx][i];
+    Def::ParaInterAll_OffDiagonal[i + Def::NInterAll_OffDiagonal] = Def::ParaTEInterAllOffDiagonal[timeidx][i];
   }
-  X->Def.NInterAll_OffDiagonal += X->Def.NTEInterAllOffDiagonal[timeidx];
+  Def::NInterAll_OffDiagonal += Def::NTEInterAllOffDiagonal[timeidx];
 }
 /** 
  * @brief main function of time evolution calculation
  * 
- * @param ExpecInterval interval to output expected values
- * @param X struct to get information of calculations.
  * @return 0 normally finished
  * @return -1 unnormally finished
  *
@@ -85,8 +83,7 @@ void MakeTEDInterAll(struct BindStruct *X, const int timeidx) {
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
 int CalcByTEM(
-  const int ExpecInterval,
-  struct EDMainCalStruct *X
+  const int ExpecInterval/**<[in] interval to output expected values*/
 ) {
   size_t byte_size;
   char *defname;
@@ -98,27 +95,27 @@ int CalcByTEM(
   int step_initial = 0;
   long int i_max = 0;
   FILE *fp;
-  double Time = X->Bind.Def.Param.Tinit;
-  double dt = ((X->Bind.Def.NLaser == 0) ? 0.0 : X->Bind.Def.Param.TimeSlice);
+  double Time = Param::Tinit;
+  double dt = ((Def::NLaser == 0) ? 0.0 : Param::TimeSlice);
   std::complex<double> **v2;  /**< Ttemporary vector for time evolution calculation, @f$ v2 = H*v1 = H^coef |psi(t)>@f$.*/
 
   global_norm = d_1d_allocate(1);
 
-  if (X->Bind.Def.NTETimeSteps < X->Bind.Def.Lanczos_max) {
+  if (Def::NTETimeSteps < Def::Lanczos_max) {
     fprintf(stdoutMPI, "Error: NTETimeSteps must be larger than Lanczos_max.\n");
     return -1;
   }
   step_spin = ExpecInterval;
-  X->Bind.Def.St = 0;
+  Def::St = 0;
   fprintf(stdoutMPI, "%s", "######  Start: TimeEvolution by Taylor Expansion.  ######\n\n");
-  if (X->Bind.Def.iInputEigenVec == FALSE) {
+  if (Def::iInputEigenVec == FALSE) {
     fprintf(stderr, "Error: A file of Inputvector is not inputted.\n");
     return -1;
   }
   else {
     //input v1
     fprintf(stdoutMPI, "%s", "An Initial Vector is inputted.\n");
-    TimeKeeper(&(X->Bind), "%s_TimeKeeper.dat", "Reading an input Eigenvector starts: %s", "a");
+    TimeKeeper("%s_TimeKeeper.dat", "Reading an input Eigenvector starts: %s", "a");
     GetFileNameByKW(KWSpectrumVec, &defname);
     strcat(defname, "_rank_%d.dat");
     sprintf(sdt, defname, myrank);
@@ -130,15 +127,15 @@ int CalcByTEM(
     }
     byte_size = fread(&step_initial, sizeof(int), 1, fp);
     byte_size = fread(&i_max, sizeof(long int), 1, fp);
-    if (i_max != X->Bind.Check.idim_max) {
+    if (i_max != Check::idim_max) {
       fprintf(stderr, "Error: A file of Inputvector is incorrect.\n");
       fclose(fp);
       printf("byte_size : %d\n", (int)byte_size);
       exitMPI(-1);
     }
-    byte_size = fread(&v1[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
+    byte_size = fread(&v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
     fclose(fp);
-    if (X->Bind.Def.iReStart == RESTART_NOT || X->Bind.Def.iReStart == RESTART_OUT) {
+    if (Def::iReStart == RESTART_NOT || Def::iReStart == RESTART_OUT) {
       step_initial = 0;
     }
   }
@@ -165,65 +162,65 @@ int CalcByTEM(
   fclose(fp);
 
 
-  int iInterAllOffDiagonal_org = X->Bind.Def.NInterAll_OffDiagonal;
-  int iTransfer_org = X->Bind.Def.EDNTransfer;
-  v2 = cd_2d_allocate(X->Bind.Check.idim_max + 1, 1);
-  for (step_i = step_initial; step_i < X->Bind.Def.Lanczos_max; step_i++) {
-    X->Bind.Def.istep = step_i;
+  int iInterAllOffDiagonal_org = Def::NInterAll_OffDiagonal;
+  int iTransfer_org = Def::EDNTransfer;
+  v2 = cd_2d_allocate(Check::idim_max + 1, 1);
+  for (step_i = step_initial; step_i < Def::Lanczos_max; step_i++) {
+    Def::istep = step_i;
 
     //Reset total number of interactions (changed in MakeTED***function.)
-    X->Bind.Def.EDNTransfer = iTransfer_org;
-    X->Bind.Def.NInterAll_OffDiagonal = iInterAllOffDiagonal_org;
+    Def::EDNTransfer = iTransfer_org;
+    Def::NInterAll_OffDiagonal = iInterAllOffDiagonal_org;
 
-    if (step_i % (X->Bind.Def.Lanczos_max / 10) == 0) {
-      fprintf(stdoutMPI, "    step_i/total_step = %d/%d \n", step_i, X->Bind.Def.Lanczos_max);
+    if (step_i % (Def::Lanczos_max / 10) == 0) {
+      fprintf(stdoutMPI, "    step_i/total_step = %d/%d \n", step_i, Def::Lanczos_max);
     }
 
-    if (X->Bind.Def.NLaser != 0) {
-      TransferWithPeierls(&(X->Bind), Time);
+    if (Def::NLaser != 0) {
+      TransferWithPeierls(Time);
     }
     else {
       // common procedure
-      Time = X->Bind.Def.TETime[step_i];
+      Time = Def::TETime[step_i];
       if (step_i == 0) dt = 0.0;
       else {
-        dt = X->Bind.Def.TETime[step_i] - X->Bind.Def.TETime[step_i - 1];
+        dt = Def::TETime[step_i] - Def::TETime[step_i - 1];
       }
-      X->Bind.Def.Param.TimeSlice = dt;
+      Param::TimeSlice = dt;
 
       // Set interactions
-      if (X->Bind.Def.NTETransferMax != 0 && X->Bind.Def.NTEInterAllMax != 0) {
+      if (Def::NTETransferMax != 0 && Def::NTEInterAllMax != 0) {
         fprintf(stdoutMPI,
           "Error: Time Evolution mode does not support TEOneBody and TETwoBody interactions at the same time. \n");
         return -1;
       }
-      else if (X->Bind.Def.NTETransferMax > 0) { //One-Body type
-        MakeTEDTransfer(&(X->Bind), step_i);
+      else if (Def::NTETransferMax > 0) { //One-Body type
+        MakeTEDTransfer(step_i);
       }
-      else if (X->Bind.Def.NTEInterAllMax > 0) { //Two-Body type
-        MakeTEDInterAll(&(X->Bind), step_i);
+      else if (Def::NTEInterAllMax > 0) { //Two-Body type
+        MakeTEDInterAll(step_i);
       }
       //[e] Yoshimi
     }
 
     if (step_i == step_initial) {
-      TimeKeeperWithStep(&(X->Bind), "%s_Time_TE_Step.dat", "step %d:TE begins: %s", "w", step_i);
+      TimeKeeperWithStep("%s_Time_TE_Step.dat", "step %d:TE begins: %s", "w", step_i);
     }
     else {
-      TimeKeeperWithStep(&(X->Bind), "%s_Time_TE_Step.dat", "step %d:TE begins: %s", "a", step_i);
+      TimeKeeperWithStep("%s_Time_TE_Step.dat", "step %d:TE begins: %s", "a", step_i);
     }
-    MultiplyForTEM(&(X->Bind), v2);
+    MultiplyForTEM(v2);
     //Add Diagonal Parts
     //Multiply Diagonal
-    expec_energy_flct(&(X->Bind), 1, v0, v1);
+    expec_energy_flct(1, v0, v1);
 
-    if (X->Bind.Def.NLaser > 0) Time += dt;
+    if (Def::NLaser > 0) Time += dt;
     if (childfopenMPI(sdt_phys, "a", &fp) != 0) {
       return -1;
     }
     fprintf(fp, "%.16lf  %.16lf %.16lf %.16lf %.16lf %d\n",
-            Time, X->Bind.Phys.energy[0], X->Bind.Phys.var[0],
-            X->Bind.Phys.doublon[0], X->Bind.Phys.num[0], step_i);
+            Time, Phys::energy[0], Phys::var[0],
+            Phys::doublon[0], Phys::num[0], step_i);
     fclose(fp);
 
     if (childfopenMPI(sdt_norm, "a", &fp) != 0) {
@@ -236,39 +233,39 @@ int CalcByTEM(
       return -1;
     }
     fprintf(fp, "%.16lf %.16lf %.16lf %.16lf %.16lf %.16lf %.16lf %d\n", 
-      Time, X->Bind.Phys.num[0], X->Bind.Phys.num2[0], X->Bind.Phys.doublon[0],
-            X->Bind.Phys.doublon2[0], X->Bind.Phys.Sz[0], X->Bind.Phys.Sz2[0], step_i);
+      Time, Phys::num[0], Phys::num2[0], Phys::doublon[0],
+            Phys::doublon2[0], Phys::Sz[0], Phys::Sz2[0], step_i);
     fclose(fp);
 
     if (step_i % step_spin == 0) {
-      expec_cisajs(&(X->Bind), 1, v2, v1);
-      expec_cisajscktaltdc(&(X->Bind), 1, v2, v1);
+      expec_cisajs(1, v2, v1);
+      expec_cisajscktaltdc(1, v2, v1);
     }
-    if (X->Bind.Def.iOutputEigenVec == TRUE) {
-      if (step_i % X->Bind.Def.Param.OutputInterval == 0) {
-        sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", X->Bind.Def.CDataFileHead, step_i, myrank);
+    if (Def::iOutputEigenVec == TRUE) {
+      if (step_i % Param::OutputInterval == 0) {
+        sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", Def::CDataFileHead, step_i, myrank);
         if (childfopenALL(sdt, "wb", &fp) != 0) {
           fclose(fp);
           exitMPI(-1);
         }
         fwrite(&step_i, sizeof(step_i), 1, fp);
-        fwrite(&X->Bind.Check.idim_max, sizeof(long int), 1, fp);
-        fwrite(&v1[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
+        fwrite(&Check::idim_max, sizeof(long int), 1, fp);
+        fwrite(&v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
         fclose(fp);
       }
     }
-  }/*for (step_i = step_initial; step_i < X->Bind.Def.Lanczos_max; step_i++)*/
+  }/*for (step_i = step_initial; step_i < Def::Lanczos_max; step_i++)*/
   free_cd_2d_allocate(v2);
 
-  if (X->Bind.Def.iOutputEigenVec == TRUE) {
-    sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", X->Bind.Def.CDataFileHead, rand_i, myrank);
+  if (Def::iOutputEigenVec == TRUE) {
+    sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", Def::CDataFileHead, rand_i, myrank);
     if (childfopenALL(sdt, "wb", &fp) != 0) {
       fclose(fp);
       exitMPI(-1);
     }
     fwrite(&step_i, sizeof(step_i), 1, fp);
-    fwrite(&X->Bind.Check.idim_max, sizeof(long int), 1, fp);
-    fwrite(&v1[0][0], sizeof(std::complex<double>), X->Bind.Check.idim_max + 1, fp);
+    fwrite(&Check::idim_max, sizeof(long int), 1, fp);
+    fwrite(&v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
     fclose(fp);
   }
 

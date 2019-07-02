@@ -19,55 +19,28 @@
 
 #include "Common.hpp"
 
-int mltplySpin(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-
-int mltplyHalfSpin(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-
-int mltplyGeneralSpin(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-
-
-int mltplySpinGC(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-
-int mltplyHalfSpinGC(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-
-int mltplyGeneralSpinGC(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-
-int mltplySpinGCBoost(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-
-void GC_child_general_int_spin
-(
+int mltplySpin( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
+int mltplyHalfSpin( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
+int mltplyGeneralSpin( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
+int mltplySpinGC( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
+int mltplyHalfSpinGC( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
+int mltplyGeneralSpinGC( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
+int mltplySpinGCBoost( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
+void GC_child_general_int_spin(
  int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- struct BindStruct *X
- );
+ std::complex<double> **tmp_v1 );
 
-void child_general_int_spin
-(
+void child_general_int_spin(int nstate, std::complex<double>** tmp_v0,
+ std::complex<double> **tmp_v1 );
+void GC_child_exchange_spin(
  int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- struct BindStruct *X
- );
+ std::complex<double> **tmp_v1);
 
-
-void GC_child_exchange_spin
-(
+void child_exchange_spin(
  int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- struct BindStruct *X
- );
+ std::complex<double> **tmp_v1 );
 
-void child_exchange_spin
-(
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- struct BindStruct *X
- );
-
-void GC_child_pairlift_spin
-(
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- struct BindStruct *X
- );
+void GC_child_pairlift_spin(int nstate, std::complex<double>** tmp_v0,
+ std::complex<double> **tmp_v1 );
 
 #endif

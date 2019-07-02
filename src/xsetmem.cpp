@@ -32,16 +32,12 @@
 
 ///
 /// \brief Set size of memories headers of output files.
-/// \param X [out] BindStruct to get headers of files.\n
 /// Output: CDataFileHead, CParaFileHead
 /// \version 0.1
-void setmem_HEAD
-(
- struct BindStruct *X
- )
+void setmem_HEAD()
 {
-  X->Def.CDataFileHead = (char*)malloc(D_FileNameMax*sizeof(char));
-  X->Def.CParaFileHead = (char*)malloc(D_FileNameMax*sizeof(char));
+  Def::CDataFileHead = (char*)malloc(D_FileNameMax*sizeof(char));
+  Def::CParaFileHead = (char*)malloc(D_FileNameMax*sizeof(char));
 }
 
 ///
@@ -49,117 +45,109 @@ void setmem_HEAD
 /// \param X [in,out] BindStruct to get information of Def and Phys structs.
 /// \param xBoost [in,out] Struct for Boost mode.
 /// \version 0.1
-void setmem_def
-(
- struct BindStruct *X,
- struct BoostList *xBoost
- ) {
-  X->Def.Tpow = li_1d_allocate(2 * X->Def.Nsite + 2);
-  X->Def.OrgTpow = li_1d_allocate(2 * X->Def.Nsite + 2);
-  X->Def.SiteToBit = li_1d_allocate(X->Def.Nsite + 1);
-  X->Def.LocSpn = i_1d_allocate(X->Def.Nsite);
-  X->Phys.spin_real_cor = d_1d_allocate(X->Def.Nsite * X->Def.Nsite);
-  X->Phys.charge_real_cor = d_1d_allocate(X->Def.Nsite * X->Def.Nsite);
-  X->Phys.loc_spin_z = d_1d_allocate(X->Def.Nsite * X->Def.Nsite);
-  X->Def.EDChemi = i_1d_allocate(X->Def.NInterAll + X->Def.NTransfer);
-  X->Def.EDSpinChemi = i_1d_allocate(X->Def.NInterAll + X->Def.NTransfer);
-  X->Def.EDParaChemi = d_1d_allocate(X->Def.NInterAll + X->Def.NTransfer);
-  X->Def.GeneralTransfer = i_2d_allocate(X->Def.NTransfer, 4);
-  X->Def.ParaGeneralTransfer = cd_1d_allocate(X->Def.NTransfer);
+void setmem_def()
+{
+  Def::Tpow = li_1d_allocate(2 * Def::Nsite + 2);
+  Def::OrgTpow = li_1d_allocate(2 * Def::Nsite + 2);
+  Def::SiteToBit = li_1d_allocate(Def::Nsite + 1);
+  Def::LocSpn = i_1d_allocate(Def::Nsite);
+  Phys::spin_real_cor = d_1d_allocate(Def::Nsite * Def::Nsite);
+  Phys::charge_real_cor = d_1d_allocate(Def::Nsite * Def::Nsite);
+  Phys::loc_spin_z = d_1d_allocate(Def::Nsite * Def::Nsite);
+  Def::EDChemi = i_1d_allocate(Def::NInterAll + Def::NTransfer);
+  Def::EDSpinChemi = i_1d_allocate(Def::NInterAll + Def::NTransfer);
+  Def::EDParaChemi = d_1d_allocate(Def::NInterAll + Def::NTransfer);
+  Def::GeneralTransfer = i_2d_allocate(Def::NTransfer, 4);
+  Def::ParaGeneralTransfer = cd_1d_allocate(Def::NTransfer);
 
-  if (X->Def.iCalcType == TimeEvolution) {
-    X->Def.EDGeneralTransfer = i_2d_allocate(X->Def.NTransfer + X->Def.NTETransferMax, 4);
-    X->Def.EDParaGeneralTransfer = cd_1d_allocate(X->Def.NTransfer + X->Def.NTETransferMax);
+  if (Def::iCalcType == TimeEvolution) {
+    Def::EDGeneralTransfer = i_2d_allocate(Def::NTransfer + Def::NTETransferMax, 4);
+    Def::EDParaGeneralTransfer = cd_1d_allocate(Def::NTransfer + Def::NTETransferMax);
   } else {
-    X->Def.EDGeneralTransfer = i_2d_allocate(X->Def.NTransfer, 4);
-    X->Def.EDParaGeneralTransfer = cd_1d_allocate(X->Def.NTransfer);
+    Def::EDGeneralTransfer = i_2d_allocate(Def::NTransfer, 4);
+    Def::EDParaGeneralTransfer = cd_1d_allocate(Def::NTransfer);
   }
 
-  X->Def.CoulombIntra = i_2d_allocate(X->Def.NCoulombIntra, 1);
-  X->Def.ParaCoulombIntra = d_1d_allocate(X->Def.NCoulombIntra);
-  X->Def.CoulombInter = i_2d_allocate(X->Def.NCoulombInter + X->Def.NIsingCoupling, 2);
-  X->Def.ParaCoulombInter = d_1d_allocate(X->Def.NCoulombInter + X->Def.NIsingCoupling);
-  X->Def.HundCoupling = i_2d_allocate(X->Def.NHundCoupling + X->Def.NIsingCoupling, 2);
-  X->Def.ParaHundCoupling = d_1d_allocate(X->Def.NHundCoupling + X->Def.NIsingCoupling);
-  X->Def.PairHopping = i_2d_allocate(X->Def.NPairHopping, 2);
-  X->Def.ParaPairHopping = d_1d_allocate(X->Def.NPairHopping);
-  X->Def.ExchangeCoupling = i_2d_allocate(X->Def.NExchangeCoupling, 2);
-  X->Def.ParaExchangeCoupling = d_1d_allocate(X->Def.NExchangeCoupling);
-  X->Def.PairLiftCoupling = i_2d_allocate(X->Def.NPairLiftCoupling, 2);
-  X->Def.ParaPairLiftCoupling = d_1d_allocate(X->Def.NPairLiftCoupling);
+  Def::CoulombIntra = i_2d_allocate(Def::NCoulombIntra, 1);
+  Def::ParaCoulombIntra = d_1d_allocate(Def::NCoulombIntra);
+  Def::CoulombInter = i_2d_allocate(Def::NCoulombInter + Def::NIsingCoupling, 2);
+  Def::ParaCoulombInter = d_1d_allocate(Def::NCoulombInter + Def::NIsingCoupling);
+  Def::HundCoupling = i_2d_allocate(Def::NHundCoupling + Def::NIsingCoupling, 2);
+  Def::ParaHundCoupling = d_1d_allocate(Def::NHundCoupling + Def::NIsingCoupling);
+  Def::PairHopping = i_2d_allocate(Def::NPairHopping, 2);
+  Def::ParaPairHopping = d_1d_allocate(Def::NPairHopping);
+  Def::ExchangeCoupling = i_2d_allocate(Def::NExchangeCoupling, 2);
+  Def::ParaExchangeCoupling = d_1d_allocate(Def::NExchangeCoupling);
+  Def::PairLiftCoupling = i_2d_allocate(Def::NPairLiftCoupling, 2);
+  Def::ParaPairLiftCoupling = d_1d_allocate(Def::NPairLiftCoupling);
 
-  X->Def.InterAll = i_2d_allocate(X->Def.NInterAll, 8);
-  X->Def.ParaInterAll = cd_1d_allocate(X->Def.NInterAll);
+  Def::InterAll = i_2d_allocate(Def::NInterAll, 8);
+  Def::ParaInterAll = cd_1d_allocate(Def::NInterAll);
 
-  X->Def.CisAjt = i_2d_allocate(X->Def.NCisAjt, 4);
-  X->Def.CisAjtCkuAlvDC = i_2d_allocate(X->Def.NCisAjtCkuAlvDC, 8);
+  Def::CisAjt = i_2d_allocate(Def::NCisAjt, 4);
+  Def::CisAjtCkuAlvDC = i_2d_allocate(Def::NCisAjtCkuAlvDC, 8);
 
-  X->Def.NSingleExcitationOperator = i_1d_allocate(X->Def.NNSingleExcitationOperator);
-  X->Def.SingleExcitationOperator = (int***)malloc(sizeof(int**)*X->Def.NNSingleExcitationOperator);
-  X->Def.ParaSingleExcitationOperator = (std::complex<double>**)malloc(
-    sizeof(std::complex<double>*)*X->Def.NNSingleExcitationOperator);
-  X->Def.NPairExcitationOperator = i_1d_allocate(X->Def.NNPairExcitationOperator);
-  X->Def.PairExcitationOperator = (int***)malloc(sizeof(int**)*X->Def.NNPairExcitationOperator);
-  X->Def.ParaPairExcitationOperator = (std::complex<double>**)malloc(
-    sizeof(std::complex<double>*)*X->Def.NNPairExcitationOperator);
+  Def::NSingleExcitationOperator = i_1d_allocate(Def::NNSingleExcitationOperator);
+  Def::SingleExcitationOperator = (int***)malloc(sizeof(int**)*Def::NNSingleExcitationOperator);
+  Def::ParaSingleExcitationOperator = (std::complex<double>**)malloc(
+    sizeof(std::complex<double>*)*Def::NNSingleExcitationOperator);
+  Def::NPairExcitationOperator = i_1d_allocate(Def::NNPairExcitationOperator);
+  Def::PairExcitationOperator = (int***)malloc(sizeof(int**)*Def::NNPairExcitationOperator);
+  Def::ParaPairExcitationOperator = (std::complex<double>**)malloc(
+    sizeof(std::complex<double>*)*Def::NNPairExcitationOperator);
 
-  X->Def.ParaLaser = d_1d_allocate(X->Def.NLaser);
+  Def::ParaLaser = d_1d_allocate(Def::NLaser);
 
-  xBoost->list_6spin_star = i_2d_allocate(xBoost->R0 * xBoost->num_pivot, 7);
-  xBoost->list_6spin_pair = i_3d_allocate(xBoost->R0 * xBoost->num_pivot, 7, 15);
-  xBoost->arrayJ = cd_3d_allocate(xBoost->NumarrayJ, 3, 3);
+  Boost::list_6spin_star = i_2d_allocate(Boost::R0 * Boost::num_pivot, 7);
+  Boost::list_6spin_pair = i_3d_allocate(Boost::R0 * Boost::num_pivot, 7, 15);
+  Boost::arrayJ = cd_3d_allocate(Boost::NumarrayJ, 3, 3);
 
   int NInterAllSet;
-  NInterAllSet = (X->Def.iCalcType == TimeEvolution) ? X->Def.NInterAll + X->Def.NTEInterAllMax : X->Def.NInterAll;
-  X->Def.InterAll_OffDiagonal = i_2d_allocate(NInterAllSet, 8);
-  X->Def.ParaInterAll_OffDiagonal = cd_1d_allocate(NInterAllSet);
-  X->Def.InterAll_Diagonal = i_2d_allocate(NInterAllSet, 4);
-  X->Def.ParaInterAll_Diagonal = d_1d_allocate(NInterAllSet);
+  NInterAllSet = (Def::iCalcType == TimeEvolution) ? Def::NInterAll + Def::NTEInterAllMax : Def::NInterAll;
+  Def::InterAll_OffDiagonal = i_2d_allocate(NInterAllSet, 8);
+  Def::ParaInterAll_OffDiagonal = cd_1d_allocate(NInterAllSet);
+  Def::InterAll_Diagonal = i_2d_allocate(NInterAllSet, 4);
+  Def::ParaInterAll_Diagonal = d_1d_allocate(NInterAllSet);
 
-  if (X->Def.iCalcType == TimeEvolution) {
-    X->Def.TETime = d_1d_allocate(X->Def.NTETimeSteps);
+  if (Def::iCalcType == TimeEvolution) {
+    Def::TETime = d_1d_allocate(Def::NTETimeSteps);
     //Time-dependent Transfer
-    X->Def.NTETransfer = i_1d_allocate(X->Def.NTETimeSteps);
-    X->Def.NTETransferDiagonal = i_1d_allocate(X->Def.NTETimeSteps);
-    X->Def.TETransfer = i_3d_allocate(X->Def.NTETimeSteps, X->Def.NTETransferMax, 4);
-    X->Def.TETransferDiagonal = i_3d_allocate(X->Def.NTETimeSteps, X->Def.NTETransferMax, 2);
-    X->Def.ParaTETransfer = cd_2d_allocate(X->Def.NTETimeSteps, X->Def.NTETransferMax);
-    X->Def.ParaTETransferDiagonal = d_2d_allocate(X->Def.NTETimeSteps, X->Def.NTETransferMax);
+    Def::NTETransfer = i_1d_allocate(Def::NTETimeSteps);
+    Def::NTETransferDiagonal = i_1d_allocate(Def::NTETimeSteps);
+    Def::TETransfer = i_3d_allocate(Def::NTETimeSteps, Def::NTETransferMax, 4);
+    Def::TETransferDiagonal = i_3d_allocate(Def::NTETimeSteps, Def::NTETransferMax, 2);
+    Def::ParaTETransfer = cd_2d_allocate(Def::NTETimeSteps, Def::NTETransferMax);
+    Def::ParaTETransferDiagonal = d_2d_allocate(Def::NTETimeSteps, Def::NTETransferMax);
     //Time-dependent InterAll
-    X->Def.NTEInterAll = i_1d_allocate(X->Def.NTETimeSteps);
-    X->Def.NTEInterAllDiagonal = i_1d_allocate(X->Def.NTETimeSteps);
-    X->Def.TEInterAll = i_3d_allocate(X->Def.NTETimeSteps, X->Def.NTEInterAllMax, 8);
-    X->Def.TEInterAllDiagonal = i_3d_allocate(X->Def.NTETimeSteps, X->Def.NTEInterAllMax, 4);
-    X->Def.ParaTEInterAll = cd_2d_allocate(X->Def.NTETimeSteps, X->Def.NTEInterAllMax);
-    X->Def.ParaTEInterAllDiagonal = d_2d_allocate(X->Def.NTETimeSteps, X->Def.NTEInterAllMax);
-    X->Def.NTEInterAllOffDiagonal = i_1d_allocate(X->Def.NTETimeSteps);
-    X->Def.TEInterAllOffDiagonal = i_3d_allocate(X->Def.NTETimeSteps, X->Def.NTEInterAllMax, 8);
-    X->Def.ParaTEInterAllOffDiagonal = cd_2d_allocate(X->Def.NTETimeSteps, X->Def.NTEInterAllMax);
+    Def::NTEInterAll = i_1d_allocate(Def::NTETimeSteps);
+    Def::NTEInterAllDiagonal = i_1d_allocate(Def::NTETimeSteps);
+    Def::TEInterAll = i_3d_allocate(Def::NTETimeSteps, Def::NTEInterAllMax, 8);
+    Def::TEInterAllDiagonal = i_3d_allocate(Def::NTETimeSteps, Def::NTEInterAllMax, 4);
+    Def::ParaTEInterAll = cd_2d_allocate(Def::NTETimeSteps, Def::NTEInterAllMax);
+    Def::ParaTEInterAllDiagonal = d_2d_allocate(Def::NTETimeSteps, Def::NTEInterAllMax);
+    Def::NTEInterAllOffDiagonal = i_1d_allocate(Def::NTETimeSteps);
+    Def::TEInterAllOffDiagonal = i_3d_allocate(Def::NTETimeSteps, Def::NTEInterAllMax, 8);
+    Def::ParaTEInterAllOffDiagonal = cd_2d_allocate(Def::NTETimeSteps, Def::NTEInterAllMax);
     //Time-dependent Chemi generated by InterAll diagonal components
-    X->Def.NTEChemi = i_1d_allocate(X->Def.NTETimeSteps);
-    X->Def.TEChemi = i_2d_allocate(X->Def.NTETimeSteps, X->Def.NTEInterAllMax);
-    X->Def.SpinTEChemi = i_2d_allocate(X->Def.NTETimeSteps, X->Def.NTEInterAllMax);
-    X->Def.ParaTEChemi = d_2d_allocate(X->Def.NTETimeSteps, X->Def.NTEInterAllMax);
+    Def::NTEChemi = i_1d_allocate(Def::NTETimeSteps);
+    Def::TEChemi = i_2d_allocate(Def::NTETimeSteps, Def::NTEInterAllMax);
+    Def::SpinTEChemi = i_2d_allocate(Def::NTETimeSteps, Def::NTEInterAllMax);
+    Def::ParaTEChemi = d_2d_allocate(Def::NTETimeSteps, Def::NTEInterAllMax);
   }
 }
-
-
 ///
 /// \brief Set size of memories for vectors(vg, v0, v1, v2, vec, alpha, beta), lists (list_1, list_2_1, list_2_2, list_Diagonal) and Phys(BindStruct.PhysList) struct in the case of Full Diag mode.
-/// \param X [in,out] BindStruct to give information and give size of memories for Hamiltonian, vectors, lists and Phys struct in the case of Full Diag mode.
 /// \retval -1 Fail to set memories.
 /// \retval 0 Normal to set memories.
 /// \version 0.1
-int setmem_large
-(
-  struct BindStruct *X
-) {
+int setmem_large()
+{
   int nstate;
 
-  if (GetlistSize(X) == TRUE) {
-    list_1 = li_1d_allocate(X->Check.idim_max + 1);
-    list_2_1 = li_1d_allocate(X->Large.SizeOflist_2_1);
-    list_2_2 = li_1d_allocate(X->Large.SizeOflist_2_2);
+  if (GetlistSize() == TRUE) {
+    list_1 = li_1d_allocate(Check::idim_max + 1);
+    list_2_1 = li_1d_allocate(Large::SizeOflist_2_1);
+    list_2_2 = li_1d_allocate(Large::SizeOflist_2_2);
     if (list_1 == NULL
       || list_2_1 == NULL
       || list_2_2 == NULL
@@ -168,84 +156,82 @@ int setmem_large
     }
   }
 
-  list_Diagonal = d_1d_allocate(X->Check.idim_max + 1);
+  list_Diagonal = d_1d_allocate(Check::idim_max + 1);
 
-  if (X->Def.iCalcType == FullDiag) {
-    nstate = X->Check.idim_max;
+  if (Def::iCalcType == FullDiag) {
+    nstate = Check::idim_max;
   }
-  else if (X->Def.iCalcType == CG) {
-    nstate = X->Def.k_exct;
+  else if (Def::iCalcType == CG) {
+    nstate = Def::k_exct;
   }
-  else if (X->Def.iCalcType == TPQCalc) {
+  else if (Def::iCalcType == TPQCalc) {
     nstate = NumAve;
   }
   else {
     nstate = 1;
   }
-  v0 = cd_2d_allocate(X->Check.idim_max + 1, nstate);
-  v1 = cd_2d_allocate(X->Check.idim_max + 1, nstate);
+  v0 = cd_2d_allocate(Check::idim_max + 1, nstate);
+  v1 = cd_2d_allocate(Check::idim_max + 1, nstate);
 #ifdef __MPI
   long int MAXidim_max;
-  MAXidim_max = MaxMPI_li(X->Check.idim_max);
-  if (GetlistSize(X) == TRUE) list_1buf = li_1d_allocate(MAXidim_max + 1);
+  MAXidim_max = MaxMPI_li(Check::idim_max);
+  if (GetlistSize() == TRUE) list_1buf = li_1d_allocate(MAXidim_max + 1);
   v1buf = cd_2d_allocate(MAXidim_max + 1, nstate);
 #else
-  if (X->Def.iCalcType == CG) v1buf = cd_2d_allocate(X->Check.idim_max + 1, nstate);
+  if (Def::iCalcType == CG) v1buf = cd_2d_allocate(Check::idim_max + 1, nstate);
 #endif // MPI
 
-  X->Phys.num_down = d_1d_allocate(nstate);
-  X->Phys.num_up = d_1d_allocate(nstate);
-  X->Phys.num = d_1d_allocate(nstate);
-  X->Phys.num2 = d_1d_allocate(nstate);
-  X->Phys.energy = d_1d_allocate(nstate);
-  X->Phys.var = d_1d_allocate(nstate);
-  X->Phys.doublon = d_1d_allocate(nstate);
-  X->Phys.doublon2 = d_1d_allocate(nstate);
-  X->Phys.Sz = d_1d_allocate(nstate);
-  X->Phys.Sz2 = d_1d_allocate(nstate);
-  X->Phys.s2 = d_1d_allocate(nstate);
+  Phys::num_down = d_1d_allocate(nstate);
+  Phys::num_up = d_1d_allocate(nstate);
+  Phys::num = d_1d_allocate(nstate);
+  Phys::num2 = d_1d_allocate(nstate);
+  Phys::energy = d_1d_allocate(nstate);
+  Phys::var = d_1d_allocate(nstate);
+  Phys::doublon = d_1d_allocate(nstate);
+  Phys::doublon2 = d_1d_allocate(nstate);
+  Phys::Sz = d_1d_allocate(nstate);
+  Phys::Sz2 = d_1d_allocate(nstate);
+  Phys::s2 = d_1d_allocate(nstate);
 
   fprintf(stdoutMPI, "%s", "\n######  LARGE ALLOCATE FINISH !  ######\n\n");
   return 0;
 }
 ///
 /// \brief Set size of lists for the canonical ensemble.
-/// \param X [in,out] Give the information for getting the list size and get the lists.\n
 /// Input: DefineList.iFlgGeneralSpin, DefineList.iCalcModel, DefineList.Nsite, CheckList.sdim, DefineList.Tpow, DefineList.SiteToBit\n
 /// Output: LargeList.SizeOflist_2_1, LargeList.SizeOflist_2_2, LargeList.SizeOflistjb
 /// \retval TRUE: Normally finished
 /// \retval FALSE: Unnormally finished
 /// \author Kazuyoshi Yoshimi
 /// \version 1.2
-int GetlistSize(
-  struct BindStruct *X
-) {
-  switch (X->Def.iCalcModel) {
+int GetlistSize()
+{
+  switch (Def::iCalcModel) {
   case Spin:
   case Hubbard:
   case HubbardNConserved:
   case Kondo:
   case KondoGC:
-    if (X->Def.iFlgGeneralSpin == FALSE) {
-      if (X->Def.iCalcModel == Spin && X->Def.Nsite % 2 == 1) {
-        X->Large.SizeOflist_2_1 = X->Check.sdim * 2 + 2;
+    if (Def::iFlgGeneralSpin == FALSE) {
+      if (Def::iCalcModel == Spin && Def::Nsite % 2 == 1) {
+        Large::SizeOflist_2_1 = Check::sdim * 2 + 2;
       }
       else {
-        X->Large.SizeOflist_2_1 = X->Check.sdim + 2;
+        Large::SizeOflist_2_1 = Check::sdim + 2;
       }
-      X->Large.SizeOflist_2_2 = X->Check.sdim + 2;
-      X->Large.SizeOflistjb = X->Check.sdim + 2;
+      Large::SizeOflist_2_2 = Check::sdim + 2;
+      Large::SizeOflistjb = Check::sdim + 2;
     }
     else {//for spin-canonical general spin
-      X->Large.SizeOflist_2_1 = X->Check.sdim + 2;
-      X->Large.SizeOflist_2_2 =
-        X->Def.Tpow[X->Def.Nsite - 1] * X->Def.SiteToBit[X->Def.Nsite - 1] / X->Check.sdim + 2;
-      X->Large.SizeOflistjb =
-        X->Def.Tpow[X->Def.Nsite - 1] * X->Def.SiteToBit[X->Def.Nsite - 1] / X->Check.sdim + 2;
+      Large::SizeOflist_2_1 = Check::sdim + 2;
+      Large::SizeOflist_2_2 =
+        Def::Tpow[Def::Nsite - 1] * Def::SiteToBit[Def::Nsite - 1] / Check::sdim + 2;
+      Large::SizeOflistjb =
+        Def::Tpow[Def::Nsite - 1] * Def::SiteToBit[Def::Nsite - 1] / Check::sdim + 2;
     }
     break;
   default:
-    X->Large.SizeOflistjb = 1;
+    Large::SizeOflistjb = 1;
     return FALSE;
   }
   return TRUE;
@@ -256,7 +242,7 @@ int GetlistSize(
  To set memory, we use ```?malloc%``` function defined in @c mfmemmory.h,
  where ```?``` indicates the type of the array and ```%``` means the dimension.
 
- For example, ```char_malloc2(X, N1, N2)``` function sets the size of memories N1@f$ \times @f$ N2 characters to two dimensional array X.
+ For example, ```char_malloc2(N1, N2)``` function sets the size of memories N1@f$ \times @f$ N2 characters to two dimensional array X.
 
  To set memories to global arrays, we prepare two functions, setmem_def() and setmem_large() functions.
 

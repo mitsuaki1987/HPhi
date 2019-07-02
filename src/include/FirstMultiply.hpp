@@ -16,5 +16,5 @@
 #pragma once
 #include "Common.hpp"
 int FirstMultiply(
-  struct BindStruct *X
+  
   );

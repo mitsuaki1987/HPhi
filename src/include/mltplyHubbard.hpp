@@ -19,70 +19,20 @@
 
 #include "Common.hpp"
 
-int mltplyHubbard(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
+int mltplyHubbard(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+int mltplyHubbardGC(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
 
-int mltplyHubbardGC(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
+void GC_child_general_hopp(int nstate, std::complex<double>** tmp_v0, 
+  std::complex<double>** tmp_v1, std::complex<double> trans);
 
-void GC_child_general_hopp
-(
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- struct BindStruct *X,
- std::complex<double> trans
- );
-
-
-void GC_child_general_int(
-                         int nstate, std::complex<double> **tmp_v0,
-                         std::complex<double> **tmp_v1,
-                         struct BindStruct *X
-                         );
-
-
-void child_general_int
-(
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- struct BindStruct *X
- );
-
+void GC_child_general_int(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+void child_general_int(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
 void child_general_hopp
-(int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, struct BindStruct *X, std::complex<double> trans);
+(int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1,  std::complex<double> trans);
 
-void child_exchange
-(
- int nstate, 
-  std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- struct BindStruct *X
- );
-
-void child_pairhopp
-(
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- struct BindStruct *X
- );
-
-void GC_child_exchange
-(
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- struct BindStruct *X
- );
-
-void GC_child_pairlift
-(
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- struct BindStruct *X
- );
-
-void GC_child_pairhopp
-(
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- struct BindStruct *X
- );
+void child_exchange(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+void child_pairhopp( int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1);
+void GC_child_exchange(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+void GC_child_pairhopp(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
 
 #endif

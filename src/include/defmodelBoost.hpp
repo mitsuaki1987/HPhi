@@ -19,7 +19,6 @@
 
 #pragma once
 #include <complex>
-#include "struct.hpp"
 
 void defmodelBoost(
   long int W0,

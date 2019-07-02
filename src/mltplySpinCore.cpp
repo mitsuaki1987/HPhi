@@ -33,25 +33,24 @@
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int child_exchange_spin_GetInfo(
-  int iExchange,//!<[in] Counter of exchange interaction
-  struct BindStruct *X//!<[inout]
+  int iExchange//!<[in] Counter of exchange interaction
 ) {
-  int isite1 = X->Def.ExchangeCoupling[iExchange][0] + 1;
-  int isite2 = X->Def.ExchangeCoupling[iExchange][1] + 1;
+  int isite1 = Def::ExchangeCoupling[iExchange][0] + 1;
+  int isite2 = Def::ExchangeCoupling[iExchange][1] + 1;
   /**
    Set the exchange coupling constant (LargeList::tmp_J)
   */
-  X->Large.tmp_J = X->Def.ParaExchangeCoupling[iExchange];
+  Large::tmp_J = Def::ParaExchangeCoupling[iExchange];
   /**
   Set the bit mask for computing spin state of both site
   (LargeList::is1_up, LargeList::is2_up)
   */
-  X->Large.is1_up = X->Def.Tpow[isite1 - 1];
-  X->Large.is2_up = X->Def.Tpow[isite2 - 1];
+  Large::is1_up = Def::Tpow[isite1 - 1];
+  Large::is2_up = Def::Tpow[isite2 - 1];
   /**
   Set the bit mask for exchange 2 spins (LargeList::isA_spin)
   */
-  X->Large.isA_spin = X->Large.is1_up + X->Large.is2_up;
+  Large::isA_spin = Large::is1_up + Large::is2_up;
   return 0;
 }/*int child_exchange_spin_GetInfo*/
 /**
@@ -61,25 +60,24 @@ int child_exchange_spin_GetInfo(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int child_pairlift_spin_GetInfo(
-  int iPairLift,
-  struct BindStruct *X
+  int iPairLift
 ) {
-  int isite1 = X->Def.PairLiftCoupling[iPairLift][0] + 1;
-  int isite2 = X->Def.PairLiftCoupling[iPairLift][1] + 1;
+  int isite1 = Def::PairLiftCoupling[iPairLift][0] + 1;
+  int isite2 = Def::PairLiftCoupling[iPairLift][1] + 1;
   /**
   Set the pairlift coupling constant (LargeList::tmp_J)
   */
-  X->Large.tmp_J = X->Def.ParaPairLiftCoupling[iPairLift];
+  Large::tmp_J = Def::ParaPairLiftCoupling[iPairLift];
   /**
   Set the bit mask for computing spin state of both site
   (LargeList::is1_up, LargeList::is2_up)
   */
-  X->Large.is1_up = X->Def.Tpow[isite1 - 1];
-  X->Large.is2_up = X->Def.Tpow[isite2 - 1];
+  Large::is1_up = Def::Tpow[isite1 - 1];
+  Large::is2_up = Def::Tpow[isite2 - 1];
   /**
   Set the bit mask for exchange 2 spins (LargeList::isA_spin)
   */
-  X->Large.isA_spin = X->Large.is1_up + X->Large.is2_up;
+  Large::isA_spin = Large::is1_up + Large::is2_up;
   return 0;
 }/*int child_pairlift_spin_GetInfo*/
 /**
@@ -89,7 +87,7 @@ int child_pairlift_spin_GetInfo(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int child_general_int_spin_GetInfo(
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int isite1,//!<[in] Site 1
   long int isite2,//!<[in] Site 2
   long int sigma1,//!<[in] Sigma 1, final state of site 1
@@ -101,23 +99,23 @@ int child_general_int_spin_GetInfo(
   /**
   Set the pairlift coupling constant (LargeList::tmp_J)
   */
-  X->Large.tmp_V = tmp_V;
-  X->Large.isite1 = isite1;
-  X->Large.isite2 = isite2;
+  Large::tmp_V = tmp_V;
+  Large::isite1 = isite1;
+  Large::isite2 = isite2;
   /**
   Set the bit mask for computing spin state of both site
   (LargeList::is1_up, LargeList::is2_up)
   */
-  X->Large.is1_up = X->Def.Tpow[isite1 - 1];
-  X->Large.is2_up = X->Def.Tpow[isite2 - 1];
+  Large::is1_up = Def::Tpow[isite1 - 1];
+  Large::is2_up = Def::Tpow[isite2 - 1];
   /**
   Set the bit mask for general interaction 
   (LargeList::is1_spin, LargeList::is2_spin, LargeList::is3_spin, LargeList::is4_spin)
   */
-  X->Large.is1_spin = sigma1;
-  X->Large.is2_spin = sigma2;
-  X->Large.is3_spin = sigma3;
-  X->Large.is4_spin = sigma4;
+  Large::is1_spin = sigma1;
+  Large::is2_spin = sigma2;
+  Large::is3_spin = sigma3;
+  Large::is4_spin = sigma4;
   return 0;
 }/*int child_general_int_spin_GetInfo*/
 
@@ -137,7 +135,7 @@ int child_general_int_spin_GetInfo(
 */
 int X_Spin_CisAit(
   long int j,//!<[in] Index of initial wavefunction
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int is1_spin,//!<[in] Bit mask for computing spin state
   long int sigma2,//!<[in] Spin state at site 2
   long int *tmp_off//!<[out] Index of final wavefunction
@@ -146,7 +144,7 @@ int X_Spin_CisAit(
   long int off;
   list_1_j = list_1_org[j];
   if (X_SpinGC_CisAit(list_1_j + 1, is1_spin, sigma2, &off) != 0) {
-    GetOffComp(list_2_1, list_2_2, off, X->Large.irght, X->Large.ilft, X->Large.ihfbit, tmp_off);
+    GetOffComp(list_2_1, list_2_2, off, Large::irght, Large::ilft, Large::ihfbit, tmp_off);
     return 1;
   }
   else {
@@ -232,7 +230,7 @@ int X_SpinGC_CisAit(
 */
 int X_child_exchange_spin_element(
   long int j,//!<[in] Index of initial wavefunction
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int isA_up,//!<[in] Bit mask for spin 1
   long int isB_up,//!<[in] Bit mask for spin 2
   long int sigmaA,//!<[in] Target of spin 1
@@ -240,9 +238,9 @@ int X_child_exchange_spin_element(
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   long int iexchg, off;
-  long int irght = X->Large.irght;
-  long int ilft = X->Large.ilft;
-  long int ihfbit = X->Large.ihfbit;
+  long int irght = Large::irght;
+  long int ilft = Large::ilft;
+  long int ihfbit = Large::ihfbit;
   long int ibit_tmp_A, ibit_tmp_B;
 
   ibit_tmp_A = ((list_1[j] & isA_up) / isA_up);
@@ -267,16 +265,16 @@ void child_exchange_spin_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[out] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   long int off;
   long int iexchg;
-  long int is_up = X->Large.isA_spin;
-  long int irght = X->Large.irght;
-  long int ilft = X->Large.ilft;
-  long int ihfbit = X->Large.ihfbit;
-  std::complex<double> tmp_J = X->Large.tmp_J;
+  long int is_up = Large::isA_spin;
+  long int irght = Large::irght;
+  long int ilft = Large::ilft;
+  long int ihfbit = Large::ihfbit;
+  std::complex<double> tmp_J = Large::tmp_J;
   long int ibit_tmp;
   int one = 1;
 
@@ -300,11 +298,11 @@ void GC_child_exchange_spin_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[out] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
-  long int is_up = X->Large.isA_spin;
-  std::complex<double> tmp_J = X->Large.tmp_J;
+  long int is_up = Large::isA_spin;
+  std::complex<double> tmp_J = Large::tmp_J;
   long int list_1_j, list_1_off;
   int one = 1;
 
@@ -330,11 +328,11 @@ void GC_child_pairlift_spin_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[out] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  struct BindStruct *X,//!<[inout]
+  //!<[inout]
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
-  long int is_up = X->Large.isA_spin;
-  std::complex<double> tmp_J = X->Large.tmp_J;
+  long int is_up = Large::isA_spin;
+  std::complex<double> tmp_J = Large::tmp_J;
   int one = 1;
   long int list_1_off;
   long int list_1_j = j - 1;

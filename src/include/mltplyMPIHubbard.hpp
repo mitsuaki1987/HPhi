@@ -19,12 +19,10 @@
 
 #pragma once
 #include <complex>
-#include "struct.hpp"
 
 void GC_child_general_hopp_MPIdouble
 (
  long int itrans,
- struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
  );
@@ -36,7 +34,6 @@ void X_GC_child_general_hopp_MPIdouble
  int org_isite2,
  int org_ispin2,
  std::complex<double> tmp_trans,
- struct BindStruct *X ,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
  );
@@ -44,7 +41,6 @@ void X_GC_child_general_hopp_MPIdouble
 void GC_child_general_hopp_MPIsingle
 (
  long int itrans,
- struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
  );
@@ -56,7 +52,6 @@ void X_GC_child_general_hopp_MPIsingle
  int org_isite2,
  int org_ispin2,
  std::complex<double> tmp_trans,
- struct BindStruct *X ,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
  );
@@ -65,7 +60,6 @@ void X_GC_child_general_hopp_MPIsingle
 void child_general_hopp_MPIdouble
 (
  long int itrans,
- struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
  );
@@ -77,7 +71,6 @@ void X_child_general_hopp_MPIdouble
  int org_isite2,
  int org_ispin2,
  std::complex<double> tmp_trans,
- struct BindStruct *X ,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
  );
@@ -85,7 +78,6 @@ void X_child_general_hopp_MPIdouble
 void child_general_hopp_MPIsingle
 (
  long int itrans,
- struct BindStruct *X,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
  );
@@ -97,7 +89,6 @@ void X_child_general_hopp_MPIsingle
  int org_isite2,
  int org_ispin2,
  std::complex<double> tmp_trans,
- struct BindStruct *X ,
  int nstate, std::complex<double> **tmp_v0,
  std::complex<double> **tmp_v1
  );

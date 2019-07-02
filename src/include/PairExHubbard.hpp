@@ -17,14 +17,14 @@
 #include "Common.hpp"
 
 int GetPairExcitedStateHubbardGC(
- struct BindStruct *X,
+ 
  int nstate, std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
  std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
   int iEx
 );
 
 int GetPairExcitedStateHubbard(
-        struct BindStruct *X,
+        
         int nstate, std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
         std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
   int iEx

@@ -19,6 +19,6 @@
 
 #include "Common.hpp"
 
-int mltply(struct BindStruct *X, int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
+int mltply( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
 
 #endif /* HPHI_MLTPLY_H */

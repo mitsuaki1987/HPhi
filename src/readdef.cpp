@@ -204,8 +204,6 @@ int GetKWWithIdx(
 
 /**
  * @brief Function of Reading calcmod file.
- * @param[in] defname file name to read.
- * @param[out] X Define List for getting flags of calc-mode.
  * @retval 0 normally finished reading file.
  * @retval -1 unnormally finished reading file.
  * @version 0.1
@@ -213,92 +211,91 @@ int GetKWWithIdx(
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  **/
 int ReadcalcmodFile(
-                    const char *defname,
-                    struct DefineList *X
-                    )
+  const char* defname/**<[in] file name to read.*/
+)
 {
   FILE *fp;
   int itmp, iret;
   char ctmpLine[D_CharTmpReadDef+D_CharKWDMAX];
   char ctmp[D_CharKWDMAX];
-  X->iCalcType=0;
-  X->iFlgFiniteTemperature=0;
-  X->iCalcModel=0;
-  X->iOutputMode=0;
-  X->iCalcEigenVec=0;
-  X->iInitialVecType=0;
-  X->iOutputEigenVec=0;
-  X->iInputEigenVec=0;
-  X->iOutputHam=0;
-  X->iInputHam=0;
-  X->iOutputExVec = 0;
-  X->iFlgCalcSpec=0;
-  X->iReStart=0;
-  X->iFlgMPI=0;
-  X->iFlgScaLAPACK=0;
+  Def::iCalcType=0;
+  Def::iFlgFiniteTemperature=0;
+  Def::iCalcModel=0;
+  Def::iOutputMode=0;
+  Def::iCalcEigenVec=0;
+  Def::iInitialVecType=0;
+  Def::iOutputEigenVec=0;
+  Def::iInputEigenVec=0;
+  Def::iOutputHam=0;
+  Def::iInputHam=0;
+  Def::iOutputExVec = 0;
+  Def::iFlgCalcSpec=0;
+  Def::iReStart=0;
+  Def::iFlgMPI=0;
+  Def::iFlgScaLAPACK=0;
 #ifdef _MAGMA
-  X->iNGPU=2;
+  Def::iNGPU=2;
 #else
-  X->iNGPU=0;
+  Def::iNGPU=0;
 #endif
   /*=======================================================================*/
   fp = fopenMPI(defname, "r");
   if(fp==NULL) return ReadDefFileError(defname);
   /* read Parameters from calcmod.def*/
-  while( fgetsMPI(ctmpLine, D_CharTmpReadDef+D_CharKWDMAX, fp)!=NULL ){
+  while (fgetsMPI(ctmpLine, D_CharTmpReadDef + D_CharKWDMAX, fp) != NULL) {
     if( (iret=GetKWWithIdx(ctmpLine, ctmp, &itmp)) !=0){
       if(iret==1) continue;
       return(-1);
     }   
     if(CheckWords(ctmp, "CalcType")==0){
-      X->iCalcType=itmp;
-      if (X->iCalcType == Lanczos) {
+      Def::iCalcType=itmp;
+      if (Def::iCalcType == Lanczos) {
         fprintf(stdoutMPI, "  LOBPCG is used alternative to Lanczos.\n");
-        X->iCalcType = CG;
+        Def::iCalcType = CG;
       }
     }
     else if(CheckWords(ctmp, "FlgFiniteTemperature")==0){
-      X->iFlgFiniteTemperature = itmp;
+      Def::iFlgFiniteTemperature = itmp;
     }
     else if(CheckWords(ctmp, "CalcModel")==0){
-      X->iCalcModel=itmp;
+      Def::iCalcModel=itmp;
     }
     else if(CheckWords(ctmp, "OutputMode")==0){
-      X->iOutputMode=itmp;
+      Def::iOutputMode=itmp;
     }
     else if(CheckWords(ctmp, "CalcEigenVec")==0){
-      X->iCalcEigenVec=itmp;
+      Def::iCalcEigenVec=itmp;
     }
     else if(CheckWords(ctmp, "InitialVecType")==0){
-      X->iInitialVecType=itmp;
+      Def::iInitialVecType=itmp;
     }
     else if(CheckWords(ctmp, "OutputEigenVec")==0 || CheckWords(ctmp, "OEV")==0){
-      X->iOutputEigenVec=itmp;
+      Def::iOutputEigenVec=itmp;
     }
     else if(CheckWords(ctmp, "InputEigenVec")==0 || CheckWords(ctmp, "IEV")==0){
-      X->iInputEigenVec=itmp;
+      Def::iInputEigenVec=itmp;
     }
     else if(CheckWords(ctmp, "OutputHam")==0){
-      X->iOutputHam=itmp;
+      Def::iOutputHam=itmp;
     }
     else if(CheckWords(ctmp, "InputHam")==0){
-      X->iInputHam=itmp;
+      Def::iInputHam=itmp;
     }
     else if(CheckWords(ctmp, "OutputExcitedVec")==0|| CheckWords(ctmp, "OutputExVec")==0){
-      X->iOutputExVec=itmp;
+      Def::iOutputExVec=itmp;
     }
     else if(CheckWords(ctmp, "CalcSpec")==0 || CheckWords(ctmp, "CalcSpectrum")==0){
-      X->iFlgCalcSpec=itmp;
+      Def::iFlgCalcSpec=itmp;
     }
     else if(CheckWords(ctmp, "ReStart")==0){
-      X->iReStart=itmp;
+      Def::iReStart=itmp;
     }
     else if(CheckWords(ctmp, "NGPU")==0){
-        X->iNGPU=itmp;
+        Def::iNGPU=itmp;
     }
     else if(CheckWords(ctmp, "ScaLAPACK")==0){
 #ifdef _SCALAPACK
-      X->iFlgScaLAPACK=itmp;
+      Def::iFlgScaLAPACK=itmp;
 #endif
     }
     else{
@@ -309,64 +306,64 @@ int ReadcalcmodFile(
   fclose(fp);
     
   /* Check values*/
-  if(ValidateValue(X->iCalcModel, 0, NUM_CALCMODEL-1)){
+  if(ValidateValue(Def::iCalcModel, 0, NUM_CALCMODEL-1)){
     fprintf(stdoutMPI, "Error in %s\n CalcType: 0: Lanczos Method, 1: Thermal Pure Quantum State Method, 2: Full Diagonalization Method, 3: Calculation Spectrum mode.\n", defname);
     return (-1);
   }
-  if(ValidateValue(X->iCalcType, 0, NUM_CALCTYPE-1)){
+  if(ValidateValue(Def::iCalcType, 0, NUM_CALCTYPE-1)){
     fprintf(stdoutMPI, "Error in %s\n CalcType: 0: Lanczos Method, 1: Thermal Pure Quantum State Method, 2: Full Diagonalization Method, 3: Calculation Spectrum mode.\n", defname);
     return (-1);
   }
-  if(ValidateValue(X->iOutputMode, 0, NUM_OUTPUTMODE-1)){
+  if(ValidateValue(Def::iOutputMode, 0, NUM_OUTPUTMODE-1)){
     fprintf(stdoutMPI, "Error in %s\n OutputMode: \n 0: calc one body green function and two body green functions,\n 1: calc one body green function and two body green functions and correlatinos for charge and spin.\n", defname);
     return (-1);
   }
   
-  if(ValidateValue(X->iCalcEigenVec, -1, NUM_CALCEIGENVEC-1)){
+  if(ValidateValue(Def::iCalcEigenVec, -1, NUM_CALCEIGENVEC-1)){
     fprintf(stdoutMPI, "Error in %s\n CalcEigenVec: \n 0: Lanczos+CG method,\n 1: Lanczos method.\n", defname);
     return (-1);
   }
   
-  if(ValidateValue(X->iInitialVecType, 0, NUM_SETINITAILVEC-1)){
+  if(ValidateValue(Def::iInitialVecType, 0, NUM_SETINITAILVEC-1)){
     fprintf(stdoutMPI, "Error in %s\n InitialVecType: \n 0: complex type,\n 1: real type.\n", defname);
     return (-1);
   }
 
-  if(ValidateValue(X->iOutputHam, 0, NUM_OUTPUTHAM-1)){
+  if(ValidateValue(Def::iOutputHam, 0, NUM_OUTPUTHAM-1)){
     fprintf(stdoutMPI, "Error in %s\n OutputHam: \n 0: not output Hamiltonian,\n 1: output Hamiltonian.\n", defname);
     return (-1);
   }
-  if(ValidateValue(X->iInputHam, 0, NUM_INPUTHAM-1)){
+  if(ValidateValue(Def::iInputHam, 0, NUM_INPUTHAM-1)){
     fprintf(stdoutMPI, "Error in %s\n InputHam: 0: not input Hamiltonian,\n 1: input Hamiltonian.\n", defname);
     return (-1);
   }
-  if(X->iInputHam == 1 && X->iOutputHam==1){
+  if(Def::iInputHam == 1 && Def::iOutputHam==1){
     fprintf(stdoutMPI,
             "Error in %s\n OutputHam=1 and InputHam=1.\n", defname);
     return (-1);
   }
-  if(ValidateValue(X->iReStart, 0, NUM_RESTART-1)){
+  if(ValidateValue(Def::iReStart, 0, NUM_RESTART-1)){
     fprintf(stdoutMPI, "Error in %s Restart: \n 0: not restart (default).\n 1: output a restart vector.\n 2: input a restart vector and output a new restart vector.\n 3: input a restart vector.\n", defname);
     return (-1);
   }
-  if(X->iNGPU < 0){
+  if(Def::iNGPU < 0){
     fprintf(stdoutMPI, "Error in %s\n NGPU: NGPU must be greater than 0.\n", defname);
     return (-1);
   }
-  if(ValidateValue(X->iFlgScaLAPACK, 0, 1)){
+  if(ValidateValue(Def::iFlgScaLAPACK, 0, 1)){
     fprintf(stdoutMPI, "Error in %s\n NGPU: NGPU must be greater than 0.\n", defname);
     return (-1);
   }
 
   /* In the case of Full Diagonalization method(iCalcType=2)*/
-  if(X->iCalcType==2 && ValidateValue(X->iFlgFiniteTemperature, 0, 1)){
+  if(Def::iCalcType==2 && ValidateValue(Def::iFlgFiniteTemperature, 0, 1)){
     fprintf(stdoutMPI,
             "Error in %s\n FlgFiniteTemperature: Finite Temperature, 1: Zero Temperature.\n",
             defname);
     return (-1);
   }
 
-  if(X->iCalcType !=2 && X->iOutputHam ==TRUE) {
+  if(Def::iCalcType !=2 && Def::iOutputHam ==TRUE) {
     fprintf(stdoutMPI,
             "Error in %s\n OutputHam is only defined for FullDiag mode, CalcType=2.\n",
             defname);
@@ -445,18 +442,13 @@ int GetFileName(
 /** 
  * @brief  Function of reading information about "ModPara" file and total number of parameters from other def files.
  *
- * @param[in] xNameListFile List of Input File names.
- * @param[out] X Define List for getting flags of calc-mode.
- * @param[out] xBoost Define List for getting flags of Boost calc-mode.
  * @retval 0 normally finished reading file.
  * @retval -1 unnormally finished reading file.
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
 int ReadDefFileNInt(
-  char *xNameListFile,
-  struct DefineList *X,
-  struct BoostList *xBoost
+  char *xNameListFile/**<[in]  List of Input File names*/
 )
 {
   FILE *fp;
@@ -464,19 +456,19 @@ int ReadDefFileNInt(
   char ctmp[D_CharTmpReadDef], ctmp2[256];
   int i, itmp;
   int iline = 0;
-  X->nvec = 0;
-  X->iFlgSpecOmegaMax = FALSE;
-  X->iFlgSpecOmegaMin = FALSE;
-  X->iFlgSpecOmegaOrg = FALSE;
-  X->iNOmega = 1000;
-  X->NCond = 0;
-  X->iFlgSzConserved = FALSE;
-  X->dcOmegaOrg = 0;
+  Def::nvec = 0;
+  Def::iFlgSpecOmegaMax = FALSE;
+  Def::iFlgSpecOmegaMin = FALSE;
+  Def::iFlgSpecOmegaOrg = FALSE;
+  Def::iNOmega = 1000;
+  Def::NCond = 0;
+  Def::iFlgSzConserved = FALSE;
+  Def::dcOmegaOrg = 0;
   int iReadNCond = FALSE;
-  xBoost->flgBoost = FALSE;
-  InitializeInteractionNum(X);
+  Boost::flgBoost = FALSE;
+  InitializeInteractionNum();
   NumAve = 1;
-  X->Param.ExpecInterval = 1;
+  Param::ExpecInterval = 1;
   cFileNameListFile = (char**)malloc(sizeof(char*)*D_iKWNumDef);
   for (i = 0; i < D_iKWNumDef; i++)
     cFileNameListFile[i] = (char*)malloc(sizeof(char)*D_CharTmpReadDef);
@@ -489,8 +481,8 @@ int ReadDefFileNInt(
   /*=======================================================================*/
   int iKWidx = 0;
   //Check the existence of Essensial Files.
-  X->READ = 0;
-  X->WRITE = 0;
+  Def::READ = 0;
+  Def::WRITE = 0;
 
   for (iKWidx = 0; iKWidx < D_iKWNumDef; iKWidx++) {
     strcpy(defname, cFileNameListFile[iKWidx]);
@@ -520,7 +512,7 @@ int ReadDefFileNInt(
     switch (iKWidx) {
     case KWCalcMod:
       /* Read calcmod.def---------------------------------------*/
-      if (ReadcalcmodFile(defname, X) != 0) {
+      if (ReadcalcmodFile(defname) != 0) {
         fclose(fp);
         return ReadDefFileError(defname);
       }
@@ -538,57 +530,57 @@ int ReadDefFileNInt(
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp); //5
   //! Read header name for files about data
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %s\n", ctmp, X->CDataFileHead); //6
+      sscanf(ctmp2, "%s %s\n", ctmp, Def::CDataFileHead); //6
   //! Read header name for files about parameters
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %s\n", ctmp, X->CParaFileHead); //7
+      sscanf(ctmp2, "%s %s\n", ctmp, Def::CParaFileHead); //7
   //! Read header (1 line).
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);   //8
       double dtmp, dtmp2;
-      X->read_hacker = 1;
+      Def::read_hacker = 1;
       //! Read lines.
       while (fgetsMPI(ctmp2, 256, fp) != NULL) {
         if (*ctmp2 == '\n') continue;
         sscanf(ctmp2, "%s %lf %lf\n", ctmp, &dtmp, &dtmp2);
         if (CheckWords(ctmp, "Nsite") == 0) {
-          X->Nsite = (int)dtmp;
+          Def::Nsite = (int)dtmp;
         }
         else if (CheckWords(ctmp, "Nup") == 0) {
-          X->Nup = (int)dtmp;
+          Def::Nup = (int)dtmp;
         }
         else if (CheckWords(ctmp, "Ndown") == 0) {
-          X->Ndown = (int)dtmp;
-          X->Total2Sz = X->Nup - X->Ndown;
+          Def::Ndown = (int)dtmp;
+          Def::Total2Sz = Def::Nup - Def::Ndown;
         }
         else if (CheckWords(ctmp, "2Sz") == 0) {
-          X->Total2Sz = (int)dtmp;
-          X->iFlgSzConserved = TRUE;
+          Def::Total2Sz = (int)dtmp;
+          Def::iFlgSzConserved = TRUE;
         }
         else if (CheckWords(ctmp, "Ncond") == 0) {
           if ((int)dtmp < 0) {
             fprintf(stdoutMPI, "Error in %s\n Ncond must be greater than 0.\n", defname);
             return (-1);
           }
-          X->NCond = (int)dtmp;
+          Def::NCond = (int)dtmp;
           iReadNCond = TRUE;
         }
         else if (CheckWords(ctmp, "Lanczos_max") == 0) {
-          X->Lanczos_max = (int)dtmp;
+          Def::Lanczos_max = (int)dtmp;
         }
         else if (CheckWords(ctmp, "initial_iv") == 0) {
-          X->initial_iv = (int)dtmp;
+          Def::initial_iv = (int)dtmp;
         }
         else if (CheckWords(ctmp, "nvec") == 0) {
-          X->nvec = (int)dtmp;
+          Def::nvec = (int)dtmp;
         }
         else if (CheckWords(ctmp, "exct") == 0) {
-          X->k_exct = (int)dtmp;
+          Def::k_exct = (int)dtmp;
         }
         else if (CheckWords(ctmp, "LanczosEps") == 0) {
-          X->LanczosEps = (int)dtmp;
+          Def::LanczosEps = (int)dtmp;
         }
         else if (CheckWords(ctmp, "LanczosTarget") == 0) {
-          X->LanczosTarget = (int)dtmp;
+          Def::LanczosTarget = (int)dtmp;
         }
         else if (CheckWords(ctmp, "LargeValue") == 0) {
           LargeValue = dtmp;
@@ -597,44 +589,44 @@ int ReadDefFileNInt(
           NumAve = (int)dtmp;
         }
         else if (strcmp(ctmp, "TimeSlice") == 0) {
-          X->Param.TimeSlice = dtmp;
+          Param::TimeSlice = dtmp;
         }
         else if (strcmp(ctmp, "ExpandCoef") == 0) {
-          X->Param.ExpandCoef = (int)dtmp;
+          Param::ExpandCoef = (int)dtmp;
         }
         else if (strcmp(ctmp, "OutputInterval") == 0) {
-          X->Param.OutputInterval = (int)dtmp;
+          Param::OutputInterval = (int)dtmp;
         }
         else if (CheckWords(ctmp, "ExpecInterval") == 0) {
-          X->Param.ExpecInterval = (int)dtmp;
+          Param::ExpecInterval = (int)dtmp;
         }
         else if (strcmp(ctmp, "Tinit") == 0) {
-          X->Param.Tinit = dtmp;
+          Param::Tinit = dtmp;
         }
         else if (CheckWords(ctmp, "CalcHS") == 0) {
-          X->read_hacker = (int)dtmp;
+          Def::read_hacker = (int)dtmp;
         }
         else if (CheckWords(ctmp, "OmegaMax") == 0) {
-          X->dcOmegaMax = dtmp + dtmp2 * I;
-          X->iFlgSpecOmegaMax = TRUE;
+          Def::dcOmegaMax = dtmp + dtmp2 * I;
+          Def::iFlgSpecOmegaMax = TRUE;
         }
         else if (CheckWords(ctmp, "OmegaMin") == 0) {
-          X->dcOmegaMin = dtmp + dtmp2 * I;
-          X->iFlgSpecOmegaMin = TRUE;
+          Def::dcOmegaMin = dtmp + dtmp2 * I;
+          Def::iFlgSpecOmegaMin = TRUE;
         }
         else if (CheckWords(ctmp, "OmegaIm") == 0) {
-          X->dcOmegaOrg += dtmp * I;
-          X->iFlgSpecOmegaOrg = TRUE;
+          Def::dcOmegaOrg += dtmp * I;
+          Def::iFlgSpecOmegaOrg = TRUE;
         }
         else if (CheckWords(ctmp, "OmegaOrg") == 0) {
-          X->dcOmegaOrg += dtmp + dtmp2 * I;
-          X->iFlgSpecOmegaOrg = TRUE;
+          Def::dcOmegaOrg += dtmp + dtmp2 * I;
+          Def::iFlgSpecOmegaOrg = TRUE;
         }
         else if (CheckWords(ctmp, "NOmega") == 0) {
-          X->iNOmega = (int)dtmp;
+          Def::iNOmega = (int)dtmp;
         }
         else if (CheckWords(ctmp, "TargetTPQRand") == 0) {
-          X->irand = (int)dtmp;
+          Def::irand = (int)dtmp;
         }
         else {
           return (-1);
@@ -644,96 +636,96 @@ int ReadDefFileNInt(
 
     case KWLocSpin:
       // Read locspn.def
-      X->iFlgGeneralSpin = FALSE;
+      Def::iFlgGeneralSpin = FALSE;
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NLocSpn));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NLocSpn));
       break;
     case KWTrans:
       // Read transfer.def
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NTransfer));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NTransfer));
       break;
     case KWCoulombIntra:
       /* Read coulombintra.def----------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NCoulombIntra));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NCoulombIntra));
       break;
     case KWCoulombInter:
       /* Read coulombinter.def----------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NCoulombInter));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NCoulombInter));
       break;
     case KWHund:
       /* Read hund.def------------------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NHundCoupling));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NHundCoupling));
       break;
     case KWPairHop:
       /* Read pairhop.def---------------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NPairHopping));
-      X->NPairHopping *= 2;
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NPairHopping));
+      Def::NPairHopping *= 2;
       break;
     case KWExchange:
       /* Read exchange.def--------------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NExchangeCoupling));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NExchangeCoupling));
       break;
     case KWIsing:
       /* Read ising.def--------------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NIsingCoupling));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NIsingCoupling));
       break;
     case KWPairLift:
       /* Read exchange.def--------------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NPairLiftCoupling));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NPairLiftCoupling));
       break;
     case KWInterAll:
       /* Read InterAll.def--------------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NInterAll));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NInterAll));
       break;
     case KWOneBodyG:
       /* Read cisajs.def----------------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NCisAjt));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NCisAjt));
       break;
     case KWTwoBodyG:
       /* Read cisajscktaltdc.def--------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NCisAjtCkuAlvDC));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NCisAjtCkuAlvDC));
       break;
     case KWLaser:
       /* Read laser.def--------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NLaser));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NLaser));
       break;
 
     case KWTEOneBody: {
-      if (X->iCalcType != TimeEvolution) break;
+      if (Def::iCalcType != TimeEvolution) break;
       /* Read TEOnebody.def--------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NTETimeSteps));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NTETimeSteps));
       fgetsMPI(ctmp2, 256, fp);
       fgetsMPI(ctmp2, 256, fp);
       fgetsMPI(ctmp2, 256, fp);
       int iTETransMax = 0;
-      if (X->NTETimeSteps > 0) {
+      if (Def::NTETimeSteps > 0) {
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
           sscanf(ctmp2, "%lf %d \n", &dtmp, &itmp);
           for (i = 0; i < itmp; ++i) {
@@ -742,20 +734,20 @@ int ReadDefFileNInt(
           if (iTETransMax < itmp) iTETransMax = itmp;
         }
       }
-      X->NTETransferMax = iTETransMax;
+      Def::NTETransferMax = iTETransMax;
       break;
     }
     case KWTETwoBody: {
-      if (X->iCalcType != TimeEvolution) break;
+      if (Def::iCalcType != TimeEvolution) break;
       /* Read TETwobody.def--------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NTETimeSteps));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NTETimeSteps));
       fgetsMPI(ctmp2, 256, fp);
       fgetsMPI(ctmp2, 256, fp);
       fgetsMPI(ctmp2, 256, fp);
       int iTEInterAllMax = 0;
-      if (X->NTETimeSteps > 0) {
+      if (Def::NTETimeSteps > 0) {
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
           sscanf(ctmp2, "%lf %d \n", &dtmp, &itmp);
           for (i = 0; i < itmp; ++i) {
@@ -764,31 +756,31 @@ int ReadDefFileNInt(
           if (iTEInterAllMax < itmp) iTEInterAllMax = itmp;
         }
       }
-      X->NTEInterAllMax = iTEInterAllMax;
+      Def::NTEInterAllMax = iTEInterAllMax;
       break;
     }
 
     case KWBoost:
       /* Read boost.def--------------------------------*/
-      xBoost->NumarrayJ = 0;
-      xBoost->W0 = 0;
-      xBoost->R0 = 0;
-      xBoost->num_pivot = 0;
-      xBoost->ishift_nspin = 0;
-      xBoost->flgBoost = TRUE;
+      Boost::NumarrayJ = 0;
+      Boost::W0 = 0;
+      Boost::R0 = 0;
+      Boost::num_pivot = 0;
+      Boost::ishift_nspin = 0;
+      Boost::flgBoost = TRUE;
       //first line is skipped
       fgetsMPI(ctmp2, 256, fp);
       //read numarrayJ
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%d\n", &(xBoost->NumarrayJ));
+      sscanf(ctmp2, "%d\n", &(Boost::NumarrayJ));
       //skipp arrayJ
-      for (iline = 0; iline < xBoost->NumarrayJ * 3; iline++) {
+      for (iline = 0; iline < Boost::NumarrayJ * 3; iline++) {
         fgetsMPI(ctmp2, 256, fp);
       }
       //read W0 R0 num_pivot ishift_nspin
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%ld %ld %ld %ld\n", &(xBoost->W0), &(xBoost->R0), &(xBoost->num_pivot),
-        &(xBoost->ishift_nspin));
+      sscanf(ctmp2, "%ld %ld %ld %ld\n", &(Boost::W0), &(Boost::R0), &(Boost::num_pivot),
+        &(Boost::ishift_nspin));
 
       break;
 
@@ -796,14 +788,14 @@ int ReadDefFileNInt(
       /* Read singleexcitation.def----------------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NNSingleExcitationOperator));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NNSingleExcitationOperator));
       break;
 
     case KWPairExcitation:
       /* Read pairexcitation.def----------------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
-      sscanf(ctmp2, "%s %d\n", ctmp, &(X->NNPairExcitationOperator));
+      sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NNPairExcitationOperator));
       break;
 
     default:
@@ -816,45 +808,45 @@ int ReadDefFileNInt(
   }
 
   //Sz, Ncond
-  switch (X->iCalcModel) {
+  switch (Def::iCalcModel) {
   case Spin:
   case Hubbard:
   case Kondo:
   case SpinlessFermion:
 
     if (iReadNCond == TRUE) {
-      if (X->iCalcModel == Spin) {
+      if (Def::iCalcModel == Spin) {
         fprintf(stdoutMPI, "For Spin, Ncond should not be defined.\n");
         return(-1);
       }
       else {
-        if (X->iFlgSzConserved == TRUE) {
-          if (X->iCalcModel == SpinlessFermion) {
+        if (Def::iFlgSzConserved == TRUE) {
+          if (Def::iCalcModel == SpinlessFermion) {
             fprintf(stdoutMPI, "  Warning: For Spinless fermion, 2Sz should not be defined.\n");
-            X->Ne = X->NCond;
-            X->Nup = X->NCond;
-            X->Ndown = 0;
+            Def::Ne = Def::NCond;
+            Def::Nup = Def::NCond;
+            Def::Ndown = 0;
             break;
           }
-          X->Nup = X->NLocSpn + X->NCond + X->Total2Sz;
-          X->Ndown = X->NLocSpn + X->NCond - X->Total2Sz;
-          X->Nup /= 2;
-          X->Ndown /= 2;
-          X->Ne = X->Nup + X->Ndown;
+          Def::Nup = Def::NLocSpn + Def::NCond + Def::Total2Sz;
+          Def::Ndown = Def::NLocSpn + Def::NCond - Def::Total2Sz;
+          Def::Nup /= 2;
+          Def::Ndown /= 2;
+          Def::Ne = Def::Nup + Def::Ndown;
         }
         else {
-          if (X->iCalcModel == Hubbard) {
-            X->Ne = X->NCond;
-            if (X->Ne < 1) {
+          if (Def::iCalcModel == Hubbard) {
+            Def::Ne = Def::NCond;
+            if (Def::Ne < 1) {
               fprintf(stdoutMPI, "Ncond is incorrect.\n");
               return(-1);
             }
-            X->iCalcModel = HubbardNConserved;
+            Def::iCalcModel = HubbardNConserved;
           }
-          else if (X->iCalcModel == SpinlessFermion) {
-            X->Ne = X->NCond;
-            X->Nup = X->NCond;
-            X->Ndown = 0;
+          else if (Def::iCalcModel == SpinlessFermion) {
+            Def::Ne = Def::NCond;
+            Def::Nup = Def::NCond;
+            Def::Ndown = 0;
           }
           else {
             fprintf(stdoutMPI, " 2Sz is not defined.\n");
@@ -863,19 +855,19 @@ int ReadDefFileNInt(
         }
       }
     }
-    else if (iReadNCond == FALSE && X->iFlgSzConserved == TRUE) {
-      if (X->iCalcModel != Spin) {
+    else if (iReadNCond == FALSE && Def::iFlgSzConserved == TRUE) {
+      if (Def::iCalcModel != Spin) {
         fprintf(stdoutMPI, " NCond is not defined.\n");
         return(-1);
       }
-      X->Nup = X->NLocSpn + X->Total2Sz;
-      X->Ndown = X->NLocSpn - X->Total2Sz;
-      X->Nup /= 2;
-      X->Ndown /= 2;
+      Def::Nup = Def::NLocSpn + Def::Total2Sz;
+      Def::Ndown = Def::NLocSpn - Def::Total2Sz;
+      Def::Nup /= 2;
+      Def::Ndown /= 2;
     }
     else {
-      if (X->Nup == 0 && X->Ndown == 0) {
-        if (X->iCalcModel == Spin) {
+      if (Def::Nup == 0 && Def::Ndown == 0) {
+        if (Def::iCalcModel == Spin) {
           fprintf(stdoutMPI, " 2Sz is not defined.\n");
           return(-1);
         }
@@ -886,16 +878,16 @@ int ReadDefFileNInt(
       }
     }
 
-    if (X->iCalcModel == Spin) {
-      X->Ne = X->Nup;
+    if (Def::iCalcModel == Spin) {
+      Def::Ne = Def::Nup;
     }
     else {
-      if (X->Ne == 0) {
-        X->Ne = X->Nup + X->Ndown;
+      if (Def::Ne == 0) {
+        Def::Ne = Def::Nup + Def::Ndown;
       }
-      if (X->NLocSpn > X->Ne) {
+      if (Def::NLocSpn > Def::Ne) {
         fprintf(stdoutMPI, "%s", "Error: Ne=Nup+Ndown must be (Ne >= NLocalSpin).\n");
-        fprintf(stdoutMPI, "NLocalSpin=%d, Ne=%d\n", X->NLocSpn, X->Ne);
+        fprintf(stdoutMPI, "NLocalSpin=%d, Ne=%d\n", Def::NLocSpn, Def::Ne);
         return(-1);
       }
     }
@@ -904,7 +896,7 @@ int ReadDefFileNInt(
   case KondoGC:
   case HubbardGC:
   case SpinlessFermionGC:
-    if (iReadNCond == TRUE || X->iFlgSzConserved == TRUE) {
+    if (iReadNCond == TRUE || Def::iFlgSzConserved == TRUE) {
       fprintf(stdoutMPI, "\n  Warning: For GC, both Ncond and 2Sz should not be defined.\n");
       //return(-1);
     }
@@ -914,15 +906,15 @@ int ReadDefFileNInt(
   }
 
   /* Check values (Positive)*/
-  if (X->Nsite <= 0) {// Nsite must be positve
+  if (Def::Nsite <= 0) {// Nsite must be positve
     fprintf(stdoutMPI, "Error in %s\n Nsite must be positive value.\n", defname);
     return (-1);
   }
-  if (X->Lanczos_max <= 0) {// Lanczos_max must be positive
+  if (Def::Lanczos_max <= 0) {// Lanczos_max must be positive
     fprintf(stdoutMPI, "Error in %s\n Lanczos_max must be positive value.\n", defname);
     return (-1);
   }
-  if (X->LanczosEps <= 0) {// Lanczos_eps must be positive
+  if (Def::LanczosEps <= 0) {// Lanczos_eps must be positive
     fprintf(stdoutMPI, "Error in %s\n Lanczos_eps must be positive value.\n", defname);
     return (-1);
   }
@@ -930,36 +922,36 @@ int ReadDefFileNInt(
     fprintf(stdoutMPI, "Error in %s\n NumAve must be positive value.\n", defname);
     return (-1);
   }
-  if (X->Param.ExpecInterval <= 0) {// Interval to calculate expected values must be positive
+  if (Param::ExpecInterval <= 0) {// Interval to calculate expected values must be positive
     fprintf(stdoutMPI, "Error in %s\n ExpecInterval must be positive value.\n", defname);
     return (-1);
   }
-  if (X->nvec == 0) {
-    X->nvec = X->Lanczos_max;
+  if (Def::nvec == 0) {
+    Def::nvec = Def::Lanczos_max;
   }
 
-  if (X->nvec < X->k_exct) {
-    X->nvec = X->k_exct;
+  if (Def::nvec < Def::k_exct) {
+    Def::nvec = Def::k_exct;
   }
-  if (X->LanczosTarget < X->k_exct) X->LanczosTarget = X->k_exct;
+  if (Def::LanczosTarget < Def::k_exct) Def::LanczosTarget = Def::k_exct;
 
-  if (ValidateValue(X->k_exct, 1, X->nvec)) {
+  if (ValidateValue(Def::k_exct, 1, Def::nvec)) {
     fprintf(stdoutMPI, "Error in %s \n exct=%d must be greater than 1 and smaller than nvec=%d.\n", 
-      defname, X->k_exct, X->nvec);
+      defname, Def::k_exct, Def::nvec);
     return (-1);
   }
 
-  if (X->k_exct > X->LanczosTarget) {
-    fprintf(stdoutMPI, "Error in %s\n LanczosTarget=%d must be greater than exct=%d.\n", defname, X->LanczosTarget, X->k_exct);
+  if (Def::k_exct > Def::LanczosTarget) {
+    fprintf(stdoutMPI, "Error in %s\n LanczosTarget=%d must be greater than exct=%d.\n", defname, Def::LanczosTarget, Def::k_exct);
     return (-1);
   }
 
-  X->fidx = 0;
-  X->NeMPI = X->Ne;
-  X->NupMPI = X->Nup;
-  X->NdownMPI = X->Ndown;
-  X->NupOrg = X->Nup;
-  X->NdownOrg = X->Ndown;
+  Def::fidx = 0;
+  Def::NeMPI = Def::Ne;
+  Def::NupMPI = Def::Nup;
+  Def::NdownMPI = Def::Ndown;
+  Def::NupOrg = Def::Nup;
+  Def::NdownOrg = Def::Ndown;
   return 0;
 }
 ///
@@ -1267,7 +1259,7 @@ int GetDiagonalInterAll
  **/
 static int CheckTETransferHermite
 (
-  struct DefineList *X,
+  
   const int NTETransfer,
   const int idx
 )
@@ -1294,11 +1286,11 @@ static int CheckTETransferHermite
   //copy
   for (i = 0; i < NTETransfer; i++) {
     for (j = 0; j < 4; j++) {
-      tmp_TETransfer[i][j] = X->TETransfer[idx][i][j];
-      X->TETransfer[idx][i][j] = 0;
+      tmp_TETransfer[i][j] = Def::TETransfer[idx][i][j];
+      Def::TETransfer[idx][i][j] = 0;
     }
-    tmp_paraTETransfer[i] = X->ParaTETransfer[idx][i];
-    X->ParaTETransfer[idx][i] = 0.0;
+    tmp_paraTETransfer[i] = Def::ParaTETransfer[idx][i];
+    Def::ParaTETransfer[idx][i] = 0.0;
   }
 
   for (i = 0; i < NTETransfer; i++) {
@@ -1339,17 +1331,17 @@ static int CheckTETransferHermite
                 }
                 if (isite1 != isite2 || isigma1 != isigma2) {
                   for (itmpIdx = 0; itmpIdx < 4; itmpIdx++) {
-                    X->TETransfer[idx][2 * icntHermite][itmpIdx] = tmp_TETransfer[i][itmpIdx];
-                    X->TETransfer[idx][2 * icntHermite + 1][itmpIdx] = tmp_TETransfer[j][itmpIdx];
+                    Def::TETransfer[idx][2 * icntHermite][itmpIdx] = tmp_TETransfer[i][itmpIdx];
+                    Def::TETransfer[idx][2 * icntHermite + 1][itmpIdx] = tmp_TETransfer[j][itmpIdx];
                   }
-                  X->ParaTETransfer[idx][2 * icntHermite] = tmp_paraTETransfer[i];
-                  X->ParaTETransfer[idx][2 * icntHermite + 1] = tmp_paraTETransfer[j];
+                  Def::ParaTETransfer[idx][2 * icntHermite] = tmp_paraTETransfer[i];
+                  Def::ParaTETransfer[idx][2 * icntHermite + 1] = tmp_paraTETransfer[j];
                   icntHermite++;
                 }
                 else {
-                  X->TETransferDiagonal[idx][icntchemi][0] = tmp_TETransfer[i][0];
-                  X->TETransferDiagonal[idx][icntchemi][1] = tmp_TETransfer[i][1];
-                  X->ParaTETransferDiagonal[idx][icntchemi] = real(tmp_paraTETransfer[i]);
+                  Def::TETransferDiagonal[idx][icntchemi][0] = tmp_TETransfer[i][0];
+                  Def::TETransferDiagonal[idx][icntchemi][1] = tmp_TETransfer[i][1];
+                  Def::ParaTETransferDiagonal[idx][icntchemi] = real(tmp_paraTETransfer[i]);
                   icntchemi += 1;
                 }
               }
@@ -1376,8 +1368,8 @@ static int CheckTETransferHermite
     return -1;
   }
 
-  X->NTETransfer[idx] = 2 * icntHermite;
-  X->NTETransferDiagonal[idx] = icntchemi;
+  Def::NTETransfer[idx] = 2 * icntHermite;
+  Def::NTETransferDiagonal[idx] = icntchemi;
 
 
   free_i_2d_allocate(tmp_TETransfer);
@@ -1396,10 +1388,7 @@ static int CheckTETransferHermite
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
-int ReadDefFileIdxPara(
-  struct DefineList *X,
-  struct BoostList *xBoost
-)
+int ReadDefFileIdxPara()
 {
   FILE *fp;
   char defname[D_FileNameMaxReadDef];
@@ -1442,21 +1431,21 @@ int ReadDefFileIdxPara(
     case KWLocSpin:
       /* Read locspn.def----------------------------------------*/
       while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-        if (idx == X->Nsite) {
+        if (idx == Def::Nsite) {
           fclose(fp);
           return ReadDefFileError(defname);
         }
 
         sscanf(ctmp2, "%d %d\n", &(xitmp[0]), &(xitmp[1]));
-        X->LocSpn[xitmp[0]] = xitmp[1];
-        X->SiteToBit[xitmp[0]] = (X->LocSpn[xitmp[0]] + 1);//2S+1
-        if (CheckSite(xitmp[0], X->Nsite) != 0) {
+        Def::LocSpn[xitmp[0]] = xitmp[1];
+        Def::SiteToBit[xitmp[0]] = (Def::LocSpn[xitmp[0]] + 1);//2S+1
+        if (CheckSite(xitmp[0], Def::Nsite) != 0) {
           fclose(fp);
           return ReadDefFileError(defname);
         }
         idx++;
       }
-      if (CheckLocSpin(X) == FALSE) {
+      if (CheckLocSpin() == FALSE) {
         fclose(fp);
         return ReadDefFileError(defname);
       }
@@ -1465,11 +1454,11 @@ int ReadDefFileIdxPara(
 
     case KWTrans:
       /* transfer.def--------------------------------------*/
-      if (X->NTransfer > 0) {
+      if (Def::NTransfer > 0) {
         icnt_trans = 0;
         while (fgetsMPI(ctmp2, 256, fp) != NULL)
         {
-          if (idx == X->NTransfer) {
+          if (idx == Def::NTransfer) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1483,7 +1472,7 @@ int ReadDefFileIdxPara(
             &dvalue_im
           );
 
-          if (CheckPairSite(isite1, isite2, X->Nsite) != 0) {
+          if (CheckPairSite(isite1, isite2, Def::Nsite) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1499,22 +1488,22 @@ int ReadDefFileIdxPara(
             }
           }
 
-          if (X->iCalcModel == Spin) {
+          if (Def::iCalcModel == Spin) {
             if (isite1 != isite2) {
               iboolLoc = 1;
               fprintf(stdoutMPI, "Warning: Site component of (i, j) =(%d, %d) is ignored.\n",
                 isite1, isite2);
             }
           }
-          else if (X->iCalcModel == Kondo) {
-            if (X->LocSpn[isite1] != ITINERANT || X->LocSpn[isite2] != ITINERANT) {
+          else if (Def::iCalcModel == Kondo) {
+            if (Def::LocSpn[isite1] != ITINERANT || Def::LocSpn[isite2] != ITINERANT) {
               if (isite1 != isite2) {
                 iboolLoc = 1;
                 fprintf(stdoutMPI, "Error: Site component of (i, j) =(%d, %d) is incorrect.\n", isite1, isite2);
               }
             }
           }
-          else if (X->iCalcModel == SpinlessFermion || X->iCalcModel == SpinlessFermionGC) {
+          else if (Def::iCalcModel == SpinlessFermion || Def::iCalcModel == SpinlessFermionGC) {
             if (isigma1 != 0 || isigma2 != 0) {
               //Not allowed
               fprintf(stderr,
@@ -1527,21 +1516,21 @@ int ReadDefFileIdxPara(
 
           iflg_trans = 0;
           for (i = 0; i < icnt_trans; i++) {
-            if (isite1 == X->GeneralTransfer[i][0] && isite2 == X->GeneralTransfer[i][2]
-              && isigma1 == X->GeneralTransfer[i][1] && isigma2 == X->GeneralTransfer[i][3])
+            if (isite1 == Def::GeneralTransfer[i][0] && isite2 == Def::GeneralTransfer[i][2]
+              && isigma1 == Def::GeneralTransfer[i][1] && isigma2 == Def::GeneralTransfer[i][3])
             {
-              X->ParaGeneralTransfer[i] += dvalue_re + dvalue_im * I;
+              Def::ParaGeneralTransfer[i] += dvalue_re + dvalue_im * I;
               iflg_trans = 1;
               continue;
             }
           }
 
           if (iflg_trans == 0) {
-            X->GeneralTransfer[icnt_trans][0] = isite1;
-            X->GeneralTransfer[icnt_trans][1] = isigma1;
-            X->GeneralTransfer[icnt_trans][2] = isite2;
-            X->GeneralTransfer[icnt_trans][3] = isigma2;
-            X->ParaGeneralTransfer[icnt_trans] = dvalue_re + dvalue_im * I;
+            Def::GeneralTransfer[icnt_trans][0] = isite1;
+            Def::GeneralTransfer[icnt_trans][1] = isigma1;
+            Def::GeneralTransfer[icnt_trans][2] = isite2;
+            Def::GeneralTransfer[icnt_trans][3] = isigma2;
+            Def::ParaGeneralTransfer[icnt_trans] = dvalue_re + dvalue_im * I;
             icnt_trans++;
           }
           idx++;
@@ -1553,14 +1542,14 @@ int ReadDefFileIdxPara(
         }
       }
 
-      X->NTransfer = icnt_trans;
+      Def::NTransfer = icnt_trans;
 
-      if (CheckSpinIndexForTrans(X) == FALSE) {
+      if (CheckSpinIndexForTrans() == FALSE) {
         fclose(fp);
         return(-1);
       }
 
-      if (CheckTransferHermite(X) != 0) {
+      if (CheckTransferHermite() != 0) {
         fprintf(stdoutMPI, "%s", "Error: NonHermite Pair exists in transfer integral. \n");
         fclose(fp);
         return(-1);
@@ -1569,18 +1558,18 @@ int ReadDefFileIdxPara(
 
     case KWCoulombIntra:
       /*coulombintra.def----------------------------------*/
-      if (X->NCoulombIntra > 0) {
+      if (Def::NCoulombIntra > 0) {
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-          if (idx == X->NCoulombIntra) {
+          if (idx == Def::NCoulombIntra) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
           sscanf(ctmp2, "%d %lf\n",
-            &(X->CoulombIntra[idx][0]),
-            &(X->ParaCoulombIntra[idx])
+            &(Def::CoulombIntra[idx][0]),
+            &(Def::ParaCoulombIntra[idx])
           );
 
-          if (CheckSite(X->CoulombIntra[idx][0], X->Nsite) != 0) {
+          if (CheckSite(Def::CoulombIntra[idx][0], Def::Nsite) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1591,20 +1580,20 @@ int ReadDefFileIdxPara(
 
     case KWCoulombInter:
       /*coulombinter.def----------------------------------*/
-      if (X->NCoulombInter > 0) {
+      if (Def::NCoulombInter > 0) {
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-          if (idx == X->NCoulombInter) {
+          if (idx == Def::NCoulombInter) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
 
           sscanf(ctmp2, "%d %d %lf\n",
-            &(X->CoulombInter[idx][0]),
-            &(X->CoulombInter[idx][1]),
-            &(X->ParaCoulombInter[idx])
+            &(Def::CoulombInter[idx][0]),
+            &(Def::CoulombInter[idx][1]),
+            &(Def::ParaCoulombInter[idx])
           );
 
-          if (CheckPairSite(X->CoulombInter[idx][0], X->CoulombInter[idx][1], X->Nsite) != 0) {
+          if (CheckPairSite(Def::CoulombInter[idx][0], Def::CoulombInter[idx][1], Def::Nsite) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1616,21 +1605,21 @@ int ReadDefFileIdxPara(
 
     case KWHund:
       /*hund.def------------------------------------------*/
-      if (X->NHundCoupling > 0) {
+      if (Def::NHundCoupling > 0) {
         while (fgetsMPI(ctmp2, 256, fp) != NULL)
         {
-          if (idx == X->NHundCoupling) {
+          if (idx == Def::NHundCoupling) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
 
           sscanf(ctmp2, "%d %d %lf\n",
-            &(X->HundCoupling[idx][0]),
-            &(X->HundCoupling[idx][1]),
-            &(X->ParaHundCoupling[idx])
+            &(Def::HundCoupling[idx][0]),
+            &(Def::HundCoupling[idx][1]),
+            &(Def::ParaHundCoupling[idx])
           );
 
-          if (CheckPairSite(X->HundCoupling[idx][0], X->HundCoupling[idx][1], X->Nsite) != 0) {
+          if (CheckPairSite(Def::HundCoupling[idx][0], Def::HundCoupling[idx][1], Def::Nsite) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1641,30 +1630,30 @@ int ReadDefFileIdxPara(
       break;
     case KWPairHop:
       /*pairhop.def---------------------------------------*/
-      if (X->iCalcModel == Spin || X->iCalcModel == SpinGC) {
+      if (Def::iCalcModel == Spin || Def::iCalcModel == SpinGC) {
         fprintf(stdoutMPI, "PairHop is not active in Spin and SpinGC.\n");
         return(-1);
       }
 
-      if (X->NPairHopping > 0) {
+      if (Def::NPairHopping > 0) {
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-          if (idx == X->NPairHopping / 2) {
+          if (idx == Def::NPairHopping / 2) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
           sscanf(ctmp2, "%d %d %lf\n",
-            &(X->PairHopping[2 * idx][0]),
-            &(X->PairHopping[2 * idx][1]),
-            &(X->ParaPairHopping[2 * idx])
+            &(Def::PairHopping[2 * idx][0]),
+            &(Def::PairHopping[2 * idx][1]),
+            &(Def::ParaPairHopping[2 * idx])
           );
 
-          if (CheckPairSite(X->PairHopping[2 * idx][0], X->PairHopping[2 * idx][1], X->Nsite) != 0) {
+          if (CheckPairSite(Def::PairHopping[2 * idx][0], Def::PairHopping[2 * idx][1], Def::Nsite) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
-          X->PairHopping[2 * idx + 1][0] = X->PairHopping[2 * idx][1];
-          X->PairHopping[2 * idx + 1][1] = X->PairHopping[2 * idx][0];
-          X->ParaPairHopping[2 * idx + 1] = X->ParaPairHopping[2 * idx];
+          Def::PairHopping[2 * idx + 1][0] = Def::PairHopping[2 * idx][1];
+          Def::PairHopping[2 * idx + 1][1] = Def::PairHopping[2 * idx][0];
+          Def::ParaPairHopping[2 * idx + 1] = Def::ParaPairHopping[2 * idx];
           idx++;
         }
       }
@@ -1672,20 +1661,20 @@ int ReadDefFileIdxPara(
 
     case KWExchange:
       /*exchange.def--------------------------------------*/
-      if (X->NExchangeCoupling > 0) {
+      if (Def::NExchangeCoupling > 0) {
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-          if (idx == X->NExchangeCoupling) {
+          if (idx == Def::NExchangeCoupling) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
 
           sscanf(ctmp2, "%d %d %lf\n",
-            &(X->ExchangeCoupling[idx][0]),
-            &(X->ExchangeCoupling[idx][1]),
-            &(X->ParaExchangeCoupling[idx])
+            &(Def::ExchangeCoupling[idx][0]),
+            &(Def::ExchangeCoupling[idx][1]),
+            &(Def::ParaExchangeCoupling[idx])
           );
 
-          if (CheckPairSite(X->ExchangeCoupling[idx][0], X->ExchangeCoupling[idx][1], X->Nsite) != 0) {
+          if (CheckPairSite(Def::ExchangeCoupling[idx][0], Def::ExchangeCoupling[idx][1], Def::Nsite) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1697,9 +1686,9 @@ int ReadDefFileIdxPara(
 
     case KWIsing:
       /*ising.def--------------------------------------*/
-      if (X->NIsingCoupling > 0) {
+      if (Def::NIsingCoupling > 0) {
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-          if (idx == X->NIsingCoupling) {
+          if (idx == Def::NIsingCoupling) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1710,19 +1699,19 @@ int ReadDefFileIdxPara(
             &dvalue_re
           );
 
-          if (CheckPairSite(isite1, isite2, X->Nsite) != 0) {
+          if (CheckPairSite(isite1, isite2, Def::Nsite) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
 
           //input into exchange couplings
-          X->HundCoupling[X->NHundCoupling + idx][0] = isite1;
-          X->HundCoupling[X->NHundCoupling + idx][1] = isite2;
-          X->ParaHundCoupling[X->NHundCoupling + idx] = -dvalue_re / 2.0;
+          Def::HundCoupling[Def::NHundCoupling + idx][0] = isite1;
+          Def::HundCoupling[Def::NHundCoupling + idx][1] = isite2;
+          Def::ParaHundCoupling[Def::NHundCoupling + idx] = -dvalue_re / 2.0;
           //input into inter Coulomb
-          X->CoulombInter[X->NCoulombInter + idx][0] = isite1;
-          X->CoulombInter[X->NCoulombInter + idx][1] = isite2;
-          X->ParaCoulombInter[X->NCoulombInter + idx] = -dvalue_re / 4.0;
+          Def::CoulombInter[Def::NCoulombInter + idx][0] = isite1;
+          Def::CoulombInter[Def::NCoulombInter + idx][1] = isite2;
+          Def::ParaCoulombInter[Def::NCoulombInter + idx] = -dvalue_re / 4.0;
           idx++;
         }
       }
@@ -1730,25 +1719,25 @@ int ReadDefFileIdxPara(
 
     case KWPairLift:
       /*pairlift.def--------------------------------------*/
-      if (X->NPairLiftCoupling > 0) {
-        if (X->iCalcModel != SpinGC) {
+      if (Def::NPairLiftCoupling > 0) {
+        if (Def::iCalcModel != SpinGC) {
           fprintf(stdoutMPI, "PairLift is active only in SpinGC.\n");
           return(-1);
         }
         while (fgetsMPI(ctmp2, 256, fp) != NULL)
         {
-          if (idx == X->NPairLiftCoupling) {
+          if (idx == Def::NPairLiftCoupling) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
 
           sscanf(ctmp2, "%d %d %lf\n",
-            &(X->PairLiftCoupling[idx][0]),
-            &(X->PairLiftCoupling[idx][1]),
-            &(X->ParaPairLiftCoupling[idx])
+            &(Def::PairLiftCoupling[idx][0]),
+            &(Def::PairLiftCoupling[idx][1]),
+            &(Def::ParaPairLiftCoupling[idx])
           );
 
-          if (CheckPairSite(X->PairLiftCoupling[idx][0], X->PairLiftCoupling[idx][1], X->Nsite) != 0) {
+          if (CheckPairSite(Def::PairLiftCoupling[idx][0], Def::PairLiftCoupling[idx][1], Def::Nsite) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1760,13 +1749,13 @@ int ReadDefFileIdxPara(
 
     case KWInterAll:
       /*interall.def---------------------------------------*/
-      X->NInterAll_Diagonal = 0;
-      X->NInterAll_OffDiagonal = 0;
-      if (X->NInterAll > 0) {
+      Def::NInterAll_Diagonal = 0;
+      Def::NInterAll_OffDiagonal = 0;
+      if (Def::NInterAll > 0) {
         icnt_interall = 0;
         icnt_diagonal = 0;
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-          if (idx == X->NInterAll) {
+          if (idx == Def::NInterAll) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1783,7 +1772,7 @@ int ReadDefFileIdxPara(
             &dvalue_im
           );
 
-          if (CheckInterAllCondition(X->iCalcModel, X->Nsite, X->iFlgGeneralSpin, X->LocSpn,
+          if (CheckInterAllCondition(Def::iCalcModel, Def::Nsite, Def::iFlgGeneralSpin, Def::LocSpn,
             isite1, isigma1, isite2, isigma2,
             isite3, isigma3, isite4, isigma4) != 0) {
             fclose(fp);
@@ -1791,8 +1780,8 @@ int ReadDefFileIdxPara(
           }
 
           if (InputInterAllInfo(&icnt_interall,
-            X->InterAll,
-            X->ParaInterAll,
+            Def::InterAll,
+            Def::ParaInterAll,
             isite1, isigma1,
             isite2, isigma2,
             isite3, isigma3,
@@ -1805,25 +1794,25 @@ int ReadDefFileIdxPara(
         }
       }
 
-      X->NInterAll = icnt_interall;
-      X->NInterAll_Diagonal = icnt_diagonal;
-      X->NInterAll_OffDiagonal = X->NInterAll - X->NInterAll_Diagonal;
+      Def::NInterAll = icnt_interall;
+      Def::NInterAll_Diagonal = icnt_diagonal;
+      Def::NInterAll_OffDiagonal = Def::NInterAll - Def::NInterAll_Diagonal;
 
       if (GetDiagonalInterAll(
-        X->InterAll, X->ParaInterAll, X->NInterAll,
-        X->InterAll_Diagonal, X->ParaInterAll_Diagonal,
-        X->InterAll_OffDiagonal, X->ParaInterAll_OffDiagonal,
-        X->EDChemi, X->EDSpinChemi, X->EDParaChemi, &X->EDNChemi,
-        X->iCalcModel
+        Def::InterAll, Def::ParaInterAll, Def::NInterAll,
+        Def::InterAll_Diagonal, Def::ParaInterAll_Diagonal,
+        Def::InterAll_OffDiagonal, Def::ParaInterAll_OffDiagonal,
+        Def::EDChemi, Def::EDSpinChemi, Def::EDParaChemi, &Def::EDNChemi,
+        Def::iCalcModel
       ) != 0) {
         fclose(fp);
         return(-1);
       }
 
       if (CheckInterAllHermite(
-        X->InterAll, X->ParaInterAll,
-        X->InterAll_OffDiagonal, X->ParaInterAll_OffDiagonal,
-        X->NInterAll_OffDiagonal, X->iCalcModel
+        Def::InterAll, Def::ParaInterAll,
+        Def::InterAll_OffDiagonal, Def::ParaInterAll_OffDiagonal,
+        Def::NInterAll_OffDiagonal, Def::iCalcModel
       ) != 0) {
         fprintf(stdoutMPI, "%s", "Error: NonHermite Pair exists in InterAll. \n");
         fclose(fp);
@@ -1833,9 +1822,9 @@ int ReadDefFileIdxPara(
 
     case KWOneBodyG:
       /*cisajs.def----------------------------------------*/
-      if (X->NCisAjt > 0) {
+      if (Def::NCisAjt > 0) {
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-          if (idx == X->NCisAjt) {
+          if (idx == Def::NCisAjt) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1845,21 +1834,21 @@ int ReadDefFileIdxPara(
             &isite2,
             &isigma2);
 
-          if (X->iCalcModel == Spin) {
+          if (Def::iCalcModel == Spin) {
             if (isite1 != isite2) {
               fprintf(stdoutMPI, "Warning: Site component of (i, j) =(%d, %d) is ignored.\n",
                 isite1, isite2);
-              X->NCisAjt--;
+              Def::NCisAjt--;
               continue;
             }
           }
 
-          X->CisAjt[idx][0] = isite1;
-          X->CisAjt[idx][1] = isigma1;
-          X->CisAjt[idx][2] = isite2;
-          X->CisAjt[idx][3] = isigma2;
+          Def::CisAjt[idx][0] = isite1;
+          Def::CisAjt[idx][1] = isigma1;
+          Def::CisAjt[idx][2] = isite2;
+          Def::CisAjt[idx][3] = isigma2;
 
-          if (CheckPairSite(isite1, isite2, X->Nsite) != 0) {
+          if (CheckPairSite(isite1, isite2, Def::Nsite) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1871,9 +1860,9 @@ int ReadDefFileIdxPara(
 
     case KWTwoBodyG:
       /*cisajscktaltdc.def--------------------------------*/
-      if (X->NCisAjtCkuAlvDC > 0) {
+      if (Def::NCisAjtCkuAlvDC > 0) {
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-          if (idx == X->NCisAjtCkuAlvDC) {
+          if (idx == Def::NCisAjtCkuAlvDC) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1889,25 +1878,25 @@ int ReadDefFileIdxPara(
             &isigma4
           );
 
-          if (X->iCalcModel == Spin || X->iCalcModel == SpinGC) {
+          if (Def::iCalcModel == Spin || Def::iCalcModel == SpinGC) {
             if (CheckFormatForSpinInt(isite1, isite2, isite3, isite4) != 0) {
               exitMPI(-1);
-              //X->NCisAjtCkuAlvDC--;
+              //Def::NCisAjtCkuAlvDC--;
               //continue;
             }
           }
 
 
-          X->CisAjtCkuAlvDC[idx][0] = isite1;
-          X->CisAjtCkuAlvDC[idx][1] = isigma1;
-          X->CisAjtCkuAlvDC[idx][2] = isite2;
-          X->CisAjtCkuAlvDC[idx][3] = isigma2;
-          X->CisAjtCkuAlvDC[idx][4] = isite3;
-          X->CisAjtCkuAlvDC[idx][5] = isigma3;
-          X->CisAjtCkuAlvDC[idx][6] = isite4;
-          X->CisAjtCkuAlvDC[idx][7] = isigma4;
+          Def::CisAjtCkuAlvDC[idx][0] = isite1;
+          Def::CisAjtCkuAlvDC[idx][1] = isigma1;
+          Def::CisAjtCkuAlvDC[idx][2] = isite2;
+          Def::CisAjtCkuAlvDC[idx][3] = isigma2;
+          Def::CisAjtCkuAlvDC[idx][4] = isite3;
+          Def::CisAjtCkuAlvDC[idx][5] = isigma3;
+          Def::CisAjtCkuAlvDC[idx][6] = isite4;
+          Def::CisAjtCkuAlvDC[idx][7] = isigma4;
 
-          if (CheckQuadSite(isite1, isite2, isite3, isite4, X->Nsite) != 0) {
+          if (CheckQuadSite(isite1, isite2, isite3, isite4, Def::Nsite) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1919,14 +1908,14 @@ int ReadDefFileIdxPara(
     case KWLaser:
       //printf("KWLaser\n");
       /*laser.def----------------------------------*/
-      if (X->NLaser > 0) {
+      if (Def::NLaser > 0) {
         //printf("Read Start\n");
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-          sscanf(ctmp2, "%s %lf\n", ctmp, &(X->ParaLaser[idx]));
-          //printf("[%d]:%f\n",idx,X->ParaLaser[idx]);
+          sscanf(ctmp2, "%s %lf\n", ctmp, &(Def::ParaLaser[idx]));
+          //printf("[%d]:%f\n",idx,Def::ParaLaser[idx]);
           idx++;
         }
-        if (idx != X->NLaser) {
+        if (idx != Def::NLaser) {
           fclose(fp);
           return ReadDefFileError(defname);
         }
@@ -1934,11 +1923,11 @@ int ReadDefFileIdxPara(
       break;
 
     case KWTEOneBody:
-      if (X->NTETimeSteps > 0) {
+      if (Def::NTETimeSteps > 0) {
         idx = 0;
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-          sscanf(ctmp2, "%lf %d\n", &(X->TETime[idx]), &(X->NTETransfer[idx]));
-          for (i = 0; i < X->NTETransfer[idx]; ++i) {
+          sscanf(ctmp2, "%lf %d\n", &(Def::TETime[idx]), &(Def::NTETransfer[idx]));
+          for (i = 0; i < Def::NTETransfer[idx]; ++i) {
             fgetsMPI(ctmp2, 256, fp);
             sscanf(ctmp2, "%d %d %d %d %lf %lf\n",
               &isite1,
@@ -1948,20 +1937,20 @@ int ReadDefFileIdxPara(
               &dvalue_re,
               &dvalue_im
             );
-            X->TETransfer[idx][i][0] = isite1;
-            X->TETransfer[idx][i][1] = isigma1;
-            X->TETransfer[idx][i][2] = isite2;
-            X->TETransfer[idx][i][3] = isigma2;
-            X->ParaTETransfer[idx][i] = dvalue_re + dvalue_im * I;
+            Def::TETransfer[idx][i][0] = isite1;
+            Def::TETransfer[idx][i][1] = isigma1;
+            Def::TETransfer[idx][i][2] = isite2;
+            Def::TETransfer[idx][i][3] = isigma2;
+            Def::ParaTETransfer[idx][i] = dvalue_re + dvalue_im * I;
           }
           //check Transfer Hermite
-          if (CheckTETransferHermite(X, X->NTETransfer[idx], idx) != 0) {
+          if (CheckTETransferHermite(Def::NTETransfer[idx], idx) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
           idx++;
         }
-        if (idx != X->NTETimeSteps) {
+        if (idx != Def::NTETimeSteps) {
           fclose(fp);
           return ReadDefFileError(defname);
         }
@@ -1969,13 +1958,13 @@ int ReadDefFileIdxPara(
       break;
 
     case KWTETwoBody:
-      if (X->NTETimeSteps > 0) {
+      if (Def::NTETimeSteps > 0) {
         idx = 0;
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-          sscanf(ctmp2, "%lf %d\n", &(X->TETime[idx]), &(X->NTEInterAll[idx]));
+          sscanf(ctmp2, "%lf %d\n", &(Def::TETime[idx]), &(Def::NTEInterAll[idx]));
           icnt_interall = 0;
           icnt_diagonal = 0;
-          for (i = 0; i < X->NTEInterAll[idx]; ++i) {
+          for (i = 0; i < Def::NTEInterAll[idx]; ++i) {
             fgetsMPI(ctmp2, 256, fp);
             sscanf(ctmp2, "%d %d %d %d %d %d %d %d %lf %lf\n",
               &isite1,
@@ -1989,15 +1978,15 @@ int ReadDefFileIdxPara(
               &dvalue_re,
               &dvalue_im
             );
-            if (CheckInterAllCondition(X->iCalcModel, X->Nsite, X->iFlgGeneralSpin, X->LocSpn,
+            if (CheckInterAllCondition(Def::iCalcModel, Def::Nsite, Def::iFlgGeneralSpin, Def::LocSpn,
               isite1, isigma1, isite2, isigma2,
               isite3, isigma3, isite4, isigma4) != 0) {
               fclose(fp);
               return ReadDefFileError(defname);
             }
             if (InputInterAllInfo(&icnt_interall,
-              X->TEInterAll[idx],
-              X->ParaTEInterAll[idx],
+              Def::TEInterAll[idx],
+              Def::ParaTEInterAll[idx],
               isite1, isigma1,
               isite2, isigma2,
               isite3, isigma3,
@@ -2008,23 +1997,23 @@ int ReadDefFileIdxPara(
             }
           }
 
-          X->NTEInterAll[idx] = icnt_interall;
-          X->NTEInterAllDiagonal[idx] = icnt_diagonal;
-          X->NTEInterAllOffDiagonal[idx] = icnt_interall - icnt_diagonal;
+          Def::NTEInterAll[idx] = icnt_interall;
+          Def::NTEInterAllDiagonal[idx] = icnt_diagonal;
+          Def::NTEInterAllOffDiagonal[idx] = icnt_interall - icnt_diagonal;
           //Diagonal -> OffDiagonal -> search pair -> hermite
-          if (GetDiagonalInterAll(X->TEInterAll[idx], X->ParaTEInterAll[idx], 
-            X->NTEInterAll[idx], X->TEInterAllDiagonal[idx], X->ParaTEInterAllDiagonal[idx],
-            X->TEInterAllOffDiagonal[idx], X->ParaTEInterAllOffDiagonal[idx], X->TEChemi[idx], 
-            X->SpinTEChemi[idx], X->ParaTEChemi[idx], &X->NTEChemi[idx], X->iCalcModel) != 0)
+          if (GetDiagonalInterAll(Def::TEInterAll[idx], Def::ParaTEInterAll[idx], 
+            Def::NTEInterAll[idx], Def::TEInterAllDiagonal[idx], Def::ParaTEInterAllDiagonal[idx],
+            Def::TEInterAllOffDiagonal[idx], Def::ParaTEInterAllOffDiagonal[idx], Def::TEChemi[idx], 
+            Def::SpinTEChemi[idx], Def::ParaTEChemi[idx], &Def::NTEChemi[idx], Def::iCalcModel) != 0)
           {
             fclose(fp);
             return (-1);
           }
 
           if (CheckInterAllHermite(
-            X->TEInterAll[idx], X->ParaTEInterAll[idx],
-            X->TEInterAllOffDiagonal[idx], X->ParaTEInterAllOffDiagonal[idx],
-            X->NTEInterAllOffDiagonal[idx], X->iCalcModel
+            Def::TEInterAll[idx], Def::ParaTEInterAll[idx],
+            Def::TEInterAllOffDiagonal[idx], Def::ParaTEInterAllOffDiagonal[idx],
+            Def::NTEInterAllOffDiagonal[idx], Def::iCalcModel
           ) != 0) {
             fprintf(stdoutMPI, "%s", "Error: NonHermite Pair exists in InterAll. \n");
             fclose(fp);
@@ -2033,7 +2022,7 @@ int ReadDefFileIdxPara(
           idx++;
         }
 
-        if (idx != X->NTETimeSteps) {
+        if (idx != Def::NTETimeSteps) {
           fclose(fp);
           return ReadDefFileError(defname);
         }
@@ -2049,15 +2038,15 @@ int ReadDefFileIdxPara(
         &dArrayValue_re[1],
         &dArrayValue_re[2]);
       for (iline = 0; iline < 3; iline++) {
-        xBoost->vecB[iline] = dArrayValue_re[iline];
+        Boost::vecB[iline] = dArrayValue_re[iline];
       }
 
       //this line is skipped;
       fgetsMPI(ctmp2, 256, fp);
 
       //input arrayJ
-      if (xBoost->NumarrayJ > 0) {
-        for (iline = 0; iline < xBoost->NumarrayJ; iline++) {
+      if (Boost::NumarrayJ > 0) {
+        for (iline = 0; iline < Boost::NumarrayJ; iline++) {
           for (ilineIn = 0; ilineIn < 3; ilineIn++) {
             fgetsMPI(ctmp2, 256, fp);
             sscanf(ctmp2, "%lf %lf %lf\n",
@@ -2065,7 +2054,7 @@ int ReadDefFileIdxPara(
               &dArrayValue_re[1],
               &dArrayValue_re[2]);
             for (ilineIn2 = 0; ilineIn2 < 3; ilineIn2++) {
-              xBoost->arrayJ[iline][ilineIn][ilineIn2] = dArrayValue_re[ilineIn2];
+              Boost::arrayJ[iline][ilineIn][ilineIn2] = dArrayValue_re[ilineIn2];
             }
           }
         }
@@ -2075,50 +2064,50 @@ int ReadDefFileIdxPara(
       fgetsMPI(ctmp2, 256, fp);
 
       //read list_6spin_star
-      if (xBoost->num_pivot > 0) {
-        for (iline = 0; iline < xBoost->num_pivot; iline++) {
+      if (Boost::num_pivot > 0) {
+        for (iline = 0; iline < Boost::num_pivot; iline++) {
           //input
           fgetsMPI(ctmp2, 256, fp);
           sscanf(ctmp2, "%d %d %d %d %d %d %d\n",
-            &xBoost->list_6spin_star[iline][0],
-            &xBoost->list_6spin_star[iline][1],
-            &xBoost->list_6spin_star[iline][2],
-            &xBoost->list_6spin_star[iline][3],
-            &xBoost->list_6spin_star[iline][4],
-            &xBoost->list_6spin_star[iline][5],
-            &xBoost->list_6spin_star[iline][6]
+            &Boost::list_6spin_star[iline][0],
+            &Boost::list_6spin_star[iline][1],
+            &Boost::list_6spin_star[iline][2],
+            &Boost::list_6spin_star[iline][3],
+            &Boost::list_6spin_star[iline][4],
+            &Boost::list_6spin_star[iline][5],
+            &Boost::list_6spin_star[iline][6]
           );
           //copy
-          for (iloop = 0; iloop < xBoost->R0; iloop++) {
+          for (iloop = 0; iloop < Boost::R0; iloop++) {
             for (itmp = 0; itmp < 7; itmp++) {
-              xBoost->list_6spin_star[iloop*xBoost->num_pivot + iline][itmp] 
-                = xBoost->list_6spin_star[iline][itmp];
+              Boost::list_6spin_star[iloop* Boost::num_pivot + iline][itmp]
+                = Boost::list_6spin_star[iline][itmp];
             }
           }
         }
       }
 
       //read list_6spin_pair
-      if (xBoost->num_pivot > 0) {
-        for (iline = 0; iline < xBoost->num_pivot; iline++) {
+      if (Boost::num_pivot > 0) {
+        for (iline = 0; iline < Boost::num_pivot; iline++) {
           //input
-          for (ilineIn2 = 0; ilineIn2 < xBoost->list_6spin_star[iline][0]; ilineIn2++) {
+          for (ilineIn2 = 0; ilineIn2 < Boost::list_6spin_star[iline][0]; ilineIn2++) {
             fgetsMPI(ctmp2, 256, fp);
             sscanf(ctmp2, "%d %d %d %d %d %d %d\n",
-              &xBoost->list_6spin_pair[iline][0][ilineIn2],
-              &xBoost->list_6spin_pair[iline][1][ilineIn2],
-              &xBoost->list_6spin_pair[iline][2][ilineIn2],
-              &xBoost->list_6spin_pair[iline][3][ilineIn2],
-              &xBoost->list_6spin_pair[iline][4][ilineIn2],
-              &xBoost->list_6spin_pair[iline][5][ilineIn2],
-              &xBoost->list_6spin_pair[iline][6][ilineIn2]
+              &Boost::list_6spin_pair[iline][0][ilineIn2],
+              &Boost::list_6spin_pair[iline][1][ilineIn2],
+              &Boost::list_6spin_pair[iline][2][ilineIn2],
+              &Boost::list_6spin_pair[iline][3][ilineIn2],
+              &Boost::list_6spin_pair[iline][4][ilineIn2],
+              &Boost::list_6spin_pair[iline][5][ilineIn2],
+              &Boost::list_6spin_pair[iline][6][ilineIn2]
             );
 
             //copy
-            for (iloop = 0; iloop < xBoost->R0; iloop++) {
+            for (iloop = 0; iloop < Boost::R0; iloop++) {
               for (itmp = 0; itmp < 7; itmp++) {
-                xBoost->list_6spin_pair[iloop*xBoost->num_pivot + iline][itmp][ilineIn2]
-                  = xBoost->list_6spin_pair[iline][itmp][ilineIn2];
+                Boost::list_6spin_pair[iloop* Boost::num_pivot + iline][itmp][ilineIn2]
+                  = Boost::list_6spin_pair[iline][itmp][ilineIn2];
               }
             }
           }
@@ -2130,18 +2119,18 @@ int ReadDefFileIdxPara(
 
     case KWSingleExcitation:
       /*singleexcitation.def----------------------------------------*/
-      if (X->NNSingleExcitationOperator > 0) {
-        if (X->iCalcModel == Spin || X->iCalcModel == SpinGC) {
+      if (Def::NNSingleExcitationOperator > 0) {
+        if (Def::iCalcModel == Spin || Def::iCalcModel == SpinGC) {
           fprintf(stderr, "SingleExcitation is not allowed for spin system.\n");
           fclose(fp);
           return ReadDefFileError(defname);
         }
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-          sscanf(ctmp2, "%d\n", &X->NSingleExcitationOperator[idx]);
-          X->SingleExcitationOperator[idx] = (int**)malloc(sizeof(int*)*X->NSingleExcitationOperator[idx]);
-          X->ParaSingleExcitationOperator[idx] = (std::complex<double>*)malloc(
-            sizeof(std::complex<double>)*X->NSingleExcitationOperator[idx]);
-          for (i = 0; i < X->NSingleExcitationOperator[idx]; ++i) {
+          sscanf(ctmp2, "%d\n", &Def::NSingleExcitationOperator[idx]);
+          Def::SingleExcitationOperator[idx] = (int**)malloc(sizeof(int*)*Def::NSingleExcitationOperator[idx]);
+          Def::ParaSingleExcitationOperator[idx] = (std::complex<double>*)malloc(
+            sizeof(std::complex<double>)*Def::NSingleExcitationOperator[idx]);
+          for (i = 0; i < Def::NSingleExcitationOperator[idx]; ++i) {
             fgetsMPI(ctmp2, 256, fp);
             sscanf(ctmp2, "%d %d %d %lf %lf\n",
               &isite1,
@@ -2151,20 +2140,20 @@ int ReadDefFileIdxPara(
               &dvalue_im
             );
 
-            if (CheckSite(isite1, X->Nsite) != 0) {
+            if (CheckSite(isite1, Def::Nsite) != 0) {
               fclose(fp);
               return ReadDefFileError(defname);
             }
 
-            X->SingleExcitationOperator[idx][i] = (int*)malloc(sizeof(int) * 3);
-            X->SingleExcitationOperator[idx][i][0] = isite1;
-            X->SingleExcitationOperator[idx][i][1] = isigma1;
-            X->SingleExcitationOperator[idx][i][2] = itype;
-            X->ParaSingleExcitationOperator[idx][i] = dvalue_re + I * dvalue_im;
-          }/*for (i = 0; i < X->NSingleExcitationOperator[idx]; ++i)*/
+            Def::SingleExcitationOperator[idx][i] = (int*)malloc(sizeof(int) * 3);
+            Def::SingleExcitationOperator[idx][i][0] = isite1;
+            Def::SingleExcitationOperator[idx][i][1] = isigma1;
+            Def::SingleExcitationOperator[idx][i][2] = itype;
+            Def::ParaSingleExcitationOperator[idx][i] = dvalue_re + I * dvalue_im;
+          }/*for (i = 0; i < Def::NSingleExcitationOperator[idx]; ++i)*/
           idx++;
         }
-        if (idx != X->NNSingleExcitationOperator) {
+        if (idx != Def::NNSingleExcitationOperator) {
           fclose(fp);
           return ReadDefFileError(defname);
         }
@@ -2173,13 +2162,13 @@ int ReadDefFileIdxPara(
 
     case KWPairExcitation:
       /*pairexcitation.def----------------------------------------*/
-      if (X->NNPairExcitationOperator > 0) {
+      if (Def::NNPairExcitationOperator > 0) {
         while (fgetsMPI(ctmp2, 256, fp) != NULL) {
-          sscanf(ctmp2, "%d\n", &X->NPairExcitationOperator[idx]);
-          X->PairExcitationOperator[idx] = (int**)malloc(sizeof(int*)*X->NPairExcitationOperator[idx]);
-          X->ParaPairExcitationOperator[idx] = (std::complex<double>*)malloc(
-            sizeof(std::complex<double>)*X->NPairExcitationOperator[idx]);
-          for (i = 0; i < X->NPairExcitationOperator[idx]; ++i) {
+          sscanf(ctmp2, "%d\n", &Def::NPairExcitationOperator[idx]);
+          Def::PairExcitationOperator[idx] = (int**)malloc(sizeof(int*)*Def::NPairExcitationOperator[idx]);
+          Def::ParaPairExcitationOperator[idx] = (std::complex<double>*)malloc(
+            sizeof(std::complex<double>)*Def::NPairExcitationOperator[idx]);
+          for (i = 0; i < Def::NPairExcitationOperator[idx]; ++i) {
             fgetsMPI(ctmp2, 256, fp);
             sscanf(ctmp2, "%d %d %d %d %d %lf %lf\n",
               &isite1,
@@ -2190,32 +2179,32 @@ int ReadDefFileIdxPara(
               &dvalue_re,
               &dvalue_im
             );
-            if (CheckPairSite(isite1, isite2, X->Nsite) != 0) {
+            if (CheckPairSite(isite1, isite2, Def::Nsite) != 0) {
               fclose(fp);
               return ReadDefFileError(defname);
             }
 
-            X->PairExcitationOperator[idx][i] = (int*)malloc(sizeof(int) * 5);
+            Def::PairExcitationOperator[idx][i] = (int*)malloc(sizeof(int) * 5);
             if (itype == 1) {
-              X->PairExcitationOperator[idx][i][0] = isite1;
-              X->PairExcitationOperator[idx][i][1] = isigma1;
-              X->PairExcitationOperator[idx][i][2] = isite2;
-              X->PairExcitationOperator[idx][i][3] = isigma2;
-              X->PairExcitationOperator[idx][i][4] = itype;
-              X->ParaPairExcitationOperator[idx][i] = dvalue_re + I * dvalue_im;
+              Def::PairExcitationOperator[idx][i][0] = isite1;
+              Def::PairExcitationOperator[idx][i][1] = isigma1;
+              Def::PairExcitationOperator[idx][i][2] = isite2;
+              Def::PairExcitationOperator[idx][i][3] = isigma2;
+              Def::PairExcitationOperator[idx][i][4] = itype;
+              Def::ParaPairExcitationOperator[idx][i] = dvalue_re + I * dvalue_im;
             }
             else {
-              X->PairExcitationOperator[idx][i][0] = isite2;
-              X->PairExcitationOperator[idx][i][1] = isigma2;
-              X->PairExcitationOperator[idx][i][2] = isite1;
-              X->PairExcitationOperator[idx][i][3] = isigma1;
-              X->PairExcitationOperator[idx][i][4] = itype;
-              X->ParaPairExcitationOperator[idx][i] = -(dvalue_re + I * dvalue_im);
+              Def::PairExcitationOperator[idx][i][0] = isite2;
+              Def::PairExcitationOperator[idx][i][1] = isigma2;
+              Def::PairExcitationOperator[idx][i][2] = isite1;
+              Def::PairExcitationOperator[idx][i][3] = isigma1;
+              Def::PairExcitationOperator[idx][i][4] = itype;
+              Def::ParaPairExcitationOperator[idx][i] = -(dvalue_re + I * dvalue_im);
             }
-          }/*for (i = 0; i < X->NPairExcitationOperator[idx]; ++i)*/
+          }/*for (i = 0; i < Def::NPairExcitationOperator[idx]; ++i)*/
           idx++;
         }
-        if (idx != X->NNPairExcitationOperator) {
+        if (idx != Def::NNPairExcitationOperator) {
           fclose(fp);
           return ReadDefFileError(defname);
         }
@@ -2235,7 +2224,7 @@ int ReadDefFileIdxPara(
     case KWExchange:
     case KWIsing:
     case KWPairLift:
-      if (X->iFlgGeneralSpin == TRUE) {
+      if (Def::iFlgGeneralSpin == TRUE) {
         fprintf(stdoutMPI, "%s", 
           "Error: Use only InterAll for setteing interactions for general spin.\n");
         return(-1);
@@ -2246,14 +2235,12 @@ int ReadDefFileIdxPara(
     }
   }
 
-  ResetInteractionNum(X);
+  ResetInteractionNum();
   /*=======================================================================*/
   return 0;
 }
 /**
  * @brief Check Site Number.
- * @param[in] iSite a site number.
- * @param[in] iMaxNum Max site number.
  * @retval 0 normally finished reading file.
  * @retval -1 unnormally finished reading file.
  * @version 0.1
@@ -2261,8 +2248,8 @@ int ReadDefFileIdxPara(
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  **/
 int CheckSite(
-  const int iSite,
-  const int iMaxNum
+  const int iSite/**<[in] site number*/,
+  const int iMaxNum/**<[in] Max site number*/
 )
 {
   if (iSite >= iMaxNum) return(-1);
@@ -2337,7 +2324,7 @@ int CheckQuadSite(
  **/
 int CheckTransferHermite
 (
-  struct DefineList *X
+  
 )
 {
   int i, j;
@@ -2356,29 +2343,29 @@ int CheckTransferHermite
   icntHermite = 0;
   icntchemi = 0;
 
-  for (i = 0; i < X->NTransfer; i++) {
-    isite1 = X->GeneralTransfer[i][0];
-    isigma1 = X->GeneralTransfer[i][1];
-    isite2 = X->GeneralTransfer[i][2];
-    isigma2 = X->GeneralTransfer[i][3];
+  for (i = 0; i < Def::NTransfer; i++) {
+    isite1 = Def::GeneralTransfer[i][0];
+    isigma1 = Def::GeneralTransfer[i][1];
+    isite2 = Def::GeneralTransfer[i][2];
+    isigma2 = Def::GeneralTransfer[i][3];
     icheckHermiteCount = FALSE;
-    for (j = 0; j < X->NTransfer; j++) {
-      itmpsite1 = X->GeneralTransfer[j][0];
-      itmpsigma1 = X->GeneralTransfer[j][1];
-      itmpsite2 = X->GeneralTransfer[j][2];
-      itmpsigma2 = X->GeneralTransfer[j][3];
+    for (j = 0; j < Def::NTransfer; j++) {
+      itmpsite1 = Def::GeneralTransfer[j][0];
+      itmpsigma1 = Def::GeneralTransfer[j][1];
+      itmpsite2 = Def::GeneralTransfer[j][2];
+      itmpsigma2 = Def::GeneralTransfer[j][3];
       if (isite1 == itmpsite2 && isite2 == itmpsite1) {
         if (isigma1 == itmpsigma2 && isigma2 == itmpsigma1) {
 
-          ddiff_trans = X->ParaGeneralTransfer[i] - conj(X->ParaGeneralTransfer[j]);
+          ddiff_trans = Def::ParaGeneralTransfer[i] - conj(Def::ParaGeneralTransfer[j]);
           if (abs(ddiff_trans) > eps_CheckImag0) {
             itmperrsite1 = itmpsite1;
             itmperrsigma1 = itmpsigma1;
             itmperrsite2 = itmpsite2;
             itmperrsigma2 = itmpsigma2;
-            dcerrTrans = X->ParaGeneralTransfer[j];
+            dcerrTrans = Def::ParaGeneralTransfer[j];
             fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n",
-              isite1, isigma1, isite2, isigma2, real(X->ParaGeneralTransfer[i]), imag(X->ParaGeneralTransfer[i]));
+              isite1, isigma1, isite2, isigma2, real(Def::ParaGeneralTransfer[i]), imag(Def::ParaGeneralTransfer[i]));
             fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", 
               itmperrsite1, itmperrsigma1, itmperrsite2, itmperrsigma2, real(dcerrTrans), imag(dcerrTrans));
             iCount++;
@@ -2386,23 +2373,23 @@ int CheckTransferHermite
           else {
             if (icheckHermiteCount == FALSE) {
               if (i <= j) {
-                if (2 * icntHermite >= X->NTransfer) {
+                if (2 * icntHermite >= Def::NTransfer) {
                   fprintf(stderr, "Elements of Transfers are incorrect.\n");
                   return(-1);
                 }
                 if (isite1 != isite2 || isigma1 != isigma2) {
                   for (itmpIdx = 0; itmpIdx < 4; itmpIdx++) {
-                    X->EDGeneralTransfer[2 * icntHermite][itmpIdx] = X->GeneralTransfer[i][itmpIdx];
-                    X->EDGeneralTransfer[2 * icntHermite + 1][itmpIdx] = X->GeneralTransfer[j][itmpIdx];
+                    Def::EDGeneralTransfer[2 * icntHermite][itmpIdx] = Def::GeneralTransfer[i][itmpIdx];
+                    Def::EDGeneralTransfer[2 * icntHermite + 1][itmpIdx] = Def::GeneralTransfer[j][itmpIdx];
                   }
-                  X->EDParaGeneralTransfer[2 * icntHermite] = X->ParaGeneralTransfer[i];
-                  X->EDParaGeneralTransfer[2 * icntHermite + 1] = X->ParaGeneralTransfer[j];
+                  Def::EDParaGeneralTransfer[2 * icntHermite] = Def::ParaGeneralTransfer[i];
+                  Def::EDParaGeneralTransfer[2 * icntHermite + 1] = Def::ParaGeneralTransfer[j];
                   icntHermite++;
                 }
                 else {
-                  X->EDChemi[icntchemi] = X->GeneralTransfer[i][0];
-                  X->EDSpinChemi[icntchemi] = X->GeneralTransfer[i][1];
-                  X->EDParaChemi[icntchemi] = real(X->ParaGeneralTransfer[i]);
+                  Def::EDChemi[icntchemi] = Def::GeneralTransfer[i][0];
+                  Def::EDSpinChemi[icntchemi] = Def::GeneralTransfer[i][1];
+                  Def::EDParaChemi[icntchemi] = real(Def::ParaGeneralTransfer[i]);
                   icntchemi += 1;
                 }
               }
@@ -2416,7 +2403,7 @@ int CheckTransferHermite
 
     //if counterpart for satisfying hermite conjugate does not exist.
     if (icheckHermiteCount == FALSE) {
-      fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", isite1, isigma1, isite2, isigma2, real(X->ParaGeneralTransfer[i]), imag(X->ParaGeneralTransfer[i]));
+      fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", isite1, isigma1, isite2, isigma2, real(Def::ParaGeneralTransfer[i]), imag(Def::ParaGeneralTransfer[i]));
       iCount++;
     }
   }
@@ -2424,15 +2411,15 @@ int CheckTransferHermite
   if (iCount != 0) {
     return -1;
   }
-  X->EDNTransfer = 2 * icntHermite;
-  X->EDNChemi = icntchemi;
+  Def::EDNTransfer = 2 * icntHermite;
+  Def::EDNChemi = icntchemi;
 
   //To realize ido-san's result
-  for (i = 0; i < X->EDNTransfer; i++) {
+  for (i = 0; i < Def::EDNTransfer; i++) {
     for (itmpIdx = 0; itmpIdx < 4; itmpIdx++) {
-      X->GeneralTransfer[i][itmpIdx] = X->EDGeneralTransfer[i][itmpIdx];
+      Def::GeneralTransfer[i][itmpIdx] = Def::EDGeneralTransfer[i][itmpIdx];
     }
-    X->ParaGeneralTransfer[i] = X->EDParaGeneralTransfer[i];
+    Def::ParaGeneralTransfer[i] = Def::EDParaGeneralTransfer[i];
   }
   return 0;
 }
@@ -2582,7 +2569,7 @@ int CheckFormatForKondoInt
  */
 void SetConvergenceFactor
 (
- struct DefineList *X
+ 
  )
 {
   //In future, convergence facator can be set by a def file.
@@ -2591,7 +2578,7 @@ void SetConvergenceFactor
   int nEnergy = -12;
   eps=pow(10.0, neps);
   eps_CG=pow(10.0, nepsCG);
-  eps_Lanczos     = pow(10,-X->LanczosEps);
+  eps_Lanczos     = pow(10,-Def::LanczosEps);
   eps_Energy = pow(10.0, nEnergy);
 }
 
@@ -2608,19 +2595,19 @@ void SetConvergenceFactor
  */
 int CheckLocSpin
 (
- struct DefineList *X
+ 
  )
 {
 
   int i=0;
-  switch(X->iCalcModel){
+  switch(Def::iCalcModel){
   case Hubbard:
   case HubbardNConserved:
   case HubbardGC:
   case SpinlessFermion:
   case SpinlessFermionGC:
-    for(i=0; i<X->Nsite; i++){
-      if(X->LocSpn[i]!=ITINERANT){
+    for(i=0; i<Def::Nsite; i++){
+      if(Def::LocSpn[i]!=ITINERANT){
         return FALSE;
       }
     }
@@ -2628,11 +2615,11 @@ int CheckLocSpin
 
   case Kondo:
   case KondoGC:
-    for(i=0; i<X->Nsite; i++){
-      if(X->LocSpn[i]>LOCSPIN){
-        X->iFlgGeneralSpin=TRUE;
+    for(i=0; i<Def::Nsite; i++){
+      if(Def::LocSpn[i]>LOCSPIN){
+        Def::iFlgGeneralSpin=TRUE;
       }
-      else if(X->LocSpn[i]<ITINERANT){
+      else if(Def::LocSpn[i]<ITINERANT){
         return FALSE;
       }
     }
@@ -2640,11 +2627,11 @@ int CheckLocSpin
 
   case Spin:
   case SpinGC:
-    for(i=0; i<X->Nsite; i++){
-      if(X->LocSpn[i]>LOCSPIN){
-        X->iFlgGeneralSpin=TRUE;
+    for(i=0; i<Def::Nsite; i++){
+      if(Def::LocSpn[i]>LOCSPIN){
+        Def::iFlgGeneralSpin=TRUE;
       }
-      else if(X->LocSpn[i]<LOCSPIN){
+      else if(Def::LocSpn[i]<LOCSPIN){
         return FALSE;
       }
     }
@@ -2655,7 +2642,7 @@ int CheckLocSpin
     //break;
   }
 
-  if(CheckTotal2Sz(X) != TRUE){
+  if(CheckTotal2Sz() != TRUE){
     return FALSE;
   }
   return TRUE;
@@ -2672,11 +2659,11 @@ int CheckLocSpin
  */
 void ResetInteractionNum
 (
- struct DefineList *X
+ 
  )
 {
-  X->NHundCoupling += X->NIsingCoupling;
-  X->NCoulombInter += X->NIsingCoupling;
+  Def::NHundCoupling += Def::NIsingCoupling;
+  Def::NCoulombInter += Def::NIsingCoupling;
 }
 
 /** 
@@ -2689,29 +2676,29 @@ void ResetInteractionNum
  */
 void InitializeInteractionNum
 (
- struct DefineList *X
+ 
  )
 {
-  X->NTransfer=0;
-  X->NCoulombIntra=0;
-  X->NCoulombInter=0;
-  X->NHundCoupling = 0;
-  X->NExchangeCoupling = 0;
-  X->NPairHopping = 0;
-  X->NIsingCoupling=0;
-  X->NPairLiftCoupling=0;
-  X->NInterAll=0;
-  X->NInterAll_Diagonal = 0;
-  X->NInterAll_OffDiagonal = 0;
-  X->NCisAjt=0;
-  X->NCisAjtCkuAlvDC=0;
-  X->NNSingleExcitationOperator=0;
-  X->NNPairExcitationOperator=0;
+  Def::NTransfer=0;
+  Def::NCoulombIntra=0;
+  Def::NCoulombInter=0;
+  Def::NHundCoupling = 0;
+  Def::NExchangeCoupling = 0;
+  Def::NPairHopping = 0;
+  Def::NIsingCoupling=0;
+  Def::NPairLiftCoupling=0;
+  Def::NInterAll=0;
+  Def::NInterAll_Diagonal = 0;
+  Def::NInterAll_OffDiagonal = 0;
+  Def::NCisAjt=0;
+  Def::NCisAjtCkuAlvDC=0;
+  Def::NNSingleExcitationOperator=0;
+  Def::NNPairExcitationOperator=0;
   //[s] Time Evolution
-  X->NTETimeSteps=0;
-  X->NLaser=0;
-  X->NTEInterAll=0;
-  X->NTETransfer=0;
+  Def::NTETimeSteps=0;
+  Def::NLaser=0;
+  Def::NTEInterAll=0;
+  Def::NTETransfer=0;
   //[e] Time Evolution
 
 }
@@ -2762,19 +2749,19 @@ int CheckGeneralSpinIndexForInterAll
  */
 int CheckSpinIndexForTrans
 (
- struct DefineList *X
+ 
  )
 {
   int i=0;
   int isite1, isite2;
   int isigma1, isigma2;
-  if(X->iFlgGeneralSpin==TRUE){
-    for(i=0; i<X->NTransfer; i++){
-      isite1 =X->GeneralTransfer[i][0];
-      isigma1=X->GeneralTransfer[i][1];
-      isite2 =X->GeneralTransfer[i][2];
-      isigma2=X->GeneralTransfer[i][3];
-      if(isigma1 > X->LocSpn[isite1] || isigma2 >X->LocSpn[isite2]){
+  if(Def::iFlgGeneralSpin==TRUE){
+    for(i=0; i<Def::NTransfer; i++){
+      isite1 =Def::GeneralTransfer[i][0];
+      isigma1=Def::GeneralTransfer[i][1];
+      isite2 =Def::GeneralTransfer[i][2];
+      isigma2=Def::GeneralTransfer[i][3];
+      if(isigma1 > Def::LocSpn[isite1] || isigma2 >Def::LocSpn[isite2]){
         fprintf(stdoutMPI, "%s", "Error: Spin index is incorrect for transfers defined in Trans file.\n");
         return FALSE;
       }
@@ -2795,14 +2782,14 @@ int CheckSpinIndexForTrans
  */
 int CheckTotal2Sz
 (
- struct DefineList *X
+ 
  )
 {
-  if(X->iFlgSzConserved==TRUE && X->iFlgGeneralSpin==FALSE){
-    int tmp_Nup=X->NLocSpn+X->NCond+X->Total2Sz;
-    int tmp_Ndown=X->NLocSpn+X->NCond-X->Total2Sz;
+  if(Def::iFlgSzConserved==TRUE && Def::iFlgGeneralSpin==FALSE){
+    int tmp_Nup=Def::NLocSpn+Def::NCond+Def::Total2Sz;
+    int tmp_Ndown=Def::NLocSpn+Def::NCond-Def::Total2Sz;
     if(tmp_Nup%2 != 0 && tmp_Ndown%2 !=0){
-      printf("Nup=%d, Ndown=%d\n",X->Nup,X->Ndown);
+      printf("Nup=%d, Ndown=%d\n",Def::Nup,Def::Ndown);
       fprintf(stdoutMPI, "2Sz is incorrect.\n");
       return FALSE;
     }
@@ -3074,26 +3061,26 @@ to get the name of keyword, i.e. cKWListOfFileNameList[KWTest] = "Test".
  ```
  void InitializeInteractionNum
 (
- struct DefineList *X
+ 
  )
 {
-  X->NTransfer=0;
-  X->NCoulombIntra=0;
-  X->NCoulombInter=0;
-  X->NIsingCoupling=0;
-  X->NPairLiftCoupling=0;
-  X->NInterAll=0;
-  X->NCisAjt=0;
-  X->NCisAjtCkuAlvDC=0;
-  X->NSingleExcitationOperator=0;
-  X->NPairExcitationOperator=0;
+  Def::NTransfer=0;
+  Def::NCoulombIntra=0;
+  Def::NCoulombInter=0;
+  Def::NIsingCoupling=0;
+  Def::NPairLiftCoupling=0;
+  Def::NInterAll=0;
+  Def::NCisAjt=0;
+  Def::NCisAjtCkuAlvDC=0;
+  Def::NSingleExcitationOperator=0;
+  Def::NPairExcitationOperator=0;
   //[s] Time Evolution
-  X->NTETimeSteps=0;
-  X->NLaser=0;
-  X->NTEInterAll=0;
-  X->NTETransfer=0;
+  Def::NTETimeSteps=0;
+  Def::NLaser=0;
+  Def::NTEInterAll=0;
+  Def::NTETransfer=0;
   //[e] Time Evolution
-  X->NTest = 0;
+  Def::NTest = 0;
 }
  ```
     @sa  InitializeInteractionNum
@@ -3106,7 +3093,7 @@ to get the name of keyword, i.e. cKWListOfFileNameList[KWTest] = "Test".
 
 You can set a value of parameters with a new keyword in ``modpara`` file by following way.
 
-- Define a new variable corresponding to the above parameter in @c struct.h file.
+- Define a new variable corresponding to the above parameter in @c global.hpp file.
 
 - The value with the keyword are read by `` ReadDefFileNInt `` function in @c readdef.cpp.
 
@@ -3126,10 +3113,10 @@ You can set a value of parameters with a new keyword in ``modpara`` file by foll
        fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp); //5
        //! Read header name for files about data
        fgetsMPI(ctmp2, 256, fp);
-       sscanf(ctmp2, "%s %s\n", ctmp, X->CDataFileHead); //6
+       sscanf(ctmp2, "%s %s\n", ctmp, Def::CDataFileHead); //6
         //! Read header name for files about parameters
        fgetsMPI(ctmp2, 256, fp);
-       sscanf(ctmp2, "%s %s\n", ctmp, X->CParaFileHead); //7
+       sscanf(ctmp2, "%s %s\n", ctmp, Def::CParaFileHead); //7
        //! Read header (1 line).
        fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);   //8
   ```
@@ -3141,7 +3128,7 @@ You can set a value of parameters with a new keyword in ``modpara`` file by foll
    For example, when you add new key word "NTest", you can get the value as follows:
    ```
         if (CheckWords(ctmp, "NTest") == 0) {
-                X->NTest = (int) dtmp;
+                Def::NTest = (int) dtmp;
               }
    ```
 
@@ -3153,7 +3140,7 @@ You can set a value of parameters with a new keyword in ``modpara`` file by foll
 
 You can set a new calculation mode with a new keyword in ``calcmod`` file by following way.
 
-- Define a new variable corresponding to the new calculation mode in @c struct.h file.
+- Define a new variable corresponding to the new calculation mode in @c global.hpp file.
 
 - The value with the keyword are read by `` ReadcalcmodFile `` function in @c readdef.cpp.
 
@@ -3161,31 +3148,31 @@ In the following, we describe the detail of the flow of setting the calculation 
 
 1. Set initial value at the beginning of ReadcalcmodFile function.
   ```
-  X->iCalcType=0;
-  X->iFlgFiniteTemperature=0;
-  X->iCalcModel=0;
-  X->iOutputMode=0;
-  X->iCalcEigenVec=0;
-  X->iInitialVecType=0;
-  X->iOutputEigenVec=0;
-  X->iInputEigenVec=0;
-  X->iOutputHam=0;
-  X->iInputHam=0;
-  X->iFlgCalcSpec=0;
-  X->iReStart=0;
-  X->iFlgMPI=0;
+  Def::iCalcType=0;
+  Def::iFlgFiniteTemperature=0;
+  Def::iCalcModel=0;
+  Def::iOutputMode=0;
+  Def::iCalcEigenVec=0;
+  Def::iInitialVecType=0;
+  Def::iOutputEigenVec=0;
+  Def::iInputEigenVec=0;
+  Def::iOutputHam=0;
+  Def::iInputHam=0;
+  Def::iFlgCalcSpec=0;
+  Def::iReStart=0;
+  Def::iFlgMPI=0;
   ```
 
 2. Each line is read by ``` fgetsMPI ``` function. 
    ``GetKWWithIdx`` function reads ctmp = keyword, itmp=index.
   ```
-   while( fgetsMPI(ctmpLine, D_CharTmpReadDef+D_CharKWDMAX, fp)!=NULL ){
+   while( fgetsMPI(ctmpLine, D_CharTmpReadDef+D_CharKWDMAfp)!=NULL ){
     if( (iret=GetKWWithIdx(ctmpLine, ctmp, &itmp)) !=0){
       if(iret==1) continue;
       return(-1);
     }   
     if(CheckWords(ctmp, "CalcType")==0){
-      X->iCalcType=itmp;
+      Def::iCalcType=itmp;
     }
    ...
    }
@@ -3197,7 +3184,7 @@ In the following, we describe the detail of the flow of setting the calculation 
    For example, when you add new key word "NTest", you can get the value as follows:
    ```
         if (CheckWords(ctmp, "NTest") == 0) {
-                X->NTest = (int) dtmp;
+                Def::NTest = (int) dtmp;
               }
    ```
 

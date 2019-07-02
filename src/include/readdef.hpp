@@ -52,84 +52,21 @@
 #define KWTEOneBody 19
 #define KWTETwoBody 20
 
-int CheckSite(
-          const int iListToSite,
-          const int iMaxNum
-          );
+int CheckSite(const int iListToSite, const int iMaxNum);
+int CheckPairSite(const int iList1ToSite, const int iList2ToSite, const int iMaxNum);
+int CheckQuadSite(const int iList1ToSite, const int iList2ToSite, const int iList3ToSite, 
+  const int iList4ToSite, const int iMaxNum);
+int CheckTransferHermite();
+int JudgeDefType(const int argc, char* argv[], int* mode);
+int CheckFormatForSpinInt(const int site1, const int site2, const int site3, const int site4);
+int CheckFormatForKondoInt(const int isite1, const int isite2, const int isite3, const int isite4, int* iLocInfo);
+int CheckFormatForKondoTrans();
+void SetConvergenceFactor();
+int CheckLocSpin();
+void ResetInteractionNum();
+void InitializeInteractionNum();
 
-
-int CheckPairSite(
-          const int iList1ToSite,
-          const int iList2ToSite,
-          const int iMaxNum
-          );
-
-
-int CheckQuadSite(
-          const int iList1ToSite,
-          const int iList2ToSite,
-          const int iList3ToSite,
-          const int iList4ToSite,
-          const int iMaxNum
-          );
-
-int CheckTransferHermite(struct DefineList *X);
-
-int JudgeDefType
-(
- const int argc,
- char *argv[],
- int *mode
- );
-
-int CheckFormatForSpinInt
-(
- const int site1,
- const int site2,
- const int site3,
- const int site4
- );
-
-/*
-int CheckFormatForKondoInt
-(
- struct DefineList *X
- );
-*/
-int CheckFormatForKondoInt
-(
- const int isite1, const int isite2,
- const int isite3, const int isite4,
- int* iLocInfo
- );
-
-int CheckFormatForKondoTrans
-(
- struct DefineList *X
- );
-
-void SetConvergenceFactor
-(
- struct DefineList *X
- );
-
-int CheckLocSpin
-(
-  struct DefineList *X
-);
-
-void ResetInteractionNum
-(
- struct DefineList *X
- );
-
-void InitializeInteractionNum
-(
- struct DefineList *X
- );
-
-int CheckGeneralSpinIndexForInterAll
-(
+int CheckGeneralSpinIndexForInterAll(
  const int isite1, const int isigma1,
  const int isite2, const int isigma2,
  const int isite3, const int isigma3,
@@ -137,33 +74,9 @@ int CheckGeneralSpinIndexForInterAll
  int* iLocInfo
  );
 
-int CheckSpinIndexForTrans
-(
-  struct DefineList *X
- );
-
-int CheckTotal2Sz
-(
-  struct DefineList *X
- );
-
-int ReadDefFileNInt(
-                    char *xNameListFile, 
-                    struct DefineList *X,
-                    struct BoostList *xBoost
-                    );
-
-int ReadDefFileIdxPara(
-                       struct DefineList *X,
-                       struct BoostList *xBoost
-                       );
-
-int CheckWords(
-               const char* ctmp,
-               const char* cKeyWord
-               );
-
-int GetFileNameByKW(
-                    int KWidx,
-                    char **FileName
-                    );
+int CheckSpinIndexForTrans();
+int CheckTotal2Sz();
+int ReadDefFileNInt(char* xNameListFile);
+int ReadDefFileIdxPara();
+int CheckWords(const char* ctmp, const char* cKeyWord);
+int GetFileNameByKW(int KWidx, char** FileName);

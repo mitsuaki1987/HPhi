@@ -40,7 +40,7 @@
  */
 int TimeKeeper
 (
- struct BindStruct *X,
+ 
  const char *cFileName,
  const char *cTimeKeeper_Message,
  const char *cWriteType
@@ -51,7 +51,7 @@ int TimeKeeper
   struct tm *area;
   time_t tx;
   
-  sprintf(sdt, cFileName, X->Def.CDataFileHead);
+  sprintf(sdt, cFileName, Def::CDataFileHead);
   tx   = time(NULL);
   area = localtime(&tx);
   if(childfopenMPI(sdt, cWriteType, &fp)!=0){
@@ -76,7 +76,7 @@ int TimeKeeper
  */
 int TimeKeeperWithStep
 (
- struct BindStruct *X,
+ 
  const char *cFileName,
  const char *cTimeKeeper_Message,
  const char *cWriteType,
@@ -88,7 +88,7 @@ int TimeKeeperWithStep
   struct tm *area;
   time_t tx;
   
-  sprintf(sdt, cFileName, X->Def.CDataFileHead);
+  sprintf(sdt, cFileName, Def::CDataFileHead);
   tx   = time(NULL);
   area = localtime(&tx);
   if(childfopenMPI(sdt, cWriteType, &fp)!=0){
@@ -115,7 +115,7 @@ int TimeKeeperWithStep
  */
 int TimeKeeperWithRandAndStep
 (
- struct BindStruct *X,
+ 
  const char *cFileName,
  const char *cTimeKeeper_Message,
  const char *cWriteType,
@@ -127,7 +127,7 @@ int TimeKeeperWithRandAndStep
   struct tm *area;
   time_t tx;
   
-  sprintf(sdt, cFileName, X->Def.CDataFileHead);
+  sprintf(sdt, cFileName, Def::CDataFileHead);
   tx   = time(NULL);
   area = localtime(&tx);
   if(childfopenMPI(sdt, cWriteType, &fp)!=0){
