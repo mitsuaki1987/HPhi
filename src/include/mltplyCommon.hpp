@@ -17,6 +17,8 @@
 #ifndef HPHI_MLTPLYCOMMON_H
 #define HPHI_MLTPLYCOMMON_H
 
+#include <complex>
+
 #define M_MLTPLY 0
 #define M_ENERGY 1
 #define M_Ham 2

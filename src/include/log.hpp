@@ -13,33 +13,12 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-#pragma once
-#include "global.hpp"
 
-int TimeKeeper
-(
- 
- const char *cFileName,
- const char *cTimeKeeper_Message,
- const char *cWriteType
-);
+int TimeKeeper(const char* cFileName, const char* cTimeKeeper_Message,
+ const char *cWriteType);
 
-int TimeKeeperWithStep
-(
- 
- const char *cFileName,
- const char *cTimeKeeper_Message,
- const char *cWriteType,
- const int istep
- );
+int TimeKeeperWithStep(const char* cFileName, const char* cTimeKeeper_Message,
+ const char *cWriteType, const int istep);
 
-
-int TimeKeeperWithRandAndStep
-(
- 
- const char *cFileName,
- const char *cTimeKeeper_Message,
- const char *cWriteType,
- const int istep,
- const int irand
- );
+int TimeKeeperWithRandAndStep(const char* cFileName, const char* cTimeKeeper_Message,
+  const char* cWriteType, const int istep, const int irand);

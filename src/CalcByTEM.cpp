@@ -13,7 +13,6 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-#include "Common.hpp"
 #include "readdef.hpp"
 #include "FirstMultiply.hpp"
 #include "Multiply.hpp"
@@ -26,6 +25,9 @@
 #include "wrapperMPI.hpp"
 #include "HPhiTrans.hpp"
 #include "common/setmemory.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
+#include "log.hpp"
 #include <iostream>
 /**@file
  * @brief  File to define functions to calculate expected values by Time evolution method.

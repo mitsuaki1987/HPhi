@@ -14,13 +14,19 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include <bitcalc.hpp>
+#include "bitcalc.hpp"
 #include "common/setmemory.hpp"
 #include "FileIO.hpp"
 #include "sz.hpp"
 #include "wrapperMPI.hpp"
 #include "xsetmem.hpp"
+#include "log.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
 #include <iostream>
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 /**
  * @file

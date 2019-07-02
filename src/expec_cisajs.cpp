@@ -25,6 +25,9 @@
 #include "mltplyMPISpinCore.hpp"
 #include "common/setmemory.hpp"
 #include "mltplyCommon.hpp"
+#include "DefCommon.hpp"
+#include "global.hpp"
+#include "log.hpp"
 
 /**
  * @file

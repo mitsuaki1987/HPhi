@@ -14,11 +14,6 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include <ctime>
-#include "Common.hpp"
-#include "log.hpp"
-#include "FileIO.hpp"
-
 /**
  * @file
  *
@@ -26,6 +21,11 @@
  *
  *
  */
+
+#include "log.hpp"
+#include "FileIO.hpp"
+#include "global.hpp"
+#include <ctime>
 
 /*!
  * @brief Functions for writing a time log.

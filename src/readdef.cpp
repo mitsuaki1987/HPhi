@@ -24,11 +24,12 @@
  * 
  * @brief  File to define functions of reading input files
  */
-#include "Common.hpp"
 #include "readdef.hpp"
 #include <cctype>
 #include "wrapperMPI.hpp"
 #include "common/setmemory.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
 #include <iostream>
 /**
  @brief Keyword List in NameListFile.

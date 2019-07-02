@@ -15,23 +15,6 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /*-------------------------------------------------------------*/
 
-#include <sz.hpp>
-#include <HPhiTrans.hpp>
-#include <output_list.hpp>
-#include <diagonalcalc.hpp>
-#include <CalcByLOBPCG.hpp>
-#include <CalcByFullDiag.hpp>
-#include <CalcByTPQ.hpp>
-#include <CalcSpectrum.hpp>
-#include <check.hpp>
-#include "CalcByTEM.hpp"
-#include "readdef.hpp"
-#include "StdFace_main.hpp"
-#include "wrapperMPI.hpp"
-#include "splash.hpp"
-#include "CalcTime.hpp"
-#include "common/setmemory.hpp"
-
 /*!
   @mainpage
 
@@ -157,6 +140,29 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/myscript.sh DESTINATION bin
         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 \endcode
 */
+
+#include "sz.hpp"
+#include "HPhiTrans.hpp"
+#include "output_list.hpp"
+#include "diagonalcalc.hpp"
+#include "CalcByLOBPCG.hpp"
+#include "CalcByFullDiag.hpp"
+#include "CalcByTPQ.hpp"
+#include "CalcSpectrum.hpp"
+#include "check.hpp"
+#include "CalcByTEM.hpp"
+#include "readdef.hpp"
+#include "StdFace_main.hpp"
+#include "wrapperMPI.hpp"
+#include "splash.hpp"
+#include "CalcTime.hpp"
+#include "common/setmemory.hpp"
+#include "xsetmem.hpp"
+#include "log.hpp"
+#include "DefCommon.hpp"
+#include "global.hpp"
+#include <sys/stat.h>
+#include <cstdlib>
 
 /** 
  * @brief Main program for HPhi

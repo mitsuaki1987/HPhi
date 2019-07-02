@@ -14,7 +14,6 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #pragma once
-#include "xsetmem.hpp"
 #define D_FileNameMaxReadDef 256 /*!<  Max length of words for file name*/
 #define D_CharTmpReadDef     200 /*!<  Max length of reading words from input files*/
 #define D_CharKWDMAX     200 /*!<  Max length of words for keyword*/
@@ -60,7 +59,6 @@ int CheckTransferHermite();
 int JudgeDefType(const int argc, char* argv[], int* mode);
 int CheckFormatForSpinInt(const int site1, const int site2, const int site3, const int site4);
 int CheckFormatForKondoInt(const int isite1, const int isite2, const int isite3, const int isite4, int* iLocInfo);
-int CheckFormatForKondoTrans();
 void SetConvergenceFactor();
 int CheckLocSpin();
 void ResetInteractionNum();

@@ -18,7 +18,11 @@
 #include "wrapperMPI.hpp"
 #include "CalcTime.hpp"
 #include "mltplyCommon.hpp"
+#include "lapack_diag.hpp"
+#include "phys.hpp"
+#include "output.hpp"
 #include "mltply.hpp"
+#include "global.hpp"
 
  /// \brief Parent function for FullDiag mode
  /// \retval TRUE(=1) normally finished.

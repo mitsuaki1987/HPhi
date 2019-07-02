@@ -13,15 +13,6 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-#include "phys.hpp"
-#include "expec_energy_flct.hpp"
-#include "expec_totalspin.hpp"
-#include "expec_cisajs.hpp"
-#include "expec_cisajscktaltdc.hpp"
-#include "wrapperMPI.hpp"
-#ifdef _SCALAPACK
-#include "matrixscalapack.hpp"
-#endif
 
 /**
  * @file
@@ -33,7 +24,17 @@
  * 
  * 
  */
-
+#include "phys.hpp"
+#include "expec_energy_flct.hpp"
+#include "expec_totalspin.hpp"
+#include "expec_cisajs.hpp"
+#include "expec_cisajscktaltdc.hpp"
+#include "wrapperMPI.hpp"
+#ifdef _SCALAPACK
+#include "matrixscalapack.hpp"
+#endif
+#include "global.hpp"
+#include "DefCommon.hpp"
 /** 
  * 
  * @brief A main function to calculate physical quantities by full diagonalization method.

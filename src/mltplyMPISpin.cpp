@@ -17,13 +17,12 @@
 @brief Functions for spin Hamiltonian + MPI
 */
 
-#include "Common.hpp"
 #include "mltplyCommon.hpp"
 #include "bitcalc.hpp"
 #include "wrapperMPI.hpp"
 #include "mltplyMPISpin.hpp"
 #include "mltplyMPISpinCore.hpp"
-
+#include "global.hpp"
 /**
 @brief Exchange term in Spin model
   When both site1 and site2 are in the inter process region.

@@ -21,6 +21,8 @@
 #include "check.hpp"
 #include "wrapperMPI.hpp"
 #include "CheckMPI.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
 
 /**
  * @file

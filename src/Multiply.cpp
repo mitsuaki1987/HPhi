@@ -14,11 +14,11 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "Common.hpp"
 #include "diagonalcalc.hpp"
 #include "Multiply.hpp"
 #include "wrapperMPI.hpp"
 #include "mltply.hpp"
+#include "global.hpp"
 #include <iostream>
 
 /**
@@ -78,7 +78,6 @@ shared(v0,NumAve,global_norm) firstprivate(i_max)
  */
 int MultiplyForTEM
 (
-  
   std::complex<double> **v2
 )
 {

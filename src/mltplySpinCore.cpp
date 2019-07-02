@@ -21,6 +21,7 @@
 #include "wrapperMPI.hpp"
 #include "mltplyCommon.hpp"
 #include "mltplySpinCore.hpp"
+#include "global.hpp"
 
 /******************************************************************************/
 //[s] GetInfo functions

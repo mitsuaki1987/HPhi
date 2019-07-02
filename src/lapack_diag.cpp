@@ -22,6 +22,8 @@
 #ifdef _SCALAPACK
 #include "matrixscalapack.hpp"
 #endif
+#include "global.hpp"
+#include <cstring>
 
 /** 
  * 

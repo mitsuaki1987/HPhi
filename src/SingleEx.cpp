@@ -17,8 +17,9 @@
 @brief Functions to compute singly excited state
 */
 #include "bitcalc.hpp"
-#include "SingleEx.hpp"
 #include "SingleExHubbard.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
 /**
 @brief Calculation of single excited state
 Target System: Hubbard, Kondo

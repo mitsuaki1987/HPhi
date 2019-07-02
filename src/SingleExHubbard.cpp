@@ -19,6 +19,7 @@
 #include "mltplyHubbardCore.hpp"
 #include "mltplyMPIHubbardCore.hpp"
 #include "mltplyCommon.hpp"
+#include "global.hpp"
 #ifdef __MPI
 #include "mpi.h"
 #endif

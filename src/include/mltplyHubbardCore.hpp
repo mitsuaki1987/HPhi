@@ -17,7 +17,6 @@
 #ifndef HPHI_MLTPLYHUBBARDCORE_H
 #define HPHI_MLTPLYHUBBARDCORE_H
 
-#include "Common.hpp"
 
 void child_pairhopp_element
 (

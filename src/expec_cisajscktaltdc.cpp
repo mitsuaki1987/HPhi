@@ -26,6 +26,9 @@
 #include "mltplyMPISpinCore.hpp"
 #include "mltplyMPIHubbardCore.hpp"
 #include "common/setmemory.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
+#include "log.hpp"
 /**
  * @file
  * 

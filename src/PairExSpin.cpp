@@ -20,9 +20,12 @@
 #include "mltplyMPISpinCore.hpp"
 #include "mltplySpinCore.hpp"
 #include "mltplyCommon.hpp"
+#include "global.hpp"
 #ifdef __MPI
 #include "common/setmemory.hpp"
 #endif
+#include <complex>
+
 /// Calculation of pair excited state for Half Spin Grand canonical system
 /// \param X [in,out] define list to get and put information of calculation
 /// \param tmp_v0 [out] Result v0 = H v1

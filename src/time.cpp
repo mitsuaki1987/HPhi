@@ -22,10 +22,10 @@
  * original code written by Satoshi Morita
  *-------------------------------------------------------------*/
 
-#include "Common.hpp"
 #include "FileIO.hpp"
 #include "CalcTime.hpp"
-
+#include "global.hpp"
+#include "DefCommon.hpp"
 #ifdef __MPI
 #include <mpi.h>
 #endif

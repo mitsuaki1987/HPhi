@@ -13,14 +13,7 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-#include "FirstMultiply.hpp"
-#include "expec_energy_flct.hpp"
-#include "common/setmemory.hpp"
-#include "wrapperMPI.hpp"
-#include "CalcTime.hpp"
-#include "mltplyCommon.hpp"
-#include "expec_cisajs.hpp"
-#include "expec_cisajscktaltdc.hpp"
+
 /**
  * @file
  * @author Takahiro Misawa (The University of Tokyo)
@@ -30,6 +23,20 @@
  *
  */
 
+#include "FirstMultiply.hpp"
+#include "expec_energy_flct.hpp"
+#include "common/setmemory.hpp"
+#include "wrapperMPI.hpp"
+#include "CalcTime.hpp"
+#include "mltplyCommon.hpp"
+#include "expec_cisajs.hpp"
+#include "expec_cisajscktaltdc.hpp"
+#include "dSFMT.hpp"
+#include "global.hpp"
+#include "log.hpp"
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 ///
 /// \brief Multiplication @f$ v_0 = H v_1 @f$ at the first step for TPQ mode (@f$ v_1 @f$ is the random or inputted vector).
 /// \param rand_i [in] A rundom number seed for giving the initial vector @f$ v_1 @f$.

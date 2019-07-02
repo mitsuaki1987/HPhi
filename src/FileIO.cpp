@@ -18,6 +18,8 @@
 */
 #include "FileIO.hpp"
 #include "wrapperMPI.hpp"
+#include "global.hpp"
+#include <cstring>
 /** 
 @brief Only the root process open file in output/ directory
 @author Takahiro Misawa (The University of Tokyo)

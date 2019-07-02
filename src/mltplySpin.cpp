@@ -156,7 +156,7 @@ General on-site term
   </tr>
 </table>
 */
-#include <bitcalc.hpp>
+#include "bitcalc.hpp"
 #include "common/setmemory.hpp"
 #include "mltplyCommon.hpp"
 #include "mltplySpin.hpp"
@@ -165,6 +165,7 @@ General on-site term
 #include "mltplyHubbardCore.hpp"
 #include "mltplyMPISpin.hpp"
 #include "mltplyMPISpinCore.hpp"
+#include "global.hpp"
 /**
 @brief Driver function for Spin hamiltonian
 @return error code

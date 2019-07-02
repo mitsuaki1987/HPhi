@@ -32,11 +32,14 @@
  * 
  * 
  */
-#include <bitcalc.hpp>
+#include "bitcalc.hpp"
 #include "FileIO.hpp"
 #include "diagonalcalc.hpp"
 #include "mltplySpinCore.hpp"
 #include "wrapperMPI.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
+#include "log.hpp"
 #include <iostream>
 /**
  * @brief Update the vector by the general two-body diagonal interaction, \f$ H_{i\sigma_1 j\sigma_2} n_ {i\sigma_1}n_{j\sigma_2}\f$.\n

@@ -16,8 +16,9 @@
 /**@file
 @brief Compute total number of electrons, spins
 */
-#include "Common.hpp"
 #include "wrapperMPI.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
 /**
 @brief Define the number of sites in each PE (DefineList.Nsite).
  Reduce the number of electrons (DefineList.Ne), 

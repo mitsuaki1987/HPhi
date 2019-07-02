@@ -16,7 +16,9 @@
 #include "output.hpp"
 #include "FileIO.hpp"
 #include "wrapperMPI.hpp"
-
+#include "DefCommon.hpp"
+#include "global.hpp"
+#include <cstring>
 
 /// \brief output function for FullDiag mode
 ///

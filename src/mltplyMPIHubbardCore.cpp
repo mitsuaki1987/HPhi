@@ -16,13 +16,13 @@
 /**@file
 @brief Functions for Hubbar + MPI (Core)
 */
-#include "Common.hpp"
 #include "mltplyCommon.hpp"
 #include "mltplyHubbardCore.hpp"
 #include "mltplyMPIHubbard.hpp"
 #include "mltplyMPIHubbardCore.hpp"
 #include "bitcalc.hpp"
 #include "wrapperMPI.hpp"
+#include "global.hpp"
 /**
 @brief Check whether this site is in the inter process region or not
 @return 1 if it is inter-process region, 0 if not.

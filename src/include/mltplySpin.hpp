@@ -17,7 +17,6 @@
 #ifndef HPHI_MLTPLYSPIN_H
 #define HPHI_MLTPLYSPIN_H
 
-#include "Common.hpp"
 
 int mltplySpin( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
 int mltplyHalfSpin( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);

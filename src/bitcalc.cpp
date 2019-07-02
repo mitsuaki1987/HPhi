@@ -15,6 +15,8 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include "bitcalc.hpp"
 #include "wrapperMPI.hpp"
+#include "DefCommon.hpp"
+#include "global.hpp"
 
 /**
  * @file

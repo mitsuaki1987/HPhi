@@ -62,12 +62,12 @@ General two body term:
   </tr>
 </table>
 */
-#include "Common.hpp"
 #include "mltplyCommon.hpp"
 #include "mltplySpinCore.hpp"
 #include "mltplyMPISpinCore.hpp"
 #include "bitcalc.hpp"
 #include "wrapperMPI.hpp"
+#include "global.hpp"
 /**
 @brief Exchange and Pairlifting term in Spin model + GC
        When both site1 and site2 are in the inter process region.

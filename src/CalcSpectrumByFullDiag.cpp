@@ -17,15 +17,15 @@
 @brief Functions to perform spectrum calculations with the
 full-diagonalization method.
 */
-#include <complex>
 #include "global.hpp"
-#include <ctime>
 #include "lapack_diag.hpp"
 #include "mltply.hpp"
 #include "mltplyCommon.hpp"
 #include "CalcTime.hpp"
 #include "common/setmemory.hpp"
 #include "CalcSpectrum.hpp"
+#include <ctime>
+#include <complex>
 /**
 @brief Compute the Green function with the Lehmann representation and FD
 @f[

@@ -21,6 +21,7 @@
 #include "mltplyHubbardCore.hpp"
 #include "mltplyMPIHubbard.hpp"
 #include "mltplyMPIHubbardCore.hpp"
+#include "global.hpp"
 #ifdef __MPI
 #include "common/setmemory.hpp"
 #endif

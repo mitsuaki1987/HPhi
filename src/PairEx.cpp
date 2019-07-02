@@ -19,6 +19,9 @@
 #include "PairEx.hpp"
 #include "PairExHubbard.hpp"
 #include "PairExSpin.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
+#include <complex>
 
 /**
  * @file

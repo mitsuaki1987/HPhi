@@ -141,6 +141,7 @@ Other
 #include "CalcTime.hpp"
 #include "mltplyHubbardCore.hpp"
 #include "mltplyMPIHubbardCore.hpp"
+#include "global.hpp"
 /**
 @brief perform Hamiltonian vector product for (extended) Hubbard type model.
 @f${\bf v}_0 = {\hat H}{\bf v}_1@f$
@@ -337,8 +338,8 @@ int mltplyHubbard(
 @return errorcode. 0 for normal, other error
 */
 int mltplyHubbardGC(
-  //!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
+  int nstate,/**<[in] Number of states*/
+  std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ){
   long int i;

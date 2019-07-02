@@ -17,7 +17,6 @@
 @brief Functions to perform calculations with the
 localy optimal block (preconditioned) conjugate gradient method.
 */
-#include "Common.hpp"
 #include "xsetmem.hpp"
 #include "mltply.hpp"
 #include "FileIO.hpp"
@@ -27,9 +26,16 @@ localy optimal block (preconditioned) conjugate gradient method.
 #include "expec_totalspin.hpp"
 #include "expec_energy_flct.hpp"
 #include "phys.hpp"
-#include <cmath>
 #include "mltplyCommon.hpp"
 #include "./common/setmemory.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
+#include "dSFMT.hpp"
+#include "log.hpp"
+#include <cmath>
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 void debug_print(int num, std::complex<double> *var){
   int i;

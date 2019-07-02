@@ -21,6 +21,12 @@
 #include "wrapperMPI.hpp"
 #include "CalcTime.hpp"
 #include "common/setmemory.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
+#include "log.hpp"
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 ///
 /// \brief Calculate expected values of energies and physical quantities for Hubbard GC model
 /// \param X [in, out] X Struct to get information about file header names, dimension of hirbert space, calc type and output physical quantities.

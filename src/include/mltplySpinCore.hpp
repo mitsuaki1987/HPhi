@@ -17,7 +17,6 @@
 #ifndef HPHI_MLTPLYSPINCORE_H
 #define HPHI_MLTPLYSPINCORE_H
 
-#include "Common.hpp"
 
 void child_exchange_spin_element(long int j, int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1,  long int *tmp_off);
 

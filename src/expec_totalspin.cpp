@@ -20,6 +20,8 @@
 #include "mltplyMPISpin.hpp"
 #include "mltplyMPISpinCore.hpp"
 #include "expec_totalspin.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
 /**
  * @file
  *

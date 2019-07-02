@@ -24,6 +24,9 @@
 #include "CalcTime.hpp"
 #include "common/setmemory.hpp"
 #include "mltplyCommon.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
+#include "log.hpp"
 /**
  * @file
  * @version 0.1, 0.2

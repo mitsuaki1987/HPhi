@@ -12,18 +12,6 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-
-// Define Mode for mltply
-// complex version
-#include <bitcalc.hpp>
-#include "mltply.hpp"
-#include "mltplySpin.hpp"
-#include "mltplyHubbard.hpp"
-#include "wrapperMPI.hpp"
-#include "CalcTime.hpp"
-#include "mltplyCommon.hpp"
-#include "diagonalcalc.hpp"
-
 /**
  * @file
  *
@@ -36,8 +24,18 @@
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
-
-
+ // Define Mode for mltply
+ // complex version
+#include "bitcalc.hpp"
+#include "mltply.hpp"
+#include "mltplySpin.hpp"
+#include "mltplyHubbard.hpp"
+#include "wrapperMPI.hpp"
+#include "CalcTime.hpp"
+#include "mltplyCommon.hpp"
+#include "diagonalcalc.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
 /**
  * @brief Parent function of multiplying the wavefunction by the Hamiltonian. @f$ H v_1@f$.\n
  * First, the calculation of diagonal term is done by using the list @f$ \verb|list_diaognal| @f$. \n

@@ -20,6 +20,7 @@
 #include "wrapperMPI.hpp"
 #include "mltplyCommon.hpp"
 #include "mltplyHubbardCore.hpp"
+#include "global.hpp"
 
 /******************************************************************************/
 //[s] GetInfo functions

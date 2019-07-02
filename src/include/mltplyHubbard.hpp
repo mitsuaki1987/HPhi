@@ -17,7 +17,6 @@
 #ifndef HPHI_MLTPLYHUBBARD_H
 #define HPHI_MLTPLYHUBBARD_H
 
-#include "Common.hpp"
 
 int mltplyHubbard(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
 int mltplyHubbardGC(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);

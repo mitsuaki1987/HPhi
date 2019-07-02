@@ -16,6 +16,7 @@
 #include "input.hpp"
 #include "FileIO.hpp"
 #include "wrapperMPI.hpp"
+#include "global.hpp"
 
 int inputHam(){
   //Input Ham

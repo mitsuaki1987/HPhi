@@ -13,7 +13,7 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-#pragma once
-#include "Common.hpp"
 
-int expec_energy_flct( int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1);
+#include <complex>
+
+int expec_energy_flct(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);

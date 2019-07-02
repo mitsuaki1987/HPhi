@@ -16,11 +16,11 @@
 /**@file
 @brief Functions for Hubbard Hamiltonian + MPI
 */
-#include "Common.hpp"
 #include "bitcalc.hpp"
 #include "wrapperMPI.hpp"
 #include "mltplyCommon.hpp"
 #include "mltplyMPIHubbard.hpp"
+#include "global.hpp"
 /**
 @brief Hopping term in Hubbard + GC
 When both site1 and site2 are in the inter process region.

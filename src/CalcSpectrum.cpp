@@ -13,6 +13,17 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+
+/**
+ * @file
+ * @version 1.1
+ * @author Kazuyoshi Yoshimi (The University of Tokyo)
+ *
+ * @brief  File for givinvg functions of calculating spectrum
+ *
+ *
+ */
+
 #include "mltply.hpp"
 #include "CalcSpectrum.hpp"
 #include "CalcSpectrumByBiCG.hpp"
@@ -24,19 +35,14 @@
 #include "FileIO.hpp"
 #include "common/setmemory.hpp"
 #include "readdef.hpp"
+#include "xsetmem.hpp"
 #include "sz.hpp"
 #include "check.hpp"
 #include "diagonalcalc.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
+#include "log.hpp"
 #include <iostream>
-/**
- * @file
- * @version 1.1
- * @author Kazuyoshi Yoshimi (The University of Tokyo)
- *
- * @brief  File for givinvg functions of calculating spectrum
- *
- *
- */
 
  ///
  /// \brief Set target frequencies

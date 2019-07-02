@@ -13,18 +13,9 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-#pragma once
-#include "Common.hpp"
+#include<complex>
 
-int diagonalcalc
-(
- 
- );
-
-int diagonalcalcForTE(
-        const int _istep,
-        
-        std::complex<double> *tmp_v0,
-        std::complex<double> *tmp_v1
-);
-
+int diagonalcalc();
+int diagonalcalcForTE(const int _istep,
+  std::complex<double>* tmp_v0, 
+  std::complex<double>* tmp_v1);

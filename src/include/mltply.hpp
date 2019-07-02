@@ -14,11 +14,6 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef HPHI_MLTPLY_H
-#define HPHI_MLTPLY_H
-
-#include "Common.hpp"
+#include <complex>
 
 int mltply( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-
-#endif /* HPHI_MLTPLY_H */

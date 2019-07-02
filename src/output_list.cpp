@@ -16,6 +16,8 @@
 #include "output_list.hpp"
 #include "FileIO.hpp"
 #include "wrapperMPI.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
 
 /**
  * @file

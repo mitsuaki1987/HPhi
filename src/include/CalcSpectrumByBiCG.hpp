@@ -13,15 +13,11 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-#pragma once
-#include "Common.hpp"
+
+#include <complex>
 
 int CalcSpectrumByBiCG(
-  std::complex<double> **v2,
-  std::complex<double> **v4,
-  int Nomega,
-  int NdcSpectrum,
-  std::complex<double> **dcSpectrum,
-  std::complex<double> *dcomega,
-  std::complex<double> **v1Org
-);
+  std::complex<double>** v2, std::complex<double>** v4,
+  int Nomega, int NdcSpectrum,
+  std::complex<double>** dcSpectrum, std::complex<double>* dcomega,
+  std::complex<double>** v1Org);

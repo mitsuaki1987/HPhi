@@ -17,13 +17,15 @@
 @author Mitsuaki Kawamura (The University of Tokyo)
 @brief  File for givinvg functions of calculating spectrum by Lanczos
 */
-#include "Common.hpp"
 #include "FileIO.hpp"
 #include "wrapperMPI.hpp"
 #include "common/setmemory.hpp"
 #include "mltply.hpp"
 #include "CalcSpectrum.hpp"
 #include "mltplyCommon.hpp"
+#include "global.hpp"
+#include "DefCommon.hpp"
+#include "log.hpp"
 #ifdef __MPI
 #include <mpi.h>
 #endif

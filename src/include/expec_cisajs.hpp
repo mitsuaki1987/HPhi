@@ -13,12 +13,5 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-#pragma once
-#include "Common.hpp"
 
-int expec_cisajs(
-  
-  int nstate,
-  std::complex<double> **Xvec,
-  std::complex<double> **vec
-);
+int expec_cisajs(int nstate, std::complex<double>** Xvec, std::complex<double>** vec);
