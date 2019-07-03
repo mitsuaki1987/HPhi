@@ -48,7 +48,6 @@
   *
   * @param[in] ib   upper half bit of i
   * @param[in] ihfbit 2^(Ns/2)
-  * @param[in] X
   * @param[out] list_1_    list_1_[icnt] = i : i is divided into ia and ib (i=ib*ihfbit+ia)
   * @param[out] list_2_1_  list_2_1_[ib] = jb
   * @param[out] list_2_2_  list_2_2_[ia] = ja  : icnt=jb+ja
@@ -60,7 +59,6 @@
 int child_omp_sz_Kondo_hacker(
   long int ib,
   long int ihfbit,
-  
   long int *list_1_,
   long int *list_2_1_,
   long int *list_2_2_,
@@ -220,7 +218,6 @@ long int Binomial(int n,int k,long int **comb,int Nsite){
  * 
  * @param[in] ib   upper half bit of i    
  * @param[in] ihfbit 2^(Ns/2) 
- * @param[in] X
  * @param[out] list_1_    list_1_[icnt] = i : i is divided into ia and ib (i=ib*ihfbit+ia) 
  * @param[out] list_2_1_  list_2_1_[ib] = jb  
  * @param[out] list_2_2_  list_2_2_[ia] = ja  : icnt=jb+ja
@@ -231,14 +228,13 @@ long int Binomial(int n,int k,long int **comb,int Nsite){
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
 int child_omp_sz(
-                 long int ib,    //!<[in]
-                 long int ihfbit, //!<[in]
-                      //!<[in]
-                 long int *list_1_, //!<[out]
-                 long int *list_2_1_,//!<[out]
-                 long int *list_2_2_,//!<[out]
-                 long int *list_jb_ //!<[in]
-                 )
+  long int ib,    //!<[in]
+  long int ihfbit, //!<[in]
+  long int* list_1_, //!<[out]
+  long int* list_2_1_,//!<[out]
+  long int* list_2_2_,//!<[out]
+  long int* list_jb_ //!<[in]
+)
 {
   long int i,j; 
   long int ia,ja,jb;
@@ -328,7 +324,6 @@ int child_omp_sz(
  */
 int child_omp_sz_hacker(long int ib,
   long int ihfbit,
-  
   long int *list_1_,
   long int *list_2_1_,
   long int *list_2_2_,
@@ -435,7 +430,6 @@ int child_omp_sz_hacker(long int ib,
  *
  * @param[in] ib   upper half bit of i    
  * @param[in] ihfbit 2^(Ns/2) 
- * @param[in] X
  * @param[out] list_1_    list_1_[icnt] = i : i is divided into ia and ib (i=ib*ihfbit+ia) 
  * @param[out] list_2_1_  list_2_1_[ib] = jb  
  * @param[out] list_2_2_  list_2_2_[ia] = ja  : icnt=jb+ja
@@ -445,14 +439,13 @@ int child_omp_sz_hacker(long int ib,
  * @author Takahiro Misawa (The University of Tokyo)
  */
 int child_omp_sz_Kondo(
-                       long int ib,        //[in]
-                       long int ihfbit,    //[in]
-                               //[in]
-                       long int *list_1_,  //[out]
-                       long int *list_2_1_,//[out]
-                       long int *list_2_2_,//[out]
-                       long int *list_jb_  //[in]
-                       )
+  long int ib,        //[in]
+  long int ihfbit,    //[in]
+  long int* list_1_,  //[out]
+  long int* list_2_1_,//[out]
+  long int* list_2_2_,//[out]
+  long int* list_jb_  //[in]
+)
 {
   long int i,j; 
   long int ia,ja,jb;
@@ -544,25 +537,18 @@ int child_omp_sz_Kondo(
 }
 /** 
  * 
- * 
- * @param ib 
- * @param ihfbit 
- * @param N2 
- * @param X 
- * 
  * @return 
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
 int child_omp_sz_KondoGC(
-                         long int ib,  //!<[in]
-                         long int ihfbit,//!<[in]
-                             //!<[in]
-                         long int *list_1_, //!<[out]
-                         long int *list_2_1_,//!<[out]
-                         long int *list_2_2_,//!<[out]
-                         long int *list_jb_//!<[in]
-                         )
+  long int ib,  //!<[in]
+  long int ihfbit,//!<[in]
+  long int* list_1_, //!<[out]
+  long int* list_2_1_,//!<[out]
+  long int* list_2_2_,//!<[out]
+  long int* list_jb_//!<[in]
+)
 {
   long int i,j; 
   long int ia,ja,jb;
@@ -633,7 +619,6 @@ int child_omp_sz_KondoGC(
  *
  * @param[in] ib   upper half bit of i    
  * @param[in] ihfbit 2^(Ns/2) 
- * @param[in] X          
  * @param[in] N ???
  * @param[out] list_1_    list_1_[icnt] = i : i is divided into ia and ib (i=ib*ihfbit+ia)
  * @param[out] list_2_1_  list_2_1_[ib] = jb  
@@ -647,7 +632,6 @@ int child_omp_sz_spin(
   long int ib,
   long int ihfbit,
   int N,
-  
   long int *list_1_,
   long int *list_2_1_,
   long int *list_2_2_,
@@ -695,7 +679,6 @@ int child_omp_sz_spin(
  *
  * @param[in] ib   upper half bit of i    
  * @param[in] ihfbit 2^(Ns/2) 
- * @param[in] X          
  * @param[in] N ???
  * @param[out] list_1_    list_1_[icnt] = i : i is divided into ia and ib (i=ib*ihfbit+ia)
  * @param[out] list_2_1_  list_2_1_[ib] = jb  
@@ -709,7 +692,6 @@ int child_omp_sz_spin_hacker(
   long int ib,
   long int ihfbit,
   int N,
-  
   long int *list_1_,
   long int *list_2_1_,
   long int *list_2_2_,
@@ -764,7 +746,6 @@ int child_omp_sz_spin_hacker(
  *
  * @param[in] ib   upper half bit of i    
  * @param[in] ihfbit 2^(Ns/2) 
- * @param[in] X          
  * @param[out] list_1_    list_1_[icnt] = i : i is divided into ia and ib (i=ib*ihfbit+ia) 
  * @param[out] list_2_1_  list_2_1_[ib] = jb  
  * @param[out] list_2_2_  list_2_2_[ia] = ja  : icnt=jb+ja
@@ -776,16 +757,15 @@ int child_omp_sz_spin_hacker(
  * @author Takahiro Misawa (The University of Tokyo)
  */
 int child_omp_sz_GeneralSpin(
-                             long int ib, 
-                             long int ihfbit,
-                             
-                             long int *list_1_,
-                             long int *list_2_1_,
-                             long int *list_2_2_,
-                             long int *list_2_1_Sz_,
-                             long int *list_2_2_Sz_,
-                             long int *list_jb_
-                             )
+  long int ib,
+  long int ihfbit,
+  long int* list_1_,
+  long int* list_2_1_,
+  long int* list_2_2_,
+  long int* list_2_1_Sz_,
+  long int* list_2_2_Sz_,
+  long int* list_jb_
+)
 {
   long int ia,ja,jb;  
   int list_2_2_Sz_ib=0;
@@ -809,7 +789,6 @@ int child_omp_sz_GeneralSpin(
 /** 
  * @brief reading the list of the restricted Hilbert space
  * 
- * @param[in] X 
  * @param[in] irght 
  * @param[in] ilft 
  * @param[in] ihfbit 
@@ -821,7 +800,6 @@ int child_omp_sz_GeneralSpin(
  */
 int Read_sz
 (
- 
  const long int irght,
  const long int ilft,
  const long int ihfbit,
@@ -901,7 +879,6 @@ int Read_sz
  *
  * @brief generating Hilbert space
  *
- * @param[inout] X
  * @param[out] list_1_   list_1[icnt] = i (index of full Hilbert space) : icnt = index in the restricted Hilbert space
  * @param[out] list_2_1_ icnt=list_2_1[]+list_2_2[]
  * @param[out] list_2_2_
@@ -912,7 +889,6 @@ int Read_sz
  */
 int sz
 (
-  
   long int *list_1_,
   long int *list_2_1_,
   long int *list_2_2_
@@ -1117,7 +1093,8 @@ int sz
         }
 
         icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ihfbit, N2, X) shared(list_1_, list_2_1_, list_2_2_, list_jb)
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
         for (ib = 0; ib < Check::sdim; ib++) {
           icnt += child_omp_sz_KondoGC(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
         }
@@ -1199,7 +1176,8 @@ int sz
           TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
           icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ihfbit, X) shared(list_1_, list_2_1_, list_2_2_, list_jb)
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, Check::sdim)
           for (ib = 0; ib < Check::sdim; ib++) {
             icnt += child_omp_sz_hacker(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
           }
@@ -1252,7 +1230,8 @@ int sz
           TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
           icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ihfbit, N2, X) shared(list_1_, list_2_1_, list_2_2_, list_jb) 
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim) 
           for (ib = 0; ib < Check::sdim; ib++) {
             icnt += child_omp_sz(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
           }
@@ -1298,7 +1277,8 @@ int sz
           TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
           icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ihfbit, N2, X) shared(list_1_, list_2_1_, list_2_2_, list_jb) 
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim) 
           for (ib = 0; ib < Check::sdim; ib++) {
             icnt += child_omp_sz_hacker(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
           }
@@ -1394,14 +1374,16 @@ int sz
         hacker = Def::read_hacker;
         if (hacker == 0) {
           icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ihfbit, N2, X) shared(list_1_, list_2_1_, list_2_2_, list_jb)
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
           for (ib = 0; ib < Check::sdim; ib++) {
             icnt += child_omp_sz_Kondo(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
           }
         }
         else if (hacker == 1) {
           icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ihfbit, N2, X) shared(list_1_, list_2_1_, list_2_2_, list_jb)
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
           for (ib = 0; ib < Check::sdim; ib++) {
             icnt += child_omp_sz_Kondo_hacker(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
           }
@@ -1475,7 +1457,8 @@ int sz
             TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
             icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb)
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb, Check::sdim)
             for (ib = 0; ib < Check::sdim; ib++) {
               icnt += child_omp_sz_spin_hacker(ib, ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb);
             }
@@ -1502,7 +1485,8 @@ int sz
             TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
             icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ihfbit, N, X) shared(list_1_, list_2_1_, list_2_2_, list_jb)
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N, Check::sdim)
             for (ib = 0; ib < Check::sdim; ib++) {
               icnt += child_omp_sz_spin(ib, ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb);
             }
@@ -1559,24 +1543,22 @@ int sz
           TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
           icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) firstprivate(ilftdim, ihfbit,  X)  shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb)
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb, ilftdim, ihfbit)
           for (ib = 0; ib < ilftdim; ib++) {
             icnt += child_omp_sz_GeneralSpin(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz, list_jb);
           }
-
           free_li_1d_allocate(HilbertNumToSz);
         }
 
         break;
       default:
         exitMPI(-1);
-
       }
       i_max = icnt;
       //fprintf(stdoutMPI, "Debug: Xicnt=%ld \n",icnt);
       TimeKeeper("%s_sz_TimeKeeper.dat", "omp parallel sz finishes: %s", "a");
       TimeKeeper("%s_TimeKeeper.dat", "omp parallel sz finishes: %s", "a");
-
     }
 
     if (Def::iFlgCalcSpec == CALCSPEC_NOT) {

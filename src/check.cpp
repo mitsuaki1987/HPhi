@@ -174,17 +174,17 @@ int check(){
         Def::Tpow[isite+1]=idimmax;
       }
       comb_sum=0;
-#pragma omp parallel for default(none) reduction(+:comb_sum) private(tmp_sz, isite) firstprivate(idimmax, X) 
-      for(idim=0; idim<idimmax; idim++){
-        tmp_sz=0;
-        for(isite=0; isite<Def::Nsite;isite++){
-          tmp_sz += GetLocal2Sz(isite+1,idim, Def::SiteToBit, Def::Tpow );          
+#pragma omp parallel for default(none) reduction(+:comb_sum) private(tmp_sz, isite) \
+shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz) 
+      for (idim = 0; idim < idimmax; idim++) {
+        tmp_sz = 0;
+        for (isite = 0; isite < Def::Nsite; isite++) {
+          tmp_sz += GetLocal2Sz(isite + 1, idim, Def::SiteToBit, Def::Tpow);
         }
         if(tmp_sz == Def::Total2Sz){
           comb_sum +=1;
         }
       }
-      
     }
     
     break;

@@ -131,8 +131,8 @@ void X_child_CisAjt_MPIdouble(
   SendRecv_cv(origin, Check::idim_maxOrg*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
   
 #pragma omp parallel for default(none) private(j, ioff) \
-  firstprivate(idim_max_buf, trans, list_2_1, list_2_2, list_1buf_org) \
-  shared(v1buf, tmp_v0,nstate,one)
+shared(idim_max_buf, trans, list_2_1, list_2_2, list_1buf_org,v1buf, tmp_v0, \
+nstate,one,Large::irght, Large::ilft, Large::ihfbit)
   for (j = 1; j <= idim_max_buf; j++) {
     GetOffComp(list_2_1, list_2_2, list_1buf_org[j],
                Large::irght, Large::ilft, Large::ihfbit, &ioff);
@@ -207,9 +207,8 @@ void X_GC_child_general_hopp_MPIsingle(
 
   bit1diff = Def::Tpow[2 * Def::Nsite - 1] * 2 - mask1 * 2;
 
-#pragma omp parallel default(none)  private(j,dmv,state1,Fsgn,ioff) \
-  firstprivate(idim_max_buf,trans,mask1,state1check,bit1diff) \
-  shared(v1buf,tmp_v1,tmp_v0,nstate,one)
+#pragma omp parallel default(none) private(j,dmv,state1,Fsgn,ioff) \
+shared(idim_max_buf,trans,mask1,state1check,bit1diff,v1buf,tmp_v1,tmp_v0,nstate,one)
   {
 #pragma omp for
     for (j = 0; j < idim_max_buf; j++) {
@@ -290,8 +289,8 @@ void X_child_general_hopp_MPIdouble(
   SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
 
 #pragma omp parallel default(none) private(j,Fsgn,ioff) \
-  firstprivate(idim_max_buf,trans,X) \
-  shared(list_2_1,list_2_2,list_1buf,v1buf,tmp_v1,tmp_v0,nstate,one)
+shared(idim_max_buf,trans,Large::irght, Large::ilft, Large::ihfbit, \
+list_2_1,list_2_2,list_1buf,v1buf,tmp_v1,tmp_v0,nstate,one)
   {
 #pragma omp for
     for (j = 1; j <= idim_max_buf; j++) {
@@ -369,9 +368,9 @@ void X_child_general_hopp_MPIsingle(
 
   bit1diff = Def::Tpow[2 * Def::Nsite - 1] * 2 - mask1 * 2;
 
-#pragma omp parallel default(none)  private(j,dmv,Fsgn,ioff,jreal,state1) \
-  firstprivate(idim_max_buf,trans,mask1,state1check,bit1diff,myrank) \
-  shared(list_1,list_2_1,list_2_2,list_1buf,v1buf,tmp_v1,tmp_v0,nstate,one)
+#pragma omp parallel default(none) private(j,dmv,Fsgn,ioff,jreal,state1) \
+shared(idim_max_buf,trans,mask1,state1check,bit1diff,myrank,Large::irght, Large::ilft, Large::ihfbit, \
+list_1,list_2_1,list_2_2,list_1buf,v1buf,tmp_v1,tmp_v0,nstate,one)
   {
 #pragma omp for
     for (j = 1; j <= idim_max_buf; j++) {
@@ -441,8 +440,8 @@ void X_child_CisAjt_MPIsingle(
   bit1diff = Def::Tpow[2 * Def::Nsite - 1] * 2 - mask1 * 2;
 
 #pragma omp parallel for default(none) private(j,dmv,Fsgn,ioff,jreal,state1) \
-  firstprivate(idim_max_buf,trans,mask1,state1check,bit1diff,list_2_1,list_2_2,list_1buf_org,list_1) \
-  shared(v1buf, tmp_v0,nstate,one)
+shared(idim_max_buf,trans,mask1,state1check,bit1diff,list_2_1,list_2_2,list_1buf_org,list_1, \
+v1buf, tmp_v0,nstate,one,Large::irght, Large::ilft, Large::ihfbit)
   for (j = 1; j <= idim_max_buf; j++) {
     jreal = list_1buf_org[j];
     state1 = jreal & mask1;

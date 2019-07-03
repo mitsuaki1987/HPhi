@@ -276,7 +276,7 @@ static void Initialize_wave(
     fprintf(stdoutMPI, "  initial_mode=%d (random): iv = %ld i_max=%ld k_exct =%d\n\n",
       initial_mode, iv, i_max, Def::k_exct);
 #pragma omp parallel default(none) private(idim, u_long_i, mythread, dsfmt, ie) \
-              shared(wave, iv, nthreads, myrank, i_max,I)
+shared(wave, iv, nthreads, myrank, i_max,I,Def::k_exct,Def::iInitialVecType)
     {
       /*
        Initialise MT
@@ -306,7 +306,8 @@ static void Initialize_wave(
 
     dnorm = d_1d_allocate(Def::k_exct);
     NormMPI_dv(i_max, Def::k_exct, wave, dnorm);
-#pragma omp parallel for default(none) shared(i_max,wave,dnorm) private(idim,ie)
+#pragma omp parallel for default(none) private(idim,ie) \
+shared(i_max,wave,dnorm,Def::k_exct)
     for (idim = 1; idim <= i_max; idim++) 
       for (ie = 0; ie < Def::k_exct; ie++) wave[idim][ie] /= dnorm[ie];
     free_d_1d_allocate(dnorm);
@@ -442,7 +443,8 @@ int LOBPCG_Main(
     /**@brief
      <li>Compute residual vectors: @f${\bf w}={\bf X}-\mu {\bf x}@f$</li>
     */
-#pragma omp parallel for default(none) shared(i_max,wxp,hwxp,eig) private(idim,ie) 
+#pragma omp parallel for default(none) private(idim,ie) \
+shared(i_max,wxp,hwxp,eig,Def::k_exct)
     for (idim = 1; idim <= i_max; idim++) {
       for (ie = 0; ie < Def::k_exct; ie++) {
         wxp[0][idim][ie] = hwxp[1][idim][ie] - eig[ie] * wxp[1][idim][ie];
@@ -460,8 +462,8 @@ int LOBPCG_Main(
       if (do_precon == 1) {
         for (ie = 0; ie < Def::k_exct; ie++) 
           preshift = calc_preshift(eig[ie], dnorm[ie], eps_LOBPCG);
-#pragma omp parallel for default(none) shared(wxp,list_Diagonal,preshift,i_max,eps_LOBPCG) \
-private(idim,precon,ie)
+#pragma omp parallel for default(none) private(idim,precon,ie) \
+shared(wxp,list_Diagonal,preshift,i_max,eps_LOBPCG,Def::k_exct)
         for (idim = 1; idim <= i_max; idim++) {
           for (ie = 0; ie < Def::k_exct; ie++){
             precon = list_Diagonal[idim] - preshift;
@@ -473,7 +475,8 @@ private(idim,precon,ie)
         <li>Normalize residual vector: @f${\bf w}={\bf w}/|w|@f$
       */
       NormMPI_dv(i_max, Def::k_exct, wxp[0], dnorm);
-#pragma omp parallel for default(none) shared(i_max,wxp,dnorm) private(idim,ie)
+#pragma omp parallel for default(none) private(idim,ie) \
+shared(i_max,wxp,dnorm,Def::k_exct)
       for (idim = 1; idim <= i_max; idim++)
         for (ie = 0; ie < Def::k_exct; ie++)
           wxp[0][idim][ie] /= dnorm[ie];
@@ -585,7 +588,8 @@ private(idim,precon,ie)
     */
     for (ii = 1; ii < 3; ii++) {
       NormMPI_dv(i_max, Def::k_exct, wxp[ii], dnorm);
-#pragma omp parallel for default(none) shared(i_max,wxp,hwxp,dnorm,ii,X) private(idim,ie)
+#pragma omp parallel for default(none) private(idim,ie) \
+shared(i_max,wxp,hwxp,dnorm,ii, Def::k_exct)
       for (idim = 1; idim <= i_max; idim++) {
         for (ie = 0; ie < Def::k_exct; ie++) {
           wxp[ii][idim][ie] /= dnorm[ie];
@@ -628,7 +632,7 @@ private(idim,precon,ie)
   </ul>
   */
   v0 = cd_2d_allocate(Check::idim_max + 1, Def::k_exct);
-#pragma omp parallel for default(none) shared(i_max,wxp,v0,X) private(idim,ie)
+#pragma omp parallel for default(none) shared(i_max,wxp,v0,Def::k_exct) private(idim,ie)
   for (idim = 1; idim <= i_max; idim++)
     for (ie = 0; ie < Def::k_exct; ie++) 
       v0[idim][ie] = wxp[1][idim][ie];
@@ -773,7 +777,7 @@ int CalcByLOBPCG(
     vin = cd_1d_allocate(Check::idim_max + 1);
     for (ie = 0; ie < Def::k_exct; ie++) {
 
-#pragma omp parallel for default(none) shared(v1,ie,vin) private(idim)
+#pragma omp parallel for default(none) shared(v1,ie,vin,Check::idim_max) private(idim)
       for (idim = 1; idim <= Check::idim_max; idim++)
         vin[idim] = v1[idim][ie];
       

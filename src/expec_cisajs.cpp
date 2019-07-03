@@ -198,8 +198,8 @@ int expec_cisajs_Hubbard(
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {
         is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
 
-#pragma omp parallel for default(none) shared(list_1, vec,Xvec,nstate,one,tmp_OneGreen) \
-firstprivate(i_max, is) private(num1, ibit, dmv)
+#pragma omp parallel for default(none) private(num1, ibit, dmv) \
+shared(list_1, vec,Xvec,nstate,one,tmp_OneGreen, i_max, is)
         for (j = 1; j <= i_max; j++) {
           ibit = list_1[j] & is;
           num1 = ibit / is;
@@ -262,8 +262,8 @@ int expec_cisajs_SpinHalf(
         }// org_isite1 > Def::Nsite
         else {
           isite1 = Def::Tpow[org_isite1 - 1];
-#pragma omp parallel for default(none) private(j,dmv)  \
-  firstprivate(i_max, isite1, org_sigma1, X) shared(vec,Xvec,nstate,one)
+#pragma omp parallel for default(none) private(j,dmv) \
+shared(i_max, isite1, org_sigma1, vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
             dmv = X_Spin_CisAis(j, isite1, org_sigma1);
             zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
@@ -320,7 +320,7 @@ int expec_cisajs_SpinGeneral(
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
 #pragma omp parallel for default(none) private(j, num1,dmv) \
-  firstprivate(i_max, org_isite1, org_sigma1, X) shared(vec,Xvec, list_1,nstate,one)
+shared(i_max, org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow, vec,Xvec, list_1,nstate,one)
           for (j = 1; j <= i_max; j++) {
             dmv = BitCheckGeneral(list_1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
             zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
@@ -380,7 +380,7 @@ int expec_cisajs_SpinGCHalf(
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
 #pragma omp parallel for default(none) private(j, tmp_sgn,dmv) \
-  firstprivate(i_max, isite1, org_sigma1, X) shared(vec,Xvec,nstate,one)
+shared(i_max, isite1, org_sigma1,vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
             dmv = X_SpinGC_CisAis(j, isite1, org_sigma1);
             zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
@@ -389,7 +389,7 @@ int expec_cisajs_SpinGCHalf(
         else {
           // transverse magnetic field
 #pragma omp parallel for default(none) private(j, tmp_sgn, tmp_off,dmv) \
-  firstprivate(i_max, isite1, org_sigma2, X) shared(vec,Xvec,nstate,one)
+shared(i_max, isite1, org_sigma2, vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
             tmp_sgn = X_SpinGC_CisAit(j, isite1, org_sigma2, &tmp_off);
             if (tmp_sgn != 0) {
@@ -452,7 +452,7 @@ int expec_cisajs_SpinGCGeneral(
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
 #pragma omp parallel for default(none) private(j, num1,dmv) \
-  firstprivate(i_max, org_isite1, org_sigma1, X) shared(vec,Xvec,nstate,one)
+shared(i_max, org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow, vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
             num1 = BitCheckGeneral(j - 1, org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
             dmv = (std::complex<double>)num1;
@@ -462,7 +462,7 @@ int expec_cisajs_SpinGCGeneral(
         else {
           // transverse magnetic field
 #pragma omp parallel for default(none) private(j, num1,dmv) \
-  firstprivate(i_max, org_isite1, org_sigma1, org_sigma2, tmp_off) shared(vec,Xvec,nstate,one)
+shared(i_max, org_isite1, org_sigma1, org_sigma2, tmp_off,Def::SiteToBit, Def::Tpow,vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
             num1 = GetOffCompGeneralSpin(
               j - 1, org_isite1, org_sigma2, org_sigma1, &tmp_off, Def::SiteToBit, Def::Tpow);

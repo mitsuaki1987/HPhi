@@ -79,7 +79,7 @@ int GetPairExcitedStateHalfSpinGC(
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
             // longitudinal magnetic field
 #pragma omp parallel for default(none) private(j, tmp_sgn,dmv) \
-  firstprivate(i_max, isite1, org_sigma1, tmp_trans) shared(one,nstate,tmp_v0, tmp_v1)
+shared(one,nstate,tmp_v0, tmp_v1,i_max, isite1, org_sigma1, tmp_trans)
             for (j = 1; j <= i_max; j++) {
               dmv = (1.0 - X_SpinGC_CisAis(j, isite1, org_sigma1))* (-tmp_trans);
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
@@ -88,7 +88,7 @@ int GetPairExcitedStateHalfSpinGC(
           else {
             // longitudinal magnetic field
 #pragma omp parallel for default(none) private(j, tmp_sgn,dmv)             \
-  firstprivate(i_max, isite1, org_sigma1, tmp_trans) shared(tmp_v0, tmp_v1,one,nstate)
+shared(tmp_v0, tmp_v1,one,nstate,i_max, isite1, org_sigma1, tmp_trans)
             for (j = 1; j <= i_max; j++) {
               dmv = (std::complex<double>)X_SpinGC_CisAis(j, isite1, org_sigma1)* tmp_trans;
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
@@ -99,7 +99,7 @@ int GetPairExcitedStateHalfSpinGC(
           // transverse magnetic field
           // fprintf(stdoutMPI, "Debug: isite1=%d, org_sigma2=%d\n", isite1, org_sigma2);
 #pragma omp parallel for default(none) private(j, tmp_sgn, tmp_off,dmv)    \
-  firstprivate(i_max, isite1, org_sigma2, tmp_trans) shared(tmp_v0, tmp_v1,one,nstate)
+shared(tmp_v0, tmp_v1,one,nstate,i_max, isite1, org_sigma2, tmp_trans)
           for (j = 1; j <= i_max; j++) {
             tmp_sgn = X_SpinGC_CisAit(j, isite1, org_sigma2, &tmp_off);
             if (tmp_sgn != 0) {
@@ -168,7 +168,7 @@ int GetPairExcitedStateGeneralSpinGC(
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
             // longitudinal magnetic field
 #pragma omp parallel for default(none) private(j,num1,dmv) \
-firstprivate(i_max,org_isite1,org_sigma1,tmp_trans) shared(tmp_v0,tmp_v1,one,nstate)
+shared(tmp_v0,tmp_v1,one,nstate,i_max,org_isite1,org_sigma1,tmp_trans,Def::SiteToBit, Def::Tpow)
             for (j = 1; j <= i_max; j++) {
               num1 = BitCheckGeneral(j - 1, org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
               dmv = -tmp_trans * (1.0 - num1);
@@ -178,7 +178,7 @@ firstprivate(i_max,org_isite1,org_sigma1,tmp_trans) shared(tmp_v0,tmp_v1,one,nst
           else {
             // longitudinal magnetic field
 #pragma omp parallel for default(none) private(j,num1,dmv) \
-  firstprivate(i_max,org_isite1,org_sigma1,tmp_trans) shared(tmp_v0,tmp_v1,one,nstate)
+shared(tmp_v0,tmp_v1,one,nstate,i_max,org_isite1,org_sigma1,tmp_trans,Def::SiteToBit,Def::Tpow)
             for (j = 1; j <= i_max; j++) {
               num1 = BitCheckGeneral(j - 1, org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
               dmv = tmp_trans * (std::complex<double>)num1;
@@ -189,8 +189,8 @@ firstprivate(i_max,org_isite1,org_sigma1,tmp_trans) shared(tmp_v0,tmp_v1,one,nst
         else {
           // transverse magnetic field
 #pragma omp parallel for default(none) private(j,num1,dmv) \
-firstprivate(i_max,org_isite1,org_sigma1,org_sigma2,tmp_off,tmp_trans) \
-shared(tmp_v0,tmp_v1,one,nstate)
+shared(tmp_v0,tmp_v1,one,nstate,i_max,org_isite1,org_sigma1,org_sigma2,tmp_off,tmp_trans, \
+Def::SiteToBit, Def::Tpow)
           for (j = 1; j <= i_max; j++) {
             num1 = GetOffCompGeneralSpin(j - 1, org_isite1, org_sigma2, org_sigma1, &tmp_off, Def::SiteToBit, Def::Tpow);
             if (num1 != 0) {
@@ -274,8 +274,8 @@ int GetPairExcitedStateHalfSpin(
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
             if (ibit1 == 0) {
               dmv = -tmp_trans;
-#pragma omp parallel for default(none) shared(tmp_v0, tmp_v1,one,nstate,dmv) \
-  firstprivate(i_max, tmp_trans) private(j)
+#pragma omp parallel for default(none) private(j) \
+shared(tmp_v0, tmp_v1,one,nstate,dmv,i_max, tmp_trans)
               for (j = 1; j <= i_max; j++) {
                 zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
               }
@@ -283,9 +283,9 @@ int GetPairExcitedStateHalfSpin(
           }
           else {
             if (ibit1 != 0) {
-#pragma omp parallel for default(none) shared(tmp_v0, tmp_v1,one,nstate)	\
-  firstprivate(i_max, tmp_trans) private(j)
-              for (j = 1; j <= i_max; j++) 
+#pragma omp parallel for default(none) private(j) \
+shared(tmp_v0, tmp_v1,one,nstate,i_max, tmp_trans)
+              for (j = 1; j <= i_max; j++)
                 zaxpy_(&nstate, &tmp_trans, tmp_v1[j], &one, tmp_v0[j], &one);
             }
           }
@@ -295,7 +295,7 @@ int GetPairExcitedStateHalfSpin(
           if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2 &&
             Def::PairExcitationOperator[iEx][i][4] == 0) {
 #pragma omp parallel for default(none) private(j,dmv) \
-firstprivate(i_max,isite1,org_sigma1,tmp_trans) shared(tmp_v0,tmp_v1,one,nstate)
+shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma1,tmp_trans)
             for (j = 1; j <= i_max; j++) {
               dmv = (1.0 - X_Spin_CisAis(j, isite1, org_sigma1)) * (-tmp_trans);
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
@@ -303,7 +303,7 @@ firstprivate(i_max,isite1,org_sigma1,tmp_trans) shared(tmp_v0,tmp_v1,one,nstate)
           }
           else {
 #pragma omp parallel for default(none) private(j,dmv) \
-firstprivate(i_max,isite1,org_sigma1,tmp_trans) shared(tmp_v0,tmp_v1,one,nstate)
+shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma1,tmp_trans)
             for (j = 1; j <= i_max; j++) {
               dmv = (std::complex<double>)X_Spin_CisAis(j, isite1, org_sigma1) * tmp_trans;
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
@@ -324,8 +324,7 @@ firstprivate(i_max,isite1,org_sigma1,tmp_trans) shared(tmp_v0,tmp_v1,one,nstate)
       else {
         isite1 = Def::Tpow[org_isite1 - 1];
 #pragma omp parallel for default(none) private(j,tmp_off,num1,dmv) \
-firstprivate(i_max,isite1,org_sigma2,tmp_trans,list_1_org,list_1,list_2_1,list_2_2) \
-shared(tmp_v0,tmp_v1,one,nstate)
+shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma2,tmp_trans,list_1_org,list_1,list_2_1,list_2_2)
         for (j = 1; j <= i_max; j++) {
           num1 = X_Spin_CisAit(j, isite1, org_sigma2, &tmp_off);
           if (num1 != 0) {
@@ -378,8 +377,7 @@ int GetPairExcitedStateGeneralSpin(
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
             if (num1 == 0) {
 #pragma omp parallel for default(none) private(j,dmv)  \
-  firstprivate(i_max, tmp_trans)                  \
-  shared(tmp_v0, tmp_v1,one,nstate)
+shared(tmp_v0, tmp_v1,one,nstate,i_max, tmp_trans)
               for (j = 1; j <= i_max; j++) {
                 dmv = -tmp_trans;
                 zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
@@ -389,7 +387,7 @@ int GetPairExcitedStateGeneralSpin(
           else {
             if (num1 != 0) {
 #pragma omp parallel for default(none) private(j) \
-  firstprivate(i_max, tmp_trans) shared(tmp_v0, tmp_v1,one,nstate)
+shared(tmp_v0, tmp_v1,one,nstate,i_max, tmp_trans)
               for (j = 1; j <= i_max; j++) {
                 zaxpy_(&nstate, &tmp_trans, tmp_v1[j], &one, tmp_v0[j], &one);
               }
@@ -406,8 +404,8 @@ int GetPairExcitedStateGeneralSpin(
           // longitudinal magnetic field
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
 #pragma omp parallel for default(none) private(j, num1,dmv) \
-  firstprivate(i_max, org_isite1, org_sigma1, tmp_trans) \
-  shared(tmp_v0, tmp_v1, list_1,one,nstate)
+shared(tmp_v0, tmp_v1, list_1,one,nstate,i_max, org_isite1, org_sigma1, tmp_trans, \
+Def::SiteToBit, Def::Tpow)
             for (j = 1; j <= i_max; j++) {
               num1 = BitCheckGeneral(list_1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
               dmv = -tmp_trans * (1.0 - num1);
@@ -415,9 +413,9 @@ int GetPairExcitedStateGeneralSpin(
             }
           }
           else {
-#pragma omp parallel for default(none) private(j, num1,dmv)    \
-  firstprivate(i_max, org_isite1, org_sigma1, tmp_trans) \
-  shared(tmp_v0, tmp_v1, list_1,one,nstate)
+#pragma omp parallel for default(none) private(j, num1,dmv) \
+shared(tmp_v0, tmp_v1, list_1,one,nstate,i_max, org_isite1, \
+org_sigma1, tmp_trans, Def::SiteToBit, Def::Tpow)
             for (j = 1; j <= i_max; j++) {
               num1 = BitCheckGeneral(list_1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
               dmv = tmp_trans * (std::complex<double>)num1;
@@ -426,9 +424,9 @@ int GetPairExcitedStateGeneralSpin(
           }
         }//org_sigma1=org_sigma2
         else {//org_sigma1 != org_sigma2
-#pragma omp parallel for default(none) private(j, tmp_sgn, tmp_off)      \
-  firstprivate(i_max, org_isite1, org_sigma1, org_sigma2, off, tmp_trans, myrank) \
-  shared(tmp_v0, tmp_v1, list_1_org, list_1,one,nstate)
+#pragma omp parallel for default(none) private(j, tmp_sgn, tmp_off) \
+shared(tmp_v0, tmp_v1, list_1_org, list_1,one,nstate, i_max, org_isite1, Large::ihfbit, \
+org_sigma1, org_sigma2, off, tmp_trans, myrank, Def::SiteToBit, Def::Tpow)
           for (j = 1; j <= i_max; j++) {
             tmp_sgn = GetOffCompGeneralSpin(list_1_org[j], org_isite1, org_sigma2, org_sigma1, &off,
               Def::SiteToBit, Def::Tpow);

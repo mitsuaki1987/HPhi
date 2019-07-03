@@ -206,7 +206,7 @@ int CalcSpectrumByBiCG(
       fprintf(stdoutMPI, "      Start from SCRATCH.\n");
       zclear(Check::idim_max, &v2[1][0]);
       GetExcitedState(1, v2, v1Org, 0);
-#pragma omp parallel for default(none) shared(v2,v4,v1Org,X) private(idim)
+#pragma omp parallel for default(none) shared(v2,v4,v1Org,Check::idim_max) private(idim)
       for (idim = 1; idim <= Check::idim_max; idim++) 
         v4[idim][0] = v2[idim][0];
     }
@@ -231,7 +231,7 @@ int CalcSpectrumByBiCG(
   else {
     zclear(Check::idim_max, &v2[1][0]);
     GetExcitedState(1, v2, v1Org, 0);
-#pragma omp parallel for default(none) shared(v2,v4,v1Org,X) private(idim)
+#pragma omp parallel for default(none) shared(v2,v4,v1Org,Check::idim_max) private(idim)
     for (idim = 1; idim <= Check::idim_max; idim++)
       v4[idim][0] = v2[idim][0];
   }

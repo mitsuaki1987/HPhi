@@ -66,9 +66,9 @@ int GetSingleExcitedStateHubbard(
           Large::irght, Large::ilft, Large::ihfbit);
       }
       else {
-#pragma omp parallel for default(none) shared(nstate,tmp_v0, tmp_v1, list_1_org,one) \
-firstprivate(idim_max, tmpphi, org_isite, ispin, list_2_1, list_2_2, is1_spin) \
-private(j,  isgn,tmp_off,dmv)
+#pragma omp parallel for default(none) private(j,  isgn,tmp_off,dmv) \
+shared(Large::irght, Large::ilft, Large::ihfbit,nstate,tmp_v0, tmp_v1, list_1_org,one, \
+idim_max, tmpphi, org_isite, ispin, list_2_1, list_2_2, is1_spin)
         for (j = 1; j <= idim_max; j++) {//idim_max -> original dimension
           isgn = X_Cis(j, is1_spin, &tmp_off, list_1_org, list_2_1, list_2_2,
             Large::irght, Large::ilft, Large::ihfbit);
@@ -83,9 +83,9 @@ private(j,  isgn,tmp_off,dmv)
           idim_max, Def::Tpow, Large::irght, Large::ilft, Large::ihfbit);
       }
       else {
-#pragma omp parallel for default(none) shared(tmp_v0,tmp_v1,list_1_org,list_1,one,nstate) \
-firstprivate(idim_max,tmpphi,org_isite,ispin,list_2_1,list_2_2,is1_spin,myrank) \
-private(j, isgn, tmp_off,dmv)
+#pragma omp parallel for default(none) private(j, isgn, tmp_off,dmv) \
+shared(tmp_v0,tmp_v1,list_1_org,list_1,one,nstate,idim_max,tmpphi,org_isite,ispin, \
+list_2_1,list_2_2,is1_spin,myrank, Large::irght, Large::ilft, Large::ihfbit)
         for (j = 1; j <= idim_max; j++) {//idim_max -> original dimension
           isgn = X_Ajt(j, is1_spin, &tmp_off, list_1_org, list_2_1, list_2_2, 
             Large::irght, Large::ilft, Large::ihfbit);
@@ -136,8 +136,8 @@ int GetSingleExcitedStateHubbardGC(
           idim_max, Def::Tpow);
       }
       else {
-#pragma omp parallel for default(none) shared(tmp_v0,tmp_v1,nstate)         \
-firstprivate(idim_max, tmpphi, org_isite, ispin) private(j, is1_spin, tmp_off)
+#pragma omp parallel for default(none) private(j, is1_spin, tmp_off) \
+shared(tmp_v0,tmp_v1,nstate,idim_max, tmpphi, org_isite, ispin,Def::Tpow)
         for (j = 1; j <= idim_max; j++) {
           is1_spin = Def::Tpow[2 * org_isite + ispin];
           GC_Cis(j, nstate, tmp_v0, tmp_v1, is1_spin, tmpphi, &tmp_off);
@@ -150,8 +150,8 @@ firstprivate(idim_max, tmpphi, org_isite, ispin) private(j, is1_spin, tmp_off)
           idim_max, Def::Tpow);
       }
       else {
-#pragma omp parallel for default(none) shared(tmp_v0,tmp_v1,nstate)         \
-firstprivate(idim_max, tmpphi, org_isite, ispin) private(j, is1_spin, tmp_off)
+#pragma omp parallel for default(none) private(j, is1_spin, tmp_off) \
+shared(tmp_v0,tmp_v1,nstate, idim_max, tmpphi, org_isite, ispin,Def::Tpow)
         for (j = 1; j <= idim_max; j++) {
           is1_spin = Def::Tpow[2 * org_isite + ispin];
           GC_Ajt(j, nstate, tmp_v0, tmp_v1, is1_spin, tmpphi, &tmp_off);

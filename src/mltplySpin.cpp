@@ -352,10 +352,9 @@ int mltplyGeneralSpin(
         sigma3 = Def::InterAll_OffDiagonal[idx][5];
         sigma4 = Def::InterAll_OffDiagonal[idx][7];
         tmp_V = Def::ParaInterAll_OffDiagonal[idx];
-#pragma omp parallel for default(none) \
-private(j,tmp_sgn,off,tmp_off,tmp_off2) \
-firstprivate(i_max,isite1,isite2,sigma1,sigma2,sigma3,sigma4,tmp_V,ihfbit) \
-shared(tmp_v0,tmp_v1,list_1,list_2_1,list_2_2,one,nstate)
+#pragma omp parallel for default(none) private(j,tmp_sgn,off,tmp_off,tmp_off2) \
+shared(i_max,isite1,isite2,sigma1,sigma2,sigma3,sigma4,tmp_V,ihfbit, tmp_v0,tmp_v1,list_1,list_2_1,list_2_2, \
+one,nstate, Def::SiteToBit, Def::Tpow)
         for (j = 1; j <= i_max; j++) {
           tmp_sgn = GetOffCompGeneralSpin(list_1[j], isite2, sigma4, sigma3, &tmp_off, Def::SiteToBit, Def::Tpow);
           if (tmp_sgn == TRUE) {
@@ -460,9 +459,8 @@ int mltplyHalfSpinGC(
           // longitudinal magnetic field (considerd in diagonalcalc.cpp)
           // transverse magnetic field
           is1_spin = Def::Tpow[isite1 - 1];
-#pragma omp parallel for default(none) \
-private(j, tmp_sgn) firstprivate(i_max, is1_spin, sigma2, off, tmp_trans) \
-shared(tmp_v0, tmp_v1,one,nstate)
+#pragma omp parallel for default(none) private(j, tmp_sgn) \
+shared(i_max, is1_spin, sigma2, off, tmp_trans,tmp_v0, tmp_v1,one,nstate)
           for (j = 1; j <= i_max; j++) {
             tmp_sgn = X_SpinGC_CisAit(j, is1_spin, sigma2, &off);
             if(tmp_sgn !=0){
@@ -651,9 +649,9 @@ int mltplyGeneralSpinGC(
             tmp_trans = -Def::EDParaGeneralTransfer[idx];
     
             // transverse magnetic field
-#pragma omp parallel for default(none) \
-private(j, tmp_sgn, num1) firstprivate(i_max, isite1, sigma1, sigma2, off, tmp_trans) \
-shared(tmp_v0, tmp_v1,one,nstate)
+#pragma omp parallel for default(none) private(j, tmp_sgn, num1) \
+shared(i_max, isite1, sigma1, sigma2, off, tmp_trans,tmp_v0, \
+tmp_v1,one,nstate, Def::SiteToBit, Def::Tpow)
             for (j = 1; j <= i_max; j++) {
               num1 = GetOffCompGeneralSpin(
                 j - 1, isite1, sigma2, sigma1, &off, Def::SiteToBit, Def::Tpow);
@@ -714,10 +712,9 @@ shared(tmp_v0, tmp_v1,one,nstate)
           }/*if (sigma3 == sigma4)*/
           else {
             //sigma3=sigma4 term is considerd as a diagonal term.
-#pragma omp parallel for default(none) \
-  private(j, tmp_sgn, off)                                         \
-  firstprivate(i_max, isite1, isite2, sigma1, sigma3, sigma4, tmp_V) \
-  shared(tmp_v0, tmp_v1,one,nstate)
+#pragma omp parallel for default(none) private(j, tmp_sgn, off) \
+shared(i_max, isite1, isite2, sigma1, sigma3, sigma4, tmp_V,tmp_v0, tmp_v1, \
+one,nstate, Def::SiteToBit, Def::Tpow)
             for (j = 1; j <= i_max; j++) {
               tmp_sgn = GetOffCompGeneralSpin(
                 j - 1, isite2, sigma4, sigma3, &off, Def::SiteToBit, Def::Tpow);
@@ -732,10 +729,9 @@ shared(tmp_v0, tmp_v1,one,nstate)
         }/*if (sigma1 == sigma2)*/
         else if (sigma3 == sigma4) {
           //sigma1=sigma2 term is considerd as a diagonal term.
-#pragma omp parallel for default(none) \
-  private(j, tmp_sgn, off, tmp_off)                                \
-  firstprivate(i_max, isite1, isite2, sigma1, sigma2, sigma3, sigma4, tmp_V) \
-  shared(tmp_v0, tmp_v1,one,nstate)
+#pragma omp parallel for default(none) private(j, tmp_sgn, off, tmp_off)                                \
+shared(i_max, isite1, isite2, sigma1, sigma2, sigma3, sigma4, tmp_V, \
+tmp_v0, tmp_v1,one,nstate, Def::SiteToBit, Def::Tpow)
           for (j = 1; j <= i_max; j++) {
             tmp_sgn = BitCheckGeneral(j - 1, isite2, sigma3, Def::SiteToBit, Def::Tpow);
             if (tmp_sgn == TRUE) {
@@ -748,10 +744,9 @@ shared(tmp_v0, tmp_v1,one,nstate)
           }/*for (j = 1; j <= i_max; j++)*/
         }/*else if (sigma3 == sigma4)*/
         else {
-#pragma omp parallel for default(none) \
-  private(j, tmp_sgn, off, tmp_off)                                \
-  firstprivate(i_max, isite1, isite2, sigma1, sigma2, sigma3, sigma4, tmp_V) \
-  shared(tmp_v0, tmp_v1,one,nstate)
+#pragma omp parallel for default(none) private(j, tmp_sgn, off, tmp_off) \
+shared(i_max, isite1, isite2, sigma1, sigma2, sigma3, sigma4, tmp_V, \
+tmp_v0, tmp_v1,one,nstate, Def::SiteToBit, Def::Tpow)
           for (j = 1; j <= i_max; j++) {
             tmp_sgn = GetOffCompGeneralSpin(
               j - 1, isite2, sigma4, sigma3, &tmp_off, Def::SiteToBit, Def::Tpow);
@@ -791,8 +786,8 @@ void child_exchange_spin(
   long int i_max = Large::i_max;
   long int off = 0;
 
-#pragma omp parallel for default(none) \
-  firstprivate(i_max, off) private(j) shared(tmp_v0, tmp_v1,nstate)
+#pragma omp parallel for default(none) private(j) \
+shared(i_max, off, tmp_v0, tmp_v1,nstate)
   for (j = 1; j <= i_max; j++) 
     child_exchange_spin_element(j, nstate, tmp_v0, tmp_v1, &off);
 }/*std::complex<double> child_exchange_spin*/
@@ -809,8 +804,8 @@ void GC_child_exchange_spin(
   long int i_max = Large::i_max;
   long int off = 0;
 
-#pragma omp parallel for default(none) \
-  firstprivate(i_max, off) private(j) shared(tmp_v0, tmp_v1,nstate)
+#pragma omp parallel for default(none) private(j) \
+shared(i_max, off,tmp_v0, tmp_v1,nstate)
   for (j = 1; j <= i_max; j++)
     GC_child_exchange_spin_element(j, nstate, tmp_v0, tmp_v1, &off);
 }/*std::complex<double> GC_child_exchange_spin*/
@@ -827,8 +822,8 @@ void GC_child_pairlift_spin(
   long int i_max = Large::i_max;
   long int off = 0;
 
-#pragma omp parallel for default(none) \
-  firstprivate(i_max, off) private(j) shared(tmp_v0, tmp_v1,nstate)
+#pragma omp parallel for default(none) private(j) \
+shared(i_max, off, tmp_v0, tmp_v1,nstate)
   for (j = 1; j <= i_max; j++) 
     GC_child_pairlift_spin_element(j, nstate, tmp_v0, tmp_v1, &off);
 }/*std::complex<double> GC_child_pairlift_spin*/
@@ -857,8 +852,7 @@ void child_general_int_spin(
   isB_up = Large::is2_up;
 
 #pragma omp parallel for default(none) private(j, tmp_sgn, dmv) \
-firstprivate(i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_off,tmp_V) \
-shared(tmp_v1, tmp_v0,one,nstate)
+shared(i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_off,tmp_V,tmp_v1, tmp_v0,one,nstate)
   for (j = 1; j <= i_max; j++) {
     tmp_sgn = X_child_exchange_spin_element(j, isA_up, isB_up, org_sigma2, org_sigma4, &tmp_off);
     if (tmp_sgn != 0) {
@@ -894,9 +888,8 @@ void GC_child_general_int_spin(
   isA_up = Def::Tpow[org_isite1 - 1];
   isB_up = Def::Tpow[org_isite2 - 1];
 
-#pragma omp parallel default(none) \
-private(j) shared(tmp_v0,tmp_v1,nstate) \
-firstprivate(i_max,isA_up,isB_up,org_sigma1,org_sigma2,org_sigma3,org_sigma4,tmp_off,tmp_V) 
+#pragma omp parallel default(none) private(j) \
+shared(tmp_v0,tmp_v1,nstate,i_max,isA_up,isB_up,org_sigma1,org_sigma2,org_sigma3,org_sigma4,tmp_off,tmp_V) 
   {
     if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
 #pragma omp for

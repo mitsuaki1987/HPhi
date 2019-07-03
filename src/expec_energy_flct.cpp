@@ -74,10 +74,11 @@ int expec_energy_flct_HubbardGC(
   }
   //[e]
 #pragma omp parallel default(none) \
-shared(tmp_v0,list_1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate) \
-firstprivate(i_max,myrank,is1_up_a,is1_down_a,is1_up_b,is1_down_b,i_32) \
-private(j,tmp_v02,D,N,Sz,isite1,bit_up,bit_down,bit_D,u_ibit1,l_ibit1, \
-        ibit_up,ibit_down,ibit_D,mythread,istate)
+private(j,tmp_v02,D,N,Sz,isite1,bit_up,bit_down,bit_D, \
+        u_ibit1,l_ibit1, ibit_up,ibit_down,ibit_D,mythread,istate) \
+shared(tmp_v0,list_1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
+       i_max,myrank,is1_up_a,is1_down_a,is1_up_b,is1_down_b,i_32) \
+
   {
     tmp_v02 = d_1d_allocate(nstate);
 #ifdef _OPENMP
@@ -233,8 +234,8 @@ int expec_energy_flct_Hubbard(
   }
   //[e]
 #pragma omp parallel default(none) \
-shared(tmp_v0,list_1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate) \
-firstprivate(i_max, myrank,is1_up_a,is1_down_a,is1_up_b,is1_down_b,i_32) \
+shared(tmp_v0,list_1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
+       i_max, myrank,is1_up_a,is1_down_a,is1_up_b,is1_down_b,i_32) \
 private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
         l_ibit1,ibit_up,ibit_down,ibit_D,mythread,istate)
   {
@@ -384,9 +385,10 @@ int expec_energy_flct_HalfSpinGC(
     }
   }
   //[e]
-#pragma omp parallel default(none) shared(tmp_v0,Sz_t,Sz2_t,nstate)   \
-firstprivate(i_max,myrank,i_32,is1_up_a,is1_up_b) \
-private(j,Sz,ibit1,isite1,tmp_v02,u_ibit1,l_ibit1,mythread,istate)
+#pragma omp parallel default(none) \
+private(j,Sz,ibit1,isite1,tmp_v02,u_ibit1,l_ibit1,mythread,istate) \
+shared(tmp_v0,Sz_t,Sz2_t,nstate, i_max,myrank,i_32,is1_up_a,is1_up_b,Def::NsiteMPI)
+
   {
     tmp_v02 = d_1d_allocate(nstate);
 #ifdef _OPENMP
@@ -470,8 +472,9 @@ int expec_energy_flct_GeneralSpinGC(
   i_max = Check::idim_max;
 
 #pragma omp parallel default(none) \
-shared(i_max,nstate,myrank,Sz_t,Sz2_t,tmp_v0) \
-private(j,istate,tmp_v02,Sz,isite1,mythread)
+private(j,istate,tmp_v02,Sz,isite1,mythread)\
+shared(i_max,nstate,myrank,Sz_t,Sz2_t,tmp_v0, \
+Def::SiteToBit, Def::Tpow,Def::Nsite,Def::NsiteMPI)
   {
     tmp_v02 = d_1d_allocate(nstate);
 #ifdef _OPENMP
@@ -565,9 +568,10 @@ int expec_energy_flct_HalfSpin(
     }
   }
   //[e]
-#pragma omp parallel default(none) shared(tmp_v0, list_1,Sz_t,Sz2_t,nstate)   \
-firstprivate(i_max,myrank,i_32,is1_up_a,is1_up_b) \
-private(j,Sz,ibit1,isite1,tmp_v02,u_ibit1,l_ibit1, tmp_list_1,mythread,istate)
+#pragma omp parallel default(none) \
+private(j,Sz,ibit1,isite1,tmp_v02,u_ibit1,l_ibit1, tmp_list_1,mythread,istate) \
+shared(tmp_v0, list_1,Sz_t,Sz2_t,nstate,i_max,myrank,i_32,is1_up_a,is1_up_b,Def::NsiteMPI) 
+
   {
     tmp_v02 = d_1d_allocate(nstate);
 #ifdef _OPENMP
@@ -651,8 +655,10 @@ int expec_energy_flct_GeneralSpin(
   Sz2_t = d_2d_allocate(nthreads, nstate);
   i_max = Check::idim_max;
 
-#pragma omp parallel default(none) shared(tmp_v0, list_1,Sz_t,Sz2_t,nstate)   \
-firstprivate(i_max,myrank) private(j,Sz,isite1,tmp_v02, tmp_list1,istate,mythread)
+#pragma omp parallel default(none) \
+private(j,Sz,isite1,tmp_v02, tmp_list1,istate,mythread) \
+shared(tmp_v0, list_1,Sz_t,Sz2_t,nstate,i_max,myrank, \
+Def::NsiteMPI, Def::SiteToBit, Def::Tpow,Def::Nsite)
   {
     tmp_v02 = d_1d_allocate(nstate);
 #ifdef _OPENMP
@@ -810,7 +816,7 @@ int expec_energy_flct(
   StopTimer(nCalcFlct);
 
 #pragma omp parallel for default(none) private(i,istate) \
-shared(tmp_v1,tmp_v0,nstate) firstprivate(i_max)
+shared(tmp_v1,tmp_v0,nstate,i_max)
   for (i = 1; i <= i_max; i++) {
     for (istate = 0; istate < nstate; istate++) {
       tmp_v1[i][istate] = tmp_v0[i][istate];

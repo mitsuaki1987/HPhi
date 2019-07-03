@@ -60,8 +60,7 @@ int FirstMultiply() {
 
   for (rand_i = 0; rand_i < NumAve; rand_i++) {
 #pragma omp parallel default(none) private(i, mythread, u_long_i, dsfmt) \
-shared(I, v0, v1, nthreads, myrank, rand_i, stdoutMPI) \
-firstprivate(i_max)
+shared(I, v0, v1, nthreads, myrank, rand_i, stdoutMPI,i_max,Def::initial_iv,Def::iInitialVecType)
   {
 #pragma omp for
     for (i = 1; i <= i_max; i++) {
