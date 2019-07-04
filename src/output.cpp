@@ -20,12 +20,11 @@
 #include "global.hpp"
 #include <cstring>
 
-/// \brief output function for FullDiag mode
-///
-/// \param [in] X Struct to get information about file header names, dimension of hirbert space, calc type, physical quantities.
-/// \retval 0 normally finished.
-/// \retval -1 abnormally finished.
-
+/**
+\brief output function for FullDiag mode
+\retval 0 normally finished.
+\retval -1 abnormally finished.
+*/
 int output() {
 
   FILE *fp;
@@ -65,13 +64,12 @@ int output() {
 
   return 0;
 }
-
-/// \brief output Hamiltonian only used for FullDiag mode
-/// \note global: [in] Ham
-/// \param [in] X Struct to get information about file header names, dimension of hirbert space.
-/// \retval 0 normally finished.
-/// \retval -1 abnormally finished.
-
+/**
+\brief output Hamiltonian only used for FullDiag mode
+\note global: [in] Ham
+\retval 0 normally finished.
+\retval -1 abnormally finished.
+*/
 int outputHam(){
   long int i=0;
   long int j=0;
@@ -81,10 +79,10 @@ int outputHam(){
   FILE *fp;
   char sdt[D_FileNameMax];
 
-#pragma omp parallel for default(none) reduction(+:ihermite) firstprivate(imax) private(i, j) shared(v0)
-  for (i=1; i<=imax; i++){
-    for (j=1; j<=i; j++){
-      if(abs(v0[i][j])>1.0e-13){
+#pragma omp parallel for default(none) reduction(+:ihermite) private(i, j) shared(v0,imax)
+  for (i = 1; i <= imax; i++) {
+    for (j = 1; j <= i; j++) {
+      if (abs(v0[i][j]) > 1.0e-13) {
         ihermite += 1;
       }
     }

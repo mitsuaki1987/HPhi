@@ -145,8 +145,8 @@ shared(tmp_v0, tmp_v1, i_max, dtmp_V)
       ibit2_spin = (long int)myrank&is2_spin;
       num2 += ibit2_spin / is2_spin;
       if (num2 != 0) {
-#pragma omp parallel for default(none) shared(tmp_v0, tmp_v1)\
-                     firstprivate(i_max, dtmp_V, is1_spin) private(num1, ibit1_spin, j)
+#pragma omp parallel for default(none) private(num1, ibit1_spin, j) \
+shared(tmp_v0, tmp_v1,i_max, dtmp_V, is1_spin)
         for (j = 1; j <= i_max; j++) {
           num1 = 0;
           ibit1_spin = (j - 1) & is1_spin;
@@ -167,8 +167,8 @@ shared(tmp_v0, tmp_v1, i_max, dtmp_V)
       ibit2_spin = (long int)myrank&is2_spin;
       num2 += ibit2_spin / is2_spin;
       if (num2 != 0) {
-#pragma omp parallel for default(none) shared(tmp_v0, tmp_v1, list_1)\
-                     firstprivate(i_max, dtmp_V, is1_spin) private(num1, ibit1_spin, j)
+#pragma omp parallel for default(none) private(num1, ibit1_spin, j) \
+shared(tmp_v0, tmp_v1, list_1,i_max, dtmp_V, is1_spin)
         for (j = 1; j <= i_max; j++) {
           num1 = 0;
           ibit1_spin = list_1[j] & is1_spin;
@@ -1884,7 +1884,7 @@ int diagonalcalc()
   fprintf(stdoutMPI, "%s", "  Start: Calculate diagaonal components of Hamiltonian. \n");
   TimeKeeper("%s_TimeKeeper.dat", "diagonal calculation starts:   %s", "a");
 
-#pragma omp parallel for default(none) private(j) shared(list_Diagonal) firstprivate(i_max)
+#pragma omp parallel for default(none) private(j) shared(list_Diagonal,i_max)
   for (j = 1; j <= i_max; j++) {
     list_Diagonal[j] = 0.0;
   }

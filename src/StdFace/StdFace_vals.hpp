@@ -21,341 +21,341 @@ These variables are passed as a pointer of the structure(StdIntList).
 */
 #include <complex>
 
-struct StdIntList {
+namespace StdI {
   /*
    Initial (undefined)
   */
-  int NaN_i;/**<@brief It is used for initializing input parameter. 
+  extern int NaN_i;/**<@brief It is used for initializing input parameter. 
             This means that a parameter wich is not specified in input file.
             Set in StdFace_ResetVals().*/
-  double pi;/**<@brief @f$\pi=3.14...@f$*/
+  extern double pi;/**<@brief @f$\pi=3.14...@f$*/
   /*
   Parameters for LATTICE
   */
-  char lattice[256];/**<@brief Name of lattice. Input parameter.*/
-  double a; /**<@brief The lattice constant. Input parameter.*/
-  double length[3];/**<@brief Anisotropic lattice constant, 
+  extern char lattice[256];/**<@brief Name of lattice. Input parameter.*/
+  extern double a; /**<@brief The lattice constant. Input parameter.*/
+  extern double length[3];/**<@brief Anisotropic lattice constant, 
                    input parameter wlength, llength, hlength.*/
-  int W;/**<@brief Number of sites along the 1st axis, input parameter.*/
-  int L;/**<@brief Number of sites along the 2nd axis, input parameter.*/
-  int Height;/**<@brief Number of sites along the 3rd axis, input parameter.*/
-  double direct[3][3];/**<@brief The unit direct lattice vector. 
+  extern int W;/**<@brief Number of sites along the 1st axis, input parameter.*/
+  extern int L;/**<@brief Number of sites along the 2nd axis, input parameter.*/
+  extern int Height;/**<@brief Number of sites along the 3rd axis, input parameter.*/
+  extern double direct[3][3];/**<@brief The unit direct lattice vector. 
                       Set in StdFace_InitSite().*/
-  int box[3][3];/**<@brief The shape of the super-cell. Input parameter
-                a0W, a0L, a0H, etc. or defined from StdIntList::W, etc. in 
+  extern int box[3][3];/**<@brief The shape of the super-cell. Input parameter
+                a0W, a0L, a0H, etc. or defined from StdI::W, etc. in 
                 StdFace_InitSite().*/
-  int rbox[3][3];/**<@brief The inversion of StdIntList::box.
+  extern int rbox[3][3];/**<@brief The inversion of StdI::box.
                  Set in StdFace_InitSite().*/
-  int NCell;/**<@brief The number of the unit cell in the super-cell
-            (determinant of StdIntList::box). Set in StdFace_InitSite().*/
-  int **Cell;/**<@brief [StdIntList][3] The cell position in the fractional 
+  extern int NCell;/**<@brief The number of the unit cell in the super-cell
+            (determinant of StdI::box). Set in StdFace_InitSite().*/
+  extern int **Cell;/**<@brief [StdIntList][3] The cell position in the fractional 
              coordinate. Malloc and Set in StdFace_InitSite().*/
-  int NsiteUC;/**<@brief Number of sites in the unit cell. Defined in the
+  extern int NsiteUC;/**<@brief Number of sites in the unit cell. Defined in the
               beginning of each lattice function*/
-  double **tau;/**<@brief Cell-internal site position in the fractional 
+  extern double **tau;/**<@brief Cell-internal site position in the fractional 
                coordinate. Defined in the beginning of each lattice function*/
   /*
   Parameters for MODEL
   */
-  char model[256];/**<@brief Name of model, input parameter*/
-  double mu;/**<@brief Chemical potential, input parameter*/
-  std::complex<double> t;/**<@brief Nearest-neighbor hopping, input parameter*/
-  std::complex<double> tp;/**<@brief 2nd-nearest hopping, input parameter*/
-  std::complex<double> t0;/**<@brief Anisotropic hopping (1st), input parameter*/
-  std::complex<double> t0p;/**<@brief Anisotropic hopping (2nd), input parameter*/
-  std::complex<double> t0pp;/**<@brief Anisotropic hopping (3rd), input parameter*/
-  std::complex<double> t1;/**<@brief Anisotropic hopping (1st), input parameter*/
-  std::complex<double> t1p;/**<@brief Anisotropic hopping (2nd), input parameter*/
-  std::complex<double> t1pp;/**<@brief Anisotropic hopping (3rd), input parameter*/
-  std::complex<double> t2;/**<@brief Anisotropic hopping (1st), input parameter*/
-  std::complex<double> t2p;/**<@brief Anisotropic hopping (2nd), input parameter*/
-  std::complex<double> t2pp;/**<@brief Anisotropic hopping (3rd), input parameter*/
-  std::complex<double> tpp;/**<@brief 3rd-nearest hopping, input parameter*/
-  double U;/**<@brief On-site Coulomb potential, input parameter*/
-  double V;/**<@brief Off-site Coulomb potential (1st), input parameter*/
-  double Vp;/**<@brief Off-site Coulomb potential (2nd), input parameter*/
-  double V0;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
-  double V0p;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
-  double V0pp;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
-  double V1;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
-  double V1p;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
-  double V1pp;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
-  double V2;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
-  double V2p;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
-  double V2pp;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
-  double Vpp;/**<@brief Off-site Coulomb potential (3rd), input parameter*/
+  extern char model[256];/**<@brief Name of model, input parameter*/
+  extern double mu;/**<@brief Chemical potential, input parameter*/
+  extern std::complex<double> t;/**<@brief Nearest-neighbor hopping, input parameter*/
+  extern std::complex<double> tp;/**<@brief 2nd-nearest hopping, input parameter*/
+  extern std::complex<double> t0;/**<@brief Anisotropic hopping (1st), input parameter*/
+  extern std::complex<double> t0p;/**<@brief Anisotropic hopping (2nd), input parameter*/
+  extern std::complex<double> t0pp;/**<@brief Anisotropic hopping (3rd), input parameter*/
+  extern std::complex<double> t1;/**<@brief Anisotropic hopping (1st), input parameter*/
+  extern std::complex<double> t1p;/**<@brief Anisotropic hopping (2nd), input parameter*/
+  extern std::complex<double> t1pp;/**<@brief Anisotropic hopping (3rd), input parameter*/
+  extern std::complex<double> t2;/**<@brief Anisotropic hopping (1st), input parameter*/
+  extern std::complex<double> t2p;/**<@brief Anisotropic hopping (2nd), input parameter*/
+  extern std::complex<double> t2pp;/**<@brief Anisotropic hopping (3rd), input parameter*/
+  extern std::complex<double> tpp;/**<@brief 3rd-nearest hopping, input parameter*/
+  extern double U;/**<@brief On-site Coulomb potential, input parameter*/
+  extern double V;/**<@brief Off-site Coulomb potential (1st), input parameter*/
+  extern double Vp;/**<@brief Off-site Coulomb potential (2nd), input parameter*/
+  extern double V0;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
+  extern double V0p;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
+  extern double V0pp;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
+  extern double V1;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
+  extern double V1p;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
+  extern double V1pp;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
+  extern double V2;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
+  extern double V2p;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
+  extern double V2pp;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
+  extern double Vpp;/**<@brief Off-site Coulomb potential (3rd), input parameter*/
   /**/
-  double JAll;/**<@brief Isotropic, diagonal spin coupling (1st Near.), 
+  extern double JAll;/**<@brief Isotropic, diagonal spin coupling (1st Near.), 
               input parameter J.*/
-  double JpAll;/**<@brief Isotropic, diagonal spin coupling (2nd Near), 
+  extern double JpAll;/**<@brief Isotropic, diagonal spin coupling (2nd Near), 
                input parameter Jp.*/
-  double J0All;/**<@brief Anisotropic, diagonal spin coupling (1st Near), 
+  extern double J0All;/**<@brief Anisotropic, diagonal spin coupling (1st Near), 
                input parameter J0.*/
-  double J0pAll;/**<@brief Anisotropic, diagonal spin coupling (2nd Near), 
+  extern double J0pAll;/**<@brief Anisotropic, diagonal spin coupling (2nd Near), 
                input parameter J0'.*/
-  double J0ppAll;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
+  extern double J0ppAll;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
                input parameter J0''.*/
-  double J1All;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
+  extern double J1All;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
                input parameter J1.*/
-  double J1pAll;/**<@brief Anisotropic, diagonal spin coupling (2nd Near), 
+  extern double J1pAll;/**<@brief Anisotropic, diagonal spin coupling (2nd Near), 
                input parameter J1'.*/
-  double J1ppAll;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
+  extern double J1ppAll;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
                input parameter J1''.*/
-  double J2All;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
+  extern double J2All;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
                input parameter J2.*/
-  double J2pAll;/**<@brief Anisotropic, diagonal spin coupling (2nd Near), 
+  extern double J2pAll;/**<@brief Anisotropic, diagonal spin coupling (2nd Near), 
                input parameter J2'.*/
-  double J2ppAll;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
+  extern double J2ppAll;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
                input parameter J2''.*/
-  double JppAll;/**<@brief Isotropic, diagonal spin coupling (3rd Near),
+  extern double JppAll;/**<@brief Isotropic, diagonal spin coupling (3rd Near),
                input parameter J''.*/
-  double J[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  extern double J[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                  (1st Near.), input parameter Jx, Jy, Jz, Jxy, etc.*/
-  double Jp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  extern double Jp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (2nd Near.), input parameter J'x, J'y, J'z, J'xy, etc.*/
-  double J0[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  extern double J0[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                  (1st Near.), input parameter J0x, J0y, J0z, J0xy, etc. 
                  or set in StdFace_InputSpinNN().*/
-  double J0p[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  extern double J0p[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (2nd Near.), input parameter J0'x, J0'y, J0'z, J0'xy, etc. 
                    or set in StdFace_InputSpin().*/
-  double J0pp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  extern double J0pp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (3rd Near.), input parameter J0''x, J0''y, J0''z, J0''xy, etc.
                    or set in StdFace_InputSpin().*/
-  double J1[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  extern double J1[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                   (1st Near.), input parameter J1x, J1y, J1z, J1xy, etc. 
                   or set in StdFace_InputSpinNN().*/
-  double J1p[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  extern double J1p[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (2nd Near.), input parameter J1'x, J1'y, J1'z, J1'xy, etc. 
                    or set in StdFace_InputSpin().*/
-  double J1pp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  extern double J1pp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (3rd Near.), input parameter J1''x, J1''y, J1''z, J1''xy, etc.
                    or set in StdFace_InputSpin().*/
-  double J2[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  extern double J2[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                   (1st Near.), input parameter J2x, J2y, J2z, J2xy, etc. 
                   or set in StdFace_InputSpinNN().*/
-  double J2p[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  extern double J2p[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (2nd Near.), input parameter J2'x, J2'y, J2'z, J2'xy, etc. 
                    or set in StdFace_InputSpin().*/
-  double J2pp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  extern double J2pp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (3rd Near.), input parameter J2''x, J2''y, J2''z, J2''xy, etc.
                    or set in StdFace_InputSpin().*/
-  double Jpp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  extern double Jpp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (3rd Near.), input parameter J''x, J''y, J''z, J''xy, etc.*/
-  double D[3][3];/**<@brief Coefficient for @f${\hat S}_{i z} {\hat S}_{i z}@f$
+  extern double D[3][3];/**<@brief Coefficient for @f${\hat S}_{i z} {\hat S}_{i z}@f$
                  input parameter D. Only D[2][2] is used.*/
-  double h;/**<@brief Longitudinal magnetic field, input parameter.*/
-  double Gamma;/**<@brief Transvars magnetic field, input parameter.*/
-  double K;/**<@brief 4-spin term. Not used.*/
+  extern double h;/**<@brief Longitudinal magnetic field, input parameter.*/
+  extern double Gamma;/**<@brief Transvars magnetic field, input parameter.*/
+  extern double K;/**<@brief 4-spin term. Not used.*/
   /*
    Phase for the boundary
   */
-  double pi180;/**<@brief @f$\pi/180@f$, set in StdFace_ResetVals().*/
-  double phase[3];/**<@brief Boundary phase, input parameter phase0, etc.*/
-  std::complex<double> ExpPhase[3];/**<@brief @f$\exp(i \pi {\rm phase}/180)@f$.*/
-  int AntiPeriod[3];/**<@brief If corresponding StdIntList::phase = 180,
+  extern double pi180;/**<@brief @f$\pi/180@f$, set in StdFace_ResetVals().*/
+  extern double phase[3];/**<@brief Boundary phase, input parameter phase0, etc.*/
+  extern std::complex<double> ExpPhase[3];/**<@brief @f$\exp(i \pi {\rm phase}/180)@f$.*/
+  extern int AntiPeriod[3];/**<@brief If corresponding StdI::phase = 180,
                     it becomes 1.*/
   /*
    Transfer, Interaction, Locspin
   */
-  int nsite;/**<@brief Number of sites, set in the each lattice file.*/
-  int *locspinflag;/**<@brief [StdIntList::nsite] LocSpin in Expert mode, 
+  extern int nsite;/**<@brief Number of sites, set in the each lattice file.*/
+  extern int *locspinflag;/**<@brief [StdI::nsite] LocSpin in Expert mode, 
                    malloc and set in each lattice file.*/
-  int ntrans;/**<@brief Number of transfer, counted in each lattice file.*/
-  int **transindx;/**<@brief [StdIntList::ntrans][4] Site/spin indices of 
+  extern int ntrans;/**<@brief Number of transfer, counted in each lattice file.*/
+  extern int **transindx;/**<@brief [StdI::ntrans][4] Site/spin indices of 
                   one-body term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_trans().*/
-  std::complex<double> *trans;/**<@brief [StdIntList::ntrans] Coefficient of 
+  extern std::complex<double> *trans;/**<@brief [StdI::ntrans] Coefficient of 
                   one-body term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_trans().*/
-  int nintr;/**<@brief Number of InterAll, counted in each lattice file.*/
-  int Lintr;/**<@brief Print interall.def or not, set in PrintInteractions().*/
-  int **intrindx;/**<@brief [StdIntList::nintr][8] Site/spin indices of 
+  extern int nintr;/**<@brief Number of InterAll, counted in each lattice file.*/
+  extern int Lintr;/**<@brief Print interall.def or not, set in PrintInteractions().*/
+  extern int **intrindx;/**<@brief [StdI::nintr][8] Site/spin indices of 
                   two-body term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  std::complex<double> *intr;/**<@brief [StdIntList::nintr] Coefficient of general
+  extern std::complex<double> *intr;/**<@brief [StdI::nintr] Coefficient of general
                   two-body term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  int NCintra;/**<@brief Number of intra-site Coulomb interaction,
+  extern int NCintra;/**<@brief Number of intra-site Coulomb interaction,
               counted in each lattice file.*/
-  int LCintra;/**<@brief Print coulombintra.def or not, set in PrintInteractions().*/
-  int **CintraIndx;/**<@brief [StdIntList::NCintra][1] Site indices of 
+  extern int LCintra;/**<@brief Print coulombintra.def or not, set in PrintInteractions().*/
+  extern int **CintraIndx;/**<@brief [StdI::NCintra][1] Site indices of 
                   intra-site Coulomb term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  double *Cintra;/**<@brief [StdIntList::NCintra] Coefficient of intra-site
+  extern double *Cintra;/**<@brief [StdI::NCintra] Coefficient of intra-site
                   Coulomb term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  int NCinter;/**<@brief Number of inter-site Coulomb interaction,
+  extern int NCinter;/**<@brief Number of inter-site Coulomb interaction,
               counted in each lattice file.*/
-  int LCinter;/**<@brief Print coulombinter.def or not, set in PrintInteractions().*/
-  int **CinterIndx;/**<@brief [StdIntList::NCinter][2] Site indices of 
+  extern int LCinter;/**<@brief Print coulombinter.def or not, set in PrintInteractions().*/
+  extern int **CinterIndx;/**<@brief [StdI::NCinter][2] Site indices of 
                   inter-site Coulomb term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  double *Cinter;/**<@brief [StdIntList::NCinter] Coefficient of inter-site
+  extern double *Cinter;/**<@brief [StdI::NCinter] Coefficient of inter-site
                   Coulomb term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  int NHund;/**<@brief Number of Hund term, counted in each lattice file.*/
-  int LHund;/**<@brief Print hund.def or not, set in PrintInteractions().*/
-  int **HundIndx;/**<@brief [StdIntList::NHund][2] Site indices of 
+  extern int NHund;/**<@brief Number of Hund term, counted in each lattice file.*/
+  extern int LHund;/**<@brief Print hund.def or not, set in PrintInteractions().*/
+  extern int **HundIndx;/**<@brief [StdI::NHund][2] Site indices of 
                   Hund term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  double *Hund;/**<@brief [StdIntList::NHund] Coefficient of Hund term, 
+  extern double *Hund;/**<@brief [StdI::NHund] Coefficient of Hund term, 
                malloc in StdFace_MallocInteractions()
                    and set in StdFace_intr().*/
-  int NEx;/**<@brief Number of exchange term, counted in each lattice file.*/
-  int LEx;/**<@brief Print exchange.def or not, set in PrintInteractions().*/
-  int **ExIndx;/**<@brief [StdIntList::NEx][2] Site indices of 
+  extern int NEx;/**<@brief Number of exchange term, counted in each lattice file.*/
+  extern int LEx;/**<@brief Print exchange.def or not, set in PrintInteractions().*/
+  extern int **ExIndx;/**<@brief [StdI::NEx][2] Site indices of 
                   exchange term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  double *Ex;/**<@brief [StdIntList::NEx] Coefficient of exchange term, 
+  extern double *Ex;/**<@brief [StdI::NEx] Coefficient of exchange term, 
                malloc in StdFace_MallocInteractions()
                    and set in StdFace_intr().*/
-  int NPairLift;/**<@brief Number of pair-lift term, counted in each lattice file.*/
-  int LPairLift;/**<@brief Print pairlift.def or not, set in PrintInteractions().*/
-  int **PLIndx;/**<@brief [StdIntList::NPairLift][2] Site indices of 
+  extern int NPairLift;/**<@brief Number of pair-lift term, counted in each lattice file.*/
+  extern int LPairLift;/**<@brief Print pairlift.def or not, set in PrintInteractions().*/
+  extern int **PLIndx;/**<@brief [StdI::NPairLift][2] Site indices of 
                   pair-lift term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  double *PairLift;/**<@brief [StdIntList::NPairLift] Coefficient of 
+  extern double *PairLift;/**<@brief [StdI::NPairLift] Coefficient of 
                    pair-lift term, malloc in StdFace_MallocInteractions()
                    and set in StdFace_intr().*/
-  int NPairHopp;/**<@brief Number of pair-hopping term, counted in each lattice file.*/
-  int LPairHopp;/**<@brief Print pairhopp.def or not, set in PrintInteractions().*/
-  int **PHIndx;/**<@brief [StdIntList::NPairLift][2] Site indices of
+  extern int NPairHopp;/**<@brief Number of pair-hopping term, counted in each lattice file.*/
+  extern int LPairHopp;/**<@brief Print pairhopp.def or not, set in PrintInteractions().*/
+  extern int **PHIndx;/**<@brief [StdI::NPairLift][2] Site indices of
                pair-hopping term, malloc in StdFace_MallocInteractions()
                and set in StdFace_intr().*/
-  double *PairHopp;/**<@brief [StdIntList::NPairLift] Coefficient of
+  extern double *PairHopp;/**<@brief [StdI::NPairLift] Coefficient of
                    pair-hopping term, malloc in StdFace_MallocInteractions()
                    and set in StdFace_intr().*/
-  int lBoost;
+  extern int lBoost;
   /*
    Calculation conditions
   */
-  int lGC;/**<@brief Switch for computing Grandcanonical ensemble(== 1).
+  extern int lGC;/**<@brief Switch for computing Grandcanonical ensemble(== 1).
           Setted in StdFace_main() after all keywords are read.*/
-  int nelec;/**<@brief Number of electrons, input from file.*/
-  int S2;/**<@brief Total spin |S| of a local spin, input from file.*/
-  char outputmode[256];/**<@brief Select amount of correlation function,
+  extern int nelec;/**<@brief Number of electrons, input from file.*/
+  extern int S2;/**<@brief Total spin |S| of a local spin, input from file.*/
+  extern char outputmode[256];/**<@brief Select amount of correlation function,
                        input from file.*/
-  char CDataFileHead[256];/**<@brief Header of the output files.
+  extern char CDataFileHead[256];/**<@brief Header of the output files.
                           Input from file*/
-  int Sz2;/**<@brief Total Sz, input from file.*/
-  int ioutputmode;/**<@brief Switch associated to StdIntList::outputmode*/
+  extern int Sz2;/**<@brief Total Sz, input from file.*/
+  extern int ioutputmode;/**<@brief Switch associated to StdI::outputmode*/
   /*
    Wannier90 mode
   */
-  double cutoff_t;/**<@brief Cutoof for the hopping in wannier90, input from file*/
-  double cutoff_u;/**<@brief Cutoof for the Coulomb in wannier90, input from file*/
-  double cutoff_j;/**<@brief Cutoof for the Hund in wannier90, input from file*/
-  double cutoff_length_t; /**<@brief Cutoof for R in wannier90, input from file.*/
-  double cutoff_length_U; /**<@brief Cutoof for R in wannier90, input from file.*/
-  double cutoff_length_J; /**<@brief Cutoof for R in wannier90, input from file.*/
-  int cutoff_tR[3];
-  int cutoff_UR[3];
-  int cutoff_JR[3];
-  int double_counting;
+  extern double cutoff_t;/**<@brief Cutoof for the hopping in wannier90, input from file*/
+  extern double cutoff_u;/**<@brief Cutoof for the Coulomb in wannier90, input from file*/
+  extern double cutoff_j;/**<@brief Cutoof for the Hund in wannier90, input from file*/
+  extern double cutoff_length_t; /**<@brief Cutoof for R in wannier90, input from file.*/
+  extern double cutoff_length_U; /**<@brief Cutoof for R in wannier90, input from file.*/
+  extern double cutoff_length_J; /**<@brief Cutoof for R in wannier90, input from file.*/
+  extern int cutoff_tR[3];
+  extern int cutoff_UR[3];
+  extern int cutoff_JR[3];
+  extern int double_counting;
 #if defined(_HPhi)
   /*
   HPhi modpara
   */
-  char method[256];/**<@brief The name of method, input from file.*/
-  char Restart[256];/**<@brief The name of restart mode, input from file.*/
-  char InitialVecType[256];/**<@brief The name of initialguess-type, input from file.*/
-  char EigenVecIO[256];/**<@brief The name of I/O mode for eigenvector, input from file*/
-  int FlgTemp;/**<@brief */
-  int Lanczos_max;/**<@brief The maxixmum number of iterations, input from file*/
-  int initial_iv; /**<@brief the number for generating random number, input from file.*/
-  int nvec;/**<@brief */
-  int exct;/**<@brief The number of eigenvectors to be computed. input from file*/
-  int LanczosEps;/**<@brief Convergence threshold for the Lanczos method.*/
-  int LanczosTarget;/**<@brief Which eigenvector is used for the convergence check.*/
-  int NumAve;/**<@brief Number of trials for TPQ calculation.*/
-  int ExpecInterval;/**<@brief Interval for the iteration when the expectation 
+  extern char method[256];/**<@brief The name of method, input from file.*/
+  extern char Restart[256];/**<@brief The name of restart mode, input from file.*/
+  extern char InitialVecType[256];/**<@brief The name of initialguess-type, input from file.*/
+  extern char EigenVecIO[256];/**<@brief The name of I/O mode for eigenvector, input from file*/
+  extern int FlgTemp;/**<@brief */
+  extern int Lanczos_max;/**<@brief The maxixmum number of iterations, input from file*/
+  extern int initial_iv; /**<@brief the number for generating random number, input from file.*/
+  extern int nvec;/**<@brief */
+  extern int exct;/**<@brief The number of eigenvectors to be computed. input from file*/
+  extern int LanczosEps;/**<@brief Convergence threshold for the Lanczos method.*/
+  extern int LanczosTarget;/**<@brief Which eigenvector is used for the convergence check.*/
+  extern int NumAve;/**<@brief Number of trials for TPQ calculation.*/
+  extern int ExpecInterval;/**<@brief Interval for the iteration when the expectation 
                     value is computed.*/
-  double LargeValue;/**<@brief The shift parameter for the TPQ calculation.*/
+  extern double LargeValue;/**<@brief The shift parameter for the TPQ calculation.*/
   /*
   Boost
   */
-  int ***list_6spin_pair;/**<@brief */
-  int **list_6spin_star;/**<@brief */
-  int num_pivot;/**<@brief */
-  int ishift_nspin;/**<@brief */
+  extern int ***list_6spin_pair;/**<@brief */
+  extern int **list_6spin_star;/**<@brief */
+  extern int num_pivot;/**<@brief */
+  extern int ishift_nspin;/**<@brief */
   /*
   Spectrum
   */
-  char CalcSpec[256];/**<@brief The name of mode for spectrum, input from file.*/
-  char SpectrumType[256];/**<@brief The type of mode for spectrum, input from file.*/
-  int Nomega;/**<@brief Number of frequencies, input from file.*/
-  double OmegaMax;/**<@brief Maximum of frequency for spectrum, input from file.*/
-  double OmegaMin;/**<@brief Minimum of frequency for spectrum, input from file.*/
-  double OmegaIm;/**<@brief Imaginary part of frequency.*/
-  double SpectrumQ[3];/**<@brief wavenumver (q-vector) in fractional coordinate*/
-  int SpectrumBody;/**<@brief one- or two-body excitation, defined from
-                   StdIntList::SpectrumType*/
+  extern char CalcSpec[256];/**<@brief The name of mode for spectrum, input from file.*/
+  extern char SpectrumType[256];/**<@brief The type of mode for spectrum, input from file.*/
+  extern int Nomega;/**<@brief Number of frequencies, input from file.*/
+  extern double OmegaMax;/**<@brief Maximum of frequency for spectrum, input from file.*/
+  extern double OmegaMin;/**<@brief Minimum of frequency for spectrum, input from file.*/
+  extern double OmegaIm;/**<@brief Imaginary part of frequency.*/
+  extern double SpectrumQ[3];/**<@brief wavenumver (q-vector) in fractional coordinate*/
+  extern int SpectrumBody;/**<@brief one- or two-body excitation, defined from
+                   StdI::SpectrumType*/
   /*
   Time evolution
   */
-  double dt;/**<@brief Time step*/
-  double tshift;/**<@brief Shift of time-step of laser*/
-  double tdump;/**<@brief Time scale of dumping*/
-  double freq;/**<@brief Frequency of laser*/
-  double Uquench;/**<@brief Quenched on-site potential*/
-  double VecPot[3];/**<@brief Vector potential*/
-  char PumpType[256];/**<@brief The type of pump*/
-  int PumpBody;/**<@brief one- or two-body pumping, defined from
-                   StdIntList::PumpType*/
-  int *npump;/**<@brief [StdIntList::nt] Number of transfer, counted in each lattice file.*/
-  int ***pumpindx;/**<@brief [StdIntList::nt][StdIntList::npump][4] Site/spin indices of
+  extern double dt;/**<@brief Time step*/
+  extern double tshift;/**<@brief Shift of time-step of laser*/
+  extern double tdump;/**<@brief Time scale of dumping*/
+  extern double freq;/**<@brief Frequency of laser*/
+  extern double Uquench;/**<@brief Quenched on-site potential*/
+  extern double VecPot[3];/**<@brief Vector potential*/
+  extern char PumpType[256];/**<@brief The type of pump*/
+  extern int PumpBody;/**<@brief one- or two-body pumping, defined from
+                   StdI::PumpType*/
+  extern int *npump;/**<@brief [StdI::nt] Number of transfer, counted in each lattice file.*/
+  extern int ***pumpindx;/**<@brief [StdI::nt][StdI::npump][4] Site/spin indices of
                   one-body term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_trans().*/
-  std::complex<double> **pump;/**<@brief [StdIntList::nt][StdIntList::npump] Coefficient of
+  extern std::complex<double> **pump;/**<@brief [StdI::nt][StdI::npump] Coefficient of
                         one-body term, malloc in StdFace_MallocInteractions()
                         and set in StdFace_trans().*/
-  double **At;/**<@brief [StdIntList::nt][3] Vector potential.*/
-  int ExpandCoef;/**<@brief The number of Hamiltonian-vector operation for the time-evolution*/
+  extern double **At;/**<@brief [StdI::nt][3] Vector potential.*/
+  extern int ExpandCoef;/**<@brief The number of Hamiltonian-vector operation for the time-evolution*/
 #elif defined(_mVMC)
   /*mVMC modpara*/
-  char CParaFileHead[256];/**<@brief Header of the optimized wavefunction,
+  extern char CParaFileHead[256];/**<@brief Header of the optimized wavefunction,
                           input from file*/
-  int NVMCCalMode;/**<@brief Optimization(=0) or compute correlation
+  extern int NVMCCalMode;/**<@brief Optimization(=0) or compute correlation
                   function(=1), input from file.*/
-  int NLanczosMode;/**<@brief Power Lanczos(=1), input from file*/
-  int NDataIdxStart;/**<@brief Start index of trials, input from file.*/
-  int NDataQtySmp;/**<@brief Number of trials, input from file.*/
-  int NSPGaussLeg;/**<@brief Number of Gauss-Legendre points for spin projection,
+  extern int NLanczosMode;/**<@brief Power Lanczos(=1), input from file*/
+  extern int NDataIdxStart;/**<@brief Start index of trials, input from file.*/
+  extern int NDataQtySmp;/**<@brief Number of trials, input from file.*/
+  extern int NSPGaussLeg;/**<@brief Number of Gauss-Legendre points for spin projection,
                   input from file.*/
-  int NMPTrans;/**<@brief Number of translation symmetry*/
-  int NSROptItrStep;/**<@brief Number of iterations for stocastic reconfiguration*/
-  int NSROptItrSmp;/**<@brief Number of steps for sampling*/
-  int NSROptFixSmp;/**<@brief */
-  double DSROptRedCut;/**<@brief Stocastic reconfiguration parameter, input from file.*/
-  double DSROptStaDel;/**<@brief Stocastic reconfiguration parameter, input from file.*/
-  double DSROptStepDt;/**<@brief Stocastic reconfiguration parameter, input from file.*/
-  int NVMCWarmUp;/**<@brief */
-  int NVMCInterval;/**<@brief */
-  int NVMCSample;/**<@brief */
-  int NExUpdatePath;/**<@brief */
-  int RndSeed;/**<@brief */
-  int NSplitSize;/**<@brief */
-  int NSPStot;/**<@brief */
-  int NStore;/**<@brief */
-  int NSRCG;/**<@brief */
-  int ComplexType;/**<@brief */
+  extern int NMPTrans;/**<@brief Number of translation symmetry*/
+  extern int NSROptItrStep;/**<@brief Number of iterations for stocastic reconfiguration*/
+  extern int NSROptItrSmp;/**<@brief Number of steps for sampling*/
+  extern int NSROptFixSmp;/**<@brief */
+  extern double DSROptRedCut;/**<@brief Stocastic reconfiguration parameter, input from file.*/
+  extern double DSROptStaDel;/**<@brief Stocastic reconfiguration parameter, input from file.*/
+  extern double DSROptStepDt;/**<@brief Stocastic reconfiguration parameter, input from file.*/
+  extern int NVMCWarmUp;/**<@brief */
+  extern int NVMCInterval;/**<@brief */
+  extern int NVMCSample;/**<@brief */
+  extern int NExUpdatePath;/**<@brief */
+  extern int RndSeed;/**<@brief */
+  extern int NSplitSize;/**<@brief */
+  extern int NSPStot;/**<@brief */
+  extern int NStore;/**<@brief */
+  extern int NSRCG;/**<@brief */
+  extern int ComplexType;/**<@brief */
   /*
    Sub-lattice
   */
-  int Lsub;/**<@brief Sublattice*/
-  int Wsub;/**<@brief Sublattice*/
-  int Hsub;/**<@brief Sublattice*/
-  int NCellsub;/**<@brief Number of cells in a sublattice*/
-  int boxsub[3][3];/**<@brief Sublattice*/
-  int rboxsub[3][3];/**<@brief Sublattice*/
+  extern int Lsub;/**<@brief Sublattice*/
+  extern int Wsub;/**<@brief Sublattice*/
+  extern int Hsub;/**<@brief Sublattice*/
+  extern int NCellsub;/**<@brief Number of cells in a sublattice*/
+  extern int boxsub[3][3];/**<@brief Sublattice*/
+  extern int rboxsub[3][3];/**<@brief Sublattice*/
   /*
    2-body part of the trial wavefunction
   */
-  int **Orb;/**<@brief [StdIntList::nsite][StdIntList::nsite] Orbital index*/
-  int **AntiOrb;/**<@brief [StdIntList::nsite][StdIntList::nsite] Anti-periodic switch*/
-  int NOrb;/**<@brief Number of independent orbital index*/
-  int NSym;/**<@brief Number of translation symmetries, 
+  extern int **Orb;/**<@brief [StdI::nsite][StdI::nsite] Orbital index*/
+  extern int **AntiOrb;/**<@brief [StdI::nsite][StdI::nsite] Anti-periodic switch*/
+  extern int NOrb;/**<@brief Number of independent orbital index*/
+  extern int NSym;/**<@brief Number of translation symmetries, 
            Defined from the number of cells in the sub-lattice.*/
 #endif
 };

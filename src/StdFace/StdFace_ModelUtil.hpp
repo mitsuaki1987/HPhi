@@ -20,18 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void StdFace_exit(int errorcode);
 
-void StdFace_intr(struct StdIntList *StdI, std::complex<double> intr0,
+void StdFace_intr(std::complex<double> intr0,
   int site1, int spin1, int site2, int spin2,
   int site3, int spin3, int site4, int spin4);
 
-void StdFace_Hopping(struct StdIntList *StdI, std::complex<double> trans0, int isite, int jsite, double *dR);
-void StdFace_trans(struct StdIntList *StdI,std::complex<double> trans0,int isite,int ispin,int jsite,int jspin);
-void StdFace_HubbardLocal(struct StdIntList *StdI, double mu0, double h0,
+void StdFace_Hopping(std::complex<double> trans0, int isite, int jsite, double *dR);
+void StdFace_trans(std::complex<double> trans0,int isite,int ispin,int jsite,int jspin);
+void StdFace_HubbardLocal(double mu0, double h0,
   double Gamma0, double U0, int isite);
-void StdFace_MagField(struct StdIntList *StdI, int S2, double h, double Gamma, int isite);
+void StdFace_MagField(int S2, double h, double Gamma, int isite);
 
-void StdFace_Coulomb(struct StdIntList *StdI, double V, int isite, int jsite);
-void StdFace_GeneralJ(struct StdIntList *StdI, double J[3][3],
+void StdFace_Coulomb(double V, int isite, int jsite);
+void StdFace_GeneralJ(double J[3][3],
   int Si2, int Sj2, int isite, int jsite);
 
 void StdFace_PrintVal_d(const char* valname, double *val, double val0);
@@ -50,36 +50,35 @@ void StdFace_InputSpin(double Jp[3][3], double JpAll, const char *Jpname);
 void StdFace_InputCoulombV(double V, double *V0, const char *V0name);
 void StdFace_InputHopp(std::complex<double> t, std::complex<double> *t0, const char *t0name);
 
-void StdFace_InitSite(struct StdIntList *StdI, FILE *fp, int dim);
-void StdFace_SetLabel(struct StdIntList *StdI, FILE *fp,
+void StdFace_InitSite(FILE *fp, int dim);
+void StdFace_SetLabel(FILE *fp,
   int iW, int iL, int diW, int diL, int isiteUC, int jsiteUC,
   int *isite, int *jsite, int connect, std::complex<double> *Cphase, double *dR);
-void StdFace_PrintGeometry(struct StdIntList *StdI);
-void StdFace_MallocInteractions(struct StdIntList *StdI, int ntransMax, int nintrMax);
-void StdFace_FindSite(struct StdIntList *StdI,
-  int iW, int iL, int iH, int diW, int diL, int diH,
+void StdFace_PrintGeometry();
+void StdFace_MallocInteractions(int ntransMax, int nintrMax);
+void StdFace_FindSite(int iW, int iL, int iH, int diW, int diL, int diH,
   int isiteUC, int jsiteUC,
   int *isite, int *jsite, std::complex<double> *Cphase, double *dR);
-void StdFace_PrintXSF(struct StdIntList *StdI);
+void StdFace_PrintXSF();
 
-void StdFace_Tetragonal(struct StdIntList *StdI);
-void StdFace_Chain(struct StdIntList *StdI);
-void StdFace_Ladder(struct StdIntList *StdI);
-void StdFace_Triangular(struct StdIntList *StdI);
-void StdFace_Honeycomb(struct StdIntList *StdI);
-void StdFace_Kagome(struct StdIntList *StdI);
-void StdFace_Orthorhombic(struct StdIntList *StdI);
-void StdFace_FCOrtho(struct StdIntList *StdI);
-void StdFace_Pyrochlore(struct StdIntList *StdI);
-void StdFace_Wannier90(struct StdIntList *StdI);
+void StdFace_Tetragonal();
+void StdFace_Chain();
+void StdFace_Ladder();
+void StdFace_Triangular();
+void StdFace_Honeycomb();
+void StdFace_Kagome();
+void StdFace_Orthorhombic();
+void StdFace_FCOrtho();
+void StdFace_Pyrochlore();
+void StdFace_Wannier90();
 
 #if defined(_HPhi)
-void StdFace_Chain_Boost(struct StdIntList *StdI);
-void StdFace_Ladder_Boost(struct StdIntList *StdI);
-void StdFace_Honeycomb_Boost(struct StdIntList *StdI);
-void StdFace_Kagome_Boost(struct StdIntList *StdI);
+void StdFace_Chain_Boost();
+void StdFace_Ladder_Boost();
+void StdFace_Honeycomb_Boost();
+void StdFace_Kagome_Boost();
 #elif defined(_mVMC)
-void StdFace_generate_orb(struct StdIntList *StdI);
-void StdFace_Proj(struct StdIntList *StdI);
-void PrintJastrow(struct StdIntList *StdI);
+void StdFace_generate_orb();
+void StdFace_Proj();
+void PrintJastrow();
 #endif

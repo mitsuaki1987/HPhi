@@ -459,8 +459,8 @@ int mltplyHalfSpinGC(
           // longitudinal magnetic field (considerd in diagonalcalc.cpp)
           // transverse magnetic field
           is1_spin = Def::Tpow[isite1 - 1];
-#pragma omp parallel for default(none) private(j, tmp_sgn) \
-shared(i_max, is1_spin, sigma2, off, tmp_trans,tmp_v0, tmp_v1,one,nstate)
+#pragma omp parallel for default(none) private(j, tmp_sgn, off) \
+shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
           for (j = 1; j <= i_max; j++) {
             tmp_sgn = X_SpinGC_CisAit(j, is1_spin, sigma2, &off);
             if(tmp_sgn !=0){
@@ -649,8 +649,8 @@ int mltplyGeneralSpinGC(
             tmp_trans = -Def::EDParaGeneralTransfer[idx];
     
             // transverse magnetic field
-#pragma omp parallel for default(none) private(j, tmp_sgn, num1) \
-shared(i_max, isite1, sigma1, sigma2, off, tmp_trans,tmp_v0, \
+#pragma omp parallel for default(none) private(j, tmp_sgn, num1, off) \
+shared(i_max, isite1, sigma1, sigma2, tmp_trans,tmp_v0, \
 tmp_v1,one,nstate, Def::SiteToBit, Def::Tpow)
             for (j = 1; j <= i_max; j++) {
               num1 = GetOffCompGeneralSpin(
@@ -786,8 +786,8 @@ void child_exchange_spin(
   long int i_max = Large::i_max;
   long int off = 0;
 
-#pragma omp parallel for default(none) private(j) \
-shared(i_max, off, tmp_v0, tmp_v1,nstate)
+#pragma omp parallel for default(none) private(j, off) \
+shared(i_max, tmp_v0, tmp_v1,nstate)
   for (j = 1; j <= i_max; j++) 
     child_exchange_spin_element(j, nstate, tmp_v0, tmp_v1, &off);
 }/*std::complex<double> child_exchange_spin*/
@@ -804,8 +804,8 @@ void GC_child_exchange_spin(
   long int i_max = Large::i_max;
   long int off = 0;
 
-#pragma omp parallel for default(none) private(j) \
-shared(i_max, off,tmp_v0, tmp_v1,nstate)
+#pragma omp parallel for default(none) private(j, off) \
+shared(i_max,tmp_v0, tmp_v1,nstate)
   for (j = 1; j <= i_max; j++)
     GC_child_exchange_spin_element(j, nstate, tmp_v0, tmp_v1, &off);
 }/*std::complex<double> GC_child_exchange_spin*/
@@ -822,8 +822,8 @@ void GC_child_pairlift_spin(
   long int i_max = Large::i_max;
   long int off = 0;
 
-#pragma omp parallel for default(none) private(j) \
-shared(i_max, off, tmp_v0, tmp_v1,nstate)
+#pragma omp parallel for default(none) private(j, off) \
+shared(i_max, tmp_v0, tmp_v1,nstate)
   for (j = 1; j <= i_max; j++) 
     GC_child_pairlift_spin_element(j, nstate, tmp_v0, tmp_v1, &off);
 }/*std::complex<double> GC_child_pairlift_spin*/
@@ -851,8 +851,8 @@ void child_general_int_spin(
   isA_up = Large::is1_up;
   isB_up = Large::is2_up;
 
-#pragma omp parallel for default(none) private(j, tmp_sgn, dmv) \
-shared(i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_off,tmp_V,tmp_v1, tmp_v0,one,nstate)
+#pragma omp parallel for default(none) private(j, tmp_sgn, dmv,tmp_off) \
+shared(i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V,tmp_v1, tmp_v0,one,nstate)
   for (j = 1; j <= i_max; j++) {
     tmp_sgn = X_child_exchange_spin_element(j, isA_up, isB_up, org_sigma2, org_sigma4, &tmp_off);
     if (tmp_sgn != 0) {
@@ -888,8 +888,8 @@ void GC_child_general_int_spin(
   isA_up = Def::Tpow[org_isite1 - 1];
   isB_up = Def::Tpow[org_isite2 - 1];
 
-#pragma omp parallel default(none) private(j) \
-shared(tmp_v0,tmp_v1,nstate,i_max,isA_up,isB_up,org_sigma1,org_sigma2,org_sigma3,org_sigma4,tmp_off,tmp_V) 
+#pragma omp parallel default(none) private(j,tmp_off) \
+shared(tmp_v0,tmp_v1,nstate,i_max,isA_up,isB_up,org_sigma1,org_sigma2,org_sigma3,org_sigma4,tmp_V) 
   {
     if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
 #pragma omp for

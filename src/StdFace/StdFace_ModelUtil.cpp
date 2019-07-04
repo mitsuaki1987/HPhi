@@ -49,12 +49,11 @@ void StdFace_exit(int errorcode//!< [in]
 }
 /**
 @brief Add transfer to the list
-set StdIntList::trans and StdIntList::transindx and
-increment StdIntList::ntrans
+set StdI::trans and StdI::transindx and
+increment StdI::ntrans
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_trans(
-  struct StdIntList *StdI,//!<[inout]
   std::complex<double> trans0,//!<[in] Hopping integral @f$t, mu@f$, etc.
   int isite,//!<[in] @f$i@f$ for @f$c_{i \sigma}^\dagger@f$
   int ispin,//!<[in] @f$\sigma@f$ for @f$c_{i \sigma}^\dagger@f$
@@ -62,19 +61,18 @@ void StdFace_trans(
   int jspin//!<[in] @f$\sigma'@f$ for @f$c_{j \sigma'}@f$
 )
 {
-  StdI->trans[StdI->ntrans] = trans0;
-  StdI->transindx[StdI->ntrans][0] = isite;
-  StdI->transindx[StdI->ntrans][1] = ispin;
-  StdI->transindx[StdI->ntrans][2] = jsite; 
-  StdI->transindx[StdI->ntrans][3] = jspin;
-  StdI->ntrans = StdI->ntrans + 1;
+  StdI::trans[StdI::ntrans] = trans0;
+  StdI::transindx[StdI::ntrans][0] = isite;
+  StdI::transindx[StdI::ntrans][1] = ispin;
+  StdI::transindx[StdI::ntrans][2] = jsite; 
+  StdI::transindx[StdI::ntrans][3] = jspin;
+  StdI::ntrans = StdI::ntrans + 1;
 }/*void StdFace_trans*/
 /**
 @brief Add Hopping for the both spin
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_Hopping(
-struct StdIntList *StdI,//!<[inout]
   std::complex<double> trans0,//!<[in] Hopping integral @f$t@f$
   int isite,//!<[in] @f$i@f$ for @f$c_{i \sigma}^\dagger@f$
   int jsite,//!<[in] @f$j@f$ for @f$c_{j \sigma}@f$
@@ -92,33 +90,33 @@ struct StdIntList *StdI,//!<[inout]
   double Cphase;
   std::complex<double> coef;
 
-  if (strcmp(StdI->method, "timeevolution") == 0 && StdI->PumpBody == 1) {
-    for (it = 0; it < StdI->Lanczos_max; it++) {
+  if (strcmp(StdI::method, "timeevolution") == 0 && StdI::PumpBody == 1) {
+    for (it = 0; it < StdI::Lanczos_max; it++) {
       Cphase = 0.0f;
-      for (ii = 0; ii < 3; ii++) Cphase += /*2.0*StdI->pi */ StdI->At[it][ii] * dR[ii];
+      for (ii = 0; ii < 3; ii++) Cphase += /*2.0*StdI::pi */ StdI::At[it][ii] * dR[ii];
       coef = std::complex<double>(cos(Cphase), sin(-Cphase));
       for (ispin = 0; ispin < 2; ispin++) {
-        StdI->pump[it][StdI->npump[it]] = coef * trans0;
-        StdI->pumpindx[it][StdI->npump[it]][0] = isite;
-        StdI->pumpindx[it][StdI->npump[it]][1] = ispin;
-        StdI->pumpindx[it][StdI->npump[it]][2] = jsite;
-        StdI->pumpindx[it][StdI->npump[it]][3] = ispin;
-        StdI->npump[it] = StdI->npump[it] + 1;
+        StdI::pump[it][StdI::npump[it]] = coef * trans0;
+        StdI::pumpindx[it][StdI::npump[it]][0] = isite;
+        StdI::pumpindx[it][StdI::npump[it]][1] = ispin;
+        StdI::pumpindx[it][StdI::npump[it]][2] = jsite;
+        StdI::pumpindx[it][StdI::npump[it]][3] = ispin;
+        StdI::npump[it] = StdI::npump[it] + 1;
 
-        StdI->pump[it][StdI->npump[it]] = conj(coef * trans0);
-        StdI->pumpindx[it][StdI->npump[it]][0] = jsite;
-        StdI->pumpindx[it][StdI->npump[it]][1] = ispin;
-        StdI->pumpindx[it][StdI->npump[it]][2] = isite;
-        StdI->pumpindx[it][StdI->npump[it]][3] = ispin;
-        StdI->npump[it] = StdI->npump[it] + 1;
+        StdI::pump[it][StdI::npump[it]] = conj(coef * trans0);
+        StdI::pumpindx[it][StdI::npump[it]][0] = jsite;
+        StdI::pumpindx[it][StdI::npump[it]][1] = ispin;
+        StdI::pumpindx[it][StdI::npump[it]][2] = isite;
+        StdI::pumpindx[it][StdI::npump[it]][3] = ispin;
+        StdI::npump[it] = StdI::npump[it] + 1;
       }/*for (ispin = 0; ispin < 2; ispin++)*/
-    }/*for (it = 0; it < StdI->Lanczos_max; it++)*/
-  }/*if (strcmp(StdI->method, "timeevolution") == 0)*/
+    }/*for (it = 0; it < StdI::Lanczos_max; it++)*/
+  }/*if (strcmp(StdI::method, "timeevolution") == 0)*/
   else
 #endif
     for (ispin = 0; ispin < 2; ispin++) {
-      StdFace_trans(StdI, trans0, jsite, ispin, isite, ispin);
-      StdFace_trans(StdI, conj(trans0), isite, ispin, jsite, ispin);
+      StdFace_trans(trans0, jsite, ispin, isite, ispin);
+      StdFace_trans(conj(trans0), isite, ispin, jsite, ispin);
     }/*for (ispin = 0; ispin < 2; ispin++)*/
 }/*void StdFace_Hopping*/
 /**
@@ -127,7 +125,6 @@ itenerant electron
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_HubbardLocal(
-  struct StdIntList *StdI,//!<[inout]
   double mu0,//!<[in] Chemical potential
   double h0,//!<[in] Longitudinal magnetic feild
   double Gamma0,//!<[in] Transvers magnetic feild
@@ -135,25 +132,24 @@ void StdFace_HubbardLocal(
   int isite//!<[in] i for @f$c_{i \sigma}^\dagger@f$
 )
 {
-  StdFace_trans(StdI, mu0 + 0.5 * h0, isite, 0, isite, 0);
-  StdFace_trans(StdI, mu0 - 0.5 * h0, isite, 1, isite, 1);
-  StdFace_trans(StdI, -0.5 * Gamma0, isite, 1, isite, 0);
-  StdFace_trans(StdI, -0.5 * Gamma0, isite, 0, isite, 1);
+  StdFace_trans(mu0 + 0.5 * h0, isite, 0, isite, 0);
+  StdFace_trans(mu0 - 0.5 * h0, isite, 1, isite, 1);
+  StdFace_trans(-0.5 * Gamma0, isite, 1, isite, 0);
+  StdFace_trans(-0.5 * Gamma0, isite, 0, isite, 1);
   /**@brief
-  Set StdIntList::Cintra and StdIntList::CintraIndx
+  Set StdI::Cintra and StdI::CintraIndx
   with the input argument and increase the number
-  of them (StdIntList::NCintra).
+  of them (StdI::NCintra).
   */
-  StdI->Cintra[StdI->NCintra] = U0;
-  StdI->CintraIndx[StdI->NCintra][0] = isite;
-  StdI->NCintra += 1;
+  StdI::Cintra[StdI::NCintra] = U0;
+  StdI::CintraIndx[StdI::NCintra][0] = isite;
+  StdI::NCintra += 1;
 }/*void StdFace_HubbardLocal*/
 /**
 @brief Add longitudinal and transvars magnetic field to the list
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_MagField(
-  struct StdIntList *StdI,//!<[inout]
   int S2,//!<[in] Spin moment in @f$i@f$ site
   double h,//!<[in] Longitudinal magnetic field @f$h@f$
   double Gamma,//!<[in] Transvars magnetic field @f$h@f$
@@ -175,7 +171,7 @@ void StdFace_MagField(
     @f]
     */
     Sz = (double)ispin - S;
-    StdFace_trans(StdI, -h * Sz, isite, ispin, isite, ispin);
+    StdFace_trans(-h * Sz, isite, ispin, isite, ispin);
     /**@brief
     Transvars part
     @f[
@@ -187,21 +183,20 @@ void StdFace_MagField(
     @f]
     */
     if (ispin < S2) {
-      StdFace_trans(StdI, -0.5 * Gamma * sqrt(S*(S + 1.0) - Sz*(Sz + 1.0)),
+      StdFace_trans(-0.5 * Gamma * sqrt(S*(S + 1.0) - Sz*(Sz + 1.0)),
         isite, ispin + 1, isite, ispin);
-      StdFace_trans(StdI, -0.5 * Gamma * sqrt(S*(S + 1.0) - Sz*(Sz + 1.0)),
+      StdFace_trans(-0.5 * Gamma * sqrt(S*(S + 1.0) - Sz*(Sz + 1.0)),
         isite, ispin, isite, ispin + 1);
     }/*if (ispin < S2)*/
   }/*for (ispin = 0; ispin <= S2; ispin++)*/
 }/*void StdFace_MagField*/
 /**
 @brief Add interaction (InterAll) to the list
-Set StdIntList::intr and StdIntList::intrindx and
-increase the number of that (StdIntList::nintr).
+Set StdI::intr and StdI::intrindx and
+increase the number of that (StdI::nintr).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_intr(
-  struct StdIntList *StdI,//!<[inout]
   std::complex<double> intr0,//!<[in] Interaction @f$U, V, J@f$, etc.
   int site1,//!<[in] @f$i_1@f$ for @f$c_{i_1 \sigma_1}^\dagger@f$
   int spin1,//!<[in] @f$sigma1_1@f$ for @f$c_{i_1 \sigma_1}^\dagger@f$
@@ -213,19 +208,18 @@ void StdFace_intr(
   int spin4//!<[in] @f$sigma1_2@f$ for @f$c_{i_2 \sigma_2}@f$
 )
 {
-  StdI->intr[StdI->nintr] = intr0;
-  StdI->intrindx[StdI->nintr][0] = site1; StdI->intrindx[StdI->nintr][1] = spin1;
-  StdI->intrindx[StdI->nintr][2] = site2; StdI->intrindx[StdI->nintr][3] = spin2;
-  StdI->intrindx[StdI->nintr][4] = site3; StdI->intrindx[StdI->nintr][5] = spin3;
-  StdI->intrindx[StdI->nintr][6] = site4; StdI->intrindx[StdI->nintr][7] = spin4;
-  StdI->nintr = StdI->nintr + 1;
+  StdI::intr[StdI::nintr] = intr0;
+  StdI::intrindx[StdI::nintr][0] = site1; StdI::intrindx[StdI::nintr][1] = spin1;
+  StdI::intrindx[StdI::nintr][2] = site2; StdI::intrindx[StdI::nintr][3] = spin2;
+  StdI::intrindx[StdI::nintr][4] = site3; StdI::intrindx[StdI::nintr][5] = spin3;
+  StdI::intrindx[StdI::nintr][6] = site4; StdI::intrindx[StdI::nintr][7] = spin4;
+  StdI::nintr = StdI::nintr + 1;
 }/*void StdFace_intr*/
 /**
 @brief Treat J as a 3*3 matrix [(6S + 1)*(6S' + 1) interactions]
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_GeneralJ(
-struct StdIntList *StdI,//!<[inout]
   double J[3][3],//!<[in] The Spin interaction @f$J_x, J_{xy}@f$, ...
   int Si2,//!<[in] Spin moment in @f$i@f$ site
   int Sj2,//!<[in] Spin moment in @f$j@f$ site
@@ -243,22 +237,22 @@ struct StdIntList *StdI,//!<[inout]
   ExGeneral = 1;
   if (Si2 == 1 || Sj2 == 1) {
     /**@brief
-    Set StdIntList::Hund, StdIntList::HundIndx, StdIntList::Cinter, 
-    StdIntList::CinterIndx for @f$S_{iz} S_{jz}@f$ term,
+    Set StdI::Hund, StdI::HundIndx, StdI::Cinter, 
+    StdI::CinterIndx for @f$S_{iz} S_{jz}@f$ term,
     and increase the number of them 
-    (StdIntList::NHund, StdIntList::NCinter). And ...
+    (StdI::NHund, StdI::NCinter). And ...
     */
     ZGeneral = 0;
 
-    StdI->Hund[StdI->NHund] = -0.5 * J[2][2];
-    StdI->HundIndx[StdI->NHund][0] = isite;
-    StdI->HundIndx[StdI->NHund][1] = jsite;
-    StdI->NHund += 1;
+    StdI::Hund[StdI::NHund] = -0.5 * J[2][2];
+    StdI::HundIndx[StdI::NHund][0] = isite;
+    StdI::HundIndx[StdI::NHund][1] = jsite;
+    StdI::NHund += 1;
 
-    StdI->Cinter[StdI->NCinter] = -0.25 * J[2][2];
-    StdI->CinterIndx[StdI->NCinter][0] = isite;
-    StdI->CinterIndx[StdI->NCinter][1] = jsite;
-    StdI->NCinter += 1;
+    StdI::Cinter[StdI::NCinter] = -0.25 * J[2][2];
+    StdI::CinterIndx[StdI::NCinter][0] = isite;
+    StdI::CinterIndx[StdI::NCinter][1] = jsite;
+    StdI::NCinter += 1;
 
     if (fabs(J[0][1]) < 0.000001 && fabs(J[1][0]) < 0.000001
 #if defined(_mVMC)
@@ -267,28 +261,28 @@ struct StdIntList *StdI,//!<[inout]
       ) {
       /**@brief
        If there is no off-diagonal term, set 
-       StdIntList::Ex, StdIntList::ExIndx, StdIntList::PairLift, 
-       StdIntList::PLIndx and increase the number of them
-       (StdIntList::NEx, StdIntList::NPairLift).
+       StdI::Ex, StdI::ExIndx, StdI::PairLift, 
+       StdI::PLIndx and increase the number of them
+       (StdI::NEx, StdI::NPairLift).
       */
       ExGeneral = 0;
 
 #if defined(_mVMC)
-      StdI->Ex[StdI->NEx] = - 0.25 * (J[0][0] + J[1][1]);
+      StdI::Ex[StdI::NEx] = - 0.25 * (J[0][0] + J[1][1]);
 #else
-      if (strcmp(StdI->model, "kondo") == 0)
-        StdI->Ex[StdI->NEx] = -0.25 * (J[0][0] + J[1][1]);
+      if (strcmp(StdI::model, "kondo") == 0)
+        StdI::Ex[StdI::NEx] = -0.25 * (J[0][0] + J[1][1]);
       else
-        StdI->Ex[StdI->NEx] = 0.25 * (J[0][0] + J[1][1]);
+        StdI::Ex[StdI::NEx] = 0.25 * (J[0][0] + J[1][1]);
 #endif
-      StdI->ExIndx[StdI->NEx][0] = isite;
-      StdI->ExIndx[StdI->NEx][1] = jsite;
-      StdI->NEx += 1;
+      StdI::ExIndx[StdI::NEx][0] = isite;
+      StdI::ExIndx[StdI::NEx][1] = jsite;
+      StdI::NEx += 1;
 
-      StdI->PairLift[StdI->NPairLift] = 0.25 * (J[0][0] - J[1][1]);
-      StdI->PLIndx[StdI->NPairLift][0] = isite;
-      StdI->PLIndx[StdI->NPairLift][1] = jsite;
-      StdI->NPairLift += 1;
+      StdI::PairLift[StdI::NPairLift] = 0.25 * (J[0][0] - J[1][1]);
+      StdI::PLIndx[StdI::NPairLift][0] = isite;
+      StdI::PLIndx[StdI::NPairLift][1] = jsite;
+      StdI::NPairLift += 1;
     }/*if (fabs(J[0][1]) < 0.000001 && fabs(J[1][0]) < 0.000001)*/
   }
   /**@brief
@@ -311,7 +305,7 @@ struct StdIntList *StdI,//!<[inout]
       */
       if (ZGeneral == 1) {
         intr0 = J[2][2] * Siz * Sjz;
-        StdFace_intr(StdI, intr0,
+        StdFace_intr(intr0,
           isite, ispin, isite, ispin, jsite, jspin, jsite, jspin);
       }
       /**@brief (2)
@@ -329,9 +323,9 @@ struct StdIntList *StdI,//!<[inout]
         intr0 = 0.25 * std::complex<double>(J[0][0] + J[1][1], J[0][1] - J[1][0])
           * sqrt(Si * (Si + 1.0) - Siz * (Siz + 1.0))
           * sqrt(Sj * (Sj + 1.0) - Sjz * (Sjz + 1.0));
-        StdFace_intr(StdI, intr0,
+        StdFace_intr(intr0,
           isite, ispin + 1, isite, ispin, jsite, jspin, jsite, jspin + 1);
-        StdFace_intr(StdI, conj(intr0),
+        StdFace_intr(conj(intr0),
           isite, ispin, isite, ispin + 1, jsite, jspin + 1, jsite, jspin);
       }
       /**@brief (3)
@@ -349,9 +343,9 @@ struct StdIntList *StdI,//!<[inout]
         intr0 = 0.5 * 0.5 * std::complex<double>(J[0][0] - J[1][1], - (J[0][1] + J[1][0]))
           * sqrt(Si * (Si + 1.0) - Siz * (Siz + 1.0))
           * sqrt(Sj * (Sj + 1.0) - Sjz * (Sjz + 1.0));
-        StdFace_intr(StdI, intr0,
+        StdFace_intr(intr0,
           isite, ispin + 1, isite, ispin, jsite, jspin + 1, jsite, jspin);
-        StdFace_intr(StdI, conj(intr0),
+        StdFace_intr(conj(intr0),
           isite, ispin, isite, ispin + 1, jsite, jspin, jsite, jspin + 1);
       }
       /**@brief (4)
@@ -366,9 +360,9 @@ struct StdIntList *StdI,//!<[inout]
       */
       if (ispin < Si2) {
         intr0 = 0.5 * std::complex<double>(J[0][2], - J[1][2]) * sqrt(Si * (Si + 1.0) - Siz * (Siz + 1.0)) * Sjz;
-        StdFace_intr(StdI, intr0,
+        StdFace_intr(intr0,
           isite, ispin + 1, isite, ispin, jsite, jspin, jsite, jspin);
-        StdFace_intr(StdI, conj(intr0),
+        StdFace_intr(conj(intr0),
           jsite, jspin, jsite, jspin, isite, ispin, isite, ispin + 1);
       }/*if (ispin < Si2)*/
       /**@brief (5)
@@ -383,9 +377,9 @@ struct StdIntList *StdI,//!<[inout]
       */
       if (jspin < Sj2) {
         intr0 = 0.5 * std::complex<double>(J[2][0], - J[2][1]) * Siz * sqrt(Sj * (Sj + 1.0) - Sjz * (Sjz + 1.0));
-        StdFace_intr(StdI, intr0,
+        StdFace_intr(intr0,
           isite, ispin, isite, ispin, jsite, jspin + 1, jsite, jspin);
-        StdFace_intr(StdI, conj(intr0),
+        StdFace_intr(conj(intr0),
           jsite, jspin, jsite, jspin + 1, isite, ispin, isite, ispin);
       }/*if (jspin < Sj2)*/
     }/*for (jspin = 0; jspin <= Sj2; jspin++)*/
@@ -393,21 +387,20 @@ struct StdIntList *StdI,//!<[inout]
 }/*StdFace_GeneralJ*/
 /**
 @brief Add onsite/offsite Coulomb term to the list
-StdIntList::Cinter and StdIntList::CinterIndx,
-and increase the number of them (StdIntList::NCinter).
+StdI::Cinter and StdI::CinterIndx,
+and increase the number of them (StdI::NCinter).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_Coulomb(
-struct StdIntList *StdI,//!<[inout]
   double V,//!<[in] Coulomb integral U, V, etc.
   int isite,//!<[in] i of n_i
   int jsite//!<[in] j of n_j
 )
 {
-  StdI->Cinter[StdI->NCinter] = V;
-  StdI->CinterIndx[StdI->NCinter][0] = isite;
-  StdI->CinterIndx[StdI->NCinter][1] = jsite;
-  StdI->NCinter += 1;
+  StdI::Cinter[StdI::NCinter] = V;
+  StdI::CinterIndx[StdI::NCinter][0] = isite;
+  StdI::CinterIndx[StdI::NCinter][1] = jsite;
+  StdI::NCinter += 1;
 }/*void StdFace_Coulomb*/
 /**
 @brief Print a valiable (real) read from the input file
@@ -597,7 +590,6 @@ original supercell.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 static void StdFace_FoldSite(
-  struct StdIntList *StdI,//!<[inout]
   int iCellV[3],//!<[in] The fractional coordinate of a site
   int nBox[3], //!<[out] the index of supercell
   int iCellV_fold[3]/**<[out] The fractional coordinate of a site 
@@ -610,23 +602,23 @@ static void StdFace_FoldSite(
   */
   for (ii = 0; ii < 3; ii++) {
     iCellV_frac[ii] = 0;
-    for (jj = 0; jj < 3; jj++)iCellV_frac[ii] += StdI->rbox[ii][jj] * iCellV[jj];
+    for (jj = 0; jj < 3; jj++)iCellV_frac[ii] += StdI::rbox[ii][jj] * iCellV[jj];
   }
   /**@brief
   (2) Search which supercell contains this cell.
   */
   for (ii = 0; ii < 3; ii++)
-    nBox[ii] = (iCellV_frac[ii] + StdI->NCell * 1000) / StdI->NCell - 1000;
+    nBox[ii] = (iCellV_frac[ii] + StdI::NCell * 1000) / StdI::NCell - 1000;
   /**@brief
   (3) Fractional coordinate (times NCell) in the original supercell
   */
   for (ii = 0; ii < 3; ii++)
-    iCellV_frac[ii] -= StdI->NCell*(nBox[ii]);
+    iCellV_frac[ii] -= StdI::NCell*(nBox[ii]);
   /**/
   for (ii = 0; ii < 3; ii++) {
     iCellV_fold[ii] = 0;
-    for (jj = 0; jj < 3; jj++) iCellV_fold[ii] += StdI->box[jj][ii] * iCellV_frac[jj];
-    iCellV_fold[ii] = (iCellV_fold[ii] + StdI->NCell * 1000) / StdI->NCell - 1000;
+    for (jj = 0; jj < 3; jj++) iCellV_fold[ii] += StdI::box[jj][ii] * iCellV_frac[jj];
+    iCellV_fold[ii] = (iCellV_fold[ii] + StdI::NCell * 1000) / StdI::NCell - 1000;
   }/*for (ii = 0; ii < 3; ii++)*/
 }/*static void StdFace_FoldSite*/
 /**
@@ -634,7 +626,6 @@ static void StdFace_FoldSite(
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void StdFace_InitSite(
-  struct StdIntList *StdI,//!<[inout]
   FILE *fp,//!<[in] File pointer to lattice.gp
   int dim//!<[in] dimension of system, if = 2, print lattice.gp
 )
@@ -649,96 +640,96 @@ void StdFace_InitSite(
   (1) Check Input parameters about the shape of super-cell
   */
   if (
-    (StdI->L != StdI->NaN_i || StdI->W != StdI->NaN_i || StdI->Height != StdI->NaN_i)
+    (StdI::L != StdI::NaN_i || StdI::W != StdI::NaN_i || StdI::Height != StdI::NaN_i)
     && 
-    (StdI->box[0][0] != StdI->NaN_i || StdI->box[0][1] != StdI->NaN_i || StdI->box[0][2] != StdI->NaN_i ||
-     StdI->box[1][0] != StdI->NaN_i || StdI->box[1][1] != StdI->NaN_i || StdI->box[1][2] != StdI->NaN_i ||
-     StdI->box[2][0] != StdI->NaN_i || StdI->box[2][1] != StdI->NaN_i || StdI->box[2][2] != StdI->NaN_i)
+    (StdI::box[0][0] != StdI::NaN_i || StdI::box[0][1] != StdI::NaN_i || StdI::box[0][2] != StdI::NaN_i ||
+     StdI::box[1][0] != StdI::NaN_i || StdI::box[1][1] != StdI::NaN_i || StdI::box[1][2] != StdI::NaN_i ||
+     StdI::box[2][0] != StdI::NaN_i || StdI::box[2][1] != StdI::NaN_i || StdI::box[2][2] != StdI::NaN_i)
     )
   {
     fprintf(stdout, "\nERROR ! (L, W, Height) and (a0W, ..., a2H) conflict !\n\n");
     StdFace_exit(-1);
   }
-  else if (StdI->L != StdI->NaN_i || StdI->W != StdI->NaN_i || StdI->Height != StdI->NaN_i)
+  else if (StdI::L != StdI::NaN_i || StdI::W != StdI::NaN_i || StdI::Height != StdI::NaN_i)
   {
-    StdFace_PrintVal_i("L", &StdI->L, 1);
-    StdFace_PrintVal_i("W", &StdI->W, 1);
-    StdFace_PrintVal_i("Height", &StdI->Height, 1);
+    StdFace_PrintVal_i("L", &StdI::L, 1);
+    StdFace_PrintVal_i("W", &StdI::W, 1);
+    StdFace_PrintVal_i("Height", &StdI::Height, 1);
     for (ii = 0; ii < 3; ii++) for (jj = 0; jj < 3; jj++)
-      StdI->box[ii][jj] = 0;
-    StdI->box[0][0] = StdI->W;
-    StdI->box[1][1] = StdI->L;
-    StdI->box[2][2] = StdI->Height;
+      StdI::box[ii][jj] = 0;
+    StdI::box[0][0] = StdI::W;
+    StdI::box[1][1] = StdI::L;
+    StdI::box[2][2] = StdI::Height;
   }
   else
   {
-    StdFace_PrintVal_i("a0W", &StdI->box[0][0], 1);
-    StdFace_PrintVal_i("a0L", &StdI->box[0][1], 0);
-    StdFace_PrintVal_i("a0H", &StdI->box[0][2], 0);
-    StdFace_PrintVal_i("a1W", &StdI->box[1][0], 0);
-    StdFace_PrintVal_i("a1L", &StdI->box[1][1], 1);
-    StdFace_PrintVal_i("a1H", &StdI->box[1][2], 0);
-    StdFace_PrintVal_i("a2W", &StdI->box[2][0], 0);
-    StdFace_PrintVal_i("a2L", &StdI->box[2][1], 0);
-    StdFace_PrintVal_i("a2H", &StdI->box[2][2], 1);
+    StdFace_PrintVal_i("a0W", &StdI::box[0][0], 1);
+    StdFace_PrintVal_i("a0L", &StdI::box[0][1], 0);
+    StdFace_PrintVal_i("a0H", &StdI::box[0][2], 0);
+    StdFace_PrintVal_i("a1W", &StdI::box[1][0], 0);
+    StdFace_PrintVal_i("a1L", &StdI::box[1][1], 1);
+    StdFace_PrintVal_i("a1H", &StdI::box[1][2], 0);
+    StdFace_PrintVal_i("a2W", &StdI::box[2][0], 0);
+    StdFace_PrintVal_i("a2L", &StdI::box[2][1], 0);
+    StdFace_PrintVal_i("a2H", &StdI::box[2][2], 1);
   }
   /*
    Parameters for the 3D system will not used.
   */
   if (dim == 2) {
-    StdI->direct[0][2] = 0.0;
-    StdI->direct[1][2] = 0.0;
-    StdI->direct[2][0] = 0.0;
-    StdI->direct[2][1] = 0.0;
-    StdI->direct[2][2] = 1.0;
+    StdI::direct[0][2] = 0.0;
+    StdI::direct[1][2] = 0.0;
+    StdI::direct[2][0] = 0.0;
+    StdI::direct[2][1] = 0.0;
+    StdI::direct[2][2] = 1.0;
   }
   /**@brief
   (2) Define the phase factor at each boundary.
-  Set anti-period flag (StdIntList::AntiPeriod).
+  Set anti-period flag (StdI::AntiPeriod).
   */
-  if (dim == 2) StdI->phase[2] = 0.0;
+  if (dim == 2) StdI::phase[2] = 0.0;
   for (ii = 0; ii < 3; ii++) {
-    StdI->ExpPhase[ii] = std::complex<double>(cos(StdI->pi180 * StdI->phase[ii]), sin(StdI->pi180 * StdI->phase[ii]));
-    if (abs(StdI->ExpPhase[ii] + 1.0) < 0.000001) StdI->AntiPeriod[ii] = 1;
-    else StdI->AntiPeriod[ii] = 0;
+    StdI::ExpPhase[ii] = std::complex<double>(cos(StdI::pi180 * StdI::phase[ii]), sin(StdI::pi180 * StdI::phase[ii]));
+    if (abs(StdI::ExpPhase[ii] + 1.0) < 0.000001) StdI::AntiPeriod[ii] = 1;
+    else StdI::AntiPeriod[ii] = 0;
   }
   /**@brief
-  (3) Malloc StdIntList::tau, intrinsic structure of unit-cell
+  (3) Malloc StdI::tau, intrinsic structure of unit-cell
   */
-  StdI->tau = (double **)malloc(sizeof(double*) * StdI->NsiteUC);
-  for (ii = 0; ii < StdI->NsiteUC; ii++) {
-    StdI->tau[ii] = (double *)malloc(sizeof(double) * 3);
+  StdI::tau = (double **)malloc(sizeof(double*) * StdI::NsiteUC);
+  for (ii = 0; ii < StdI::NsiteUC; ii++) {
+    StdI::tau[ii] = (double *)malloc(sizeof(double) * 3);
   }
   /**@brief
-  (4) Calculate reciprocal lattice vectors (times StdIntList::NCell, the number of unit-cells)
-  for folding sites. store in StdIntList::rbox.
+  (4) Calculate reciprocal lattice vectors (times StdI::NCell, the number of unit-cells)
+  for folding sites. store in StdI::rbox.
   */
-  StdI->NCell = 0;
+  StdI::NCell = 0;
   for (ii = 0; ii < 3; ii++) {
-    StdI->NCell += StdI->box[0][ii]
-      * StdI->box[1][(ii + 1) % 3]
-      * StdI->box[2][(ii + 2) % 3]
-      - StdI->box[0][ii]
-      * StdI->box[1][(ii + 2) % 3]
-      * StdI->box[2][(ii + 1) % 3];
+    StdI::NCell += StdI::box[0][ii]
+      * StdI::box[1][(ii + 1) % 3]
+      * StdI::box[2][(ii + 2) % 3]
+      - StdI::box[0][ii]
+      * StdI::box[1][(ii + 2) % 3]
+      * StdI::box[2][(ii + 1) % 3];
   }
-  printf("   Number of Cell = %d\n", abs(StdI->NCell));
-  if (StdI->NCell == 0) {
+  printf("   Number of Cell = %d\n", abs(StdI::NCell));
+  if (StdI::NCell == 0) {
     StdFace_exit(-1);
   }
 
   for (ii = 0; ii < 3; ii++) {
     for (jj = 0; jj < 3; jj++) {
-      StdI->rbox[ii][jj] = StdI->box[(ii + 1) % 3][(jj + 1) % 3] * StdI->box[(ii + 2) % 3][(jj + 2) % 3]
-                         - StdI->box[(ii + 1) % 3][(jj + 2) % 3] * StdI->box[(ii + 2) % 3][(jj + 1) % 3];
+      StdI::rbox[ii][jj] = StdI::box[(ii + 1) % 3][(jj + 1) % 3] * StdI::box[(ii + 2) % 3][(jj + 2) % 3]
+                         - StdI::box[(ii + 1) % 3][(jj + 2) % 3] * StdI::box[(ii + 2) % 3][(jj + 1) % 3];
     }
   }
-  if (StdI->NCell < 0) {
+  if (StdI::NCell < 0) {
     for (ii = 0; ii < 3; ii++)
       for (jj = 0; jj < 3; jj++)
-        StdI->rbox[ii][jj] *= -1;
-    StdI->NCell *= -1;
-  }/*if (StdI->NCell < 0)*/
+        StdI::rbox[ii][jj] *= -1;
+    StdI::NCell *= -1;
+  }/*if (StdI::NCell < 0)*/
   /**@brief
   (5) Find Cells in the super-cell
   (5-1) Find the lower- and the upper bound for surrowndinf the super-cell
@@ -750,7 +741,7 @@ void StdFace_InitSite(
       for (nBox[1] = 0; nBox[1] < 2; nBox[1]++) {
         for (nBox[0] = 0; nBox[0] < 2; nBox[0]++) {
           edge = 0;
-          for (jj = 0; jj < 3; jj++) edge += nBox[jj] * StdI->box[jj][ii];
+          for (jj = 0; jj < 3; jj++) edge += nBox[jj] * StdI::box[jj][ii];
           if (edge < bound[ii][0]) bound[ii][0] = edge;
           if (edge > bound[ii][1]) bound[ii][1] = edge;
         }
@@ -758,20 +749,20 @@ void StdFace_InitSite(
     }
   }
   /**@brief
-  (5-2) Find cells in the super-cell (StdIntList::Cell, the fractional coordinate)
+  (5-2) Find cells in the super-cell (StdI::Cell, the fractional coordinate)
   */
-  StdI->Cell = (int **)malloc(sizeof(int*) * StdI->NCell);
-  for (ii = 0; ii < StdI->NCell; ii++) {
-    StdI->Cell[ii] = (int *)malloc(sizeof(int) * 3);
-  }/*for (ii = 0; ii < StdI->NCell; ii++)*/
+  StdI::Cell = (int **)malloc(sizeof(int*) * StdI::NCell);
+  for (ii = 0; ii < StdI::NCell; ii++) {
+    StdI::Cell[ii] = (int *)malloc(sizeof(int) * 3);
+  }/*for (ii = 0; ii < StdI::NCell; ii++)*/
   jj = 0;
   for (iCellV[2] = bound[2][0]; iCellV[2] <= bound[2][1]; iCellV[2]++) {
     for (iCellV[1] = bound[1][0]; iCellV[1] <= bound[1][1]; iCellV[1]++) {
       for (iCellV[0] = bound[0][0]; iCellV[0] <= bound[0][1]; iCellV[0]++) {
-        StdFace_FoldSite(StdI, iCellV, nBox, iCellV_fold);
+        StdFace_FoldSite(iCellV, nBox, iCellV_fold);
         if (nBox[0] == 0 && nBox[1] == 0 && nBox[2] == 0) {
           for (ii = 0; ii < 3; ii++)
-            StdI->Cell[jj][ii] = iCellV[ii];
+            StdI::Cell[jj][ii] = iCellV[ii];
           jj += 1;
         }/*if (lUC == 1)*/
       }/*for (iCellV[0] = bound[0][0]; iCellV[0] <= bound[0][1]; iCellV[0]++*/
@@ -783,10 +774,10 @@ void StdFace_InitSite(
   if (dim == 2) {
     pos[0][0] = 0.0;
     pos[0][1] = 0.0;
-    pos[1][0] = StdI->direct[0][0] * (double)StdI->box[0][0] + StdI->direct[1][0] * (double)StdI->box[0][1];
-    pos[1][1] = StdI->direct[0][1] * (double)StdI->box[0][0] + StdI->direct[1][1] * (double)StdI->box[0][1];
-    pos[2][0] = StdI->direct[0][0] * (double)StdI->box[1][0] + StdI->direct[1][0] * (double)StdI->box[1][1];
-    pos[2][1] = StdI->direct[0][1] * (double)StdI->box[1][0] + StdI->direct[1][1] * (double)StdI->box[1][1];
+    pos[1][0] = StdI::direct[0][0] * (double)StdI::box[0][0] + StdI::direct[1][0] * (double)StdI::box[0][1];
+    pos[1][1] = StdI::direct[0][1] * (double)StdI::box[0][0] + StdI::direct[1][1] * (double)StdI::box[0][1];
+    pos[2][0] = StdI::direct[0][0] * (double)StdI::box[1][0] + StdI::direct[1][0] * (double)StdI::box[1][1];
+    pos[2][1] = StdI::direct[0][1] * (double)StdI::box[1][0] + StdI::direct[1][1] * (double)StdI::box[1][1];
     pos[3][0] = pos[1][0] + pos[2][0];
     pos[3][1] = pos[1][1] + pos[2][1];
     /**/
@@ -825,7 +816,6 @@ void StdFace_InitSite(
 @brief Find the index of transfer and interaction
 */
 void StdFace_FindSite(
-  struct StdIntList *StdI,//!<[inout]
   int iW,//!<[in] position of initial site
   int iL,//!<[in] position of initial site
   int iH,//!<[in] position of initial site
@@ -843,43 +833,42 @@ void StdFace_FindSite(
   int iCell, jCell, kCell, ii;
   int nBox[3], jCellV[3];
   /**/
-  dR[0] = - (double)diW + StdI->tau[isiteUC][0] - StdI->tau[jsiteUC][0];
-  dR[1] = - (double)diL + StdI->tau[isiteUC][1] - StdI->tau[jsiteUC][1];
-  dR[2] = - (double)diH + StdI->tau[isiteUC][2] - StdI->tau[jsiteUC][2];
+  dR[0] = - (double)diW + StdI::tau[isiteUC][0] - StdI::tau[jsiteUC][0];
+  dR[1] = - (double)diL + StdI::tau[isiteUC][1] - StdI::tau[jsiteUC][1];
+  dR[2] = - (double)diH + StdI::tau[isiteUC][2] - StdI::tau[jsiteUC][2];
   /**/
   jCellV[0] = iW + diW;
   jCellV[1] = iL + diL;
   jCellV[2] = iH + diH;
-  StdFace_FoldSite(StdI, jCellV, nBox, jCellV);
+  StdFace_FoldSite(jCellV, nBox, jCellV);
   *Cphase = 1.0;
-  for (ii = 0; ii < 3; ii++) *Cphase *= pow(StdI->ExpPhase[ii], (double)nBox[ii]);
+  for (ii = 0; ii < 3; ii++) *Cphase *= pow(StdI::ExpPhase[ii], (double)nBox[ii]);
   /**/
-  for (kCell = 0; kCell < StdI->NCell; kCell++) {
-    if (jCellV[0] == StdI->Cell[kCell][0] &&
-        jCellV[1] == StdI->Cell[kCell][1] &&
-        jCellV[2] == StdI->Cell[kCell][2]) 
+  for (kCell = 0; kCell < StdI::NCell; kCell++) {
+    if (jCellV[0] == StdI::Cell[kCell][0] &&
+        jCellV[1] == StdI::Cell[kCell][1] &&
+        jCellV[2] == StdI::Cell[kCell][2]) 
     {
       jCell = kCell;
     }
-    if (iW == StdI->Cell[kCell][0] &&
-        iL == StdI->Cell[kCell][1] &&
-        iH == StdI->Cell[kCell][2])
+    if (iW == StdI::Cell[kCell][0] &&
+        iL == StdI::Cell[kCell][1] &&
+        iH == StdI::Cell[kCell][2])
     {
       iCell = kCell;
     }
-  }/*for (iCell = 0; iCell < StdI->NCell; iCell++)*/
-  *isite = iCell * StdI->NsiteUC + isiteUC;
-  *jsite = jCell * StdI->NsiteUC + jsiteUC;
-  if (strcmp(StdI->model, "kondo") == 0) {
-    *isite += StdI->NCell * StdI->NsiteUC;
-    *jsite += StdI->NCell * StdI->NsiteUC;
+  }/*for (iCell = 0; iCell < StdI::NCell; iCell++)*/
+  *isite = iCell * StdI::NsiteUC + isiteUC;
+  *jsite = jCell * StdI::NsiteUC + jsiteUC;
+  if (strcmp(StdI::model, "kondo") == 0) {
+    *isite += StdI::NCell * StdI::NsiteUC;
+    *jsite += StdI::NCell * StdI::NsiteUC;
   }
 }/*void StdFace_FindSite*/
 /**
 @brief Set Label in the gnuplot display (Only used in 2D system)
 */
 void StdFace_SetLabel(
-  struct StdIntList *StdI,//!<[inout]
   FILE *fp,//!<[in] File pointer to lattice.gp
   int iW,//!<[in] position of initial site
   int iL,//!<[in] position of initial site
@@ -898,17 +887,17 @@ void StdFace_SetLabel(
   /**@brief
   First print the reversed one
   */
-  StdFace_FindSite(StdI, iW, iL, 0, -diW, -diL, 0, jsiteUC, isiteUC, isite, jsite, Cphase, dR);
+  StdFace_FindSite(iW, iL, 0, -diW, -diL, 0, jsiteUC, isiteUC, isite, jsite, Cphase, dR);
 
-  xi = StdI->direct[0][0] * ((double)iW + StdI->tau[jsiteUC][0])
-     + StdI->direct[1][0] * ((double)iL + StdI->tau[jsiteUC][1]);
-  yi = StdI->direct[0][1] * ((double)iW + StdI->tau[jsiteUC][0])
-     + StdI->direct[1][1] * ((double)iL + StdI->tau[jsiteUC][1]);
+  xi = StdI::direct[0][0] * ((double)iW + StdI::tau[jsiteUC][0])
+     + StdI::direct[1][0] * ((double)iL + StdI::tau[jsiteUC][1]);
+  yi = StdI::direct[0][1] * ((double)iW + StdI::tau[jsiteUC][0])
+     + StdI::direct[1][1] * ((double)iL + StdI::tau[jsiteUC][1]);
 
-  xj = StdI->direct[0][0] * ((double)(iW - diW) + StdI->tau[isiteUC][0])
-     + StdI->direct[1][0] * ((double)(iL - diL) + StdI->tau[isiteUC][1]);
-  yj = StdI->direct[0][1] * ((double)(iW - diW) + StdI->tau[isiteUC][0])
-     + StdI->direct[1][1] * ((double)(iL - diL) + StdI->tau[isiteUC][1]);
+  xj = StdI::direct[0][0] * ((double)(iW - diW) + StdI::tau[isiteUC][0])
+     + StdI::direct[1][0] * ((double)(iL - diL) + StdI::tau[isiteUC][1]);
+  yj = StdI::direct[0][1] * ((double)(iW - diW) + StdI::tau[isiteUC][0])
+     + StdI::direct[1][1] * ((double)(iL - diL) + StdI::tau[isiteUC][1]);
 
   if (*isite < 10)fprintf(fp, "set label \"%1d\" at %f, %f center front\n", *isite, xi, yi);
   else            fprintf(fp, "set label \"%2d\" at %f, %f center front\n", *isite, xi, yi);
@@ -919,17 +908,17 @@ void StdFace_SetLabel(
   /**@brief
   Then print the normal one, these are different when they cross boundary.
   */
-  StdFace_FindSite(StdI, iW, iL, 0, diW, diL, 0, isiteUC, jsiteUC, isite, jsite, Cphase, dR);
+  StdFace_FindSite(iW, iL, 0, diW, diL, 0, isiteUC, jsiteUC, isite, jsite, Cphase, dR);
 
-  xi = StdI->direct[1][0] * ((double)iL + StdI->tau[isiteUC][1])
-     + StdI->direct[0][0] * ((double)iW + StdI->tau[isiteUC][0]);
-  yi = StdI->direct[1][1] * ((double)iL + StdI->tau[isiteUC][1])
-     + StdI->direct[0][1] * ((double)iW + StdI->tau[isiteUC][0]);
+  xi = StdI::direct[1][0] * ((double)iL + StdI::tau[isiteUC][1])
+     + StdI::direct[0][0] * ((double)iW + StdI::tau[isiteUC][0]);
+  yi = StdI::direct[1][1] * ((double)iL + StdI::tau[isiteUC][1])
+     + StdI::direct[0][1] * ((double)iW + StdI::tau[isiteUC][0]);
 
-  xj = StdI->direct[0][0] * ((double)(iW + diW) + StdI->tau[jsiteUC][0])
-     + StdI->direct[1][0] * ((double)(iL + diL) + StdI->tau[jsiteUC][1]);
-  yj = StdI->direct[0][1] * ((double)(iW + diW) + StdI->tau[jsiteUC][0])
-     + StdI->direct[1][1] * ((double)(iL + diL) + StdI->tau[jsiteUC][1]);
+  xj = StdI::direct[0][0] * ((double)(iW + diW) + StdI::tau[jsiteUC][0])
+     + StdI::direct[1][0] * ((double)(iL + diL) + StdI::tau[jsiteUC][1]);
+  yj = StdI::direct[0][1] * ((double)(iW + diW) + StdI::tau[jsiteUC][0])
+     + StdI::direct[1][1] * ((double)(iL + diL) + StdI::tau[jsiteUC][1]);
 
   if (*isite < 10)fprintf(fp, "set label \"%1d\" at %f, %f center front\n", *isite, xi, yi);
   else            fprintf(fp, "set label \"%2d\" at %f, %f center front\n", *isite, xi, yi);
@@ -941,7 +930,7 @@ void StdFace_SetLabel(
 /**
 @brief Print lattice.xsf (XCrysDen format) 
 */
-void StdFace_PrintXSF(struct StdIntList *StdI) {
+void StdFace_PrintXSF() {
   FILE *fp;
   int ii, jj, kk, isite, iCell;
   double vec[3];
@@ -953,19 +942,19 @@ void StdFace_PrintXSF(struct StdIntList *StdI) {
     for (jj = 0; jj < 3; jj++) {
       vec[jj] = 0.0;
       for (kk = 0; kk < 3; kk++)
-        vec[jj] += (double)StdI->box[ii][kk] * StdI->direct[kk][jj];
+        vec[jj] += (double)StdI::box[ii][kk] * StdI::direct[kk][jj];
     }
     fprintf(fp, "%15.5f %15.5f %15.5f\n", vec[0], vec[1], vec[2]);
   }
   fprintf(fp, "PRIMCOORD\n");
-  fprintf(fp, "%d 1\n", StdI->NCell * StdI->NsiteUC);
-  for (iCell = 0; iCell < StdI->NCell; iCell++) {
-    for (isite = 0; isite < StdI->NsiteUC; isite++) {
+  fprintf(fp, "%d 1\n", StdI::NCell * StdI::NsiteUC);
+  for (iCell = 0; iCell < StdI::NCell; iCell++) {
+    for (isite = 0; isite < StdI::NsiteUC; isite++) {
       for (jj = 0; jj < 3; jj++) {
         vec[jj] = 0.0;
         for (kk = 0; kk < 3; kk++)
-          vec[jj] += ((double)StdI->Cell[iCell][kk] + StdI->tau[isite][kk])
-          * StdI->direct[kk][jj];
+          vec[jj] += ((double)StdI::Cell[iCell][kk] + StdI::tau[isite][kk])
+          * StdI::direct[kk][jj];
       }
       fprintf(fp, "H %15.5f %15.5f %15.5f\n", vec[0], vec[1], vec[2]);
     }
@@ -1110,7 +1099,7 @@ void StdFace_InputSpin(
 /**
 @brief Input off-site Coulomb interaction from the 
 input file, if it is not specified, use the default value (0
-or the isotropic Coulomb interaction StdIntList::V).
+or the isotropic Coulomb interaction StdI::V).
 */
 void StdFace_InputCoulombV(
   double V,//!<[in]
@@ -1135,7 +1124,7 @@ void StdFace_InputCoulombV(
 /**
 @brief Input hopping integral from the
 input file, if it is not specified, use the default value(0
-or the isotropic hopping StdIntList::V).
+or the isotropic hopping StdI::V).
 */
 void StdFace_InputHopp(
   std::complex<double> t,//!<[in]
@@ -1160,7 +1149,7 @@ void StdFace_InputHopp(
 /**
 @brief Print geometry of sites for the pos-process of correlation function
 */
-void StdFace_PrintGeometry(struct StdIntList *StdI) {
+void StdFace_PrintGeometry() {
   FILE *fp;
   int isite, iCell, ii;
 
@@ -1168,32 +1157,32 @@ void StdFace_PrintGeometry(struct StdIntList *StdI) {
 
   for (ii = 0; ii < 3; ii++) 
     fprintf(fp, "%25.15e %25.15e %25.15e\n", 
-      StdI->direct[ii][0], StdI->direct[ii][1], StdI->direct[ii][2]);
+      StdI::direct[ii][0], StdI::direct[ii][1], StdI::direct[ii][2]);
   fprintf(fp, "%25.15e %25.15e %25.15e\n", 
-    StdI->phase[0], StdI->phase[1], StdI->phase[2]);
+    StdI::phase[0], StdI::phase[1], StdI::phase[2]);
   for (ii = 0; ii < 3; ii++)
     fprintf(fp, "%d %d %d\n",
-      StdI->box[ii][0], StdI->box[ii][1], StdI->box[ii][2]);
+      StdI::box[ii][0], StdI::box[ii][1], StdI::box[ii][2]);
 
-  for (iCell = 0; iCell < StdI->NCell; iCell++) {
-    for (isite = 0; isite < StdI->NsiteUC; isite++) {
+  for (iCell = 0; iCell < StdI::NCell; iCell++) {
+    for (isite = 0; isite < StdI::NsiteUC; isite++) {
       fprintf(fp, "%d %d %d %d\n",
-        StdI->Cell[iCell][0] - StdI->Cell[0][0],
-        StdI->Cell[iCell][1] - StdI->Cell[0][1],
-        StdI->Cell[iCell][2] - StdI->Cell[0][2],
+        StdI::Cell[iCell][0] - StdI::Cell[0][0],
+        StdI::Cell[iCell][1] - StdI::Cell[0][1],
+        StdI::Cell[iCell][2] - StdI::Cell[0][2],
         isite);
-    }/*for (isite = 0; isite < StdI->NsiteUC; isite++)*/
-  }/* for (iCell = 0; iCell < StdI->NCell; iCell++)*/
-  if (strcmp(StdI->model, "kondo") == 0) {
-    for (iCell = 0; iCell < StdI->NCell; iCell++) {
-      for (isite = 0; isite < StdI->NsiteUC; isite++) {
+    }/*for (isite = 0; isite < StdI::NsiteUC; isite++)*/
+  }/* for (iCell = 0; iCell < StdI::NCell; iCell++)*/
+  if (strcmp(StdI::model, "kondo") == 0) {
+    for (iCell = 0; iCell < StdI::NCell; iCell++) {
+      for (isite = 0; isite < StdI::NsiteUC; isite++) {
         fprintf(fp, "%d %d %d %d\n",
-          StdI->Cell[iCell][0] - StdI->Cell[0][0],
-          StdI->Cell[iCell][1] - StdI->Cell[0][1],
-          StdI->Cell[iCell][2] - StdI->Cell[0][2],
-          isite + StdI->NsiteUC);
-      }/*for (isite = 0; isite < StdI->NsiteUC; isite++)*/
-    }/* for (iCell = 0; iCell < StdI->NCell; iCell++)*/
+          StdI::Cell[iCell][0] - StdI::Cell[0][0],
+          StdI::Cell[iCell][1] - StdI::Cell[0][1],
+          StdI::Cell[iCell][2] - StdI::Cell[0][2],
+          isite + StdI::NsiteUC);
+      }/*for (isite = 0; isite < StdI::NsiteUC; isite++)*/
+    }/* for (iCell = 0; iCell < StdI::NCell; iCell++)*/
   }
   fflush(fp);
   fclose(fp);
@@ -1202,7 +1191,6 @@ void StdFace_PrintGeometry(struct StdIntList *StdI) {
 @brief Malloc Arrays for interactions
 */
 void StdFace_MallocInteractions(
-  struct StdIntList *StdI,//!<[inout]
   int ntransMax,//!<[in] upper limit of the number of transfer
   int nintrMax//!<[in] upper limit of the number of interaction
 ) {
@@ -1211,92 +1199,92 @@ void StdFace_MallocInteractions(
   int it;
 #endif
   /**@brief
-  (1) Transfer StdIntList::trans, StdIntList::transindx
+  (1) Transfer StdI::trans, StdI::transindx
   */
-  StdI->transindx = (int **)malloc(sizeof(int*) * ntransMax);
-  StdI->trans = (std::complex<double> *)malloc(sizeof(std::complex<double>) * ntransMax);
+  StdI::transindx = (int **)malloc(sizeof(int*) * ntransMax);
+  StdI::trans = (std::complex<double> *)malloc(sizeof(std::complex<double>) * ntransMax);
   for (ii = 0; ii < ntransMax; ii++) {
-    StdI->transindx[ii] = (int *)malloc(sizeof(int) * 4);
+    StdI::transindx[ii] = (int *)malloc(sizeof(int) * 4);
   }
-  StdI->ntrans = 0;
+  StdI::ntrans = 0;
 #if defined(_HPhi)
-  if (strcmp(StdI->method, "timeevolution") == 0 && StdI->PumpBody == 1) {
-    StdI->npump = (int *)malloc(sizeof(int) * StdI->Lanczos_max);
-    StdI->pumpindx = (int ***)malloc(sizeof(int**) * StdI->Lanczos_max);
-    StdI->pump = (std::complex<double> **)malloc(sizeof(std::complex<double>*) * StdI->Lanczos_max);
-    for (it = 0; it < StdI->Lanczos_max; it++) {
-      StdI->npump[it] = 0;
-      StdI->pumpindx[it] = (int **)malloc(sizeof(int*) * ntransMax);
-      StdI->pump[it] = (std::complex<double> *)malloc(sizeof(std::complex<double>) * ntransMax);
+  if (strcmp(StdI::method, "timeevolution") == 0 && StdI::PumpBody == 1) {
+    StdI::npump = (int *)malloc(sizeof(int) * StdI::Lanczos_max);
+    StdI::pumpindx = (int ***)malloc(sizeof(int**) * StdI::Lanczos_max);
+    StdI::pump = (std::complex<double> **)malloc(sizeof(std::complex<double>*) * StdI::Lanczos_max);
+    for (it = 0; it < StdI::Lanczos_max; it++) {
+      StdI::npump[it] = 0;
+      StdI::pumpindx[it] = (int **)malloc(sizeof(int*) * ntransMax);
+      StdI::pump[it] = (std::complex<double> *)malloc(sizeof(std::complex<double>) * ntransMax);
       for (ii = 0; ii < ntransMax; ii++) {
-        StdI->pumpindx[it][ii] = (int *)malloc(sizeof(int) * 4);
+        StdI::pumpindx[it][ii] = (int *)malloc(sizeof(int) * 4);
       }
-    }/*for (it = 0; it < StdI->Lanczos_max;)*/
-  }/*if (strcmp(StdI->method, "timeevolution") == 0*/
+    }/*for (it = 0; it < StdI::Lanczos_max;)*/
+  }/*if (strcmp(StdI::method, "timeevolution") == 0*/
 #endif
   /**@brief
-  (2) InterAll StdIntList::intr, StdIntList::intrindx
+  (2) InterAll StdI::intr, StdI::intrindx
   */
-  StdI->intrindx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI->intr = (std::complex<double> *)malloc(sizeof(std::complex<double>) * nintrMax);
+  StdI::intrindx = (int **)malloc(sizeof(int*) * nintrMax);
+  StdI::intr = (std::complex<double> *)malloc(sizeof(std::complex<double>) * nintrMax);
   for (ii = 0; ii < nintrMax; ii++) {
-    StdI->intrindx[ii] = (int *)malloc(sizeof(int) * 8);
+    StdI::intrindx[ii] = (int *)malloc(sizeof(int) * 8);
   }
-  StdI->nintr = 0;
+  StdI::nintr = 0;
   /**@brief
-  (3) Coulomb intra StdIntList::Cintra, StdIntList::CintraIndx
+  (3) Coulomb intra StdI::Cintra, StdI::CintraIndx
   */
-  StdI->CintraIndx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI->Cintra = (double *)malloc(sizeof(double) * nintrMax);
+  StdI::CintraIndx = (int **)malloc(sizeof(int*) * nintrMax);
+  StdI::Cintra = (double *)malloc(sizeof(double) * nintrMax);
   for (ii = 0; ii < nintrMax; ii++) {
-    StdI->CintraIndx[ii] = (int *)malloc(sizeof(int) * 1);
+    StdI::CintraIndx[ii] = (int *)malloc(sizeof(int) * 1);
   }
-  StdI->NCintra = 0;
+  StdI::NCintra = 0;
   /**@brief
-  (4) Coulomb inter StdIntList::Cinter, StdIntList::CinterIndx
+  (4) Coulomb inter StdI::Cinter, StdI::CinterIndx
   */
-  StdI->CinterIndx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI->Cinter = (double *)malloc(sizeof(double) * nintrMax);
+  StdI::CinterIndx = (int **)malloc(sizeof(int*) * nintrMax);
+  StdI::Cinter = (double *)malloc(sizeof(double) * nintrMax);
   for (ii = 0; ii < nintrMax; ii++) {
-    StdI->CinterIndx[ii] = (int *)malloc(sizeof(int) * 2);
+    StdI::CinterIndx[ii] = (int *)malloc(sizeof(int) * 2);
   }
-  StdI->NCinter = 0;
+  StdI::NCinter = 0;
   /**@brief
-  (5) Hund StdIntList::Hund, StdIntList::HundIndx
+  (5) Hund StdI::Hund, StdI::HundIndx
   */
-  StdI->HundIndx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI->Hund = (double *)malloc(sizeof(double) * nintrMax);
+  StdI::HundIndx = (int **)malloc(sizeof(int*) * nintrMax);
+  StdI::Hund = (double *)malloc(sizeof(double) * nintrMax);
   for (ii = 0; ii < nintrMax; ii++) {
-    StdI->HundIndx[ii] = (int *)malloc(sizeof(int) * 2);
+    StdI::HundIndx[ii] = (int *)malloc(sizeof(int) * 2);
   }
-  StdI->NHund = 0;
+  StdI::NHund = 0;
   /**@brief
-  (6) Excahnge StdIntList::Ex, StdIntList::ExIndx
+  (6) Excahnge StdI::Ex, StdI::ExIndx
   */
-  StdI->ExIndx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI->Ex = (double *)malloc(sizeof(double) * nintrMax);
+  StdI::ExIndx = (int **)malloc(sizeof(int*) * nintrMax);
+  StdI::Ex = (double *)malloc(sizeof(double) * nintrMax);
   for (ii = 0; ii < nintrMax; ii++) {
-    StdI->ExIndx[ii] = (int *)malloc(sizeof(int) * 2);
+    StdI::ExIndx[ii] = (int *)malloc(sizeof(int) * 2);
   }
-  StdI->NEx = 0;
+  StdI::NEx = 0;
   /**@brief
-  (7) PairLift StdIntList::PairLift, StdIntList::PLIndx
+  (7) PairLift StdI::PairLift, StdI::PLIndx
   */
-  StdI->PLIndx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI->PairLift = (double *)malloc(sizeof(double) * nintrMax);
+  StdI::PLIndx = (int **)malloc(sizeof(int*) * nintrMax);
+  StdI::PairLift = (double *)malloc(sizeof(double) * nintrMax);
   for (ii = 0; ii < nintrMax; ii++) {
-    StdI->PLIndx[ii] = (int *)malloc(sizeof(int) * 2);
+    StdI::PLIndx[ii] = (int *)malloc(sizeof(int) * 2);
   }
-  StdI->NPairLift = 0;
+  StdI::NPairLift = 0;
   /**@brief
-  (7) PairHopp StdIntList::PairHopp, StdIntList::PHIndx
+  (7) PairHopp StdI::PairHopp, StdI::PHIndx
   */
-  StdI->PHIndx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI->PairHopp = (double *)malloc(sizeof(double) * nintrMax);
+  StdI::PHIndx = (int **)malloc(sizeof(int*) * nintrMax);
+  StdI::PairHopp = (double *)malloc(sizeof(double) * nintrMax);
   for (ii = 0; ii < nintrMax; ii++) {
-    StdI->PHIndx[ii] = (int *)malloc(sizeof(int) * 2);
+    StdI::PHIndx[ii] = (int *)malloc(sizeof(int) * 2);
   }
-  StdI->NPairHopp = 0;
+  StdI::NPairHopp = 0;
 }/*void StdFace_MallocInteractions*/
 #if defined(_mVMC)
 /**
@@ -1304,7 +1292,6 @@ void StdFace_MallocInteractions(
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 static void StdFace_FoldSiteSub(
-  struct StdIntList *StdI,//!<[inout]
   int iCellV[3],//!<[in]
   int nBox[3], //!<[out]
   int iCellV_fold[3]//!<[out]
@@ -1316,30 +1303,30 @@ static void StdFace_FoldSiteSub(
   */
   for (ii = 0; ii < 3; ii++) {
     iCellV_frac[ii] = 0;
-    for (jj = 0; jj < 3; jj++)iCellV_frac[ii] += StdI->rboxsub[ii][jj] * iCellV[jj];
+    for (jj = 0; jj < 3; jj++)iCellV_frac[ii] += StdI::rboxsub[ii][jj] * iCellV[jj];
   }
   /**@brief
   (2) Which supercell contains this cell
   */
   for (ii = 0; ii < 3; ii++)
-    nBox[ii] = (iCellV_frac[ii] + StdI->NCellsub * 1000) / StdI->NCellsub - 1000;
+    nBox[ii] = (iCellV_frac[ii] + StdI::NCellsub * 1000) / StdI::NCellsub - 1000;
   /**@brief
   (3) Fractional coordinate (times NCell) in the original supercell
   */
   for (ii = 0; ii < 3; ii++)
-    iCellV_frac[ii] -= StdI->NCellsub*(nBox[ii]);
+    iCellV_frac[ii] -= StdI::NCellsub*(nBox[ii]);
   /**/
   for (ii = 0; ii < 3; ii++) {
     iCellV_fold[ii] = 0;
-    for (jj = 0; jj < 3; jj++) iCellV_fold[ii] += StdI->boxsub[jj][ii] * iCellV_frac[jj];
-    iCellV_fold[ii] = (iCellV_fold[ii] + StdI->NCellsub * 1000) / StdI->NCellsub - 1000;
+    for (jj = 0; jj < 3; jj++) iCellV_fold[ii] += StdI::boxsub[jj][ii] * iCellV_frac[jj];
+    iCellV_fold[ii] = (iCellV_fold[ii] + StdI::NCellsub * 1000) / StdI::NCellsub - 1000;
   }
 }/*static void StdFace_FoldSiteSub*/
 /**
 @brief Print Quantum number projection
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_Proj(struct StdIntList *StdI)
+void StdFace_Proj()
 {
   FILE *fp;
   int jsite, iCell, jCell, kCell;
@@ -1347,78 +1334,78 @@ void StdFace_Proj(struct StdIntList *StdI)
   int iSym;
   int **Sym, **Anti;
 
-  Sym = (int **)malloc(sizeof(int*) * StdI->nsite);
-  Anti = (int **)malloc(sizeof(int*) * StdI->nsite);
-  for (jsite = 0; jsite < StdI->nsite; jsite++) {
-    Sym[jsite] = (int *)malloc(sizeof(int) * StdI->nsite);
-    Anti[jsite] = (int *)malloc(sizeof(int) * StdI->nsite);
+  Sym = (int **)malloc(sizeof(int*) * StdI::nsite);
+  Anti = (int **)malloc(sizeof(int*) * StdI::nsite);
+  for (jsite = 0; jsite < StdI::nsite; jsite++) {
+    Sym[jsite] = (int *)malloc(sizeof(int) * StdI::nsite);
+    Anti[jsite] = (int *)malloc(sizeof(int) * StdI::nsite);
   }
   /**pbrief
   (1) Define translation operator in sub lattice
   */
-  StdI->NSym = 0;
-  for (iCell = 0; iCell < StdI->NCell; iCell++) {
+  StdI::NSym = 0;
+  for (iCell = 0; iCell < StdI::NCell; iCell++) {
 
-    StdFace_FoldSiteSub(StdI, StdI->Cell[iCell], nBox, iCellV);
+    StdFace_FoldSiteSub(StdI::Cell[iCell], nBox, iCellV);
 
-    StdFace_FoldSite(StdI, iCellV, nBox, iCellV);
+    StdFace_FoldSite(iCellV, nBox, iCellV);
 
-    if (iCellV[0] == StdI->Cell[iCell][0] && 
-        iCellV[1] == StdI->Cell[iCell][1] && 
-        iCellV[2] == StdI->Cell[iCell][2]) {
+    if (iCellV[0] == StdI::Cell[iCell][0] && 
+        iCellV[1] == StdI::Cell[iCell][1] && 
+        iCellV[2] == StdI::Cell[iCell][2]) {
       /**@brief
       (2) Translation operator in sub lattice
       */
-      for (jCell = 0; jCell < StdI->NCell; jCell++) {
+      for (jCell = 0; jCell < StdI::NCell; jCell++) {
 
-        for (ii = 0; ii < 3; ii++)jCellV[ii] = StdI->Cell[jCell][ii] + iCellV[ii];
-        StdFace_FoldSite(StdI, jCellV, nBox, jCellV);
+        for (ii = 0; ii < 3; ii++)jCellV[ii] = StdI::Cell[jCell][ii] + iCellV[ii];
+        StdFace_FoldSite(jCellV, nBox, jCellV);
 
-        for (kCell = 0; kCell < StdI->NCell; kCell++) {
-          if (jCellV[0] == StdI->Cell[kCell][0] && 
-              jCellV[1] == StdI->Cell[kCell][1] &&
-              jCellV[2] == StdI->Cell[kCell][2]) 
+        for (kCell = 0; kCell < StdI::NCell; kCell++) {
+          if (jCellV[0] == StdI::Cell[kCell][0] && 
+              jCellV[1] == StdI::Cell[kCell][1] &&
+              jCellV[2] == StdI::Cell[kCell][2]) 
           {
 
-            for (jsite = 0; jsite < StdI->NsiteUC; jsite++) {
+            for (jsite = 0; jsite < StdI::NsiteUC; jsite++) {
 
-              Sym[StdI->NSym][jCell*StdI->NsiteUC + jsite] = kCell*StdI->NsiteUC + jsite;
-              Anti[StdI->NSym][jCell*StdI->NsiteUC + jsite]
-                = StdI->AntiPeriod[0] * nBox[0]
-                + StdI->AntiPeriod[1] * nBox[1]
-                + StdI->AntiPeriod[2] * nBox[2];
+              Sym[StdI::NSym][jCell*StdI::NsiteUC + jsite] = kCell*StdI::NsiteUC + jsite;
+              Anti[StdI::NSym][jCell*StdI::NsiteUC + jsite]
+                = StdI::AntiPeriod[0] * nBox[0]
+                + StdI::AntiPeriod[1] * nBox[1]
+                + StdI::AntiPeriod[2] * nBox[2];
 
-              if (strcmp(StdI->model, "kondo") == 0) {
-                Sym[StdI->NSym][StdI->nsite / 2 + jCell*StdI->NsiteUC + jsite] = StdI->nsite / 2 + kCell*StdI->NsiteUC + jsite;
-                Anti[StdI->NSym][StdI->nsite / 2 + jCell*StdI->NsiteUC + jsite]
-                  = StdI->AntiPeriod[0] * nBox[0]
-                  + StdI->AntiPeriod[1] * nBox[1]
-                  + StdI->AntiPeriod[2] * nBox[2];
-              }/*if (strcmp(StdI->model, "kondo") == 0)*/
+              if (strcmp(StdI::model, "kondo") == 0) {
+                Sym[StdI::NSym][StdI::nsite / 2 + jCell*StdI::NsiteUC + jsite] = StdI::nsite / 2 + kCell*StdI::NsiteUC + jsite;
+                Anti[StdI::NSym][StdI::nsite / 2 + jCell*StdI::NsiteUC + jsite]
+                  = StdI::AntiPeriod[0] * nBox[0]
+                  + StdI::AntiPeriod[1] * nBox[1]
+                  + StdI::AntiPeriod[2] * nBox[2];
+              }/*if (strcmp(StdI::model, "kondo") == 0)*/
 
-            }/*for (jsite = 0; jsite < StdI->NsiteUC; jsite++)*/
+            }/*for (jsite = 0; jsite < StdI::NsiteUC; jsite++)*/
 
-          }/*if (jWfold == StdI->Cell[kCell][0] && jLfold == StdI->Cell[kCell][1])*/
-        }/*for (kCell = 0; kCell < StdI->NCell; kCell++)*/
-      }/*for (jCell = 0; jCell < StdI->NCell; jCell++)*/
-      StdI->NSym += 1;
+          }/*if (jWfold == StdI::Cell[kCell][0] && jLfold == StdI::Cell[kCell][1])*/
+        }/*for (kCell = 0; kCell < StdI::NCell; kCell++)*/
+      }/*for (jCell = 0; jCell < StdI::NCell; jCell++)*/
+      StdI::NSym += 1;
     }/*if (iWfold == iW && iLfold == iL)*/
-  }/*for (iCell = 0; iCell < StdI->NCell; iCell++)*/
+  }/*for (iCell = 0; iCell < StdI::NCell; iCell++)*/
 
   fp = fopen("qptransidx.def", "w");
   fprintf(fp, "=============================================\n");
-  fprintf(fp, "NQPTrans %10d\n", StdI->NSym);
+  fprintf(fp, "NQPTrans %10d\n", StdI::NSym);
   fprintf(fp, "=============================================\n");
   fprintf(fp, "======== TrIdx_TrWeight_and_TrIdx_i_xi ======\n");
   fprintf(fp, "=============================================\n");
-  for (iSym = 0; iSym < StdI->NSym; iSym++) {
+  for (iSym = 0; iSym < StdI::NSym; iSym++) {
     fprintf(fp, "%d %10.5f\n", iSym, 1.0);
   }
-  for (iSym = 0; iSym < StdI->NSym; iSym++) {
-    for (jsite = 0; jsite < StdI->nsite; jsite++) {
+  for (iSym = 0; iSym < StdI::NSym; iSym++) {
+    for (jsite = 0; jsite < StdI::nsite; jsite++) {
       if (Anti[iSym][jsite] % 2 == 0) Anti[iSym][jsite] = 1;
       else Anti[iSym][jsite] = -1;
-      if (StdI->AntiPeriod[0] == 1 || StdI->AntiPeriod[1] == 1 || StdI->AntiPeriod[2] == 1) {
+      if (StdI::AntiPeriod[0] == 1 || StdI::AntiPeriod[1] == 1 || StdI::AntiPeriod[2] == 1) {
         fprintf(fp, "%5d  %5d  %5d  %5d\n", iSym, jsite, Sym[iSym][jsite], Anti[iSym][jsite]);
       }
       else {
@@ -1430,227 +1417,227 @@ void StdFace_Proj(struct StdIntList *StdI)
   fclose(fp);
   fprintf(stdout, "    qptransidx.def is written.\n");
 
-  for (jsite = 0; jsite < StdI->nsite; jsite++) {
+  for (jsite = 0; jsite < StdI::nsite; jsite++) {
     free(Anti[jsite]);
     free(Sym[jsite]);
   }
   free(Sym);
   free(Anti);
-}/*void StdFace_Proj(struct StdIntList *StdI)*/
+}/*void StdFace_Proj()*/
 /**
 @brief Initialize sub Cell
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-static void StdFace_InitSiteSub(struct StdIntList *StdI)
+static void StdFace_InitSiteSub()
 {
   int ii, jj, kk, prod;
   /**@brief
   (1) check Input parameters
   */
-  if ((StdI->Lsub != StdI->NaN_i || StdI->Wsub != StdI->NaN_i || StdI->Hsub != StdI->NaN_i)
-    && (StdI->boxsub[0][0] != StdI->NaN_i || StdI->boxsub[0][1] != StdI->NaN_i || StdI->boxsub[0][2] != StdI->NaN_i ||
-        StdI->boxsub[1][0] != StdI->NaN_i || StdI->boxsub[1][1] != StdI->NaN_i || StdI->boxsub[1][2] != StdI->NaN_i ||
-        StdI->boxsub[2][0] != StdI->NaN_i || StdI->boxsub[2][1] != StdI->NaN_i || StdI->boxsub[2][2] != StdI->NaN_i))
+  if ((StdI::Lsub != StdI::NaN_i || StdI::Wsub != StdI::NaN_i || StdI::Hsub != StdI::NaN_i)
+    && (StdI::boxsub[0][0] != StdI::NaN_i || StdI::boxsub[0][1] != StdI::NaN_i || StdI::boxsub[0][2] != StdI::NaN_i ||
+        StdI::boxsub[1][0] != StdI::NaN_i || StdI::boxsub[1][1] != StdI::NaN_i || StdI::boxsub[1][2] != StdI::NaN_i ||
+        StdI::boxsub[2][0] != StdI::NaN_i || StdI::boxsub[2][1] != StdI::NaN_i || StdI::boxsub[2][2] != StdI::NaN_i))
   {
     fprintf(stdout, "\nERROR ! (Lsub, Wsub, Hsub) and (a0Wsub, ..., a2Hsub) conflict !\n\n");
     StdFace_exit(-1);
   }
-  else if (StdI->Wsub != StdI->NaN_i || StdI->Lsub != StdI->NaN_i || StdI->Hsub != StdI->NaN_i) {
-    StdFace_PrintVal_i("Lsub", &StdI->Lsub, 1);
-    StdFace_PrintVal_i("Wsub", &StdI->Wsub, 1);
-    StdFace_PrintVal_i("Hsub", &StdI->Hsub, 1);
+  else if (StdI::Wsub != StdI::NaN_i || StdI::Lsub != StdI::NaN_i || StdI::Hsub != StdI::NaN_i) {
+    StdFace_PrintVal_i("Lsub", &StdI::Lsub, 1);
+    StdFace_PrintVal_i("Wsub", &StdI::Wsub, 1);
+    StdFace_PrintVal_i("Hsub", &StdI::Hsub, 1);
     for (ii = 0; ii < 3; ii++) for (jj = 0; jj < 3; jj++)
-      StdI->boxsub[ii][jj] = 0;
-    StdI->boxsub[0][0] = StdI->Wsub;
-    StdI->boxsub[1][1] = StdI->Lsub;
-    StdI->boxsub[2][2] = StdI->Hsub;
+      StdI::boxsub[ii][jj] = 0;
+    StdI::boxsub[0][0] = StdI::Wsub;
+    StdI::boxsub[1][1] = StdI::Lsub;
+    StdI::boxsub[2][2] = StdI::Hsub;
   }
   else {
-    StdFace_PrintVal_i("a0Wsub", &StdI->boxsub[0][0], StdI->box[0][0]);
-    StdFace_PrintVal_i("a0Lsub", &StdI->boxsub[0][1], StdI->box[0][1]);
-    StdFace_PrintVal_i("a0Hsub", &StdI->boxsub[0][2], StdI->box[0][2]);
-    StdFace_PrintVal_i("a1Wsub", &StdI->boxsub[1][0], StdI->box[1][0]);
-    StdFace_PrintVal_i("a1Lsub", &StdI->boxsub[1][1], StdI->box[1][1]);
-    StdFace_PrintVal_i("a1Hsub", &StdI->boxsub[1][2], StdI->box[1][2]);
-    StdFace_PrintVal_i("a2Wsub", &StdI->boxsub[2][0], StdI->box[2][0]);
-    StdFace_PrintVal_i("a2Lsub", &StdI->boxsub[2][1], StdI->box[2][1]);
-    StdFace_PrintVal_i("a2Hsub", &StdI->boxsub[2][2], StdI->box[2][2]);
+    StdFace_PrintVal_i("a0Wsub", &StdI::boxsub[0][0], StdI::box[0][0]);
+    StdFace_PrintVal_i("a0Lsub", &StdI::boxsub[0][1], StdI::box[0][1]);
+    StdFace_PrintVal_i("a0Hsub", &StdI::boxsub[0][2], StdI::box[0][2]);
+    StdFace_PrintVal_i("a1Wsub", &StdI::boxsub[1][0], StdI::box[1][0]);
+    StdFace_PrintVal_i("a1Lsub", &StdI::boxsub[1][1], StdI::box[1][1]);
+    StdFace_PrintVal_i("a1Hsub", &StdI::boxsub[1][2], StdI::box[1][2]);
+    StdFace_PrintVal_i("a2Wsub", &StdI::boxsub[2][0], StdI::box[2][0]);
+    StdFace_PrintVal_i("a2Lsub", &StdI::boxsub[2][1], StdI::box[2][1]);
+    StdFace_PrintVal_i("a2Hsub", &StdI::boxsub[2][2], StdI::box[2][2]);
   }
   /**@brief
   (2) Calculate reciprocal lattice vectors (times NCellsub)
   */
-  StdI->NCellsub = 0;
+  StdI::NCellsub = 0;
   for (ii = 0; ii < 3; ii++) {
-    StdI->NCellsub += StdI->boxsub[0][ii]
-                    * StdI->boxsub[1][(ii + 1) % 3]
-                    * StdI->boxsub[2][(ii + 2) % 3]
-                    - StdI->boxsub[0][ii]
-                    * StdI->boxsub[1][(ii + 2) % 3]
-                    * StdI->boxsub[2][(ii + 1) % 3];
+    StdI::NCellsub += StdI::boxsub[0][ii]
+                    * StdI::boxsub[1][(ii + 1) % 3]
+                    * StdI::boxsub[2][(ii + 2) % 3]
+                    - StdI::boxsub[0][ii]
+                    * StdI::boxsub[1][(ii + 2) % 3]
+                    * StdI::boxsub[2][(ii + 1) % 3];
   }
-  printf("         Number of Cell in the sublattice: %d\n", abs(StdI->NCellsub));
-  if (StdI->NCellsub == 0) {
+  printf("         Number of Cell in the sublattice: %d\n", abs(StdI::NCellsub));
+  if (StdI::NCellsub == 0) {
     StdFace_exit(-1);
   }
 
   for (ii = 0; ii < 3; ii++) {
     for (jj = 0; jj < 3; jj++) {
-      StdI->rboxsub[ii][jj] = StdI->boxsub[(ii + 1) % 3][(jj + 1) % 3] * StdI->boxsub[(ii + 2) % 3][(jj + 2) % 3]
-                            - StdI->boxsub[(ii + 1) % 3][(jj + 2) % 3] * StdI->boxsub[(ii + 2) % 3][(jj + 1) % 3];
+      StdI::rboxsub[ii][jj] = StdI::boxsub[(ii + 1) % 3][(jj + 1) % 3] * StdI::boxsub[(ii + 2) % 3][(jj + 2) % 3]
+                            - StdI::boxsub[(ii + 1) % 3][(jj + 2) % 3] * StdI::boxsub[(ii + 2) % 3][(jj + 1) % 3];
     }
   }
-  if (StdI->NCellsub < 0) {
+  if (StdI::NCellsub < 0) {
     for (ii = 0; ii < 3; ii++)
       for (jj = 0; jj < 3; jj++)
-        StdI->rboxsub[ii][jj] *= -1;
-    StdI->NCellsub *= -1;
-  }/*if (StdI->NCell < 0)*/
+        StdI::rboxsub[ii][jj] *= -1;
+    StdI::NCellsub *= -1;
+  }/*if (StdI::NCell < 0)*/
   /**@brief
   (4) Check the sublattice is commensurate or not
   */
   for (ii = 0; ii < 3; ii++) {
     for (jj = 0; jj < 3; jj++) {
       prod = 0.0;
-      for (kk = 0; kk < 3; kk++) prod += StdI->rboxsub[ii][kk] * (double)StdI->box[jj][kk];
-      if (prod % StdI->NCellsub != 0) {
+      for (kk = 0; kk < 3; kk++) prod += StdI::rboxsub[ii][kk] * (double)StdI::box[jj][kk];
+      if (prod % StdI::NCellsub != 0) {
         printf("\n ERROR ! Sublattice is INCOMMENSURATE !\n\n");
         StdFace_exit(-1);
-      }/*if (prod % StdI->NCellsub != 0)*/
+      }/*if (prod % StdI::NCellsub != 0)*/
     }
   }
 }/*void StdFace_InitSiteSub*/
 /**
 @brief Generate orbitalindex
 */
-void StdFace_generate_orb(struct StdIntList *StdI) {
+void StdFace_generate_orb() {
   int iCell, jCell, kCell, iCell2, jCell2, iOrb, isite, jsite, Anti;
   int nBox[3], iCellV[3], jCellV[3], dCellV[3], ii;
   int **CellDone;
 
-  StdFace_InitSiteSub(StdI);
+  StdFace_InitSiteSub();
 
-  StdI->Orb = (int **)malloc(sizeof(int*) * StdI->nsite);
-  StdI->AntiOrb = (int **)malloc(sizeof(int*) * StdI->nsite);
-  for (isite = 0; isite < StdI->nsite; isite++) {
-    StdI->Orb[isite] = (int *)malloc(sizeof(int) * StdI->nsite);
-    StdI->AntiOrb[isite] = (int *)malloc(sizeof(int) * StdI->nsite);
+  StdI::Orb = (int **)malloc(sizeof(int*) * StdI::nsite);
+  StdI::AntiOrb = (int **)malloc(sizeof(int*) * StdI::nsite);
+  for (isite = 0; isite < StdI::nsite; isite++) {
+    StdI::Orb[isite] = (int *)malloc(sizeof(int) * StdI::nsite);
+    StdI::AntiOrb[isite] = (int *)malloc(sizeof(int) * StdI::nsite);
   }
-  CellDone = (int **)malloc(sizeof(int*) * StdI->NCell);
-  for (iCell = 0; iCell < StdI->NCell; iCell++) {
-    CellDone[iCell] = (int *)malloc(sizeof(int) * StdI->NCell);
-    for (jCell = 0; jCell < StdI->NCell; jCell++) {
+  CellDone = (int **)malloc(sizeof(int*) * StdI::NCell);
+  for (iCell = 0; iCell < StdI::NCell; iCell++) {
+    CellDone[iCell] = (int *)malloc(sizeof(int) * StdI::NCell);
+    for (jCell = 0; jCell < StdI::NCell; jCell++) {
       CellDone[iCell][jCell] = 0;
     }
   }
 
   iOrb = 0;
-  for (iCell = 0; iCell < StdI->NCell; iCell++) {
+  for (iCell = 0; iCell < StdI::NCell; iCell++) {
 
-    StdFace_FoldSiteSub(StdI, StdI->Cell[iCell], nBox, iCellV);
+    StdFace_FoldSiteSub(StdI::Cell[iCell], nBox, iCellV);
 
-    StdFace_FoldSite(StdI, iCellV, nBox, iCellV);
+    StdFace_FoldSite(iCellV, nBox, iCellV);
 
-    for (kCell = 0; kCell < StdI->NCell; kCell++) {
-      if (iCellV[0] == StdI->Cell[kCell][0] && 
-          iCellV[1] == StdI->Cell[kCell][1] &&
-          iCellV[2] == StdI->Cell[kCell][2]) 
+    for (kCell = 0; kCell < StdI::NCell; kCell++) {
+      if (iCellV[0] == StdI::Cell[kCell][0] && 
+          iCellV[1] == StdI::Cell[kCell][1] &&
+          iCellV[2] == StdI::Cell[kCell][2]) 
       {
         iCell2 = kCell;
       }
-    }/*for (kCell = 0; kCell < StdI->NCell; kCell++)*/
+    }/*for (kCell = 0; kCell < StdI::NCell; kCell++)*/
 
-    for (jCell = 0; jCell < StdI->NCell; jCell++) {
+    for (jCell = 0; jCell < StdI::NCell; jCell++) {
 
       for (ii = 0; ii < 3; ii++)
-        jCellV[ii] = StdI->Cell[jCell][ii] + iCellV[ii] - StdI->Cell[iCell][ii];
+        jCellV[ii] = StdI::Cell[jCell][ii] + iCellV[ii] - StdI::Cell[iCell][ii];
 
-      StdFace_FoldSite(StdI, jCellV, nBox, jCellV);
+      StdFace_FoldSite(jCellV, nBox, jCellV);
 
-      for (kCell = 0; kCell < StdI->NCell; kCell++) {
-        if (jCellV[0] == StdI->Cell[kCell][0] &&
-            jCellV[1] == StdI->Cell[kCell][1] &&
-            jCellV[2] == StdI->Cell[kCell][2]) 
+      for (kCell = 0; kCell < StdI::NCell; kCell++) {
+        if (jCellV[0] == StdI::Cell[kCell][0] &&
+            jCellV[1] == StdI::Cell[kCell][1] &&
+            jCellV[2] == StdI::Cell[kCell][2]) 
         {
           jCell2 = kCell;
         }
-      }/*for (kCell = 0; kCell < StdI->NCell; kCell++)*/
+      }/*for (kCell = 0; kCell < StdI::NCell; kCell++)*/
       /*
        AntiPeriodic factor
       */
       for (ii = 0; ii < 3; ii++)
-        dCellV[ii] = StdI->Cell[jCell][ii] - StdI->Cell[iCell][ii];
-      StdFace_FoldSite(StdI, dCellV, nBox, dCellV);
+        dCellV[ii] = StdI::Cell[jCell][ii] - StdI::Cell[iCell][ii];
+      StdFace_FoldSite(dCellV, nBox, dCellV);
       Anti = 0;
-      for (ii = 0; ii < 3; ii++)Anti += StdI->AntiPeriod[ii] * nBox[ii];
+      for (ii = 0; ii < 3; ii++)Anti += StdI::AntiPeriod[ii] * nBox[ii];
       if (Anti % 2 == 0) Anti = 1;
       else Anti = -1;
 
-      for (isite = 0; isite < StdI->NsiteUC; isite++) {
-        for (jsite = 0; jsite < StdI->NsiteUC; jsite++) {
+      for (isite = 0; isite < StdI::NsiteUC; isite++) {
+        for (jsite = 0; jsite < StdI::NsiteUC; jsite++) {
  
           if (CellDone[iCell2][jCell2] == 0) {
-            StdI->Orb[iCell2*StdI->NsiteUC + isite][jCell2*StdI->NsiteUC + jsite] = iOrb;
-            StdI->AntiOrb[iCell2*StdI->NsiteUC + isite][jCell2*StdI->NsiteUC + jsite] = Anti;
+            StdI::Orb[iCell2*StdI::NsiteUC + isite][jCell2*StdI::NsiteUC + jsite] = iOrb;
+            StdI::AntiOrb[iCell2*StdI::NsiteUC + isite][jCell2*StdI::NsiteUC + jsite] = Anti;
             iOrb += 1;
           }
-          StdI->Orb[iCell*StdI->NsiteUC + isite][jCell*StdI->NsiteUC + jsite]
-            = StdI->Orb[iCell2*StdI->NsiteUC + isite][jCell2*StdI->NsiteUC + jsite];
-          StdI->AntiOrb[iCell*StdI->NsiteUC + isite][jCell*StdI->NsiteUC + jsite] = Anti;
+          StdI::Orb[iCell*StdI::NsiteUC + isite][jCell*StdI::NsiteUC + jsite]
+            = StdI::Orb[iCell2*StdI::NsiteUC + isite][jCell2*StdI::NsiteUC + jsite];
+          StdI::AntiOrb[iCell*StdI::NsiteUC + isite][jCell*StdI::NsiteUC + jsite] = Anti;
 
-          if (strcmp(StdI->model, "kondo") == 0) {
+          if (strcmp(StdI::model, "kondo") == 0) {
             if (CellDone[iCell2][jCell2] == 0) {
-              StdI->Orb[StdI->nsite / 2 + iCell2*StdI->NsiteUC + isite]
-                       [                  jCell2*StdI->NsiteUC + jsite] = iOrb;
-              StdI->AntiOrb[StdI->nsite / 2 + iCell2*StdI->NsiteUC + isite]
-                           [                  jCell2*StdI->NsiteUC + jsite] = Anti;
+              StdI::Orb[StdI::nsite / 2 + iCell2*StdI::NsiteUC + isite]
+                       [                  jCell2*StdI::NsiteUC + jsite] = iOrb;
+              StdI::AntiOrb[StdI::nsite / 2 + iCell2*StdI::NsiteUC + isite]
+                           [                  jCell2*StdI::NsiteUC + jsite] = Anti;
               iOrb += 1;
-              StdI->Orb[                  iCell2*StdI->NsiteUC + isite]
-                       [StdI->nsite / 2 + jCell2*StdI->NsiteUC + jsite] = iOrb;
-              StdI->AntiOrb[                  iCell2*StdI->NsiteUC + isite]
-                           [StdI->nsite / 2 + jCell2*StdI->NsiteUC + jsite] = Anti;
+              StdI::Orb[                  iCell2*StdI::NsiteUC + isite]
+                       [StdI::nsite / 2 + jCell2*StdI::NsiteUC + jsite] = iOrb;
+              StdI::AntiOrb[                  iCell2*StdI::NsiteUC + isite]
+                           [StdI::nsite / 2 + jCell2*StdI::NsiteUC + jsite] = Anti;
               iOrb += 1;
-              StdI->Orb[StdI->nsite / 2 + iCell2*StdI->NsiteUC + isite]
-                       [StdI->nsite / 2 + jCell2*StdI->NsiteUC + jsite] = iOrb;
-              StdI->AntiOrb[StdI->nsite / 2 + iCell2*StdI->NsiteUC + isite]
-                           [StdI->nsite / 2 + jCell2*StdI->NsiteUC + jsite] = Anti;
+              StdI::Orb[StdI::nsite / 2 + iCell2*StdI::NsiteUC + isite]
+                       [StdI::nsite / 2 + jCell2*StdI::NsiteUC + jsite] = iOrb;
+              StdI::AntiOrb[StdI::nsite / 2 + iCell2*StdI::NsiteUC + isite]
+                           [StdI::nsite / 2 + jCell2*StdI::NsiteUC + jsite] = Anti;
               iOrb += 1;
             }
-            StdI->Orb[StdI->nsite / 2 + iCell*StdI->NsiteUC + isite]
-                     [                  jCell*StdI->NsiteUC + jsite]
-            = StdI->Orb[StdI->nsite / 2 + iCell2*StdI->NsiteUC + isite]
-                       [                  jCell2*StdI->NsiteUC + jsite];
-            StdI->AntiOrb[StdI->nsite / 2 + iCell*StdI->NsiteUC + isite]
-                         [                  jCell*StdI->NsiteUC + jsite] = Anti;
-            StdI->Orb[                  iCell*StdI->NsiteUC + isite]
-                     [StdI->nsite / 2 + jCell*StdI->NsiteUC + jsite]
-            = StdI->Orb[                  iCell2*StdI->NsiteUC + isite]
-                       [StdI->nsite / 2 + jCell2*StdI->NsiteUC + jsite];
-            StdI->AntiOrb[iCell*StdI->NsiteUC + isite]
-                         [StdI->nsite / 2 + jCell*StdI->NsiteUC + jsite] = Anti;
-            StdI->Orb[StdI->nsite / 2 + iCell*StdI->NsiteUC + isite]
-                     [StdI->nsite / 2 + jCell*StdI->NsiteUC + jsite]
-              = StdI->Orb[StdI->nsite / 2 + iCell2*StdI->NsiteUC + isite]
-                         [StdI->nsite / 2 + jCell2*StdI->NsiteUC + jsite];
-              StdI->AntiOrb[StdI->nsite / 2 + iCell*StdI->NsiteUC + isite]
-                           [StdI->nsite / 2 + jCell*StdI->NsiteUC + jsite] = Anti;
-          }/*if (strcmp(StdI->model, "kondo") == 0)*/
+            StdI::Orb[StdI::nsite / 2 + iCell*StdI::NsiteUC + isite]
+                     [                  jCell*StdI::NsiteUC + jsite]
+            = StdI::Orb[StdI::nsite / 2 + iCell2*StdI::NsiteUC + isite]
+                       [                  jCell2*StdI::NsiteUC + jsite];
+            StdI::AntiOrb[StdI::nsite / 2 + iCell*StdI::NsiteUC + isite]
+                         [                  jCell*StdI::NsiteUC + jsite] = Anti;
+            StdI::Orb[                  iCell*StdI::NsiteUC + isite]
+                     [StdI::nsite / 2 + jCell*StdI::NsiteUC + jsite]
+            = StdI::Orb[                  iCell2*StdI::NsiteUC + isite]
+                       [StdI::nsite / 2 + jCell2*StdI::NsiteUC + jsite];
+            StdI::AntiOrb[iCell*StdI::NsiteUC + isite]
+                         [StdI::nsite / 2 + jCell*StdI::NsiteUC + jsite] = Anti;
+            StdI::Orb[StdI::nsite / 2 + iCell*StdI::NsiteUC + isite]
+                     [StdI::nsite / 2 + jCell*StdI::NsiteUC + jsite]
+              = StdI::Orb[StdI::nsite / 2 + iCell2*StdI::NsiteUC + isite]
+                         [StdI::nsite / 2 + jCell2*StdI::NsiteUC + jsite];
+              StdI::AntiOrb[StdI::nsite / 2 + iCell*StdI::NsiteUC + isite]
+                           [StdI::nsite / 2 + jCell*StdI::NsiteUC + jsite] = Anti;
+          }/*if (strcmp(StdI::model, "kondo") == 0)*/
 
-        }/*for (jsite = 0; jsite < StdI->NsiteUC; jsite++)*/
-      }/*for (isite = 0; isite < StdI->NsiteUC; isite++)*/
+        }/*for (jsite = 0; jsite < StdI::NsiteUC; jsite++)*/
+      }/*for (isite = 0; isite < StdI::NsiteUC; isite++)*/
       CellDone[iCell2][jCell2] = 1;
-    }/*for (jCell = 0; jCell < StdI->NCell; jCell++)*/
+    }/*for (jCell = 0; jCell < StdI::NCell; jCell++)*/
 
-  }/*for (iCell = 0; iCell < StdI->NCell; iCell++)*/
-  StdI->NOrb = iOrb;
+  }/*for (iCell = 0; iCell < StdI::NCell; iCell++)*/
+  StdI::NOrb = iOrb;
 
-  for (iCell = 0; iCell < StdI->NCell; iCell++) free(CellDone[iCell]);
+  for (iCell = 0; iCell < StdI::NCell; iCell++) free(CellDone[iCell]);
   free(CellDone);
 }/*void StdFace_generate_orb*/
 /**
 @brief Output Jastrow
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void PrintJastrow(struct StdIntList *StdI) {
+void PrintJastrow() {
   FILE *fp;
   int isite, jsite, isiteUC, jsiteUC, revarsal, isite1, jsite1, iorb;
   int NJastrow, iJastrow;
@@ -1659,40 +1646,40 @@ void PrintJastrow(struct StdIntList *StdI) {
   std::complex<double> Cphase;
   double dR[3];
 
-  Jastrow = (int **)malloc(sizeof(int*) * StdI->nsite);
-  for (isite = 0; isite < StdI->nsite; isite++) 
-    Jastrow[isite] = (int *)malloc(sizeof(int) * StdI->nsite);
+  Jastrow = (int **)malloc(sizeof(int*) * StdI::nsite);
+  for (isite = 0; isite < StdI::nsite; isite++) 
+    Jastrow[isite] = (int *)malloc(sizeof(int) * StdI::nsite);
 
-  if (abs(StdI->NMPTrans) == 1 || StdI->NMPTrans == StdI->NaN_i) {
+  if (abs(StdI::NMPTrans) == 1 || StdI::NMPTrans == StdI::NaN_i) {
     /**@brief
     (1) Copy Orbital index
     */
-    for (isite = 0; isite < StdI->nsite; isite++) {
-      for (jsite = 0; jsite < StdI->nsite; jsite++) {
-        Jastrow[isite][jsite] = StdI->Orb[isite][jsite];
+    for (isite = 0; isite < StdI::nsite; isite++) {
+      for (jsite = 0; jsite < StdI::nsite; jsite++) {
+        Jastrow[isite][jsite] = StdI::Orb[isite][jsite];
       }/*for (jsite = 0; jsite < isite; jsite++)*/
-    }/*for (isite = 0; isite < StdI->nsite; isite++)*/
+    }/*for (isite = 0; isite < StdI::nsite; isite++)*/
     /**@brief
     (2) Symmetrize
     */
-    for (iorb = 0; iorb < StdI->NOrb; iorb++) {
-      for (isite = 0; isite < StdI->nsite; isite++) {
-        for (jsite = 0; jsite < StdI->nsite; jsite++) {
+    for (iorb = 0; iorb < StdI::NOrb; iorb++) {
+      for (isite = 0; isite < StdI::nsite; isite++) {
+        for (jsite = 0; jsite < StdI::nsite; jsite++) {
           if (Jastrow[isite][jsite] == iorb) {
             Jastrow[jsite][isite] = Jastrow[isite][jsite];
           }
         }/*for (jsite = 0; jsite < isite; jsite++)*/
-      }/*for (isite = 0; isite < StdI->nsite; isite++)*/
-    }/*for (iorb = 0; iorb < StdI->NOrb; iorb++)*/
+      }/*for (isite = 0; isite < StdI::nsite; isite++)*/
+    }/*for (iorb = 0; iorb < StdI::NOrb; iorb++)*/
      /**/
-    if (strcmp(StdI->model, "hubbard") == 0) NJastrow = 0;
+    if (strcmp(StdI::model, "hubbard") == 0) NJastrow = 0;
     else NJastrow = -1;
-    for (isite = 0; isite < StdI->nsite; isite++) {
+    for (isite = 0; isite < StdI::nsite; isite++) {
       /*
       For Local spin
       */
-      if (StdI->locspinflag[isite] != 0) {
-        for (jsite = 0; jsite < StdI->nsite; jsite++) {
+      if (StdI::locspinflag[isite] != 0) {
+        for (jsite = 0; jsite < StdI::nsite; jsite++) {
           Jastrow[isite][jsite] = -1;
           Jastrow[jsite][isite] = -1;
         }
@@ -1703,59 +1690,59 @@ void PrintJastrow(struct StdIntList *StdI) {
         if (Jastrow[isite][jsite] >= 0) {
           iJastrow = Jastrow[isite][jsite];
           NJastrow -= 1;
-          for (isite1 = 0; isite1 < StdI->nsite; isite1++) {
-            for (jsite1 = 0; jsite1 < StdI->nsite; jsite1++) {
+          for (isite1 = 0; isite1 < StdI::nsite; isite1++) {
+            for (jsite1 = 0; jsite1 < StdI::nsite; jsite1++) {
               if (Jastrow[isite1][jsite1] == iJastrow)
                 Jastrow[isite1][jsite1] = NJastrow;
-            }/*for (jsite1 = 0; jsite1 < StdI->nsite; jsite1++)*/
-          }/*for (isite1 = 0; isite1 < StdI->nsite; isite1++)*/
+            }/*for (jsite1 = 0; jsite1 < StdI::nsite; jsite1++)*/
+          }/*for (isite1 = 0; isite1 < StdI::nsite; isite1++)*/
         }/*if (Jastrow[isite][jsite] >= 0)*/
       }/*for (jsite = 0; jsite < isite; jsite++)*/
-    }/*for (isite = 0; isite < StdI->nsite; isite++)*/
+    }/*for (isite = 0; isite < StdI::nsite; isite++)*/
      /**/
     NJastrow = -NJastrow;
-    for (isite = 0; isite < StdI->nsite; isite++) {
-      for (jsite = 0; jsite < StdI->nsite; jsite++) {
+    for (isite = 0; isite < StdI::nsite; isite++) {
+      for (jsite = 0; jsite < StdI::nsite; jsite++) {
         Jastrow[isite][jsite] = -1 - Jastrow[isite][jsite];
       }/*for (jsite = 0; jsite < isite; jsite++)*/
-    }/*for (isite = 0; isite < StdI->nsite; isite++)*/
-  }/*if (abs(StdI->NMPTrans) == 1)*/
+    }/*for (isite = 0; isite < StdI::nsite; isite++)*/
+  }/*if (abs(StdI::NMPTrans) == 1)*/
   else {
 
-    if (strcmp(StdI->model, "spin") == 0) {
+    if (strcmp(StdI::model, "spin") == 0) {
       NJastrow = 1;
 
-      for (isite = 0; isite < StdI->nsite; isite++) {
-        for (jsite = 0; jsite < StdI->nsite; jsite++) {
+      for (isite = 0; isite < StdI::nsite; isite++) {
+        for (jsite = 0; jsite < StdI::nsite; jsite++) {
           Jastrow[isite][jsite] = 0;
-        }/*for (jsite = 0; jsite < StdI->nsite; jsite++)*/
-      }/*for (isite = 0; isite < StdI->nsite; isite++)*/
-    }/*if (strcmp(StdI->model, "spin") == 0)*/
+        }/*for (jsite = 0; jsite < StdI::nsite; jsite++)*/
+      }/*for (isite = 0; isite < StdI::nsite; isite++)*/
+    }/*if (strcmp(StdI::model, "spin") == 0)*/
     else {
 
       NJastrow = 0;
 
-      if (strcmp(StdI->model, "kondo") == 0) {
+      if (strcmp(StdI::model, "kondo") == 0) {
         /*
         Local spin - itererant electron part
         */
-        for (isite = 0; isite < StdI->nsite; isite++) {
-          for (jsite = 0; jsite < StdI->nsite / 2; jsite++) {
+        for (isite = 0; isite < StdI::nsite; isite++) {
+          for (jsite = 0; jsite < StdI::nsite / 2; jsite++) {
             Jastrow[isite][jsite] = 0;
             Jastrow[jsite][isite] = 0;
-          }/*for (jsite = 0; jsite < StdI->nsite; jsite++)*/
-        }/*for (isite = 0; isite < StdI->nsite; isite++)*/
+          }/*for (jsite = 0; jsite < StdI::nsite; jsite++)*/
+        }/*for (isite = 0; isite < StdI::nsite; isite++)*/
 
         NJastrow += 1;
-      }/*if (strcmp(StdI->model, "kondo") == 0)*/
+      }/*if (strcmp(StdI::model, "kondo") == 0)*/
 
-      for (dCell = 0; dCell < StdI->NCell; dCell++) {
-        StdFace_FindSite(StdI,
+      for (dCell = 0; dCell < StdI::NCell; dCell++) {
+        StdFace_FindSite(
           0, 0, 0,
-          -StdI->Cell[dCell][0], -StdI->Cell[dCell][1], -StdI->Cell[dCell][2],
+          -StdI::Cell[dCell][0], -StdI::Cell[dCell][1], -StdI::Cell[dCell][2],
           0, 0, &isite, &jsite, &Cphase, dR);
-        if (strcmp(StdI->model, "kondo") == 0) jsite += -StdI->NCell * StdI->NsiteUC;
-        iCell = jsite / StdI->NsiteUC;
+        if (strcmp(StdI::model, "kondo") == 0) jsite += -StdI::NCell * StdI::NsiteUC;
+        iCell = jsite / StdI::NsiteUC;
         if (iCell < dCell) {
           /*
           If -R has been already done, skip.
@@ -1770,32 +1757,32 @@ void PrintJastrow(struct StdIntList *StdI) {
         }
         else revarsal = 0;
 
-        for (isiteUC = 0; isiteUC < StdI->NsiteUC; isiteUC++) {
-          for (jsiteUC = 0; jsiteUC < StdI->NsiteUC; jsiteUC++) {
+        for (isiteUC = 0; isiteUC < StdI::NsiteUC; isiteUC++) {
+          for (jsiteUC = 0; jsiteUC < StdI::NsiteUC; jsiteUC++) {
             if (revarsal == 1 && jsiteUC > isiteUC) continue;/*If [Fold(-R) = R]*/
             if (isiteUC == jsiteUC &&
-              StdI->Cell[dCell][0] == 0 &&
-              StdI->Cell[dCell][1] == 0 &&
-              StdI->Cell[dCell][2] == 0) continue;/*Diagonal*/
+              StdI::Cell[dCell][0] == 0 &&
+              StdI::Cell[dCell][1] == 0 &&
+              StdI::Cell[dCell][2] == 0) continue;/*Diagonal*/
 
-            for (iCell = 0; iCell < StdI->NCell; iCell++) {
-              StdFace_FindSite(StdI,
-                StdI->Cell[iCell][0], StdI->Cell[iCell][1], StdI->Cell[iCell][2],
-                StdI->Cell[dCell][0], StdI->Cell[dCell][1], StdI->Cell[dCell][2],
+            for (iCell = 0; iCell < StdI::NCell; iCell++) {
+              StdFace_FindSite(
+                StdI::Cell[iCell][0], StdI::Cell[iCell][1], StdI::Cell[iCell][2],
+                StdI::Cell[dCell][0], StdI::Cell[dCell][1], StdI::Cell[dCell][2],
                 isiteUC, jsiteUC, &isite, &jsite, &Cphase, dR);
 
               Jastrow[isite][jsite] = NJastrow;
               Jastrow[jsite][isite] = NJastrow;
 
-            }/*for (iCell = 0; iCell < StdI->NCell; iCell++)*/
+            }/*for (iCell = 0; iCell < StdI::NCell; iCell++)*/
 
             NJastrow += 1;
 
-          }/*for (jsiteUC = 0; jsiteUC < StdI->NsiteUC; jsiteUC++)*/
-        }/*for (isiteUC = 0; isiteUC < StdI->NsiteUC; isiteUC++)*/
-      }/*for (dCell = 0; dCell < StdI->NCell; dCell++)*/
-    }/*if (strcmp(StdI->model, "spin") != 0)*/
-  }/*if (abs(StdI->NMPTrans) != 1)*/
+          }/*for (jsiteUC = 0; jsiteUC < StdI::NsiteUC; jsiteUC++)*/
+        }/*for (isiteUC = 0; isiteUC < StdI::NsiteUC; isiteUC++)*/
+      }/*for (dCell = 0; dCell < StdI::NCell; dCell++)*/
+    }/*if (strcmp(StdI::model, "spin") != 0)*/
+  }/*if (abs(StdI::NMPTrans) != 1)*/
     
   fp = fopen("jastrowidx.def", "w");
   fprintf(fp, "=============================================\n");
@@ -1804,15 +1791,15 @@ void PrintJastrow(struct StdIntList *StdI) {
   fprintf(fp, "=============================================\n");
   fprintf(fp, "=============================================\n");
 
-  for (isite = 0; isite < StdI->nsite; isite++) {
-    for (jsite = 0; jsite < StdI->nsite; jsite++) {
+  for (isite = 0; isite < StdI::nsite; isite++) {
+    for (jsite = 0; jsite < StdI::nsite; jsite++) {
       if (isite == jsite) continue;
       fprintf(fp, "%5d  %5d  %5d\n", isite, jsite, Jastrow[isite][jsite]);
     }/*for (jsite = 0; jsite < isite; jsite++)*/
-  }/*for (isite = 0; isite < StdI->nsite; isite++)*/
+  }/*for (isite = 0; isite < StdI::nsite; isite++)*/
 
   for (iJastrow = 0; iJastrow < NJastrow; iJastrow++){
-    if (strcmp(StdI->model, "hubbard") == 0 || iJastrow > 0)
+    if (strcmp(StdI::model, "hubbard") == 0 || iJastrow > 0)
       fprintf(fp, "%5d  %5d\n", iJastrow, 1);
     else
       fprintf(fp, "%5d  %5d\n", iJastrow, 0);
@@ -1821,7 +1808,7 @@ void PrintJastrow(struct StdIntList *StdI) {
   fclose(fp);
   fprintf(stdout, "    jastrowidx.def is written.\n");
 
-  for (isite = 0; isite < StdI->nsite; isite++) free(Jastrow[isite]);
+  for (isite = 0; isite < StdI::nsite; isite++) free(Jastrow[isite]);
   free(Jastrow);
 }/*void PrintJastrow*/
 #endif

@@ -16,6 +16,4 @@
 #include<complex>
 
 int diagonalcalc();
-int diagonalcalcForTE(const int _istep,
-  std::complex<double>* tmp_v0, 
-  std::complex<double>* tmp_v1);
+int diagonalcalcForTE(const int _istep, std::complex<double>* tmp_v0, std::complex<double>* tmp_v1);

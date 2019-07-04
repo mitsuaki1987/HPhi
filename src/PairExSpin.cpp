@@ -188,8 +188,8 @@ shared(tmp_v0,tmp_v1,one,nstate,i_max,org_isite1,org_sigma1,tmp_trans,Def::SiteT
         }
         else {
           // transverse magnetic field
-#pragma omp parallel for default(none) private(j,num1,dmv) \
-shared(tmp_v0,tmp_v1,one,nstate,i_max,org_isite1,org_sigma1,org_sigma2,tmp_off,tmp_trans, \
+#pragma omp parallel for default(none) private(j,num1,dmv,tmp_off) \
+shared(tmp_v0,tmp_v1,one,nstate,i_max,org_isite1,org_sigma1,org_sigma2,tmp_trans, \
 Def::SiteToBit, Def::Tpow)
           for (j = 1; j <= i_max; j++) {
             num1 = GetOffCompGeneralSpin(j - 1, org_isite1, org_sigma2, org_sigma1, &tmp_off, Def::SiteToBit, Def::Tpow);
@@ -424,9 +424,9 @@ org_sigma1, tmp_trans, Def::SiteToBit, Def::Tpow)
           }
         }//org_sigma1=org_sigma2
         else {//org_sigma1 != org_sigma2
-#pragma omp parallel for default(none) private(j, tmp_sgn, tmp_off) \
+#pragma omp parallel for default(none) private(j, tmp_sgn, tmp_off, off) \
 shared(tmp_v0, tmp_v1, list_1_org, list_1,one,nstate, i_max, org_isite1, Large::ihfbit, \
-org_sigma1, org_sigma2, off, tmp_trans, myrank, Def::SiteToBit, Def::Tpow)
+org_sigma1, org_sigma2, tmp_trans, myrank, Def::SiteToBit, Def::Tpow)
           for (j = 1; j <= i_max; j++) {
             tmp_sgn = GetOffCompGeneralSpin(list_1_org[j], org_isite1, org_sigma2, org_sigma1, &off,
               Def::SiteToBit, Def::Tpow);

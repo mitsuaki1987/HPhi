@@ -37,13 +37,6 @@ localy optimal block (preconditioned) conjugate gradient method.
 #include <omp.h>
 #endif
 
-void debug_print(int num, std::complex<double> *var){
-  int i;
-  for (i=0;i<num;i++){
-    printf("debug %d %f %f\n", i, real(var[i]), imag(var[i]));
-  }
-}
-
 extern "C" {
   extern void zheevd_(char *jobz, char *uplo, int *n, std::complex<double> *a, int *lda, double *w, std::complex<double> *work, int *lwork, double *rwork, int * lrwork, int *iwork, int *liwork, int *info);
   extern void zgemm_(char *transa, char *transb, int *m, int *n, int *k, std::complex<double> *alpha, std::complex<double> *a, int *lda, std::complex<double> *b, int *ldb, std::complex<double> *beta, std::complex<double> *c, int *ldc);

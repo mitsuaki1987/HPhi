@@ -103,7 +103,7 @@ shared(v1, i_max, rand_i) reduction(+:dnorm)
     dnorm = SumMPI_d(dnorm);
     dnorm = sqrt(dnorm);
     global_1st_norm[rand_i] = dnorm;
-#pragma omp parallel for default(none) private(i) shared(v1,rand_i) firstprivate(i_max, dnorm)
+#pragma omp parallel for default(none) private(i) shared(v1,rand_i,i_max, dnorm)
     for (i = 1; i <= i_max; i++) v1[i][rand_i] = v1[i][rand_i] / dnorm;
   }/*for (rand_i = 0; rand_i < NumAve; rand_i++)*/
 
@@ -133,21 +133,20 @@ Compute expectation value at infinite temperature
   StopTimer(3102);
 
   for (rand_i = 0; rand_i < NumAve; rand_i++) {
-#pragma omp parallel for default(none) private(i) shared(v0, v1, list_1,rand_i) \
-firstprivate(i_max, Ns, LargeValue, myrank)
+#pragma omp parallel for default(none) private(i) \
+shared(v0, v1, list_1,rand_i, i_max, Ns, LargeValue, myrank)
     for (i = 1; i <= i_max; i++) {
       v0[i][rand_i] = LargeValue * v1[i][rand_i] - v0[i][rand_i] / Ns;
     }
 
     dnorm = 0.0;
-#pragma omp parallel for default(none) private(i) shared(v0,rand_i) \
-firstprivate(i_max) reduction(+:dnorm)
+#pragma omp parallel for default(none) private(i) shared(v0,rand_i,i_max) reduction(+:dnorm)
     for (i = 1; i <= i_max; i++)
       dnorm += real(conj(v0[i][rand_i])*v0[i][rand_i]);
     dnorm = SumMPI_d(dnorm);
     dnorm = sqrt(dnorm);
     global_norm[rand_i] = dnorm;
-#pragma omp parallel for default(none) private(i) shared(v0,rand_i) firstprivate(i_max, dnorm)
+#pragma omp parallel for default(none) private(i) shared(v0,rand_i,i_max, dnorm)
     for (i = 1; i <= i_max; i++) v0[i][rand_i] = v0[i][rand_i] / dnorm;
   }/*for (rand_i = 0; rand_i < NumAve; rand_i++)*/
   TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", "set %d step %d:TPQ finishes: %s", "a", rand_i, step_i);

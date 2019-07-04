@@ -53,15 +53,15 @@ int Multiply
   Ns = 1.0*Def::NsiteMPI;
   // mltply is in expec_energy.cpp v0=H*v1
 #pragma omp parallel for default(none) private(i,rand_i)  \
-  shared(v0, v1,NumAve) firstprivate(i_max, Ns, LargeValue)
+shared(v0, v1,NumAve,i_max, Ns, LargeValue)
   for (i = 1; i <= i_max; i++) {
     for (rand_i = 0; rand_i < NumAve; rand_i++) {
       v0[i][rand_i] = LargeValue * v1[i][rand_i] - v0[i][rand_i] / Ns;  //v0=(l-H/Ns)*v1
     }
   }
   NormMPI_dv(i_max, NumAve, v0, global_norm);
-#pragma omp parallel for default(none) private(i,rand_i) \
-shared(v0,NumAve,global_norm) firstprivate(i_max)
+#pragma omp parallel for default(none) private(i_max,i,rand_i) \
+shared(v0,NumAve,global_norm)
   for (i = 1; i <= i_max; i++) 
     for (rand_i = 0; rand_i < NumAve; rand_i++)
       v0[i][rand_i] = v0[i][rand_i] / global_norm[rand_i];
@@ -92,8 +92,8 @@ int MultiplyForTEM
   i_max = Check::idim_max;
   // mltply is in expec_energy.cpp v0=H*v1
   if (dt < pow(10.0, -14)) {
-#pragma omp parallel for default(none) private(i) \
-shared(I,v0, v1, v2) firstprivate(i_max, dt, tmp2)
+#pragma omp parallel for default(none) private(i, tmp2) \
+shared(I,v0, v1, v2,i_max, dt)
     for (i = 1; i <= i_max; i++) {
       tmp2 = v0[i][0];
       v0[i][0] = v1[i][0];  //v0=(1-i*dt*H)*v1
@@ -104,8 +104,8 @@ shared(I,v0, v1, v2) firstprivate(i_max, dt, tmp2)
   }
   else {
     tmp1 *= -I * dt;
-#pragma omp parallel for default(none) private(i) \
-shared(v0, v1, v2,I) firstprivate(i_max, dt, tmp1, tmp2)
+#pragma omp parallel for default(none) private(i, tmp2) \
+shared(v0, v1, v2,I,i_max, dt, tmp1)
     for (i = 1; i <= i_max; i++) {
       tmp2 = v0[i][0];
       v0[i][0] = v1[i][0] + tmp1 * tmp2;  //v0=(1-i*dt*H)*v1
@@ -117,8 +117,8 @@ shared(v0, v1, v2,I) firstprivate(i_max, dt, tmp1, tmp2)
       //v2 = H*v1 = H^coef |psi(t)>
       mltply(1, v2, v1);
 
-#pragma omp parallel for default(none) private(i) shared(I, v0, v1, v2) \
-firstprivate(i_max, tmp1, myrank)
+#pragma omp parallel for default(none) private(i) \
+shared(I, v0, v1, v2,i_max, tmp1, myrank)
       for (i = 1; i <= i_max; i++) {
         v0[i][0] += tmp1 * v2[i][0];
         v1[i][0] = v2[i][0];
@@ -127,15 +127,15 @@ firstprivate(i_max, tmp1, myrank)
     }
   }
   dnorm = 0.0;
-#pragma omp parallel for default(none) reduction(+: dnorm) private(i) shared(v0) \
-firstprivate(i_max, dt)
+#pragma omp parallel for default(none) reduction(+: dnorm) private(i) \
+shared(v0,i_max)
   for (i = 1; i <= i_max; i++) {
     dnorm += real(conj(v0[i][0])*v0[i][0]);
   }
   dnorm = SumMPI_d(dnorm);
   dnorm = sqrt(dnorm);
   global_norm[0] = dnorm;
-#pragma omp parallel for default(none) private(i) shared(v0) firstprivate(i_max, dnorm)
+#pragma omp parallel for default(none) private(i) shared(v0,i_max, dnorm)
   for (i = 1; i <= i_max; i++) {
     v0[i][0] = v0[i][0] / dnorm;
   }

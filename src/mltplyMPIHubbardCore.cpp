@@ -1211,9 +1211,9 @@ void X_Ajt_MPI(
   }
   else return;
 
-#pragma omp parallel for default(none) private(j) \
-firstprivate(idim_max_buf, trans, ioff, _irght, _ilft, _ihfbit, list_2_1, list_2_2) \
-shared(v1buf, tmp_v1, nstate,one, tmp_v0, list_1buf_org)
+#pragma omp parallel for default(none) private(j, ioff) \
+shared(idim_max_buf, trans, _irght, _ilft, _ihfbit, list_2_1, list_2_2, \
+v1buf, tmp_v1, nstate,one, tmp_v0, list_1buf_org)
   for (j = 1; j <= idim_max_buf; j++) {
     GetOffComp(list_2_1, list_2_2, list_1buf_org[j],
       _irght, _ilft, _ihfbit, &ioff);

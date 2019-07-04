@@ -32,10 +32,12 @@
 /**@file
  * @brief  File to define functions to calculate expected values by Time evolution method.
 */
- /// \brief Set transfer integrals at timeidx-th time
- /// \param X struct for getting information of transfer integrals
- /// \param timeidx index of time
-void MakeTEDTransfer( const int timeidx) {
+ /**\brief 
+ Set transfer integrals at timeidx-th time
+ */
+void MakeTEDTransfer( 
+  const int timeidx/**<index of time*/
+) {
   int i, j;
   //Clear values
   for (i = 0; i < Def::NTETransferMax; i++) {
@@ -54,10 +56,12 @@ void MakeTEDTransfer( const int timeidx) {
   }
   Def::EDNTransfer += Def::NTETransfer[timeidx];
 }
-/// \brief Set interall interactions at timeidx-th time
-/// \param X struct for getting information of interall interactions
-/// \param timeidx index of time
-void MakeTEDInterAll( const int timeidx) {
+/**\brief 
+Set interall interactions at timeidx-th time
+*/
+void MakeTEDInterAll( 
+  const int timeidx/**<index of time*/
+) {
   int i, j;
   //Clear values
   for (i = 0; i < Def::NTEInterAllMax; i++) {

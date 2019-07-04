@@ -24,10 +24,12 @@
 #include "mltply.hpp"
 #include "global.hpp"
 
- /// \brief Parent function for FullDiag mode
- /// \retval TRUE(=1) normally finished.
- /// \retval FALSE(=0) abnormally finished.
-int CalcByFullDiag(
+/**
+@brief Parent function for FullDiag mode
+@retval TRUE(=1) normally finished.
+@retval FALSE(=0) abnormally finished.
+*/
+int CalcByFullDiag::CalcByFullDiag(
 )
 {
   int iret=0;
