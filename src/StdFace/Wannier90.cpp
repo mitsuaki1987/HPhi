@@ -418,7 +418,7 @@ static void PrintUHFinitial(
 */
 void StdFace_Wannier90()
 {
-  int isite, jsite, ispin, ntransMax, nintrMax;
+  int isite, jsite, ispin;
   int iL, iW, iH, kCell, it, ii;
   double Jtmp[3][3] = { {0.0} };
   FILE *fp;
@@ -513,21 +513,6 @@ void StdFace_Wannier90()
   else if(strcmp(StdI::model, "hubbard") == 0 )
     for (isite = 0; isite < StdI::nsite; isite++) StdI::locspinflag[isite] = 0;
   /**@brief
-  (4) Compute the upper limit of the number of Transfer & Interaction and malloc them.
-  */
-  if (strcmp(StdI::model, "spin") == 0 ) {
-    ntransMax = StdI::nsite * (StdI::S2 + 1/*h*/ + 2 * StdI::S2/*Gamma*/);
-    nintrMax = StdI::NCell * (StdI::NsiteUC/*D*/ + NtUJ[0]/*J*/ + NtUJ[1] + NtUJ[2])
-      * (3 * StdI::S2 + 1) * (3 * StdI::S2 + StdI::NsiteUC);
-  }
-  else if (strcmp(StdI::model, "hubbard") == 0) {
-    ntransMax = StdI::NCell * 2/*spin*/ * (2 * StdI::NsiteUC/*mu+h+Gamma*/ + NtUJ[0] * 2/*t*/
-      + NtUJ[1] * 2 * 3/*DC(U)*/ + NtUJ[2] * 2 * 2/*DC(J)*/);
-    nintrMax = StdI::NCell * (NtUJ[1] + NtUJ[2] + StdI::NsiteUC);
-  }
-  /**/
-  StdFace_MallocInteractions(ntransMax, nintrMax);
-  /**@brief
   (4.5) For spin system, compute super exchange interaction.
   */
   if (strcmp(StdI::model, "spin") == 0) {
@@ -571,12 +556,8 @@ void StdFace_Wannier90()
         if (strcmp(StdI::model, "hubbard") == 0) {
           isite = StdI::NsiteUC*kCell + tUJindx[0][it][3];
           for (ispin = 0; ispin < 2; ispin++) {
-            StdI::trans[StdI::ntrans] = -tUJ[0][it];
-            StdI::transindx[StdI::ntrans][0] = isite;
-            StdI::transindx[StdI::ntrans][1] = ispin;
-            StdI::transindx[StdI::ntrans][2] = isite;
-            StdI::transindx[StdI::ntrans][3] = ispin;
-            StdI::ntrans = StdI::ntrans + 1;
+            StdI::trans.push_back(-tUJ[0][it]);
+            StdI::transindx.push_back(std::vector<int>{isite, ispin, isite, ispin});
           }/*for (ispin = 0; ispin < 2; ispin++)*/
         }/*if (strcmp(StdI::model, "hubbrad") == 0 )*/
       }/*Local term*/
@@ -608,9 +589,8 @@ void StdFace_Wannier90()
       if (tUJindx[1][it][0] == 0 && tUJindx[1][it][1] == 0 && tUJindx[1][it][2] == 0
         && tUJindx[1][it][3] == tUJindx[1][it][4])
       {
-        StdI::Cintra[StdI::NCintra] = real(tUJ[1][it]);
-        StdI::CintraIndx[StdI::NCintra][0] = StdI::NsiteUC*kCell + tUJindx[1][it][3];
-        StdI::NCintra += 1;
+        StdI::Cintra.push_back(real(tUJ[1][it]));
+        StdI::CintraIndx.push_back(StdI::NsiteUC*kCell + tUJindx[1][it][3]);
         /*
         Double-counting correction @f$0.5 U_{0ii} D_{0ii}@f$
         */
@@ -618,12 +598,8 @@ void StdFace_Wannier90()
           isite = StdI::NsiteUC*kCell + tUJindx[1][it][3];
           for (ispin = 0; ispin < 2; ispin++) {
             DenMat0 = DenMat[0][0][0][tUJindx[1][it][3]][tUJindx[1][it][3]];
-            StdI::trans[StdI::ntrans] = 0.5*real(tUJ[1][it])*DenMat0;
-            StdI::transindx[StdI::ntrans][0] = isite;
-            StdI::transindx[StdI::ntrans][1] = ispin;
-            StdI::transindx[StdI::ntrans][2] = isite;
-            StdI::transindx[StdI::ntrans][3] = ispin;
-            StdI::ntrans = StdI::ntrans + 1;
+            StdI::trans.push_back(0.5*real(tUJ[1][it])*DenMat0);
+            StdI::transindx.push_back(std::vector<int>{isite, ispin, isite, ispin});
           }/*for (ispin = 0; ispin < 2; ispin++)*/
         }
       }/*Local term*/
@@ -644,22 +620,14 @@ void StdFace_Wannier90()
             @f$sum_{(R,j)(>0,i)} U_{Rij} D_{0jj} (Local)@f$
             */
             DenMat0 = DenMat[0][0][0][tUJindx[1][it][4]][tUJindx[1][it][4]];
-            StdI::trans[StdI::ntrans] = real(tUJ[1][it])*DenMat0;
-            StdI::transindx[StdI::ntrans][0] = isite;
-            StdI::transindx[StdI::ntrans][1] = ispin;
-            StdI::transindx[StdI::ntrans][2] = isite;
-            StdI::transindx[StdI::ntrans][3] = ispin;
-            StdI::ntrans = StdI::ntrans + 1;
+            StdI::trans.push_back(real(tUJ[1][it])*DenMat0);
+            StdI::transindx.push_back(std::vector<int>{isite, ispin, isite, ispin});
             /*
             @f$sum_{(R,j)(>0,i)} U_{Rij} D_{0jj} (Local)@f$
             */
             DenMat0 = DenMat[0][0][0][tUJindx[1][it][3]][tUJindx[1][it][3]];
-            StdI::trans[StdI::ntrans] = real(tUJ[1][it])*DenMat0;
-            StdI::transindx[StdI::ntrans][0] = jsite;
-            StdI::transindx[StdI::ntrans][1] = ispin;
-            StdI::transindx[StdI::ntrans][2] = jsite;
-            StdI::transindx[StdI::ntrans][3] = ispin;
-            StdI::ntrans = StdI::ntrans + 1;
+            StdI::trans.push_back(real(tUJ[1][it])*DenMat0);
+            StdI::transindx.push_back(std::vector<int>{jsite, ispin, jsite, ispin});
           }/*for (ispin = 0; ispin < 2; ispin++)*/
           /*
           @f$-0.5U_{Rij} D_{Rjj}@f$
@@ -684,21 +652,15 @@ void StdFace_Wannier90()
           tUJindx[2][it][0], tUJindx[2][it][1], tUJindx[2][it][2],
           tUJindx[2][it][3], tUJindx[2][it][4], &isite, &jsite, &Cphase, dR);
 
-        StdI::Hund[StdI::NHund] = real(tUJ[2][it]);
-        StdI::HundIndx[StdI::NHund][0] = isite;
-        StdI::HundIndx[StdI::NHund][1] = jsite;
-        StdI::NHund += 1;
+        StdI::Hund.push_back(real(tUJ[2][it]));
+        StdI::HundIndx.push_back(std::vector<int>{isite, jsite});
 
         if (strcmp(StdI::model, "hubbard") == 0) {
-          StdI::Ex[StdI::NEx] = real(tUJ[2][it]);
-          StdI::ExIndx[StdI::NEx][0] = isite;
-          StdI::ExIndx[StdI::NEx][1] = jsite;
-          StdI::NEx += 1;
+          StdI::Ex.push_back(real(tUJ[2][it]));
+          StdI::ExIndx.push_back(std::vector<int>{isite, jsite});
 
-          StdI::PairHopp[StdI::NPairHopp] = real(tUJ[2][it]);
-          StdI::PHIndx[StdI::NPairHopp][0] = isite;
-          StdI::PHIndx[StdI::NPairHopp][1] = jsite;
-          StdI::NPairHopp += 1;
+          StdI::PairHopp.push_back(real(tUJ[2][it]));
+          StdI::PHIndx.push_back(std::vector<int>{isite, jsite});
           /*
           Double-counting correction
           */
@@ -708,22 +670,14 @@ void StdFace_Wannier90()
               @f$- \frac{1}{2}sum_{(R,j)(>0,i)} J_{Rij} D_{0jj}@f$
               */
               DenMat0 = DenMat[0][0][0][tUJindx[2][it][4]][tUJindx[2][it][4]];
-              StdI::trans[StdI::ntrans] = -0.5*real(tUJ[2][it]) *DenMat0;
-              StdI::transindx[StdI::ntrans][0] = isite;
-              StdI::transindx[StdI::ntrans][1] = ispin;
-              StdI::transindx[StdI::ntrans][2] = isite;
-              StdI::transindx[StdI::ntrans][3] = ispin;
-              StdI::ntrans = StdI::ntrans + 1;
+              StdI::trans.push_back(-0.5*real(tUJ[2][it]) *DenMat0);
+              StdI::transindx.push_back(std::vector<int>{isite, ispin, isite, ispin});
               /*
               @f$- \frac{1}{2}sum_{(R,j)(>0,i)} J_{Rij} D_{0jj}@f$
               */
               DenMat0 = DenMat[0][0][0][tUJindx[2][it][3]][tUJindx[2][it][3]];
-              StdI::trans[StdI::ntrans] = -0.5*real(tUJ[2][it]) *DenMat0;
-              StdI::transindx[StdI::ntrans][0] = jsite;
-              StdI::transindx[StdI::ntrans][1] = ispin;
-              StdI::transindx[StdI::ntrans][2] = jsite;
-              StdI::transindx[StdI::ntrans][3] = ispin;
-              StdI::ntrans = StdI::ntrans + 1;
+              StdI::trans.push_back(-0.5*real(tUJ[2][it]) *DenMat0);
+              StdI::transindx.push_back(std::vector<int>{jsite, ispin, jsite, ispin});
             }/*for (ispin = 0; ispin < 2; ispin++)*/
             /*
             @f$J_{Rij} (D_{Rjj}+2{\rm Re}[D_{Rjj])@f$
@@ -736,13 +690,11 @@ void StdFace_Wannier90()
         }
         else {
 #if defined(_mVMC)
-          StdI::Ex[StdI::NEx] = real(tUJ[2][it]);
+          StdI::Ex.push_back(real(tUJ[2][it]));
 #else
-          StdI::Ex[StdI::NEx] = -real(tUJ[2][it]);
+          StdI::Ex.push_back(-real(tUJ[2][it]));
 #endif
-          StdI::ExIndx[StdI::NEx][0] = isite;
-          StdI::ExIndx[StdI::NEx][1] = jsite;
-          StdI::NEx += 1;
+          StdI::ExIndx.push_back(std::vector<int>{isite, jsite});
         }
       }/*Non-local term*/
     }/*for (it = 0; it < NtUJ[0]; it++)*/

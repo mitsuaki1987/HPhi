@@ -41,21 +41,22 @@ The following lattices are supported:
 #include "StdFace_ModelUtil.hpp"
 #include <complex>
 #include <iostream>
-
+#include <vector>
+#include <iostream>
 
 namespace StdI {
   /*
    Initial (undefined)
   */
-  int NaN_i;/**<@brief It is used for initializing input parameter.
+  int NaN_i = 2147483647;/**<@brief It is used for initializing input parameter.
             This means that a parameter wich is not specified in input file.
             Set in StdFace_ResetVals().*/
-  double pi;/**<@brief @f$\pi=3.14...@f$*/
+  double pi = acos(-1.0);/**<@brief @f$\pi=3.14...@f$*/
   /*
   Parameters for LATTICE
   */
   char lattice[256];/**<@brief Name of lattice. Input parameter.*/
-  double a; /**<@brief The lattice constant. Input parameter.*/
+  double a = 0.0 / 0.0; /**<@brief The lattice constant. Input parameter.*/
   double length[3];/**<@brief Anisotropic lattice constant,
                    input parameter wlength, llength, hlength.*/
   int W;/**<@brief Number of sites along the 1st axis, input parameter.*/
@@ -80,50 +81,50 @@ namespace StdI {
                Parameters for MODEL
                */
   char model[256];/**<@brief Name of model, input parameter*/
-  double mu;/**<@brief Chemical potential, input parameter*/
-  std::complex<double> t;/**<@brief Nearest-neighbor hopping, input parameter*/
-  std::complex<double> tp;/**<@brief 2nd-nearest hopping, input parameter*/
-  std::complex<double> t0;/**<@brief Anisotropic hopping (1st), input parameter*/
-  std::complex<double> t0p;/**<@brief Anisotropic hopping (2nd), input parameter*/
-  std::complex<double> t0pp;/**<@brief Anisotropic hopping (3rd), input parameter*/
-  std::complex<double> t1;/**<@brief Anisotropic hopping (1st), input parameter*/
-  std::complex<double> t1p;/**<@brief Anisotropic hopping (2nd), input parameter*/
+  double mu = 0.0 / 0.0;/**<@brief Chemical potential, input parameter*/
+  std::complex<double> t = 0.0 / 0.0;/**<@brief Nearest-neighbor hopping, input parameter*/
+  std::complex<double> tp = 0.0 / 0.0;/**<@brief 2nd-nearest hopping, input parameter*/
+  std::complex<double> t0 = 0.0 / 0.0;/**<@brief Anisotropic hopping (1st), input parameter*/
+  std::complex<double> t0p = 0.0 / 0.0;/**<@brief Anisotropic hopping (2nd), input parameter*/
+  std::complex<double> t0pp = 0.0 / 0.0;/**<@brief Anisotropic hopping (3rd), input parameter*/
+  std::complex<double> t1 = 0.0 / 0.0;/**<@brief Anisotropic hopping (1st), input parameter*/
+  std::complex<double> t1p = 0.0 / 0.0;/**<@brief Anisotropic hopping (2nd), input parameter*/
   std::complex<double> t1pp;/**<@brief Anisotropic hopping (3rd), input parameter*/
-  std::complex<double> t2;/**<@brief Anisotropic hopping (1st), input parameter*/
-  std::complex<double> t2p;/**<@brief Anisotropic hopping (2nd), input parameter*/
-  std::complex<double> t2pp;/**<@brief Anisotropic hopping (3rd), input parameter*/
-  std::complex<double> tpp;/**<@brief 3rd-nearest hopping, input parameter*/
-  double U;/**<@brief On-site Coulomb potential, input parameter*/
-  double V;/**<@brief Off-site Coulomb potential (1st), input parameter*/
-  double Vp;/**<@brief Off-site Coulomb potential (2nd), input parameter*/
-  double V0;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
-  double V0p;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
-  double V0pp;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
-  double V1;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
-  double V1p;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
-  double V1pp;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
-  double V2;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
+  std::complex<double> t2 = 0.0 / 0.0;/**<@brief Anisotropic hopping (1st), input parameter*/
+  std::complex<double> t2p = 0.0 / 0.0;/**<@brief Anisotropic hopping (2nd), input parameter*/
+  std::complex<double> t2pp = 0.0 / 0.0;/**<@brief Anisotropic hopping (3rd), input parameter*/
+  std::complex<double> tpp = 0.0 / 0.0;/**<@brief 3rd-nearest hopping, input parameter*/
+  double U = 0.0 / 0.0;/**<@brief On-site Coulomb potential, input parameter*/
+  double V = 0.0 / 0.0;/**<@brief Off-site Coulomb potential (1st), input parameter*/
+  double Vp = 0.0 / 0.0;/**<@brief Off-site Coulomb potential (2nd), input parameter*/
+  double V0 = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
+  double V0p = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
+  double V0pp = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
+  double V1 = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
+  double V1p = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
+  double V1pp = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
+  double V2 = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
   double V2p;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
   double V2pp;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
-  double Vpp;/**<@brief Off-site Coulomb potential (3rd), input parameter*/
+  double Vpp = 0.0 / 0.0;/**<@brief Off-site Coulomb potential (3rd), input parameter*/
   /**/
-  double JAll;/**<@brief Isotropic, diagonal spin coupling (1st Near.),
+  double JAll = 0.0 / 0.0;/**<@brief Isotropic, diagonal spin coupling (1st Near.),
               input parameter J.*/
-  double JpAll;/**<@brief Isotropic, diagonal spin coupling (2nd Near),
+  double JpAll = 0.0 / 0.0;/**<@brief Isotropic, diagonal spin coupling (2nd Near),
                input parameter Jp.*/
-  double J0All;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
+  double J0All = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
                input parameter J0.*/
-  double J0pAll;/**<@brief Anisotropic, diagonal spin coupling (2nd Near),
+  double J0pAll = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (2nd Near),
                input parameter J0'.*/
-  double J0ppAll;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
+  double J0ppAll = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
                input parameter J0''.*/
-  double J1All;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
+  double J1All = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
                input parameter J1.*/
-  double J1pAll;/**<@brief Anisotropic, diagonal spin coupling (2nd Near),
+  double J1pAll = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (2nd Near),
                input parameter J1'.*/
-  double J1ppAll;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
+  double J1ppAll = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
                input parameter J1''.*/
-  double J2All;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
+  double J2All = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
                input parameter J2.*/
   double J2pAll;/**<@brief Anisotropic, diagonal spin coupling (2nd Near),
                input parameter J2'.*/
@@ -167,7 +168,7 @@ namespace StdI {
   double D[3][3];/**<@brief Coefficient for @f${\hat S}_{i z} {\hat S}_{i z}@f$
                  input parameter D. Only D[2][2] is used.*/
   double h;/**<@brief Longitudinal magnetic field, input parameter.*/
-  double Gamma;/**<@brief Transvars magnetic field, input parameter.*/
+  double Gamma = NAN;/**<@brief Transvars magnetic field, input parameter.*/
   double K;/**<@brief 4-spin term. Not used.*/
   /*
    Phase for the boundary
@@ -183,69 +184,59 @@ namespace StdI {
   int nsite;/**<@brief Number of sites, set in the each lattice file.*/
   int* locspinflag;/**<@brief [StdI::nsite] LocSpin in Expert mode,
                    malloc and set in each lattice file.*/
-  int ntrans;/**<@brief Number of transfer, counted in each lattice file.*/
-  int** transindx;/**<@brief [StdI::ntrans][4] Site/spin indices of
+  std::vector<std::vector<int> > transindx;/**<@brief [StdI::ntrans][4] Site/spin indices of
                   one-body term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_trans().*/
-  std::complex<double>* trans;/**<@brief [StdI::ntrans] Coefficient of
+  std::vector<std::complex<double> > trans;/**<@brief [StdI::ntrans] Coefficient of
                   one-body term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_trans().*/
-  int nintr;/**<@brief Number of InterAll, counted in each lattice file.*/
   int Lintr;/**<@brief Print interall.def or not, set in PrintInteractions().*/
-  int** intrindx;/**<@brief [StdI::nintr][8] Site/spin indices of
+  std::vector<std::vector<int> > intrindx;/**<@brief [StdI::nintr][8] Site/spin indices of
                   two-body term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  std::complex<double>* intr;/**<@brief [StdI::nintr] Coefficient of general
+  std::vector<std::complex<double> > intr;/**<@brief [StdI::nintr] Coefficient of general
                   two-body term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  int NCintra;/**<@brief Number of intra-site Coulomb interaction,
-              counted in each lattice file.*/
   int LCintra;/**<@brief Print coulombintra.def or not, set in PrintInteractions().*/
-  int** CintraIndx;/**<@brief [StdI::NCintra][1] Site indices of
+  std::vector<int> CintraIndx;/**<@brief [StdI::NCintra][1] Site indices of
                   intra-site Coulomb term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  double* Cintra;/**<@brief [StdI::NCintra] Coefficient of intra-site
+  std::vector<double> Cintra;/**<@brief [StdI::NCintra] Coefficient of intra-site
                   Coulomb term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  int NCinter;/**<@brief Number of inter-site Coulomb interaction,
-              counted in each lattice file.*/
   int LCinter;/**<@brief Print coulombinter.def or not, set in PrintInteractions().*/
-  int** CinterIndx;/**<@brief [StdI::NCinter][2] Site indices of
+  std::vector<std::vector<int> > CinterIndx;/**<@brief [StdI::NCinter][2] Site indices of
                   inter-site Coulomb term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  double* Cinter;/**<@brief [StdI::NCinter] Coefficient of inter-site
+  std::vector<double> Cinter;/**<@brief [StdI::NCinter] Coefficient of inter-site
                   Coulomb term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  int NHund;/**<@brief Number of Hund term, counted in each lattice file.*/
   int LHund;/**<@brief Print hund.def or not, set in PrintInteractions().*/
-  int** HundIndx;/**<@brief [StdI::NHund][2] Site indices of
+  std::vector<std::vector<int> > HundIndx;/**<@brief [StdI::NHund][2] Site indices of
                   Hund term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  double* Hund;/**<@brief [StdI::NHund] Coefficient of Hund term,
+  std::vector<double> Hund;/**<@brief [StdI::NHund] Coefficient of Hund term,
                malloc in StdFace_MallocInteractions()
                    and set in StdFace_intr().*/
-  int NEx;/**<@brief Number of exchange term, counted in each lattice file.*/
   int LEx;/**<@brief Print exchange.def or not, set in PrintInteractions().*/
-  int** ExIndx;/**<@brief [StdI::NEx][2] Site indices of
+  std::vector<std::vector<int> > ExIndx;/**<@brief [StdI::NEx][2] Site indices of
                   exchange term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  double* Ex;/**<@brief [StdI::NEx] Coefficient of exchange term,
+  std::vector<double> Ex;/**<@brief [StdI::NEx] Coefficient of exchange term,
                malloc in StdFace_MallocInteractions()
                    and set in StdFace_intr().*/
-  int NPairLift;/**<@brief Number of pair-lift term, counted in each lattice file.*/
   int LPairLift;/**<@brief Print pairlift.def or not, set in PrintInteractions().*/
-  int** PLIndx;/**<@brief [StdI::NPairLift][2] Site indices of
+  std::vector<std::vector<int> > PLIndx;/**<@brief [StdI::NPairLift][2] Site indices of
                   pair-lift term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_intr().*/
-  double* PairLift;/**<@brief [StdI::NPairLift] Coefficient of
+  std::vector<double> PairLift;/**<@brief [StdI::NPairLift] Coefficient of
                    pair-lift term, malloc in StdFace_MallocInteractions()
                    and set in StdFace_intr().*/
-  int NPairHopp;/**<@brief Number of pair-hopping term, counted in each lattice file.*/
   int LPairHopp;/**<@brief Print pairhopp.def or not, set in PrintInteractions().*/
-  int** PHIndx;/**<@brief [StdI::NPairLift][2] Site indices of
+  std::vector<std::vector<int> > PHIndx;/**<@brief [StdI::NPairLift][2] Site indices of
                pair-hopping term, malloc in StdFace_MallocInteractions()
                and set in StdFace_intr().*/
-  double* PairHopp;/**<@brief [StdI::NPairLift] Coefficient of
+  std::vector<double> PairHopp;/**<@brief [StdI::NPairLift] Coefficient of
                    pair-hopping term, malloc in StdFace_MallocInteractions()
                    and set in StdFace_intr().*/
   int lBoost;
@@ -326,10 +317,10 @@ namespace StdI {
   int PumpBody;/**<@brief one- or two-body pumping, defined from
                    StdI::PumpType*/
   int* npump;/**<@brief [StdI::nt] Number of transfer, counted in each lattice file.*/
-  int*** pumpindx;/**<@brief [StdI::nt][StdI::npump][4] Site/spin indices of
+  std::vector<std::vector<std::vector<int> > > pumpindx;/**<@brief [StdI::nt][StdI::npump][4] Site/spin indices of
                   one-body term, malloc in StdFace_MallocInteractions()
                   and set in StdFace_trans().*/
-  std::complex<double>** pump;/**<@brief [StdI::nt][StdI::npump] Coefficient of
+  std::vector<std::vector<std::complex<double> > > pump;/**<@brief [StdI::nt][StdI::npump] Coefficient of
                         one-body term, malloc in StdFace_MallocInteractions()
                         and set in StdFace_trans().*/
   double** At;/**<@brief [StdI::nt][3] Vector potential.*/
@@ -392,26 +383,26 @@ static void StdFace_LargeValue() {
   double LargeValue0;
 
   LargeValue0 = 0.0;
-  for (ktrans = 0; ktrans < StdI::ntrans; ktrans++) {
-    LargeValue0 += std::abs(StdI::trans[ktrans]);
+  for (ktrans = 0; ktrans < StdI::trans.size(); ktrans++) {
+    LargeValue0 += std::abs(StdI::trans.at(ktrans));
   }
-  for (kintr = 0; kintr < StdI::nintr; kintr++) {
-    LargeValue0 += std::abs(StdI::intr[kintr]);
+  for (kintr = 0; kintr < StdI::intr.size(); kintr++) {
+    LargeValue0 += std::abs(StdI::intr.at(kintr));
   }
-  for (kintr = 0; kintr < StdI::NCintra; kintr++) {
-    LargeValue0 += std::abs(StdI::Cintra[kintr]);
+  for (kintr = 0; kintr < StdI::Cintra.size(); kintr++) {
+    LargeValue0 += std::abs(StdI::Cintra.at(kintr));
   }
-  for (kintr = 0; kintr < StdI::NCinter; kintr++) {
-    LargeValue0 += std::abs(StdI::Cinter[kintr]);
+  for (kintr = 0; kintr < StdI::Cinter.size(); kintr++) {
+    LargeValue0 += std::abs(StdI::Cinter.at(kintr));
   }
-  for (kintr = 0; kintr < StdI::NEx; kintr++) {
-    LargeValue0 += 2.0 * std::abs(StdI::Ex[kintr]);
+  for (kintr = 0; kintr < StdI::Ex.size(); kintr++) {
+    LargeValue0 += 2.0 * std::abs(StdI::Ex.at(kintr));
   }
-  for (kintr = 0; kintr < StdI::NPairLift; kintr++) {
-    LargeValue0 += 2.0 * std::abs(StdI::PairLift[kintr]);
+  for (kintr = 0; kintr < StdI::PairLift.size(); kintr++) {
+    LargeValue0 += 2.0 * std::abs(StdI::PairLift.at(kintr));
   }
-  for (kintr = 0; kintr < StdI::NHund; kintr++) {
-    LargeValue0 += 2.0 * std::abs(StdI::Hund[kintr]);
+  for (kintr = 0; kintr < StdI::Hund.size(); kintr++) {
+    LargeValue0 += 2.0 * std::abs(StdI::Hund.at(kintr));
   }
   LargeValue0 /= (double)StdI::nsite;
   StdFace_PrintVal_d("LargeValue", &StdI::LargeValue, LargeValue0);
@@ -913,6 +904,9 @@ static void VectorPotential() {
     }
     fflush(fp);
     fclose(fp);
+
+    StdI::pumpindx.resize(StdI::Lanczos_max);
+    StdI::pump.resize(StdI::Lanczos_max);
   }/*if (StdI::PumpBody == 1)*/
 
   for (it = 0; it < StdI::Lanczos_max; it++) free(Et[it]);
@@ -938,14 +932,14 @@ static void PrintPump() {
       /*
       Sum equivalent pumping
       */
-      for (ipump = 0; ipump < StdI::npump[it]; ipump++) {
-        for (jpump = ipump + 1; jpump < StdI::npump[it]; jpump++) {
-          if (StdI::pumpindx[it][ipump][0] == StdI::pumpindx[it][jpump][0]
-            && StdI::pumpindx[it][ipump][1] == StdI::pumpindx[it][jpump][1]
-            && StdI::pumpindx[it][ipump][2] == StdI::pumpindx[it][jpump][2]
-            && StdI::pumpindx[it][ipump][3] == StdI::pumpindx[it][jpump][3]) {
-            StdI::pump[it][ipump] = StdI::pump[it][ipump] + StdI::pump[it][jpump];
-            StdI::pump[it][jpump] = 0.0;
+      for (ipump = 0; ipump < StdI::pump.at(it).size(); ipump++) {
+        for (jpump = ipump + 1; jpump < StdI::pump.at(it).size(); jpump++) {
+          if (StdI::pumpindx.at(it).at(ipump).at(0) == StdI::pumpindx.at(it).at(jpump).at(0)
+            && StdI::pumpindx.at(it).at(ipump).at(1) == StdI::pumpindx.at(it).at(jpump).at(1)
+            && StdI::pumpindx.at(it).at(ipump).at(2) == StdI::pumpindx.at(it).at(jpump).at(2)
+            && StdI::pumpindx.at(it).at(ipump).at(3) == StdI::pumpindx.at(it).at(jpump).at(3)) {
+            StdI::pump.at(it).at(ipump) = StdI::pump.at(it).at(ipump) + StdI::pump.at(it).at(jpump);
+            StdI::pump.at(it).at(jpump) = 0.0;
           }
         }/*for (ktrans = jtrans + 1; ktrans < StdI::ntrans; ktrans++)*/
       }/*for (jtrans = 0; jtrans < StdI::ntrans; jtrans++)*/
@@ -953,18 +947,18 @@ static void PrintPump() {
       Count the number of finite pumping
       */
       npump0 = 0;
-      for (ipump = 0; ipump < StdI::npump[it]; ipump++) 
-        if (std::abs(StdI::pump[it][ipump]) > 0.000001) npump0 += 1;
+      for (ipump = 0; ipump < StdI::pump.at(it).size(); ipump++)
+        if (std::abs(StdI::pump.at(it).at(ipump)) > 0.000001) npump0 += 1;
 
       fprintf(fp, "%f  %d\n", StdI::dt*(double)it, npump0);
-      for (ipump = 0; ipump < StdI::npump[it]; ipump++) {
+      for (ipump = 0; ipump < StdI::pump.at(it).size(); ipump++) {
 
-        if (std::abs(StdI::pump[it][ipump]) <= 0.000001) continue;
+        if (std::abs(StdI::pump.at(it).at(ipump)) <= 0.000001) continue;
 
         fprintf(fp, "%5d %5d %5d %5d %25.15f %25.15f\n",
-          StdI::pumpindx[it][ipump][0], StdI::pumpindx[it][ipump][1],
-          StdI::pumpindx[it][ipump][2], StdI::pumpindx[it][ipump][3],
-          real(StdI::pump[it][ipump]), imag(StdI::pump[it][ipump]));
+          StdI::pumpindx.at(it).at(ipump).at(0), StdI::pumpindx.at(it).at(ipump).at(1),
+          StdI::pumpindx.at(it).at(ipump).at(2), StdI::pumpindx.at(it).at(ipump).at(3),
+          real(StdI::pump.at(it).at(ipump)), imag(StdI::pump.at(it).at(ipump)));
       }/*for (itrans = 0; itrans < StdI::ntrans; itrans++)*/
     }/*for (it = 0; it < StdI::Lanczos_max; it++)*/
     fprintf(stdout, "      teone.def is written.\n\n");
@@ -1570,21 +1564,21 @@ static void PrintTrans(){
   FILE *fp;
   int jtrans, ktrans, ntrans0;
 
-  for (jtrans = 0; jtrans < StdI::ntrans; jtrans++){
-    for (ktrans = jtrans + 1; ktrans < StdI::ntrans; ktrans++){
-      if (StdI::transindx[jtrans][0] == StdI::transindx[ktrans][0]
-        && StdI::transindx[jtrans][1] == StdI::transindx[ktrans][1]
-        && StdI::transindx[jtrans][2] == StdI::transindx[ktrans][2]
-        && StdI::transindx[jtrans][3] == StdI::transindx[ktrans][3]){
-        StdI::trans[jtrans] = StdI::trans[jtrans] + StdI::trans[ktrans];
-        StdI::trans[ktrans] = 0.0;
+  for (jtrans = 0; jtrans < StdI::trans.size(); jtrans++){
+    for (ktrans = jtrans + 1; ktrans < StdI::trans.size(); ktrans++){
+      if (StdI::transindx.at(jtrans).at(0) == StdI::transindx.at(ktrans).at(0)
+        && StdI::transindx.at(jtrans).at(1) == StdI::transindx.at(ktrans).at(1)
+        && StdI::transindx.at(jtrans).at(2) == StdI::transindx.at(ktrans).at(2)
+        && StdI::transindx.at(jtrans).at(3) == StdI::transindx.at(ktrans).at(3)){
+        StdI::trans.at(jtrans) = StdI::trans.at(jtrans) + StdI::trans.at(ktrans);
+        StdI::trans.at(ktrans) = 0.0;
       }
     }/*for (ktrans = jtrans + 1; ktrans < StdI::ntrans; ktrans++)*/
   }/*for (jtrans = 0; jtrans < StdI::ntrans; jtrans++)*/
 
   ntrans0 = 0;
-  for (ktrans = 0; ktrans < StdI::ntrans; ktrans++){
-    if (std::abs(StdI::trans[ktrans]) > 0.000001) ntrans0 = ntrans0 + 1;
+  for (ktrans = 0; ktrans < StdI::trans.size(); ktrans++){
+    if (std::abs(StdI::trans.at(ktrans)) > 0.000001) ntrans0 += 1;
   }
 
   fp = fopen("trans.def", "w");
@@ -1595,12 +1589,12 @@ static void PrintTrans(){
   fprintf(fp, "======================== \n");
 
   ntrans0 = 0;
-  for (ktrans = 0; ktrans < StdI::ntrans; ktrans++) {
-    if (std::abs(StdI::trans[ktrans]) > 0.000001)
+  for (ktrans = 0; ktrans < StdI::trans.size(); ktrans++) {
+    if (std::abs(StdI::trans.at(ktrans)) > 0.000001)
       fprintf(fp, "%5d %5d %5d %5d %25.15f %25.15f\n",
-        StdI::transindx[ktrans][0], StdI::transindx[ktrans][1],
-        StdI::transindx[ktrans][2], StdI::transindx[ktrans][3],
-        real(StdI::trans[ktrans]), imag(StdI::trans[ktrans]));
+        StdI::transindx.at(ktrans).at(0), StdI::transindx.at(ktrans).at(1),
+        StdI::transindx.at(ktrans).at(2), StdI::transindx.at(ktrans).at(3),
+        real(StdI::trans.at(ktrans)), imag(StdI::trans.at(ktrans)));
   }
 
   fflush(fp);
@@ -2196,17 +2190,17 @@ static void PrintInteractions()
   /*
    Coulomb INTRA
   */
-  for (kintr = 0; kintr < StdI::NCintra; kintr++) {
-    for (jintr = kintr + 1; jintr < StdI::NCintra; jintr++) 
-      if(StdI::CintraIndx[jintr][0] == StdI::CintraIndx[kintr][0])
+  for (kintr = 0; kintr < StdI::Cintra.size(); kintr++) {
+    for (jintr = kintr + 1; jintr < StdI::Cintra.size(); jintr++)
+      if(StdI::CintraIndx.at(jintr) == StdI::CintraIndx.at(kintr))
       {
-        StdI::Cintra[kintr] += StdI::Cintra[jintr];
-        StdI::Cintra[jintr] = 0.0;
+        StdI::Cintra.at(kintr) += StdI::Cintra.at(jintr);
+        StdI::Cintra.at(jintr) = 0.0;
       }
   }
   nintr0 = 0;
-  for (kintr = 0; kintr < StdI::NCintra; kintr++) {
-    if (fabs(StdI::Cintra[kintr]) > 0.000001) nintr0 = nintr0 + 1;
+  for (kintr = 0; kintr < StdI::Cintra.size(); kintr++) {
+    if (fabs(StdI::Cintra.at(kintr)) > 0.000001) nintr0 += 1;
   }
   if (nintr0 == 0 || StdI::lBoost == 1) StdI::LCintra = 0;
   else StdI::LCintra = 1;
@@ -2218,10 +2212,10 @@ static void PrintInteractions()
     fprintf(fp, "=============================================\n");
     fprintf(fp, "================== CoulombIntra ================\n");
     fprintf(fp, "=============================================\n");
-    for (kintr = 0; kintr < StdI::NCintra; kintr++) {
-      if (fabs(StdI::Cintra[kintr]) > 0.000001)
+    for (kintr = 0; kintr < StdI::Cintra.size(); kintr++) {
+      if (fabs(StdI::Cintra.at(kintr)) > 0.000001)
         fprintf(fp, "%5d %25.15f\n",
-          StdI::CintraIndx[kintr][0], StdI::Cintra[kintr]);
+          StdI::CintraIndx.at(kintr), StdI::Cintra.at(kintr));
     }
     fflush(fp);
     fclose(fp);
@@ -2230,23 +2224,23 @@ static void PrintInteractions()
   /*
   Coulomb INTER
   */
-  for (kintr = 0; kintr < StdI::NCinter; kintr++) {
-    for (jintr = kintr + 1; jintr < StdI::NCinter; jintr++)
+  for (kintr = 0; kintr < StdI::Cinter.size(); kintr++) {
+    for (jintr = kintr + 1; jintr < StdI::Cinter.size(); jintr++)
       if (
-        (    StdI::CinterIndx[jintr][0] == StdI::CinterIndx[kintr][0]
-          && StdI::CinterIndx[jintr][1] == StdI::CinterIndx[kintr][1])
+        (    StdI::CinterIndx.at(jintr).at(0) == StdI::CinterIndx.at(kintr).at(0)
+          && StdI::CinterIndx.at(jintr).at(1) == StdI::CinterIndx.at(kintr).at(1))
         ||
-        (    StdI::CinterIndx[jintr][0] == StdI::CinterIndx[kintr][1]
-          && StdI::CinterIndx[jintr][1] == StdI::CinterIndx[kintr][0])
+        (    StdI::CinterIndx.at(jintr).at(0) == StdI::CinterIndx.at(kintr).at(1)
+          && StdI::CinterIndx.at(jintr).at(1) == StdI::CinterIndx.at(kintr).at(0))
         )
       {
-        StdI::Cinter[kintr] += StdI::Cinter[jintr];
-        StdI::Cinter[jintr] = 0.0;
+        StdI::Cinter.at(kintr) += StdI::Cinter.at(jintr);
+        StdI::Cinter.at(jintr) = 0.0;
       }
   }/*for (kintr = 0; kintr < StdI::NCinter; kintr++)*/
   nintr0 = 0;
-  for (kintr = 0; kintr < StdI::NCinter; kintr++) {
-    if (fabs(StdI::Cinter[kintr]) > 0.000001) nintr0 = nintr0 + 1;
+  for (kintr = 0; kintr < StdI::Cinter.size(); kintr++) {
+    if (fabs(StdI::Cinter.at(kintr)) > 0.000001) nintr0 += 1;
   }
   if (nintr0 == 0 || StdI::lBoost == 1) StdI::LCinter = 0;
   else StdI::LCinter = 1;
@@ -2258,10 +2252,10 @@ static void PrintInteractions()
     fprintf(fp, "=============================================\n");
     fprintf(fp, "================== CoulombInter ================\n");
     fprintf(fp, "=============================================\n");
-    for (kintr = 0; kintr < StdI::NCinter; kintr++) {
-      if (fabs(StdI::Cinter[kintr]) > 0.000001)
+    for (kintr = 0; kintr < StdI::Cinter.size(); kintr++) {
+      if (fabs(StdI::Cinter.at(kintr)) > 0.000001)
         fprintf(fp, "%5d %5d %25.15f\n",
-          StdI::CinterIndx[kintr][0], StdI::CinterIndx[kintr][1], StdI::Cinter[kintr]);
+          StdI::CinterIndx.at(kintr).at(0), StdI::CinterIndx.at(kintr).at(1), StdI::Cinter.at(kintr));
     }
     fflush(fp);
     fclose(fp);
@@ -2270,23 +2264,23 @@ static void PrintInteractions()
   /*
   Hund
   */
-  for (kintr = 0; kintr < StdI::NHund; kintr++) {
-    for (jintr = kintr + 1; jintr < StdI::NHund; jintr++)
+  for (kintr = 0; kintr < StdI::Hund.size(); kintr++) {
+    for (jintr = kintr + 1; jintr < StdI::Hund.size(); jintr++)
       if (
-        (StdI::HundIndx[jintr][0] == StdI::HundIndx[kintr][0]
-          && StdI::HundIndx[jintr][1] == StdI::HundIndx[kintr][1])
+        (StdI::HundIndx.at(jintr).at(0) == StdI::HundIndx.at(kintr).at(0)
+          && StdI::HundIndx.at(jintr).at(1) == StdI::HundIndx.at(kintr).at(1))
         ||
-        (StdI::HundIndx[jintr][0] == StdI::HundIndx[kintr][1]
-          && StdI::HundIndx[jintr][1] == StdI::HundIndx[kintr][0])
+        (StdI::HundIndx.at(jintr).at(0) == StdI::HundIndx.at(kintr).at(1)
+          && StdI::HundIndx.at(jintr).at(1) == StdI::HundIndx.at(kintr).at(0))
         )
       {
-        StdI::Hund[kintr] += StdI::Hund[jintr];
-        StdI::Hund[jintr] = 0.0;
+        StdI::Hund.at(kintr) += StdI::Hund.at(jintr);
+        StdI::Hund.at(jintr) = 0.0;
       }
   }/*for (kintr = 0; kintr < StdI::NHund; kintr++)*/
   nintr0 = 0;
-  for (kintr = 0; kintr < StdI::NHund; kintr++) {
-    if (fabs(StdI::Hund[kintr]) > 0.000001) nintr0 = nintr0 + 1;
+  for (kintr = 0; kintr < StdI::Hund.size(); kintr++) {
+    if (fabs(StdI::Hund.at(kintr)) > 0.000001) nintr0 += 1;
   }
   if (nintr0 == 0 || StdI::lBoost == 1) StdI::LHund = 0;
   else StdI::LHund = 1;
@@ -2298,10 +2292,10 @@ static void PrintInteractions()
     fprintf(fp, "=============================================\n");
     fprintf(fp, "=============== Hund coupling ===============\n");
     fprintf(fp, "=============================================\n");
-    for (kintr = 0; kintr < StdI::NHund; kintr++) {
-      if (fabs(StdI::Hund[kintr]) > 0.000001)
+    for (kintr = 0; kintr < StdI::Hund.size(); kintr++) {
+      if (fabs(StdI::Hund.at(kintr)) > 0.000001)
         fprintf(fp, "%5d %5d %25.15f\n",
-          StdI::HundIndx[kintr][0], StdI::HundIndx[kintr][1], StdI::Hund[kintr]);
+          StdI::HundIndx.at(kintr).at(0), StdI::HundIndx.at(kintr).at(1), StdI::Hund.at(kintr));
     }
     fflush(fp);
     fclose(fp);
@@ -2310,23 +2304,23 @@ static void PrintInteractions()
   /*
   Exchange
   */
-  for (kintr = 0; kintr < StdI::NEx; kintr++) {
-    for (jintr = kintr + 1; jintr < StdI::NEx; jintr++)
+  for (kintr = 0; kintr < StdI::Ex.size(); kintr++) {
+    for (jintr = kintr + 1; jintr < StdI::Ex.size(); jintr++)
       if (
-        (StdI::ExIndx[jintr][0] == StdI::ExIndx[kintr][0]
-          && StdI::ExIndx[jintr][1] == StdI::ExIndx[kintr][1])
+        (StdI::ExIndx.at(jintr).at(0) == StdI::ExIndx.at(kintr).at(0)
+          && StdI::ExIndx.at(jintr).at(1) == StdI::ExIndx.at(kintr).at(1))
         ||
-        (StdI::ExIndx[jintr][0] == StdI::ExIndx[kintr][1]
-          && StdI::ExIndx[jintr][1] == StdI::ExIndx[kintr][0])
+        (StdI::ExIndx.at(jintr).at(0) == StdI::ExIndx.at(kintr).at(1)
+          && StdI::ExIndx.at(jintr).at(1) == StdI::ExIndx.at(kintr).at(0))
         )
       {
-        StdI::Ex[kintr] += StdI::Ex[jintr];
-        StdI::Ex[jintr] = 0.0;
+        StdI::Ex.at(kintr) += StdI::Ex.at(jintr);
+        StdI::Ex.at(jintr) = 0.0;
       }
   }/*for (kintr = 0; kintr < StdI::NEx; kintr++)*/
   nintr0 = 0;
-  for (kintr = 0; kintr < StdI::NEx; kintr++) {
-    if (fabs(StdI::Ex[kintr]) > 0.000001) nintr0 = nintr0 + 1;
+  for (kintr = 0; kintr < StdI::Ex.size(); kintr++) {
+    if (fabs(StdI::Ex.at(kintr)) > 0.000001) nintr0 += 1;
   }
   if (nintr0 == 0 || StdI::lBoost == 1) StdI::LEx = 0;
   else StdI::LEx = 1;
@@ -2338,10 +2332,10 @@ static void PrintInteractions()
     fprintf(fp, "=============================================\n");
     fprintf(fp, "====== ExchangeCoupling coupling ============\n");
     fprintf(fp, "=============================================\n");
-    for (kintr = 0; kintr < StdI::NEx; kintr++) {
-      if (fabs(StdI::Ex[kintr]) > 0.000001)
+    for (kintr = 0; kintr < StdI::Ex.size(); kintr++) {
+      if (fabs(StdI::Ex.at(kintr)) > 0.000001)
         fprintf(fp, "%5d %5d %25.15f\n",
-          StdI::ExIndx[kintr][0], StdI::ExIndx[kintr][1], StdI::Ex[kintr]);
+          StdI::ExIndx.at(kintr).at(0), StdI::ExIndx.at(kintr).at(1), StdI::Ex.at(kintr));
     }
     fflush(fp);
     fclose(fp);
@@ -2350,23 +2344,23 @@ static void PrintInteractions()
   /*
     PairLift
   */
-  for (kintr = 0; kintr < StdI::NPairLift; kintr++) {
-    for (jintr = kintr + 1; jintr < StdI::NPairLift; jintr++)
+  for (kintr = 0; kintr < StdI::PairLift.size(); kintr++) {
+    for (jintr = kintr + 1; jintr < StdI::PairLift.size(); jintr++)
       if (
-        (StdI::PLIndx[jintr][0] == StdI::PLIndx[kintr][0]
-          && StdI::PLIndx[jintr][1] == StdI::PLIndx[kintr][1])
+        (StdI::PLIndx.at(jintr).at(0) == StdI::PLIndx.at(kintr).at(0)
+          && StdI::PLIndx.at(jintr).at(1) == StdI::PLIndx.at(kintr).at(1))
         ||
-        (StdI::PLIndx[jintr][0] == StdI::PLIndx[kintr][1]
-          && StdI::PLIndx[jintr][1] == StdI::PLIndx[kintr][0])
+        (StdI::PLIndx.at(jintr).at(0) == StdI::PLIndx.at(kintr).at(1)
+          && StdI::PLIndx.at(jintr).at(1) == StdI::PLIndx.at(kintr).at(0))
         )
       {
-        StdI::PairLift[kintr] += StdI::PairLift[jintr];
-        StdI::PairLift[jintr] = 0.0;
+        StdI::PairLift.at(kintr) += StdI::PairLift.at(jintr);
+        StdI::PairLift.at(jintr) = 0.0;
       }
   }/*for (kintr = 0; kintr < StdI::NPairLift; kintr++)*/
   nintr0 = 0;
-  for (kintr = 0; kintr < StdI::NPairLift; kintr++) {
-    if (fabs(StdI::PairLift[kintr]) > 0.000001) nintr0 = nintr0 + 1;
+  for (kintr = 0; kintr < StdI::PairLift.size(); kintr++) {
+    if (fabs(StdI::PairLift.at(kintr)) > 0.000001) nintr0 += 1;
   }
   if (nintr0 == 0 || StdI::lBoost == 1) StdI::LPairLift = 0;
   else StdI::LPairLift = 1;
@@ -2378,10 +2372,10 @@ static void PrintInteractions()
     fprintf(fp, "=============================================\n");
     fprintf(fp, "====== Pair-Lift term ============\n");
     fprintf(fp, "=============================================\n");
-    for (kintr = 0; kintr < StdI::NPairLift; kintr++) {
-      if (fabs(StdI::PairLift[kintr]) > 0.000001)
+    for (kintr = 0; kintr < StdI::PairLift.size(); kintr++) {
+      if (fabs(StdI::PairLift.at(kintr)) > 0.000001)
         fprintf(fp, "%5d %5d %25.15f\n",
-          StdI::PLIndx[kintr][0], StdI::PLIndx[kintr][1], StdI::PairLift[kintr]);
+          StdI::PLIndx.at(kintr).at(0), StdI::PLIndx.at(kintr).at(1), StdI::PairLift.at(kintr));
     }
     fflush(fp);
     fclose(fp);
@@ -2390,23 +2384,23 @@ static void PrintInteractions()
   /*
   PairHopp
   */
-  for (kintr = 0; kintr < StdI::NPairHopp; kintr++) {
-    for (jintr = kintr + 1; jintr < StdI::NPairHopp; jintr++)
+  for (kintr = 0; kintr < StdI::PairHopp.size(); kintr++) {
+    for (jintr = kintr + 1; jintr < StdI::PairHopp.size(); jintr++)
       if (
-        (StdI::PHIndx[jintr][0] == StdI::PHIndx[kintr][0]
-          && StdI::PHIndx[jintr][1] == StdI::PHIndx[kintr][1])
+        (StdI::PHIndx.at(jintr).at(0) == StdI::PHIndx.at(kintr).at(0)
+          && StdI::PHIndx.at(jintr).at(1) == StdI::PHIndx.at(kintr).at(1))
         ||
-        (StdI::PHIndx[jintr][0] == StdI::PHIndx[kintr][1]
-          && StdI::PHIndx[jintr][1] == StdI::PHIndx[kintr][0])
+        (StdI::PHIndx.at(jintr).at(0) == StdI::PHIndx.at(kintr).at(1)
+          && StdI::PHIndx.at(jintr).at(1) == StdI::PHIndx.at(kintr).at(0))
         )
       {
-        StdI::PairHopp[kintr] += StdI::PairHopp[jintr];
-        StdI::PairHopp[jintr] = 0.0;
+        StdI::PairHopp.at(kintr) += StdI::PairHopp.at(jintr);
+        StdI::PairHopp.at(jintr) = 0.0;
       }
   }/*for (kintr = 0; kintr < StdI::NPairHopp; kintr++)*/
   nintr0 = 0;
-  for (kintr = 0; kintr < StdI::NPairHopp; kintr++) {
-    if (fabs(StdI::PairHopp[kintr]) > 0.000001) nintr0 = nintr0 + 1;
+  for (kintr = 0; kintr < StdI::PairHopp.size(); kintr++) {
+    if (fabs(StdI::PairHopp.at(kintr)) > 0.000001) nintr0 += 1;
   }
   if (nintr0 == 0 || StdI::lBoost == 1) StdI::LPairHopp = 0;
   else StdI::LPairHopp = 1;
@@ -2418,10 +2412,10 @@ static void PrintInteractions()
     fprintf(fp, "=============================================\n");
     fprintf(fp, "====== Pair-Hopping term ============\n");
     fprintf(fp, "=============================================\n");
-    for (kintr = 0; kintr < StdI::NPairHopp; kintr++) {
-      if (fabs(StdI::PairHopp[kintr]) > 0.000001)
+    for (kintr = 0; kintr < StdI::PairHopp.size(); kintr++) {
+      if (fabs(StdI::PairHopp.at(kintr)) > 0.000001)
         fprintf(fp, "%5d %5d %25.15f\n",
-          StdI::PHIndx[kintr][0], StdI::PHIndx[kintr][1], StdI::PairHopp[kintr]);
+          StdI::PHIndx.at(kintr).at(0), StdI::PHIndx.at(kintr).at(1), StdI::PairHopp.at(kintr));
     }
     fflush(fp);
     fclose(fp);
@@ -2430,137 +2424,137 @@ static void PrintInteractions()
   /*
    InterAll
   */
-  for (jintr = 0; jintr < StdI::nintr; jintr++) {
-    for (kintr = jintr + 1; kintr < StdI::nintr; kintr++) {
+  for (jintr = 0; jintr < StdI::intr.size(); jintr++) {
+    for (kintr = jintr + 1; kintr < StdI::intr.size(); kintr++) {
       if (
-        (StdI::intrindx[jintr][0] == StdI::intrindx[kintr][0]
-          && StdI::intrindx[jintr][1] == StdI::intrindx[kintr][1]
-          && StdI::intrindx[jintr][2] == StdI::intrindx[kintr][2]
-          && StdI::intrindx[jintr][3] == StdI::intrindx[kintr][3]
-          && StdI::intrindx[jintr][4] == StdI::intrindx[kintr][4]
-          && StdI::intrindx[jintr][5] == StdI::intrindx[kintr][5]
-          && StdI::intrindx[jintr][6] == StdI::intrindx[kintr][6]
-          && StdI::intrindx[jintr][7] == StdI::intrindx[kintr][7])
+        (StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(0)
+          && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(1)
+          && StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(kintr).at(2)
+          && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(3)
+          && StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(kintr).at(4)
+          && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(kintr).at(5)
+          && StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(6)
+          && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(7))
         ||
-        (StdI::intrindx[jintr][0] == StdI::intrindx[kintr][4]
-          && StdI::intrindx[jintr][1] == StdI::intrindx[kintr][5]
-          && StdI::intrindx[jintr][2] == StdI::intrindx[kintr][6]
-          && StdI::intrindx[jintr][3] == StdI::intrindx[kintr][7]
-          && StdI::intrindx[jintr][4] == StdI::intrindx[kintr][0]
-          && StdI::intrindx[jintr][5] == StdI::intrindx[kintr][1]
-          && StdI::intrindx[jintr][6] == StdI::intrindx[kintr][2]
-          && StdI::intrindx[jintr][7] == StdI::intrindx[kintr][3])
+        (StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(4)
+          && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(5)
+          && StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(kintr).at(6)
+          && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(7)
+          && StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(kintr).at(0)
+          && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(kintr).at(1)
+          && StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(2)
+          && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(3))
         ) {
-        StdI::intr[jintr] = StdI::intr[jintr] + StdI::intr[kintr];
-        StdI::intr[kintr] = 0.0;
+        StdI::intr.at(jintr) = StdI::intr.at(jintr) + StdI::intr.at(kintr);
+        StdI::intr.at(kintr) = 0.0;
       }
       else if (
-        (StdI::intrindx[jintr][0] == StdI::intrindx[kintr][4]
-          && StdI::intrindx[jintr][1] == StdI::intrindx[kintr][5]
-          && StdI::intrindx[jintr][2] == StdI::intrindx[kintr][2]
-          && StdI::intrindx[jintr][3] == StdI::intrindx[kintr][3]
-          && StdI::intrindx[jintr][4] == StdI::intrindx[kintr][0]
-          && StdI::intrindx[jintr][5] == StdI::intrindx[kintr][1]
-          && StdI::intrindx[jintr][6] == StdI::intrindx[kintr][6]
-          && StdI::intrindx[jintr][7] == StdI::intrindx[kintr][7])
+        (StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(4)
+          && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(5)
+          && StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(kintr).at(2)
+          && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(3)
+          && StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(kintr).at(0)
+          && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(kintr).at(1)
+          && StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(6)
+          && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(7))
         ||
-        (StdI::intrindx[jintr][0] == StdI::intrindx[kintr][0]
-          && StdI::intrindx[jintr][1] == StdI::intrindx[kintr][1]
-          && StdI::intrindx[jintr][2] == StdI::intrindx[kintr][6]
-          && StdI::intrindx[jintr][3] == StdI::intrindx[kintr][7]
-          && StdI::intrindx[jintr][4] == StdI::intrindx[kintr][4]
-          && StdI::intrindx[jintr][5] == StdI::intrindx[kintr][5]
-          && StdI::intrindx[jintr][6] == StdI::intrindx[kintr][2]
-          && StdI::intrindx[jintr][7] == StdI::intrindx[kintr][3])
+        (StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(0)
+          && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(1)
+          && StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(kintr).at(6)
+          && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(7)
+          && StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(kintr).at(4)
+          && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(kintr).at(5)
+          && StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(2)
+          && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(3))
         ) {
-        StdI::intr[jintr] = StdI::intr[jintr] - StdI::intr[kintr];
-        StdI::intr[kintr] = 0.0;
+        StdI::intr.at(jintr) = StdI::intr.at(jintr) - StdI::intr.at(kintr);
+        StdI::intr.at(kintr) = 0.0;
       }
     }/*for (kintr = jintr + 1; kintr < StdI::nintr; kintr++)*/
   }/*for (jintr = 0; jintr < StdI::nintr; jintr++)*/
 
-  for (jintr = 0; jintr < StdI::nintr; jintr++) {
-    for (kintr = jintr + 1; kintr < StdI::nintr; kintr++) {
-      if (StdI::intrindx[jintr][6] == StdI::intrindx[kintr][4]
-        && StdI::intrindx[jintr][7] == StdI::intrindx[kintr][5]
-        && StdI::intrindx[jintr][4] == StdI::intrindx[kintr][6]
-        && StdI::intrindx[jintr][5] == StdI::intrindx[kintr][7]
-        && StdI::intrindx[jintr][2] == StdI::intrindx[kintr][0]
-        && StdI::intrindx[jintr][3] == StdI::intrindx[kintr][1]
-        && StdI::intrindx[jintr][0] == StdI::intrindx[kintr][2]
-        && StdI::intrindx[jintr][1] == StdI::intrindx[kintr][3]
+  for (jintr = 0; jintr < StdI::intr.size(); jintr++) {
+    for (kintr = jintr + 1; kintr < StdI::intr.size(); kintr++) {
+      if (StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(4)
+        && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(5)
+        && StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(kintr).at(6)
+        && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(kintr).at(7)
+        && StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(kintr).at(0)
+        && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(1)
+        && StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(2)
+        && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(3)
         ) {
-        StdI::intrindx[kintr][0] = StdI::intrindx[jintr][6];
-        StdI::intrindx[kintr][1] = StdI::intrindx[jintr][7];
-        StdI::intrindx[kintr][2] = StdI::intrindx[jintr][4];
-        StdI::intrindx[kintr][3] = StdI::intrindx[jintr][5];
-        StdI::intrindx[kintr][4] = StdI::intrindx[jintr][2];
-        StdI::intrindx[kintr][5] = StdI::intrindx[jintr][3];
-        StdI::intrindx[kintr][6] = StdI::intrindx[jintr][0];
-        StdI::intrindx[kintr][7] = StdI::intrindx[jintr][1];
+        StdI::intrindx.at(kintr).at(0) = StdI::intrindx.at(jintr).at(6);
+        StdI::intrindx.at(kintr).at(1) = StdI::intrindx.at(jintr).at(7);
+        StdI::intrindx.at(kintr).at(2) = StdI::intrindx.at(jintr).at(4);
+        StdI::intrindx.at(kintr).at(3) = StdI::intrindx.at(jintr).at(5);
+        StdI::intrindx.at(kintr).at(4) = StdI::intrindx.at(jintr).at(2);
+        StdI::intrindx.at(kintr).at(5) = StdI::intrindx.at(jintr).at(3);
+        StdI::intrindx.at(kintr).at(6) = StdI::intrindx.at(jintr).at(0);
+        StdI::intrindx.at(kintr).at(7) = StdI::intrindx.at(jintr).at(1);
       }
       else if (
-        (StdI::intrindx[jintr][6] == StdI::intrindx[kintr][4]
-          && StdI::intrindx[jintr][7] == StdI::intrindx[kintr][5]
-          && StdI::intrindx[jintr][4] == StdI::intrindx[kintr][2]
-          && StdI::intrindx[jintr][5] == StdI::intrindx[kintr][3]
-          && StdI::intrindx[jintr][2] == StdI::intrindx[kintr][0]
-          && StdI::intrindx[jintr][3] == StdI::intrindx[kintr][1]
-          && StdI::intrindx[jintr][0] == StdI::intrindx[kintr][6]
-          && StdI::intrindx[jintr][1] == StdI::intrindx[kintr][7])
+        (StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(4)
+          && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(5)
+          && StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(kintr).at(2)
+          && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(kintr).at(3)
+          && StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(kintr).at(0)
+          && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(1)
+          && StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(6)
+          && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(7))
         ||
-        (StdI::intrindx[jintr][6] == StdI::intrindx[kintr][0]
-          && StdI::intrindx[jintr][7] == StdI::intrindx[kintr][1]
-          && StdI::intrindx[jintr][4] == StdI::intrindx[kintr][6]
-          && StdI::intrindx[jintr][5] == StdI::intrindx[kintr][7]
-          && StdI::intrindx[jintr][2] == StdI::intrindx[kintr][4]
-          && StdI::intrindx[jintr][3] == StdI::intrindx[kintr][5]
-          && StdI::intrindx[jintr][0] == StdI::intrindx[kintr][2]
-          && StdI::intrindx[jintr][1] == StdI::intrindx[kintr][3])
+        (StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(0)
+          && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(1)
+          && StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(kintr).at(6)
+          && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(kintr).at(7)
+          && StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(kintr).at(4)
+          && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(5)
+          && StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(2)
+          && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(3))
         ) {
-        StdI::intrindx[kintr][0] = StdI::intrindx[jintr][6];
-        StdI::intrindx[kintr][1] = StdI::intrindx[jintr][7];
-        StdI::intrindx[kintr][2] = StdI::intrindx[jintr][4];
-        StdI::intrindx[kintr][3] = StdI::intrindx[jintr][5];
-        StdI::intrindx[kintr][4] = StdI::intrindx[jintr][2];
-        StdI::intrindx[kintr][5] = StdI::intrindx[jintr][3];
-        StdI::intrindx[kintr][6] = StdI::intrindx[jintr][0];
-        StdI::intrindx[kintr][7] = StdI::intrindx[jintr][1];
+        StdI::intrindx.at(kintr).at(0) = StdI::intrindx.at(jintr).at(6);
+        StdI::intrindx.at(kintr).at(1) = StdI::intrindx.at(jintr).at(7);
+        StdI::intrindx.at(kintr).at(2) = StdI::intrindx.at(jintr).at(4);
+        StdI::intrindx.at(kintr).at(3) = StdI::intrindx.at(jintr).at(5);
+        StdI::intrindx.at(kintr).at(4) = StdI::intrindx.at(jintr).at(2);
+        StdI::intrindx.at(kintr).at(5) = StdI::intrindx.at(jintr).at(3);
+        StdI::intrindx.at(kintr).at(6) = StdI::intrindx.at(jintr).at(0);
+        StdI::intrindx.at(kintr).at(7) = StdI::intrindx.at(jintr).at(1);
 
-        StdI::intr[kintr] = -StdI::intr[kintr];
+        StdI::intr.at(kintr) = -StdI::intr.at(kintr);
       }
     }/*for (kintr = jintr + 1; kintr < StdI::nintr; kintr++)*/
   }/*for (jintr = 0; jintr < StdI::nintr; jintr++)*/
 
-  for (jintr = 0; jintr < StdI::nintr; jintr++) {
+  for (jintr = 0; jintr < StdI::intr.size(); jintr++) {
 
     if (
-      (StdI::intrindx[jintr][0] == StdI::intrindx[jintr][4]
-        && StdI::intrindx[jintr][1] == StdI::intrindx[jintr][5]) ||
-        (StdI::intrindx[jintr][2] == StdI::intrindx[jintr][6]
-          && StdI::intrindx[jintr][3] == StdI::intrindx[jintr][7])
+      (StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(jintr).at(4)
+        && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(jintr).at(5)) ||
+        (StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(jintr).at(6)
+          && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(jintr).at(7))
       ) {
 
       if (!(
-        (StdI::intrindx[jintr][0] == StdI::intrindx[jintr][2]
-          && StdI::intrindx[jintr][1] == StdI::intrindx[jintr][3])
+        (StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(jintr).at(2)
+          && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(jintr).at(3))
         ||
-        (StdI::intrindx[jintr][0] == StdI::intrindx[jintr][6]
-          && StdI::intrindx[jintr][1] == StdI::intrindx[jintr][7])
+        (StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(jintr).at(6)
+          && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(jintr).at(7))
         ||
-        (StdI::intrindx[jintr][4] == StdI::intrindx[jintr][2]
-          && StdI::intrindx[jintr][5] == StdI::intrindx[jintr][3])
+        (StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(jintr).at(2)
+          && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(jintr).at(3))
         ||
-        (StdI::intrindx[jintr][4] == StdI::intrindx[jintr][6]
-          && StdI::intrindx[jintr][5] == StdI::intrindx[jintr][7])
+        (StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(jintr).at(6)
+          && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(jintr).at(7))
         ))
-        StdI::intr[jintr] = 0.0;
+        StdI::intr.at(jintr) = 0.0;
     }
   }/*for (jintr = 0; jintr < StdI::nintr; jintr++)*/
 
   nintr0 = 0;
-  for (kintr = 0; kintr < StdI::nintr; kintr++) {
-    if (std::abs(StdI::intr[kintr]) > 0.000001) nintr0 = nintr0 + 1;
+  for (kintr = 0; kintr < StdI::intr.size(); kintr++) {
+    if (std::abs(StdI::intr.at(kintr)) > 0.000001) nintr0 += 1;
   }
   if (nintr0 == 0 || StdI::lBoost == 1) StdI::Lintr = 0;
   else StdI::Lintr = 1;
@@ -2575,14 +2569,14 @@ static void PrintInteractions()
 
     if (StdI::lBoost == 0) {
       nintr0 = 0;
-      for (kintr = 0; kintr < StdI::nintr; kintr++) {
-        if (std::abs(StdI::intr[kintr]) > 0.000001)
+      for (kintr = 0; kintr < StdI::intr.size(); kintr++) {
+        if (std::abs(StdI::intr.at(kintr)) > 0.000001)
           fprintf(fp, "%5d %5d %5d %5d %5d %5d %5d %5d %25.15f  %25.15f\n",
-            StdI::intrindx[kintr][0], StdI::intrindx[kintr][1],
-            StdI::intrindx[kintr][2], StdI::intrindx[kintr][3],
-            StdI::intrindx[kintr][4], StdI::intrindx[kintr][5],
-            StdI::intrindx[kintr][6], StdI::intrindx[kintr][7],
-            real(StdI::intr[kintr]), imag(StdI::intr[kintr]));
+            StdI::intrindx.at(kintr).at(0), StdI::intrindx.at(kintr).at(1),
+            StdI::intrindx.at(kintr).at(2), StdI::intrindx.at(kintr).at(3),
+            StdI::intrindx.at(kintr).at(4), StdI::intrindx.at(kintr).at(5),
+            StdI::intrindx.at(kintr).at(6), StdI::intrindx.at(kintr).at(7),
+            real(StdI::intr.at(kintr)), imag(StdI::intr.at(kintr)));
       }/*for (kintr = 0; kintr < StdI::nintr; kintr++)*/
     }/* if (StdI::lBoost == 0)*/
 
@@ -3049,20 +3043,6 @@ void StdFace_main(
   Print1Green();
   Print2Green();
   PrintNamelist();
-  /*
-  Finalize All
-  */
-  free(StdI::locspinflag);
-  for (ktrans = 0; ktrans < StdI::ntrans; ktrans++) {
-    free(StdI::transindx[ktrans]);
-  }
-  free(StdI::transindx);
-  free(StdI::trans);
-  for (kintr = 0; kintr < StdI::nintr; kintr++) {
-    free(StdI::intrindx[kintr]);
-  }
-  free(StdI::intrindx);
-  free(StdI::intr);
 
   fprintf(stdout, "\n######  Input files are generated.  ######\n\n");
 }/*void StdFace_main*/

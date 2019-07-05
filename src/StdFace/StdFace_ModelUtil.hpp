@@ -55,7 +55,6 @@ void StdFace_SetLabel(FILE *fp,
   int iW, int iL, int diW, int diL, int isiteUC, int jsiteUC,
   int *isite, int *jsite, int connect, std::complex<double> *Cphase, double *dR);
 void StdFace_PrintGeometry();
-void StdFace_MallocInteractions(int ntransMax, int nintrMax);
 void StdFace_FindSite(int iW, int iL, int iH, int diW, int diL, int diH,
   int isiteUC, int jsiteUC,
   int *isite, int *jsite, std::complex<double> *Cphase, double *dR);

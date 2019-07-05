@@ -18,11 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /**@file
 @brief Various utility for constructing models
 */
+#include "StdFace_vals.hpp"
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
 #include <complex>
-#include "StdFace_vals.hpp"
 #include <cstring>
 #ifdef __MPI
 #include <mpi.h>
@@ -61,12 +61,8 @@ void StdFace_trans(
   int jspin//!<[in] @f$\sigma'@f$ for @f$c_{j \sigma'}@f$
 )
 {
-  StdI::trans[StdI::ntrans] = trans0;
-  StdI::transindx[StdI::ntrans][0] = isite;
-  StdI::transindx[StdI::ntrans][1] = ispin;
-  StdI::transindx[StdI::ntrans][2] = jsite; 
-  StdI::transindx[StdI::ntrans][3] = jspin;
-  StdI::ntrans = StdI::ntrans + 1;
+  StdI::trans.push_back(trans0);
+  StdI::transindx.push_back(std::vector<int>{isite, ispin, jsite, jspin});
 }/*void StdFace_trans*/
 /**
 @brief Add Hopping for the both spin
@@ -96,19 +92,11 @@ void StdFace_Hopping(
       for (ii = 0; ii < 3; ii++) Cphase += /*2.0*StdI::pi */ StdI::At[it][ii] * dR[ii];
       coef = std::complex<double>(cos(Cphase), sin(-Cphase));
       for (ispin = 0; ispin < 2; ispin++) {
-        StdI::pump[it][StdI::npump[it]] = coef * trans0;
-        StdI::pumpindx[it][StdI::npump[it]][0] = isite;
-        StdI::pumpindx[it][StdI::npump[it]][1] = ispin;
-        StdI::pumpindx[it][StdI::npump[it]][2] = jsite;
-        StdI::pumpindx[it][StdI::npump[it]][3] = ispin;
-        StdI::npump[it] = StdI::npump[it] + 1;
+        StdI::pump.at(it).push_back(coef * trans0);
+        StdI::pumpindx.at(it).push_back(std::vector<int>{isite, ispin, jsite, ispin});
 
-        StdI::pump[it][StdI::npump[it]] = conj(coef * trans0);
-        StdI::pumpindx[it][StdI::npump[it]][0] = jsite;
-        StdI::pumpindx[it][StdI::npump[it]][1] = ispin;
-        StdI::pumpindx[it][StdI::npump[it]][2] = isite;
-        StdI::pumpindx[it][StdI::npump[it]][3] = ispin;
-        StdI::npump[it] = StdI::npump[it] + 1;
+        StdI::pump.at(it).push_back(conj(coef * trans0));
+        StdI::pumpindx.at(it).push_back(std::vector<int>{jsite, ispin, isite, ispin});
       }/*for (ispin = 0; ispin < 2; ispin++)*/
     }/*for (it = 0; it < StdI::Lanczos_max; it++)*/
   }/*if (strcmp(StdI::method, "timeevolution") == 0)*/
@@ -141,9 +129,8 @@ void StdFace_HubbardLocal(
   with the input argument and increase the number
   of them (StdI::NCintra).
   */
-  StdI::Cintra[StdI::NCintra] = U0;
-  StdI::CintraIndx[StdI::NCintra][0] = isite;
-  StdI::NCintra += 1;
+  StdI::Cintra.push_back(U0);
+  StdI::CintraIndx.push_back(isite);
 }/*void StdFace_HubbardLocal*/
 /**
 @brief Add longitudinal and transvars magnetic field to the list
@@ -208,12 +195,9 @@ void StdFace_intr(
   int spin4//!<[in] @f$sigma1_2@f$ for @f$c_{i_2 \sigma_2}@f$
 )
 {
-  StdI::intr[StdI::nintr] = intr0;
-  StdI::intrindx[StdI::nintr][0] = site1; StdI::intrindx[StdI::nintr][1] = spin1;
-  StdI::intrindx[StdI::nintr][2] = site2; StdI::intrindx[StdI::nintr][3] = spin2;
-  StdI::intrindx[StdI::nintr][4] = site3; StdI::intrindx[StdI::nintr][5] = spin3;
-  StdI::intrindx[StdI::nintr][6] = site4; StdI::intrindx[StdI::nintr][7] = spin4;
-  StdI::nintr = StdI::nintr + 1;
+  StdI::intr.push_back(intr0);
+  StdI::intrindx.push_back(std::vector<int>
+  {site1, spin1, site2, spin2, site3, spin3, site4, spin4});
 }/*void StdFace_intr*/
 /**
 @brief Treat J as a 3*3 matrix [(6S + 1)*(6S' + 1) interactions]
@@ -244,15 +228,11 @@ void StdFace_GeneralJ(
     */
     ZGeneral = 0;
 
-    StdI::Hund[StdI::NHund] = -0.5 * J[2][2];
-    StdI::HundIndx[StdI::NHund][0] = isite;
-    StdI::HundIndx[StdI::NHund][1] = jsite;
-    StdI::NHund += 1;
+    StdI::Hund.push_back(-0.5 * J[2][2]);
+    StdI::HundIndx.push_back(std::vector<int>{isite, jsite});
 
-    StdI::Cinter[StdI::NCinter] = -0.25 * J[2][2];
-    StdI::CinterIndx[StdI::NCinter][0] = isite;
-    StdI::CinterIndx[StdI::NCinter][1] = jsite;
-    StdI::NCinter += 1;
+    StdI::Cinter.push_back(-0.25 * J[2][2]);
+    StdI::CinterIndx.push_back(std::vector<int>{isite, jsite});
 
     if (fabs(J[0][1]) < 0.000001 && fabs(J[1][0]) < 0.000001
 #if defined(_mVMC)
@@ -271,18 +251,14 @@ void StdFace_GeneralJ(
       StdI::Ex[StdI::NEx] = - 0.25 * (J[0][0] + J[1][1]);
 #else
       if (strcmp(StdI::model, "kondo") == 0)
-        StdI::Ex[StdI::NEx] = -0.25 * (J[0][0] + J[1][1]);
+        StdI::Ex.push_back( -0.25 * (J[0][0] + J[1][1]));
       else
-        StdI::Ex[StdI::NEx] = 0.25 * (J[0][0] + J[1][1]);
+        StdI::Ex.push_back( 0.25 * (J[0][0] + J[1][1]));
 #endif
-      StdI::ExIndx[StdI::NEx][0] = isite;
-      StdI::ExIndx[StdI::NEx][1] = jsite;
-      StdI::NEx += 1;
+      StdI::ExIndx.push_back(std::vector<int>{ isite, jsite});
 
-      StdI::PairLift[StdI::NPairLift] = 0.25 * (J[0][0] - J[1][1]);
-      StdI::PLIndx[StdI::NPairLift][0] = isite;
-      StdI::PLIndx[StdI::NPairLift][1] = jsite;
-      StdI::NPairLift += 1;
+      StdI::PairLift.push_back(0.25 * (J[0][0] - J[1][1]));
+      StdI::PLIndx.push_back(std::vector<int>{isite, jsite});
     }/*if (fabs(J[0][1]) < 0.000001 && fabs(J[1][0]) < 0.000001)*/
   }
   /**@brief
@@ -397,10 +373,8 @@ void StdFace_Coulomb(
   int jsite//!<[in] j of n_j
 )
 {
-  StdI::Cinter[StdI::NCinter] = V;
-  StdI::CinterIndx[StdI::NCinter][0] = isite;
-  StdI::CinterIndx[StdI::NCinter][1] = jsite;
-  StdI::NCinter += 1;
+  StdI::Cinter.push_back(V);
+  StdI::CinterIndx.push_back(std::vector<int>{isite, jsite});
 }/*void StdFace_Coulomb*/
 /**
 @brief Print a valiable (real) read from the input file
@@ -1187,105 +1161,6 @@ void StdFace_PrintGeometry() {
   fflush(fp);
   fclose(fp);
 }/*void StdFace_PrintGeometry()*/
-/**
-@brief Malloc Arrays for interactions
-*/
-void StdFace_MallocInteractions(
-  int ntransMax,//!<[in] upper limit of the number of transfer
-  int nintrMax//!<[in] upper limit of the number of interaction
-) {
-  int ii;
-#if defined(_HPhi)
-  int it;
-#endif
-  /**@brief
-  (1) Transfer StdI::trans, StdI::transindx
-  */
-  StdI::transindx = (int **)malloc(sizeof(int*) * ntransMax);
-  StdI::trans = (std::complex<double> *)malloc(sizeof(std::complex<double>) * ntransMax);
-  for (ii = 0; ii < ntransMax; ii++) {
-    StdI::transindx[ii] = (int *)malloc(sizeof(int) * 4);
-  }
-  StdI::ntrans = 0;
-#if defined(_HPhi)
-  if (strcmp(StdI::method, "timeevolution") == 0 && StdI::PumpBody == 1) {
-    StdI::npump = (int *)malloc(sizeof(int) * StdI::Lanczos_max);
-    StdI::pumpindx = (int ***)malloc(sizeof(int**) * StdI::Lanczos_max);
-    StdI::pump = (std::complex<double> **)malloc(sizeof(std::complex<double>*) * StdI::Lanczos_max);
-    for (it = 0; it < StdI::Lanczos_max; it++) {
-      StdI::npump[it] = 0;
-      StdI::pumpindx[it] = (int **)malloc(sizeof(int*) * ntransMax);
-      StdI::pump[it] = (std::complex<double> *)malloc(sizeof(std::complex<double>) * ntransMax);
-      for (ii = 0; ii < ntransMax; ii++) {
-        StdI::pumpindx[it][ii] = (int *)malloc(sizeof(int) * 4);
-      }
-    }/*for (it = 0; it < StdI::Lanczos_max;)*/
-  }/*if (strcmp(StdI::method, "timeevolution") == 0*/
-#endif
-  /**@brief
-  (2) InterAll StdI::intr, StdI::intrindx
-  */
-  StdI::intrindx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI::intr = (std::complex<double> *)malloc(sizeof(std::complex<double>) * nintrMax);
-  for (ii = 0; ii < nintrMax; ii++) {
-    StdI::intrindx[ii] = (int *)malloc(sizeof(int) * 8);
-  }
-  StdI::nintr = 0;
-  /**@brief
-  (3) Coulomb intra StdI::Cintra, StdI::CintraIndx
-  */
-  StdI::CintraIndx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI::Cintra = (double *)malloc(sizeof(double) * nintrMax);
-  for (ii = 0; ii < nintrMax; ii++) {
-    StdI::CintraIndx[ii] = (int *)malloc(sizeof(int) * 1);
-  }
-  StdI::NCintra = 0;
-  /**@brief
-  (4) Coulomb inter StdI::Cinter, StdI::CinterIndx
-  */
-  StdI::CinterIndx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI::Cinter = (double *)malloc(sizeof(double) * nintrMax);
-  for (ii = 0; ii < nintrMax; ii++) {
-    StdI::CinterIndx[ii] = (int *)malloc(sizeof(int) * 2);
-  }
-  StdI::NCinter = 0;
-  /**@brief
-  (5) Hund StdI::Hund, StdI::HundIndx
-  */
-  StdI::HundIndx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI::Hund = (double *)malloc(sizeof(double) * nintrMax);
-  for (ii = 0; ii < nintrMax; ii++) {
-    StdI::HundIndx[ii] = (int *)malloc(sizeof(int) * 2);
-  }
-  StdI::NHund = 0;
-  /**@brief
-  (6) Excahnge StdI::Ex, StdI::ExIndx
-  */
-  StdI::ExIndx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI::Ex = (double *)malloc(sizeof(double) * nintrMax);
-  for (ii = 0; ii < nintrMax; ii++) {
-    StdI::ExIndx[ii] = (int *)malloc(sizeof(int) * 2);
-  }
-  StdI::NEx = 0;
-  /**@brief
-  (7) PairLift StdI::PairLift, StdI::PLIndx
-  */
-  StdI::PLIndx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI::PairLift = (double *)malloc(sizeof(double) * nintrMax);
-  for (ii = 0; ii < nintrMax; ii++) {
-    StdI::PLIndx[ii] = (int *)malloc(sizeof(int) * 2);
-  }
-  StdI::NPairLift = 0;
-  /**@brief
-  (7) PairHopp StdI::PairHopp, StdI::PHIndx
-  */
-  StdI::PHIndx = (int **)malloc(sizeof(int*) * nintrMax);
-  StdI::PairHopp = (double *)malloc(sizeof(double) * nintrMax);
-  for (ii = 0; ii < nintrMax; ii++) {
-    StdI::PHIndx[ii] = (int *)malloc(sizeof(int) * 2);
-  }
-  StdI::NPairHopp = 0;
-}/*void StdFace_MallocInteractions*/
 #if defined(_mVMC)
 /**
 @brief Define whether the specified site is in the unit cell or not.

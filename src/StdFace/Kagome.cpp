@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 void StdFace_Kagome()
 {
-  int isite, jsite, isiteUC, kCell, ntransMax, nintrMax;
+  int isite, jsite, isiteUC, kCell;
   int iL, iW;
   FILE *fp;
   std::complex<double> Cphase;
@@ -154,25 +154,6 @@ void StdFace_Kagome()
       StdI::locspinflag[iL] = StdI::S2;
       StdI::locspinflag[iL + StdI::nsite / 2] = 0;
     }
-  /**@brief
-  (4) Compute the upper limit of the number of Transfer & Interaction and malloc them.
-  */
-  if (strcmp(StdI::model, "spin") == 0 ) {//>>
-    ntransMax = StdI::nsite * (StdI::S2 + 1/*h*/ + 2 * StdI::S2/*Gamma*/);
-    nintrMax = StdI::NCell * (StdI::NsiteUC/*D*/ + 6/*J*/ + 6/*J'*/)
-      * (3 * StdI::S2 + 1) * (3 * StdI::S2 + 1);
-  }
-  else {
-    ntransMax = StdI::NCell * 2/*spin*/ * (2 * StdI::NsiteUC/*mu+h+Gamma*/ + 12/*t*/ + 12/*t'*/);
-    nintrMax = StdI::NCell * (StdI::NsiteUC/*U*/ + 4 * (6/*V*/ + 6/*V'*/));
-
-    if (strcmp(StdI::model, "kondo") == 0) {
-      ntransMax += StdI::nsite / 2 * (StdI::S2 + 1/*h*/ + 2 * StdI::S2/*Gamma*/);
-      nintrMax += StdI::nsite / 2 * (3 * StdI::S2 + 1) * (3 * StdI::S2 + 1);
-    }/*if (strcmp(StdI::model, "kondo") == 0)*/
-  }//<<
-  /**/
-  StdFace_MallocInteractions(ntransMax, nintrMax);
   /**@brief
   (5) Set Transfer & Interaction
   */

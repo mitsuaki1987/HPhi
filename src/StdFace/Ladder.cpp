@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 void StdFace_Ladder()
 {
   FILE *fp;
-  int isite, jsite, ntransMax, nintrMax;
+  int isite, jsite;
   int iL, isiteUC;
   std::complex<double> Cphase;
   double dR[3];
@@ -157,30 +157,6 @@ void StdFace_Ladder()
       StdI::locspinflag[isite] = StdI::S2;
       StdI::locspinflag[isite + StdI::nsite / 2] = 0;
     }
-  /**@brief
-  (4) Compute the upper limit of the number of Transfer & Interaction and malloc them.
-  */
-  if (strcmp(StdI::model, "spin") == 0 ) {
-    ntransMax = StdI::L * StdI::NsiteUC * (StdI::S2 + 1/*h*/ + 2 * StdI::S2/*Gamma*/);
-    nintrMax = StdI::L * StdI::NsiteUC * (1/*D*/ + 1/*J1*/ + 1/*J1'*/)
-      * (3 * StdI::S2 + 1) * (3 * StdI::S2 + 1)
-      + StdI::L * (StdI::NsiteUC - 1) * (1/*J0*/ + 1/*J2*/ + 1/*J2'*/)
-      * (3 * StdI::S2 + 1) * (3 * StdI::S2 + 1);
-  }/*if (strcmp(StdI::model, "spin") == 0 )*/
-  else {
-    ntransMax = StdI::L*StdI::NsiteUC * (2/*mu+h+Gamma*/ + 2/*t1*/ + 2/*t1'*/)
-      + StdI::L*(StdI::NsiteUC - 1) * (2/*t0*/ + 2/*t2*/ + 2/*t2'*/);
-    nintrMax = StdI::L*StdI::NsiteUC * 1/*U*/
-      + StdI::L*StdI::NsiteUC * 4 * (1/*V1*/ + 1/*V1'*/)
-      + StdI::L*(StdI::NsiteUC - 1) * 4 * (1/*V0*/ + 1/*V2*/ + 1/*V2'*/);
-
-    if (strcmp(StdI::model, "kondo") == 0) {
-      ntransMax += StdI::L * StdI::NsiteUC * (StdI::S2 + 1/*h*/ + 2 * StdI::S2/*Gamma*/);
-      nintrMax += StdI::nsite / 2 * (3 * 1 + 1) * (3 * StdI::S2 + 1);
-    }/*if (strcmp(StdI::model, "kondo") == 0)*/
-  }
-  /**/
-  StdFace_MallocInteractions(ntransMax, nintrMax);
   /**@brief
   (5) Set Transfer & Interaction
   */
