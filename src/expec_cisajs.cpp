@@ -82,7 +82,7 @@ int expec_cisajs_HubbardGC(
         else {
           is = Def::Tpow[2 * org_isite1 - 1];
         }
-        ibit = (long int)myrank & is;
+        ibit = (long int)MP::myrank & is;
         if (ibit == is) {
           zaxpy_long(i_max*nstate, tmp_OneGreen, &vec[1][0], &Xvec[1][0]);
         }
@@ -170,7 +170,7 @@ int expec_cisajs_Hubbard(
       org_isite2 > Def::Nsite) {
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {//diagonal
         is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
-        ibit = (long int)myrank & is;
+        ibit = (long int)MP::myrank & is;
         if (ibit == is) {
           zaxpy_long(i_max*nstate, tmp_OneGreen, &vec[1][0], &Xvec[1][0]);
         }
@@ -199,9 +199,9 @@ int expec_cisajs_Hubbard(
         is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
 
 #pragma omp parallel for default(none) private(num1, ibit, dmv) \
-shared(list_1, vec,Xvec,nstate,one,tmp_OneGreen, i_max, is)
+shared(List::c1, vec,Xvec,nstate,one,tmp_OneGreen, i_max, is)
         for (j = 1; j <= i_max; j++) {
-          ibit = list_1[j] & is;
+          ibit = List::c1[j] & is;
           num1 = ibit / is;
           dmv = (std::complex<double>)num1;
           zaxpy_(&nstate, &dmv, vec[j], &one, Xvec[j], &one);
@@ -255,7 +255,7 @@ int expec_cisajs_SpinHalf(
       if (org_isite1 == org_isite2) {
         if (org_isite1 > Def::Nsite) {
           is1_up = Def::Tpow[org_isite1 - 1];
-          ibit1 = X_SpinGC_CisAis((long int)myrank + 1, is1_up, org_sigma1);
+          ibit1 = X_SpinGC_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
           if (ibit1 != 0) {
             zaxpy_long(i_max*nstate, 1.0, &vec[1][0], &Xvec[1][0]);
           }
@@ -309,7 +309,7 @@ int expec_cisajs_SpinGeneral(
       if (org_isite1 > Def::Nsite) {
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
-          num1 = BitCheckGeneral((long int)myrank,
+          num1 = BitCheckGeneral((long int)MP::myrank,
                                            org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
           if (num1 != 0) {
             zaxpy_long(i_max*nstate, 1.0, &vec[1][0], &Xvec[1][0]);
@@ -320,9 +320,9 @@ int expec_cisajs_SpinGeneral(
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
 #pragma omp parallel for default(none) private(j, num1,dmv) \
-shared(i_max, org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow, vec,Xvec, list_1,nstate,one)
+shared(i_max, org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow, vec,Xvec, List::c1,nstate,one)
           for (j = 1; j <= i_max; j++) {
-            dmv = BitCheckGeneral(list_1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
+            dmv = BitCheckGeneral(List::c1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
             zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
           }
         }
@@ -652,7 +652,7 @@ int expec_cisajs(
   }
   else if (Def::St == 1) {
     TimeKeeper("%s_TimeKeeper.dat", "CG expec_cisajs finishes:     %s", "a");
-    fprintf(stdoutMPI, "%s", "  End  : Calculate one body Green functions.\n\n");
+    fprintf(MP::STDOUT, "%s", "  End  : Calculate one body Green functions.\n\n");
   }
   free_cd_2d_allocate(prod);
   return 0;

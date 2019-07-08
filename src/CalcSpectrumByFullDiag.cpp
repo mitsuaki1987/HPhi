@@ -33,7 +33,7 @@ G(z) = \sum_n \frac{|\langle n|c|0\rangle|^2}{z - E_n}
 @f]
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-int CalcSpectrumByFullDiag(
+void CalcSpectrumByFullDiag(
   int Nomega,//!<[in] Number of frequencies
   int NdcSpectrum,
   std::complex<double> **dcSpectrum,//!<[out] [Nomega] Spectrum
@@ -45,8 +45,8 @@ int CalcSpectrumByFullDiag(
   std::complex<double> **vR, **vL, vRv, vLv, *vLvvRv;
   /**
   <ul>
-  <li>Generate fully stored Hamiltonian. Because ::v0 & ::v1 are overwritten,
-  copy ::v0 into ::vg.</li>
+  <li>Generate fully stored Hamiltonian. Because Wave::v0 & Wave::v1 are overwritten,
+  copy ::Wave::v0 into ::vg.</li>
   */
   idim_max_int = (int)Check::idim_max;
   vR = cd_2d_allocate(idim_max_int, 1);
@@ -54,20 +54,20 @@ int CalcSpectrumByFullDiag(
   vLvvRv = cd_1d_allocate(idim_max_int);
 
   StartTimer(6301);
-  zclear((Check::idim_max + 1)*(Check::idim_max + 1), &v0[0][0]);
-  zclear((Check::idim_max + 1)*(Check::idim_max + 1), &v1[0][0]);
-  for (idim = 1; idim <= Check::idim_max; idim++) v1[idim][idim] = 1.0;
-  mltply(Check::idim_max, v0, v1);
+  zclear((Check::idim_max + 1)*(Check::idim_max + 1), &Wave::v0[0][0]);
+  zclear((Check::idim_max + 1)*(Check::idim_max + 1), &Wave::v1[0][0]);
+  for (idim = 1; idim <= Check::idim_max; idim++) Wave::v1[idim][idim] = 1.0;
+  mltply(Check::idim_max, Wave::v0, Wave::v1);
   StopTimer(6301);
   /**
-  <li>::v0 becomes eigenvalues in lapack_diag(), and
-   ::v1 becomes eigenvectors</li>
+  <li>::Wave::v0 becomes eigenvalues in lapack_diag(), and
+   ::Wave::v1 becomes eigenvectors</li>
   */
   StartTimer(6302);
   lapack_diag();
   StopTimer(6302);
   /**
-  <li>Compute @f$|\langle n|c|0\rangle|^2@f$ for all @f$n@f$ and store them into ::v1,
+  <li>Compute @f$|\langle n|c|0\rangle|^2@f$ for all @f$n@f$ and store them into ::Wave::v1,
   where @f$c|0\rangle@f$ is ::vg.</li>
   */
   zclear(Check::idim_max, &vR[1][0]);
@@ -80,8 +80,8 @@ int CalcSpectrumByFullDiag(
       vRv = 0.0;
       vLv = 0.0;
       for (jdim = 0; jdim < idim_max_int; jdim++) {
-        vRv += conj(v1[jdim][idim]) * vR[jdim][1];
-        vLv += conj(v1[jdim][idim]) * vL[jdim][1];
+        vRv += conj(Wave::v1[jdim][idim]) * vR[jdim][1];
+        vLv += conj(Wave::v1[jdim][idim]) * vL[jdim][1];
       }
       vLvvRv[idim] = conj(vLv) * vRv;
     }/*for (idim = 0; idim < idim_max_int; idim++)*/
@@ -106,6 +106,5 @@ int CalcSpectrumByFullDiag(
   free_cd_2d_allocate(vL);
   free_cd_2d_allocate(vR);
   free_cd_1d_allocate(vLvvRv);
-  return TRUE;
 }/*CalcSpectrumByFullDiag*/
 

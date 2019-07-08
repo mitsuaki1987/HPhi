@@ -52,14 +52,14 @@ int lapack_diag(
 
   for (i = 0; i < i_max; i++) {
     for (j = 0; j < i_max; j++) {
-      v0[i][j] = v0[i + 1][j];
+      Wave::v0[i][j] = Wave::v0[i + 1][j];
     }
   }
   xMsize = i_max;
   if (Def::iNGPU == 0) {
 #ifdef _SCALAPACK
-    if(nproc >1) {
-      fprintf(stdoutMPI, "Using SCALAPACK\n\n");
+    if(MP::nproc >1) {
+      fprintf(MP::STDOUT, "Using SCALAPACK\n\n");
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       MPI_Comm_size(MPI_COMM_WORLD, &size);
       MPI_Dims_create(size,2,dims);
@@ -89,23 +89,23 @@ int lapack_diag(
       ZHEEVall(xMsize, Ham, v0, v1);
     }
 #else
-    ZHEEVall(xMsize, v0, Phys::energy, v1);
+    ZHEEVall(xMsize, Wave::v0, Phys::energy, Wave::v1);
 #endif
   } else {
 #ifdef _MAGMA
-    if(myrank==0){
+    if(MP::myrank==0){
       if(diag_magma_cmp(xMsize, Ham, v0, v1, Def::iNGPU) != 0) {
         return -1;
       }
     }
 #else
-    fprintf(stdoutMPI, "Warning: MAGMA is not used in this calculation.");
-    ZHEEVall(xMsize, v0, Phys::energy, v1);
+    fprintf(MP::STDOUT, "Warning: MAGMA is not used in this calculation.");
+    ZHEEVall(xMsize, Wave::v0, Phys::energy, Wave::v1);
 #endif
   }
   for (i = 0; i < i_max; i++) {
     for (j = 0; j < i_max; j++) {
-      v0[i + 1][j] = v1[i][j];
+      Wave::v0[i + 1][j] = Wave::v1[i][j];
     }
   }
 

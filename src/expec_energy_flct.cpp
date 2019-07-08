@@ -49,12 +49,12 @@ int expec_energy_flct_HubbardGC(
   double **doublon_t, **doublon2_t, **num_t, **num2_t, **Sz_t, **Sz2_t;
 
   i_max = Check::idim_max;
-  doublon_t = d_2d_allocate(nthreads, nstate);
-  doublon2_t = d_2d_allocate(nthreads, nstate);
-  num_t = d_2d_allocate(nthreads, nstate);
-  num2_t = d_2d_allocate(nthreads, nstate);
-  Sz_t = d_2d_allocate(nthreads, nstate);
-  Sz2_t = d_2d_allocate(nthreads, nstate);
+  doublon_t = d_2d_allocate(MP::nthreads, nstate);
+  doublon2_t = d_2d_allocate(MP::nthreads, nstate);
+  num_t = d_2d_allocate(MP::nthreads, nstate);
+  num2_t = d_2d_allocate(MP::nthreads, nstate);
+  Sz_t = d_2d_allocate(MP::nthreads, nstate);
+  Sz2_t = d_2d_allocate(MP::nthreads, nstate);
   i_32 = 0xFFFFFFFF; //2^32 - 1
 
   //[s] for bit count
@@ -76,8 +76,8 @@ int expec_energy_flct_HubbardGC(
 #pragma omp parallel default(none) \
 private(j,tmp_v02,D,N,Sz,isite1,bit_up,bit_down,bit_D, \
         u_ibit1,l_ibit1, ibit_up,ibit_down,ibit_D,mythread,istate) \
-shared(tmp_v0,list_1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
-       i_max,myrank,is1_up_a,is1_down_a,is1_up_b,is1_down_b,i_32) \
+shared(tmp_v0,List::c1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
+       i_max,MP::myrank,is1_up_a,is1_down_a,is1_up_b,is1_down_b,i_32) \
 
   {
     tmp_v02 = d_1d_allocate(nstate);
@@ -94,13 +94,13 @@ shared(tmp_v0,list_1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
       bit_down = 0;
       bit_D = 0;
       // isite1 > Def::Nsite
-      ibit_up = (long int) myrank & is1_up_a;
+      ibit_up = (long int) MP::myrank & is1_up_a;
       u_ibit1 = ibit_up >> 32;
       l_ibit1 = ibit_up & i_32;
       bit_up += pop(u_ibit1);
       bit_up += pop(l_ibit1);
 
-      ibit_down = (long int) myrank & is1_down_a;
+      ibit_down = (long int) MP::myrank & is1_down_a;
       u_ibit1 = ibit_down >> 32;
       l_ibit1 = ibit_down & i_32;
       bit_down += pop(u_ibit1);
@@ -154,7 +154,7 @@ shared(tmp_v0,list_1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
     Phys::num2[istate] = 0.0;
     Phys::Sz[istate] = 0.0;
     Phys::Sz2[istate] = 0.0;
-    for (mythread = 0; mythread < nthreads; mythread++) {
+    for (mythread = 0; mythread < MP::nthreads; mythread++) {
       Phys::doublon[istate] += doublon_t[mythread][istate];
       Phys::doublon2[istate] += doublon2_t[mythread][istate];
       Phys::num[istate] += num_t[mythread][istate];
@@ -209,12 +209,12 @@ int expec_energy_flct_Hubbard(
 
   i_max = Check::idim_max;
 
-  doublon_t = d_2d_allocate(nthreads, nstate);
-  doublon2_t = d_2d_allocate(nthreads, nstate);
-  num_t = d_2d_allocate(nthreads, nstate);
-  num2_t = d_2d_allocate(nthreads, nstate);
-  Sz_t = d_2d_allocate(nthreads, nstate);
-  Sz2_t = d_2d_allocate(nthreads, nstate);
+  doublon_t = d_2d_allocate(MP::nthreads, nstate);
+  doublon2_t = d_2d_allocate(MP::nthreads, nstate);
+  num_t = d_2d_allocate(MP::nthreads, nstate);
+  num2_t = d_2d_allocate(MP::nthreads, nstate);
+  Sz_t = d_2d_allocate(MP::nthreads, nstate);
+  Sz2_t = d_2d_allocate(MP::nthreads, nstate);
   i_32 = 0xFFFFFFFF;
 
   //[s] for bit count
@@ -234,8 +234,8 @@ int expec_energy_flct_Hubbard(
   }
   //[e]
 #pragma omp parallel default(none) \
-shared(tmp_v0,list_1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
-       i_max, myrank,is1_up_a,is1_down_a,is1_up_b,is1_down_b,i_32) \
+shared(tmp_v0,List::c1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
+       i_max, MP::myrank,is1_up_a,is1_down_a,is1_up_b,is1_down_b,i_32) \
 private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
         l_ibit1,ibit_up,ibit_down,ibit_D,mythread,istate)
   {
@@ -252,15 +252,15 @@ private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
       bit_up = 0;
       bit_down = 0;
       bit_D = 0;
-      tmp_list_1 = list_1[j];
+      tmp_list_1 = List::c1[j];
       // isite1 > Def::Nsite
-      ibit_up = (long int) myrank & is1_up_a;
+      ibit_up = (long int) MP::myrank & is1_up_a;
       u_ibit1 = ibit_up >> 32;
       l_ibit1 = ibit_up & i_32;
       bit_up += pop(u_ibit1);
       bit_up += pop(l_ibit1);
 
-      ibit_down = (long int) myrank & is1_down_a;
+      ibit_down = (long int) MP::myrank & is1_down_a;
       u_ibit1 = ibit_down >> 32;
       l_ibit1 = ibit_down & i_32;
       bit_down += pop(u_ibit1);
@@ -314,7 +314,7 @@ private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
     Phys::num2[istate] = 0.0;
     Phys::Sz[istate] = 0.0;
     Phys::Sz2[istate] = 0.0;
-    for (mythread = 0; mythread < nthreads; mythread++) {
+    for (mythread = 0; mythread < MP::nthreads; mythread++) {
       Phys::doublon[istate] += doublon_t[mythread][istate];
       Phys::doublon2[istate] += doublon2_t[mythread][istate];
       Phys::num[istate] += num_t[mythread][istate];
@@ -369,8 +369,8 @@ int expec_energy_flct_HalfSpinGC(
 
   i_max = Check::idim_max;
 
-  Sz_t = d_2d_allocate(nthreads, nstate);
-  Sz2_t = d_2d_allocate(nthreads, nstate);
+  Sz_t = d_2d_allocate(MP::nthreads, nstate);
+  Sz2_t = d_2d_allocate(MP::nthreads, nstate);
   i_32 = 0xFFFFFFFF; //2^32 - 1
 
   //[s] for bit count
@@ -387,7 +387,7 @@ int expec_energy_flct_HalfSpinGC(
   //[e]
 #pragma omp parallel default(none) \
 private(j,Sz,ibit1,isite1,tmp_v02,u_ibit1,l_ibit1,mythread,istate) \
-shared(tmp_v0,Sz_t,Sz2_t,nstate, i_max,myrank,i_32,is1_up_a,is1_up_b,Def::NsiteMPI)
+shared(tmp_v0,Sz_t,Sz2_t,nstate, i_max,MP::myrank,i_32,is1_up_a,is1_up_b,Def::NsiteMPI)
 
   {
     tmp_v02 = d_1d_allocate(nstate);
@@ -403,7 +403,7 @@ shared(tmp_v0,Sz_t,Sz2_t,nstate, i_max,myrank,i_32,is1_up_a,is1_up_b,Def::NsiteM
       Sz = 0.0;
 
       // isite1 > Def::Nsite
-      ibit1 = (long int) myrank & is1_up_a;
+      ibit1 = (long int) MP::myrank & is1_up_a;
       u_ibit1 = ibit1 >> 32;
       l_ibit1 = ibit1 & i_32;
       Sz += pop(u_ibit1);
@@ -426,7 +426,7 @@ shared(tmp_v0,Sz_t,Sz2_t,nstate, i_max,myrank,i_32,is1_up_a,is1_up_b,Def::NsiteM
   for (istate = 0; istate < nstate; istate++) {
     Phys::Sz[istate] = 0.0;
     Phys::Sz2[istate] = 0.0;
-    for (mythread = 0; mythread < nthreads; mythread++) {
+    for (mythread = 0; mythread < MP::nthreads; mythread++) {
       Phys::Sz[istate] += Sz_t[mythread][istate];
       Phys::Sz2[istate] += Sz2_t[mythread][istate];
     }
@@ -467,13 +467,13 @@ int expec_energy_flct_GeneralSpinGC(
   long int i_max;
   double **Sz_t, **Sz2_t;
 
-  Sz_t = d_2d_allocate(nthreads, nstate);
-  Sz2_t = d_2d_allocate(nthreads, nstate);
+  Sz_t = d_2d_allocate(MP::nthreads, nstate);
+  Sz2_t = d_2d_allocate(MP::nthreads, nstate);
   i_max = Check::idim_max;
 
 #pragma omp parallel default(none) \
 private(j,istate,tmp_v02,Sz,isite1,mythread)\
-shared(i_max,nstate,myrank,Sz_t,Sz2_t,tmp_v0, \
+shared(i_max,nstate,MP::myrank,Sz_t,Sz2_t,tmp_v0, \
 Def::SiteToBit, Def::Tpow,Def::Nsite,Def::NsiteMPI)
   {
     tmp_v02 = d_1d_allocate(nstate);
@@ -490,7 +490,7 @@ Def::SiteToBit, Def::Tpow,Def::Nsite,Def::NsiteMPI)
       for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
         //prefactor 0.5 is added later.
         if (isite1 > Def::Nsite) {
-          Sz += GetLocal2Sz(isite1, myrank, Def::SiteToBit, Def::Tpow);
+          Sz += GetLocal2Sz(isite1, MP::myrank, Def::SiteToBit, Def::Tpow);
         }
         else {
           Sz += GetLocal2Sz(isite1, j - 1, Def::SiteToBit, Def::Tpow);
@@ -506,7 +506,7 @@ Def::SiteToBit, Def::Tpow,Def::Nsite,Def::NsiteMPI)
   for (istate = 0; istate < nstate; istate++) {
     Phys::Sz[istate] = 0.0;
     Phys::Sz2[istate] = 0.0;
-    for (mythread = 0; mythread < nthreads; mythread++) {
+    for (mythread = 0; mythread < MP::nthreads; mythread++) {
       Phys::Sz[istate] += Sz_t[mythread][istate];
       Phys::Sz2[istate] += Sz2_t[mythread][istate];
     }
@@ -552,8 +552,8 @@ int expec_energy_flct_HalfSpin(
   double **Sz_t, **Sz2_t;
 
   i_max = Check::idim_max;
-  Sz_t = d_2d_allocate(nthreads, nstate);
-  Sz2_t = d_2d_allocate(nthreads, nstate);
+  Sz_t = d_2d_allocate(MP::nthreads, nstate);
+  Sz2_t = d_2d_allocate(MP::nthreads, nstate);
   i_32 = 0xFFFFFFFF; //2^32 - 1
 
   //[s] for bit count
@@ -570,7 +570,7 @@ int expec_energy_flct_HalfSpin(
   //[e]
 #pragma omp parallel default(none) \
 private(j,Sz,ibit1,isite1,tmp_v02,u_ibit1,l_ibit1, tmp_list_1,mythread,istate) \
-shared(tmp_v0, list_1,Sz_t,Sz2_t,nstate,i_max,myrank,i_32,is1_up_a,is1_up_b,Def::NsiteMPI) 
+shared(tmp_v0, List::c1,Sz_t,Sz2_t,nstate,i_max,MP::myrank,i_32,is1_up_a,is1_up_b,Def::NsiteMPI) 
 
   {
     tmp_v02 = d_1d_allocate(nstate);
@@ -584,10 +584,10 @@ shared(tmp_v0, list_1,Sz_t,Sz2_t,nstate,i_max,myrank,i_32,is1_up_a,is1_up_b,Def:
       for (istate = 0; istate < nstate; istate++) \
         tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       Sz = 0.0;
-      tmp_list_1 = list_1[j];
+      tmp_list_1 = List::c1[j];
 
       // isite1 > Def::Nsite
-      ibit1 = (long int) myrank & is1_up_a;
+      ibit1 = (long int) MP::myrank & is1_up_a;
       u_ibit1 = ibit1 >> 32;
       l_ibit1 = ibit1 & i_32;
       Sz += pop(u_ibit1);
@@ -610,7 +610,7 @@ shared(tmp_v0, list_1,Sz_t,Sz2_t,nstate,i_max,myrank,i_32,is1_up_a,is1_up_b,Def:
   for (istate = 0; istate < nstate; istate++) {
     Phys::Sz[istate] = 0.0;
     Phys::Sz2[istate] = 0.0;
-    for (mythread = 0; mythread < nthreads; mythread++) {
+    for (mythread = 0; mythread < MP::nthreads; mythread++) {
       Phys::Sz[istate] += Sz_t[mythread][istate];
       Phys::Sz2[istate] += Sz2_t[mythread][istate];
     }
@@ -651,13 +651,13 @@ int expec_energy_flct_GeneralSpin(
   long int i_max, tmp_list1;
   double **Sz_t, **Sz2_t;
 
-  Sz_t = d_2d_allocate(nthreads, nstate);
-  Sz2_t = d_2d_allocate(nthreads, nstate);
+  Sz_t = d_2d_allocate(MP::nthreads, nstate);
+  Sz2_t = d_2d_allocate(MP::nthreads, nstate);
   i_max = Check::idim_max;
 
 #pragma omp parallel default(none) \
 private(j,Sz,isite1,tmp_v02, tmp_list1,istate,mythread) \
-shared(tmp_v0, list_1,Sz_t,Sz2_t,nstate,i_max,myrank, \
+shared(tmp_v0, List::c1,Sz_t,Sz2_t,nstate,i_max,MP::myrank, \
 Def::NsiteMPI, Def::SiteToBit, Def::Tpow,Def::Nsite)
   {
     tmp_v02 = d_1d_allocate(nstate);
@@ -671,11 +671,11 @@ Def::NsiteMPI, Def::SiteToBit, Def::Tpow,Def::Nsite)
       for (istate = 0; istate < nstate; istate++)
         tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       Sz = 0.0;
-      tmp_list1 = list_1[j];
+      tmp_list1 = List::c1[j];
       for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
         //prefactor 0.5 is added later.
         if (isite1 > Def::Nsite) {
-          Sz += GetLocal2Sz(isite1, myrank, Def::SiteToBit, Def::Tpow);
+          Sz += GetLocal2Sz(isite1, MP::myrank, Def::SiteToBit, Def::Tpow);
         }
         else {
           Sz += GetLocal2Sz(isite1, tmp_list1, Def::SiteToBit, Def::Tpow);
@@ -691,7 +691,7 @@ Def::NsiteMPI, Def::SiteToBit, Def::Tpow,Def::Nsite)
   for (istate = 0; istate < nstate; istate++) {
     Phys::Sz[istate] = 0.0;
     Phys::Sz2[istate] = 0.0;
-    for (mythread = 0; mythread < nthreads; mythread++) {
+    for (mythread = 0; mythread < MP::nthreads; mythread++) {
       Phys::Sz[istate] += Sz_t[mythread][istate];
       Phys::Sz2[istate] += Sz2_t[mythread][istate];
     }
@@ -740,8 +740,9 @@ int expec_energy_flct(
   case TPQCalc:
   case TimeEvolution:
 #ifdef _DEBUG
-    fprintf(stdoutMPI, "%s", "  Start: Calculate Energy.\n");
-    TimeKeeperWithStep("%s_TimeKeeper.dat", "step %d: Calculate energy begins:      %s", "a", step_i);
+    fprintf(MP::STDOUT, "%s", "  Start: Calculate Energy.\n");
+    TimeKeeperWithStep("%s_TimeKeeper.dat",
+      "step %d: Calculate energy begins:      %s", "a", Step::step_i);
 #endif
     break;
   case FullDiag:
@@ -853,8 +854,8 @@ shared(tmp_v1,tmp_v0,nstate,i_max)
   case TPQCalc:
   case TimeEvolution:
 #ifdef _DEBUG
-    fprintf(stdoutMPI, "%s", "  End  : Calculate Energy.\n");
-    TimeKeeperWithStep("%s_TimeKeeper.dat", "step %d: Calculate energy finishes:    %s", "a", step_i);
+    fprintf(MP::STDOUT, "%s", "  End  : Calculate Energy.\n");
+    TimeKeeperWithStep("%s_TimeKeeper.dat", "step %d: Calculate energy finishes:    %s", "a", Step::step_i);
 #endif
     break;
   default:

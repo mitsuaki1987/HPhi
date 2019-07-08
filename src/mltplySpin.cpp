@@ -353,10 +353,10 @@ int mltplyGeneralSpin(
         sigma4 = Def::InterAll_OffDiagonal[idx][7];
         tmp_V = Def::ParaInterAll_OffDiagonal[idx];
 #pragma omp parallel for default(none) private(j,tmp_sgn,off,tmp_off,tmp_off2) \
-shared(i_max,isite1,isite2,sigma1,sigma2,sigma3,sigma4,tmp_V,ihfbit, tmp_v0,tmp_v1,list_1,list_2_1,list_2_2, \
-one,nstate, Def::SiteToBit, Def::Tpow)
+shared(i_max,isite1,isite2,sigma1,sigma2,sigma3,sigma4,tmp_V,ihfbit, tmp_v0,tmp_v1, \
+List::c1,one,nstate, Def::SiteToBit, Def::Tpow)
         for (j = 1; j <= i_max; j++) {
-          tmp_sgn = GetOffCompGeneralSpin(list_1[j], isite2, sigma4, sigma3, &tmp_off, Def::SiteToBit, Def::Tpow);
+          tmp_sgn = GetOffCompGeneralSpin(List::c1[j], isite2, sigma4, sigma3, &tmp_off, Def::SiteToBit, Def::Tpow);
           if (tmp_sgn == TRUE) {
             tmp_sgn = GetOffCompGeneralSpin(tmp_off, isite1, sigma2, sigma1, &tmp_off2, Def::SiteToBit, Def::Tpow);
             if (tmp_sgn == TRUE) {

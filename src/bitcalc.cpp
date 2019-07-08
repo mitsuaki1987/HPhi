@@ -211,7 +211,7 @@ int GetOffComp(
   *_ioffComp+=_list_2_2[ib];
 */
 
-  //if(myrank==1)
+  //if(MP::myrank==1)
   //printf( "DEGBUG:_ibit=%ld, _list_2_1=%ld, _list_2_2=%ld\n", _ibit, _list_2_1[ia], _list_2_2[ib]);
 
   if(_list_2_1[ia]*_list_2_2[ib]==0){
@@ -293,11 +293,11 @@ int ConvertToList1GeneralSpin(
   long int ia, ib;
   ia=org_ibit%ihlfbit;
   ib=org_ibit/ihlfbit;
-  if(list_2_1[ia]*list_2_2[ib]==0){
+  if(List::c2_1[ia]*List::c2_2[ib]==0){
     *_ilist1Comp=0;
     return FALSE;
   }
-  *_ilist1Comp = list_2_1[ia] + list_2_2[ib] - 2;
+  *_ilist1Comp = List::c2_1[ia] + List::c2_2[ib] - 2;
   return TRUE;
 }
 

@@ -147,7 +147,7 @@ int expec_cisajscktalt_HubbardGC(
   long int Asum, Bsum, Adiff, Bdiff;
   long int tmp_off = 0;
   long int tmp_off_2 = 0;
-  std::complex<double> tmp_V = 1.0 + 0.0*I;
+  std::complex<double> tmp_V = 1.0;
   long int i_max;
 
   for (i = 0; i < Def::NCisAjtCkuAlvDC; i++) {
@@ -404,14 +404,14 @@ int expec_cisajscktalt_SpinHalf(
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
         is1_up = Def::Tpow[org_isite1 - 1];
         is2_up = Def::Tpow[org_isite3 - 1];
-        num1 = X_SpinGC_CisAis((long int)myrank + 1, is1_up, org_sigma1);
-        num2 = X_SpinGC_CisAis((long int)myrank + 1, is2_up, org_sigma3);
+        num1 = X_SpinGC_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
+        num2 = X_SpinGC_CisAis((long int)MP::myrank + 1, is2_up, org_sigma3);
         zaxpy_long(i_max*nstate, tmp_V * (std::complex<double>)(num1*num2),
           &vec[1][0], &Xvec[1][0]);
       }
       else if (org_isite1 == org_isite3 && org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) {
         is1_up = Def::Tpow[org_isite1 - 1];
-        num1 = X_SpinGC_CisAis((long int)myrank + 1, is1_up, org_sigma1);
+        num1 = X_SpinGC_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
         zaxpy_long(i_max*nstate, tmp_V * (std::complex<double>)num1, &vec[1][0], &Xvec[1][0]);
       }
       else if (org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) {//exchange
@@ -427,7 +427,7 @@ int expec_cisajscktalt_SpinHalf(
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
         is1_up = Def::Tpow[org_isite1 - 1];
         is2_up = Def::Tpow[org_isite3 - 1];
-        num2 = X_SpinGC_CisAis((long int)myrank + 1, is2_up, org_sigma3);
+        num2 = X_SpinGC_CisAis((long int)MP::myrank + 1, is2_up, org_sigma3);
 #pragma omp parallel for default(none)shared(vec,Xvec,nstate,one, \
 i_max, tmp_V, is1_up, org_sigma1, num2) private(j, num1,dmv)
         for (j = 1; j <= i_max; j++) {
@@ -458,7 +458,7 @@ shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4, tmp_V)
       }
       else if (org_isite1 == org_isite3 && org_sigma1 == org_sigma4 && org_sigma3 == org_sigma2) {
 #pragma omp parallel for default(none) private(j, dmv) \
-shared(i_max,isA_up,org_sigma1, tmp_V,vec, list_1,Xvec,nstate,one)
+shared(i_max,isA_up,org_sigma1, tmp_V,vec,Xvec,nstate,one)
         for (j = 1; j <= i_max; j++) {
           dmv = tmp_V * (std::complex<double>)X_Spin_CisAis(j, isA_up, org_sigma1);
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
@@ -563,12 +563,12 @@ int expec_cisajscktalt_SpinGeneral(
     else {
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
 #pragma omp parallel for default(none) private(j, num1) \
-shared(vec,list_1,Xvec,nstate,one, i_max,org_isite1, org_sigma1,org_isite3, org_sigma3, \
+shared(vec,List::c1,Xvec,nstate,one, i_max,org_isite1, org_sigma1,org_isite3, org_sigma3, \
 tmp_V, Def::SiteToBit, Def::Tpow)
         for (j = 1; j <= i_max; j++) {
-          num1 = BitCheckGeneral(list_1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
+          num1 = BitCheckGeneral(List::c1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
           if (num1 != FALSE) {
-            num1 = BitCheckGeneral(list_1[j], org_isite3, org_sigma3, Def::SiteToBit, Def::Tpow);
+            num1 = BitCheckGeneral(List::c1[j], org_isite3, org_sigma3, Def::SiteToBit, Def::Tpow);
             if (num1 != FALSE) {
               zaxpy_(&nstate, &tmp_V, &vec[j][0], &one, &Xvec[j][0], &one);
             }
@@ -578,9 +578,9 @@ tmp_V, Def::SiteToBit, Def::Tpow)
       else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
 #pragma omp parallel for default(none) private(list1_off,j,num1,tmp_off,tmp_off_2) \
 shared(i_max,org_isite1,org_isite3,org_sigma1,org_sigma2,org_sigma3,org_sigma4, \
-myrank,tmp_V,vec,list_1,Xvec,nstate,one,Def::SiteToBit, Def::Tpow, Check::sdim)
+MP::myrank,tmp_V,vec,List::c1,Xvec,nstate,one,Def::SiteToBit, Def::Tpow, Check::sdim)
         for (j = 1; j <= i_max; j++) {
-          num1 = GetOffCompGeneralSpin(list_1[j], org_isite3, org_sigma4, org_sigma3, &tmp_off, Def::SiteToBit, Def::Tpow);
+          num1 = GetOffCompGeneralSpin(List::c1[j], org_isite3, org_sigma4, org_sigma3, &tmp_off, Def::SiteToBit, Def::Tpow);
           if (num1 != FALSE) {
             num1 = GetOffCompGeneralSpin(tmp_off, org_isite1, org_sigma2, org_sigma1, &tmp_off_2,
               Def::SiteToBit, Def::Tpow);

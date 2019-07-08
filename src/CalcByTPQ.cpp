@@ -63,11 +63,11 @@ int CalcByTPQ(
 
   inv_temp = d_1d_allocate(NumAve);
 
-  step_spin = ExpecInterval;
+  Step::step_spin = ExpecInterval;
   Def::St = 0;
-  fprintf(stdoutMPI, "%s", "######  Start: TPQCalculation.  ######\n\n");
-  global_norm = d_1d_allocate(NumAve);
-  global_1st_norm = d_1d_allocate(NumAve);
+  fprintf(MP::STDOUT, "%s", "######  Start: TPQCalculation.  ######\n\n");
+  Step::global_norm = d_1d_allocate(NumAve);
+  Step::global_1st_norm = d_1d_allocate(NumAve);
 
   //for rand_i =0, rand_i<NumAve
   sdt_phys = (char**)malloc(sizeof(char*)*NumAve);
@@ -82,39 +82,39 @@ int CalcByTPQ(
     sprintf(sdt_flct[rand_i], "Flct_rand%d.dat", rand_i);
   }
   Ns = 1.0 * Def::NsiteMPI;
-  fprintf(stdoutMPI, "  rand_i / rand_max  =  %d / %d\n", 1, NumAve);
+  fprintf(MP::STDOUT, "  rand_i / rand_max  =  %d / %d\n", 1, NumAve);
   iret = 0;
 
   //Make or Read initial vector
   if (Def::iReStart == RESTART_INOUT || Def::iReStart == RESTART_IN) {
     StartTimer(3600);
-    TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector starts: %s\n", "a", 0, step_i);
-    fprintf(stdoutMPI, "%s", "  Start:  Input vector.\n");
-    sprintf(sdt, "tmpvec_set%d_rank_%d.dat", rand_i, myrank);
+    TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector starts: %s\n", "a", 0, Step::step_i);
+    fprintf(MP::STDOUT, "%s", "  Start:  Input vector.\n");
+    sprintf(sdt, "tmpvec_set%d_rank_%d.dat", rand_i, MP::myrank);
     childfopenALL(sdt, "rb", &fp);
     if (fp == NULL) {
       fprintf(stdout, "A file of Inputvector does not exist.\n");
       fprintf(stdout, "Start to calculate in normal procedure.\n");
       iret = 1;
     }
-    byte_size = fread(&step_i, sizeof(step_i), 1, fp);
+    byte_size = fread(&Step::step_i, sizeof(Step::step_i), 1, fp);
     byte_size = fread(&i_max, sizeof(long int), 1, fp);
     if (i_max != Check::idim_max) {
       fprintf(stderr, "Error: A file of Inputvector is incorrect.\n");
       exitMPI(-1);
     }
-    byte_size = fread(v0, sizeof(std::complex<double>), (Check::idim_max + 1)*NumAve, fp);
-    TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector finishes: %s\n", "a", 0, step_i);
-    fprintf(stdoutMPI, "%s", "  End  :  Input vector.\n");
+    byte_size = fread(Wave::v0, sizeof(std::complex<double>), (Check::idim_max + 1)*NumAve, fp);
+    TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector finishes: %s\n", "a", 0, Step::step_i);
+    fprintf(MP::STDOUT, "%s", "  End  :  Input vector.\n");
     fclose(fp);
     StopTimer(3600);
-    Def::istep = step_i;
+    Def::istep = Step::step_i;
     StartTimer(3200);
-    iret = expec_energy_flct(NumAve, v0, v1);
+    iret = expec_energy_flct(NumAve, Wave::v0, Wave::v1);
     StopTimer(3200);
     if (iret != 0) return -1;
 
-    step_iO = step_i - 1;
+    step_iO = Step::step_i - 1;
     if (byte_size == 0) printf("byte_size: %d \n", (int)byte_size);
   }/*if (Def::iReStart == RESTART_INOUT || Def::iReStart == RESTART_IN)*/
 
@@ -122,36 +122,36 @@ int CalcByTPQ(
     StartTimer(3600);
     for (rand_i = 0; rand_i < NumAve; rand_i++) {
       if (childfopenMPI(sdt_phys[rand_i], "w", &fp) == 0) {
-        fprintf(fp, "%s", " # inv_tmp, energy, phys_var, phys_doublon, phys_num, step_i\n");
+        fprintf(fp, "%s", " # inv_tmp, energy, phys_var, phys_doublon, phys_num, Step::step_i\n");
         fclose(fp);
       }
       else return -1;
       // for norm
       if (childfopenMPI(sdt_norm[rand_i], "w", &fp) == 0) {
-        fprintf(fp, "%s", " # inv_temp, global_norm, global_1st_norm, step_i \n");
+        fprintf(fp, "%s", " # inv_temp, Step::global_norm, Step::global_1st_norm, Step::step_i \n");
         fclose(fp); 
       }
       else return -1;
       // for fluctuations
       if (childfopenMPI(sdt_flct[rand_i], "w", &fp) == 0) {
-        fprintf(fp, "%s", " # inv_temp, N, N^2, D, D^2, Sz, Sz^2, step_i \n");
+        fprintf(fp, "%s", " # inv_temp, N, N^2, D, D^2, Sz, Sz^2, Step::step_i \n");
         fclose(fp);
       }
       else return -1;
     }
     StopTimer(3600);
 
-    step_i = 0;
+    Step::step_i = 0;
 
     StartTimer(3100);
     if (rand_i == 0) {
-      TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "set %d step %d:TPQ begins: %s", "w", 0, step_i);
+      TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "set %d step %d:TPQ begins: %s", "w", 0, Step::step_i);
     }
     else {
-      TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "set %d step %d:TPQ begins: %s", "a", 0, step_i);
+      TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "set %d step %d:TPQ begins: %s", "a", 0, Step::step_i);
     }
     /**@brief
-    Initialize v1 and compute v0 = H*v1
+    Initialize Wave::v1 and compute v0 = H*Wave::v1
     */
     FirstMultiply();
     StopTimer(3100);
@@ -160,40 +160,40 @@ int CalcByTPQ(
       if (childfopenMPI(sdt_phys[rand_i], "a", &fp) == 0) {
         fprintf(fp, "%.16lf  %.16lf %.16lf %.16lf %.16lf %d\n", 
           inv_temp[rand_i], Phys::energy[rand_i], Phys::var[rand_i],
-          Phys::doublon[rand_i], Phys::num[rand_i], step_i);
+          Phys::doublon[rand_i], Phys::num[rand_i], Step::step_i);
         fclose(fp);
       }
       else return -1;
       // for norm
       if (childfopenMPI(sdt_norm[rand_i], "a", &fp) == 0) {
         fprintf(fp, "%.16lf %.16lf %.16lf %d\n", 
-          inv_temp[rand_i], global_1st_norm[rand_i], global_1st_norm[rand_i], step_i);
+          inv_temp[rand_i], Step::global_1st_norm[rand_i], Step::global_1st_norm[rand_i], Step::step_i);
         fclose(fp);
       }
       else return -1;
     }
     /**@brief
-    Compute v1=0, and compute v0 = H*v1
+    Compute Wave::v1=0, and compute v0 = H*Wave::v1
     */
     StartTimer(3200);
-    iret = expec_energy_flct(NumAve, v0, v1); //v0 = H*v1
+    iret = expec_energy_flct(NumAve, Wave::v0, Wave::v1); //v0 = H*Wave::v1
     StopTimer(3200);
     if (iret != 0) return -1;
-    step_i += 1;
+    Step::step_i += 1;
     StartTimer(3600);
     for (rand_i = 0; rand_i < NumAve; rand_i++) {
-      inv_temp[rand_i] = (2.0 / Ns) / (LargeValue - Phys::energy[rand_i] / Ns);
+      inv_temp[rand_i] = (2.0 / Ns) / (Step::LargeValue - Phys::energy[rand_i] / Ns);
       if (childfopenMPI(sdt_phys[rand_i], "a", &fp) == 0) {
         fprintf(fp, "%.16lf  %.16lf %.16lf %.16lf %.16lf %d\n", 
           inv_temp[rand_i], Phys::energy[rand_i], Phys::var[rand_i],
-          Phys::doublon[rand_i], Phys::num[rand_i], step_i);
+          Phys::doublon[rand_i], Phys::num[rand_i], Step::step_i);
         fclose(fp);
       }
       else return -1;     
       // for norm
       if (childfopenMPI(sdt_norm[rand_i], "a", &fp) == 0) {
         fprintf(fp, "%.16lf %.16lf %.16lf %d\n", 
-          inv_temp[rand_i], global_norm[rand_i], global_1st_norm[rand_i], step_i);
+          inv_temp[rand_i], Step::global_norm[rand_i], Step::global_1st_norm[rand_i], Step::step_i);
         fclose(fp);
       }
       else return -1;
@@ -202,54 +202,54 @@ int CalcByTPQ(
         fprintf(fp, "%.16lf %.16lf %.16lf %.16lf %.16lf %.16lf %.16lf %d\n", 
           inv_temp[rand_i], Phys::num[rand_i], Phys::num2[rand_i], 
           Phys::doublon[rand_i], Phys::doublon2[rand_i], 
-          Phys::Sz[rand_i], Phys::Sz2[rand_i], step_i);
+          Phys::Sz[rand_i], Phys::Sz2[rand_i], Step::step_i);
         fclose(fp);
       }
       else return -1;      
     }/*for (rand_i = 0; rand_i < NumAve; rand_i++)*/
     StopTimer(3600);
-    step_i += 1;
-    Def::istep = step_i;
+    Step::step_i += 1;
+    Def::istep = Step::step_i;
     step_iO = 0;
   }/*if (Def::iReStart == RESTART_NOT || Def::iReStart == RESTART_OUT || iret == 1)*/
 
-  for (step_i = Def::istep; step_i < Def::Lanczos_max; step_i++) {
-    Def::istep = step_i;
-    if (step_i % ((Def::Lanczos_max - step_iO) / 10) == 0) {
-      fprintf(stdoutMPI, "    step_i/total_step = %d/%d \n", step_i, Def::Lanczos_max);
+  for (Step::step_i = Def::istep; Step::step_i < Def::Lanczos_max; Step::step_i++) {
+    Def::istep = Step::step_i;
+    if (Step::step_i % ((Def::Lanczos_max - step_iO) / 10) == 0) {
+      fprintf(MP::STDOUT, "    Step::step_i/total_step = %d/%d \n", Step::step_i, Def::Lanczos_max);
     }
-    Def::istep = step_i;
+    Def::istep = Step::step_i;
     StartTimer(3600);
-    TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "set %d step %d:TPQ begins: %s", "a", 0, step_i);
+    TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "set %d step %d:TPQ begins: %s", "a", 0, Step::step_i);
     StopTimer(3600);
     StartTimer(3500);
     Multiply();
     StopTimer(3500);
 
-    if (step_i%step_spin == 0) {
+    if (Step::step_i%Step::step_spin == 0) {
       StartTimer(3300);
-      iret = expec_cisajs(NumAve, v1, v0);
+      iret = expec_cisajs(NumAve, Wave::v1, Wave::v0);
       StopTimer(3300);
       if (iret != 0) return -1;
 
       StartTimer(3400);
-      iret = expec_cisajscktaltdc(NumAve, v1, v0);
+      iret = expec_cisajscktaltdc(NumAve, Wave::v1, Wave::v0);
       StopTimer(3400);
       if (iret != 0) return -1;
     }
 
     StartTimer(3200);
-    iret = expec_energy_flct(NumAve, v0, v1);
+    iret = expec_energy_flct(NumAve, Wave::v0, Wave::v1);
     StopTimer(3200);
     if (iret != 0) return -1;
 
     StartTimer(3600);
     for (rand_i = 0; rand_i < NumAve; rand_i++) {
-      inv_temp[rand_i] = (2.0*step_i / Ns) / (LargeValue - Phys::energy[rand_i] / Ns);
+      inv_temp[rand_i] = (2.0*Step::step_i / Ns) / (Step::LargeValue - Phys::energy[rand_i] / Ns);
       if (childfopenMPI(sdt_phys[rand_i], "a", &fp) == 0) {
         fprintf(fp, "%.16lf  %.16lf %.16lf %.16lf %.16lf %d\n", 
           inv_temp[rand_i], Phys::energy[rand_i], Phys::var[rand_i],
-          Phys::doublon[rand_i], Phys::num[rand_i], step_i);
+          Phys::doublon[rand_i], Phys::num[rand_i], Step::step_i);
         // for
         fclose(fp);
       }
@@ -257,7 +257,7 @@ int CalcByTPQ(
 
       if (childfopenMPI(sdt_norm[rand_i], "a", &fp) == 0) {
         fprintf(fp, "%.16lf %.16lf %.16lf %d\n", 
-          inv_temp[rand_i], global_norm[rand_i], global_1st_norm[rand_i], step_i);
+          inv_temp[rand_i], Step::global_norm[rand_i], Step::global_1st_norm[rand_i], Step::step_i);
         fclose(fp);
       }
       else return FALSE;
@@ -267,30 +267,30 @@ int CalcByTPQ(
         fprintf(fp, "%.16lf %.16lf %.16lf %.16lf %.16lf %.16lf %.16lf %d\n", 
           inv_temp[rand_i], Phys::num[rand_i], Phys::num2[rand_i],
           Phys::doublon[rand_i], Phys::doublon2[rand_i],
-          Phys::Sz[rand_i], Phys::Sz2[rand_i], step_i);
+          Phys::Sz[rand_i], Phys::Sz2[rand_i], Step::step_i);
         fclose(fp);
       }
       else return -1;
     }/*for (rand_i = 0; rand_i < NumAve; rand_i++)*/
     StopTimer(3600);
-  }/*for (step_i = Def::istep; step_i < Def::Lanczos_max; step_i++)*/
+  }/*for (Step::step_i = Def::istep; Step::step_i < Def::Lanczos_max; Step::step_i++)*/
 
   if (Def::iReStart == RESTART_OUT || Def::iReStart == RESTART_INOUT) {
-    TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector starts: %s\n", "a", 0, step_i);
-    fprintf(stdoutMPI, "%s", "  Start:  Output vector.\n");
-    sprintf(sdt, "tmpvec_set%d_rank_%d.dat", 0, myrank);
+    TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector starts: %s\n", "a", 0, Step::step_i);
+    fprintf(MP::STDOUT, "%s", "  Start:  Output vector.\n");
+    sprintf(sdt, "tmpvec_set%d_rank_%d.dat", 0, MP::myrank);
     if (childfopenALL(sdt, "wb", &fp) != 0) {
       exitMPI(-1);
     }
-    fwrite(&step_i, sizeof(step_i), 1, fp);
+    fwrite(&Step::step_i, sizeof(Step::step_i), 1, fp);
     fwrite(&Check::idim_max, sizeof(Check::idim_max), 1, fp);
-    fwrite(v1, sizeof(std::complex<double>), (Check::idim_max + 1)*NumAve, fp);
+    fwrite(Wave::v1, sizeof(std::complex<double>), (Check::idim_max + 1)*NumAve, fp);
     fclose(fp);
-    TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector finishes: %s\n", "a", 0, step_i);
-    fprintf(stdoutMPI, "%s", "  End  :  Output vector.\n");
+    TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector finishes: %s\n", "a", 0, Step::step_i);
+    fprintf(MP::STDOUT, "%s", "  End  :  Output vector.\n");
   }
 
-  fprintf(stdoutMPI, "%s", "######  End  : TPQCalculation.  ######\n\n");
+  fprintf(MP::STDOUT, "%s", "######  End  : TPQCalculation.  ######\n\n");
 
 
   free_d_1d_allocate(inv_temp);

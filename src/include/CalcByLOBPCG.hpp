@@ -13,5 +13,11 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+#include <complex>
 
-int CalcByLOBPCG();
+namespace CalcByLOBPCG {
+  int main();
+  int diag_ovrp(int nsub, std::complex<double>* hsub, std::complex<double>* ovlp, double* eig);
+  int LOBPCG_Main();
+  void Output_restart(std::complex<double>** wave);
+}

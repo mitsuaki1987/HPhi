@@ -36,36 +36,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
 @brief MPI initialization wrapper
-Process ID (::myrank), Number of processes (::nproc), 
-Number of threads (::nthreads), and pointer to the standard output
-(::stdoutMPI) are specified here.
+Process ID (::MP::myrank), Number of processes (::MP::nproc), 
+Number of threads (::MP::nthreads), and pointer to the standard output
+(::MP::STDOUT) are specified here.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 void InitializeMPI(int argc, char *argv[]){
 #ifdef __MPI
   int ierr;
   ierr = MPI_Init(&argc, &argv);
-  ierr = MPI_Comm_size(MPI_COMM_WORLD, &nproc);
-  ierr = MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+  ierr = MPI_Comm_size(MPI_COMM_WORLD, &MP::nproc);
+  ierr = MPI_Comm_rank(MPI_COMM_WORLD, &MP::myrank);
   if(ierr != 0) exitMPI(ierr);
 #else
-  nproc = 1;
-  myrank = 0;
+  MP::nproc = 1;
+  MP::myrank = 0;
 #endif
-  if (myrank == 0) stdoutMPI = stdout;
-  else stdoutMPI = fopen("/dev/null", "w");
+  if (MP::myrank == 0) MP::STDOUT = stdout;
+  else MP::STDOUT = fopen("/dev/null", "w");
   splash();
 
-#pragma omp parallel default(none) shared(nthreads)
+#pragma omp parallel default(none) shared(MP::nthreads)
 #pragma omp master
 #ifdef _OPENMP
-  nthreads = omp_get_num_threads();
+  MP::nthreads = omp_get_num_threads();
 #else
-  nthreads=1;
+  MP::nthreads=1;
 #endif
-  fprintf(stdoutMPI, "\n\n#####  Parallelization Info.  #####\n\n");
-  fprintf(stdoutMPI, "  OpenMP threads : %d\n", nthreads);
-  fprintf(stdoutMPI, "  MPI PEs : %d \n\n", nproc);
+  fprintf(MP::STDOUT, "\n\n#####  Parallelization Info.  #####\n\n");
+  fprintf(MP::STDOUT, "  OpenMP threads : %d\n", MP::nthreads);
+  fprintf(MP::STDOUT, "  MPI PEs : %d \n\n", MP::nproc);
 }/*void InitializeMPI(int argc, char *argv[])*/
 /**
 @brief MPI Finitialization wrapper
@@ -77,7 +77,7 @@ void FinalizeMPI(){
   ierr = MPI_Finalize();
   if (ierr != 0) fprintf(stderr, "\n  MPI_Finalize() = %d\n\n", ierr);
 #endif
-  if (myrank != 0) fclose(stdoutMPI);
+  if (MP::myrank != 0) fclose(MP::STDOUT);
 }
 /**
 @brief MPI Abortation wrapper
@@ -99,7 +99,7 @@ void exitMPI(
 }/*void exitMPI*/
 /**
 @brief MPI file I/O (open) wrapper.
-Only the root node (::myrank = 0) should be open/read/write (small) parameter files.
+Only the root node (::MP::myrank = 0) should be open/read/write (small) parameter files.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
 FILE* fopenMPI(
@@ -108,14 +108,14 @@ FILE* fopenMPI(
 ){
   FILE* fp;
 
-  if (myrank == 0) fp = fopen(FileName, mode);
+  if (MP::myrank == 0) fp = fopen(FileName, mode);
   else fp = fopen("/dev/null", "w");
 
   return fp;
 }/*FILE* fopenMPI*/
 /**
 @brief MPI file I/O (get a line, fgets) wrapper.
-Only the root node (::myrank = 0) reads and broadcast string.
+Only the root node (::MP::myrank = 0) reads and broadcast string.
 @return The same as that of fgets
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
@@ -129,7 +129,7 @@ char* fgetsMPI(
 
   ctmp = InputString;
   inull = 0;
-  if (myrank == 0) {
+  if (MP::myrank == 0) {
     ctmp = fgets(InputString, maxcount, fp);
     if (ctmp == NULL){
       inull = 1;
@@ -147,7 +147,7 @@ char* fgetsMPI(
   MPI_Bcast(InputString, maxcount, MPI_CHAR, 0, MPI_COMM_WORLD);
   MPI_Bcast(&inull, 1, MPI_INT, 0, MPI_COMM_WORLD);
 #endif
-  if (myrank != 0 && inull == 1) {
+  if (MP::myrank != 0 && inull == 1) {
     ctmp = NULL;
   }
 
@@ -373,7 +373,7 @@ std::complex<double> VecProdMPI(
   std::complex<double> prod, *prod_thr;
   int mythread;
 
-  prod_thr = cd_1d_allocate(nthreads);
+  prod_thr = cd_1d_allocate(MP::nthreads);
 #pragma omp parallel default(none) shared(v1,v2,ndim,prod,prod_thr) private(idim,mythread)
   {
 #ifdef _OPENMP
@@ -386,7 +386,7 @@ std::complex<double> VecProdMPI(
       prod_thr[mythread] += conj(v1[idim]) * v2[idim];
   }
   prod = 0.0;
-  for (mythread = 0; mythread < nthreads; mythread++)
+  for (mythread = 0; mythread < MP::nthreads; mythread++)
     prod += prod_thr[mythread];
   free_cd_1d_allocate(prod_thr);
 

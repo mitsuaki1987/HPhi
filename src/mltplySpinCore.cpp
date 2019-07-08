@@ -143,9 +143,9 @@ int X_Spin_CisAit(
 ) {
   long int list_1_j;
   long int off;
-  list_1_j = list_1_org[j];
+  list_1_j = List::c1_org[j];
   if (X_SpinGC_CisAit(list_1_j + 1, is1_spin, sigma2, &off) != 0) {
-    GetOffComp(list_2_1, list_2_2, off, Large::irght, Large::ilft, Large::ihfbit, tmp_off);
+    GetOffComp(List::c2_1, List::c2_2, off, Large::irght, Large::ilft, Large::ihfbit, tmp_off);
     return 1;
   }
   else {
@@ -166,7 +166,7 @@ int X_Spin_CisAis(
 ) {
   int A_ibit_tmp;
   // off = j
-  A_ibit_tmp = ((list_1[j] & is1_spin) / is1_spin) ^ (1 - sigma1);
+  A_ibit_tmp = ((List::c1[j] & is1_spin) / is1_spin) ^ (1 - sigma1);
   return A_ibit_tmp;
 }/*int X_Spin_CisAis*/
 /**
@@ -244,11 +244,11 @@ int X_child_exchange_spin_element(
   long int ihfbit = Large::ihfbit;
   long int ibit_tmp_A, ibit_tmp_B;
 
-  ibit_tmp_A = ((list_1[j] & isA_up) / isA_up);
-  ibit_tmp_B = ((list_1[j] & isB_up) / isB_up);
+  ibit_tmp_A = ((List::c1[j] & isA_up) / isA_up);
+  ibit_tmp_B = ((List::c1[j] & isB_up) / isB_up);
   if (ibit_tmp_A == sigmaA && ibit_tmp_B == sigmaB) {
-    iexchg = list_1[j] ^ (isA_up + isB_up);
-    GetOffComp(list_2_1, list_2_2, iexchg, irght, ilft, ihfbit, &off);
+    iexchg = List::c1[j] ^ (isA_up + isB_up);
+    GetOffComp(List::c2_1, List::c2_2, iexchg, irght, ilft, ihfbit, &off);
     *tmp_off = off;
     return 1;
   }
@@ -279,13 +279,13 @@ void child_exchange_spin_element(
   long int ibit_tmp;
   int one = 1;
 
-  ibit_tmp = (list_1[j] & is_up);
+  ibit_tmp = (List::c1[j] & is_up);
   if (ibit_tmp == 0 || ibit_tmp == is_up) {
     return;
   }
   else {
-    iexchg = list_1[j] ^ is_up;
-    GetOffComp(list_2_1, list_2_2, iexchg, irght, ilft, ihfbit, &off);
+    iexchg = List::c1[j] ^ is_up;
+    GetOffComp(List::c2_1, List::c2_2, iexchg, irght, ilft, ihfbit, &off);
     *tmp_off = off;
     zaxpy_(&nstate, &tmp_J, &tmp_v1[j][0], &one, &tmp_v0[off][0], &one);
   }

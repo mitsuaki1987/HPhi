@@ -45,7 +45,7 @@ int output_list(){
   char sdt[D_FileNameMax];
   int i,i_max;
   
-  fprintf(stdoutMPI, "%s", "  Start: output list. \n");
+  fprintf(MP::STDOUT, "%s", "  Start: output list. \n");
   i_max=Check::idim_max;
   switch(Def::iCalcModel){
   case HubbardGC:
@@ -65,10 +65,10 @@ int output_list(){
     return -1;
   }
   for(i=1;i<=i_max;i++){
-    fprintf(fp," %lu \n",list_1[i]);
+    fprintf(fp," %lu \n",List::c1[i]);
   }
   fclose(fp);
   
-  fprintf(stdoutMPI, "%s", "  End  : output list. \n");
+  fprintf(MP::STDOUT, "%s", "  End  : output list. \n");
   return 0;
 }

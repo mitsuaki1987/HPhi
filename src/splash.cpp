@@ -33,19 +33,19 @@ void splash(){
 #include "version_patch.hpp"
 ;
 
-  fprintf(stdoutMPI, "                                                                \n");
-  fprintf(stdoutMPI, "      ,ammmmmmmmmmmmmmb,,        Welcome to the                 \n");
-  fprintf(stdoutMPI, "    ,@@` dm          mb  ===m                                    \n");
-  fprintf(stdoutMPI, "  ,@@` d@@@@@@@@@@@@@@@@b Pm,    @@          @@        @@       \n");
-  fprintf(stdoutMPI, " d@  d@@@ @@@ @@@@@@ @@@@b ~@a   @@          @@     @@@@@@@@    \n");
-  fprintf(stdoutMPI, "d@   @@@@ ^^^ @@@@ m m @@@   @,  @@          @@   @@@  @@  @@@  \n");
-  fprintf(stdoutMPI, "@    @@@@_@@@_@@@@mm mm@@@   @|  @@mmmmmmmmmm@@  @@    @@    @@ \n");
-  fprintf(stdoutMPI, "P@    9@@@@@@@@@@@@@@@@@P    @~  @@@@@@@@@@@@@@  @@    @@    @@ \n");
-  fprintf(stdoutMPI, " @@      ~~9@@@@@@PPP~      @P   @@          @@   @@@  @@  @@@  \n");
-  fprintf(stdoutMPI, "  ~@@b      @@@@@@@      ,@@~    @@          @@     @@@@@@@@    \n");
-  fprintf(stdoutMPI, "    ~@@@m,,@@@@@@@@@  ,m@~`      @@          @@        @@       \n");
-  fprintf(stdoutMPI, "        ~~9@@@@@@@@@  ~                                         \n");
-  fprintf(stdoutMPI, "           9@P~~~9@P             Version %d.%d.%d    \n", ver_maj, ver_min, ver_pat);
-  fprintf(stdoutMPI, "                                                                \n");
+  fprintf(MP::STDOUT, "                                                                \n");
+  fprintf(MP::STDOUT, "      ,ammmmmmmmmmmmmmb,,        Welcome to the                 \n");
+  fprintf(MP::STDOUT, "    ,@@` dm          mb  ===m                                    \n");
+  fprintf(MP::STDOUT, "  ,@@` d@@@@@@@@@@@@@@@@b Pm,    @@          @@        @@       \n");
+  fprintf(MP::STDOUT, " d@  d@@@ @@@ @@@@@@ @@@@b ~@a   @@          @@     @@@@@@@@    \n");
+  fprintf(MP::STDOUT, "d@   @@@@ ^^^ @@@@ m m @@@   @,  @@          @@   @@@  @@  @@@  \n");
+  fprintf(MP::STDOUT, "@    @@@@_@@@_@@@@mm mm@@@   @|  @@mmmmmmmmmm@@  @@    @@    @@ \n");
+  fprintf(MP::STDOUT, "P@    9@@@@@@@@@@@@@@@@@P    @~  @@@@@@@@@@@@@@  @@    @@    @@ \n");
+  fprintf(MP::STDOUT, " @@      ~~9@@@@@@PPP~      @P   @@          @@   @@@  @@  @@@  \n");
+  fprintf(MP::STDOUT, "  ~@@b      @@@@@@@      ,@@~    @@          @@     @@@@@@@@    \n");
+  fprintf(MP::STDOUT, "    ~@@@m,,@@@@@@@@@  ,m@~`      @@          @@        @@       \n");
+  fprintf(MP::STDOUT, "        ~~9@@@@@@@@@  ~                                         \n");
+  fprintf(MP::STDOUT, "           9@P~~~9@P             Version %d.%d.%d    \n", ver_maj, ver_min, ver_pat);
+  fprintf(MP::STDOUT, "                                                                \n");
 
 }/*void splash()*/

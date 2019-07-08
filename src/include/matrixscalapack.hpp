@@ -44,7 +44,7 @@ void pzheev_(char *jobz, char *uplo, const long int *n, std::complex<double> *a,
              std::complex<double> *work, const long int *lwork, std::complex<double> *rwork, 
              const long int *lrwork, int *info );
 
-long int GetBlockSize(long int Msize, long int nproc);
+long int GetBlockSize(long int Msize, long int MP::nproc);
 long int GetPArrayIndex(long int i, long int np, long int nb);
 long int GetLocalIndex(long int i, long int np, long int nb);
 long int GetGlobalIndex(long int il, long int p, long int np, long int nb);

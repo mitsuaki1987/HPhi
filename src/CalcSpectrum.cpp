@@ -44,12 +44,12 @@
 #include "log.hpp"
 #include <iostream>
 
- ///
- /// \brief Set target frequencies
- /// Output: dcOmegaMax, dcOmegaMin
- ///
- /// \retval FALSE Fail to set frequencies.
- /// \retval TRUE Success to set frequencies.
+/**
+@brief Set target frequencies
+Output: dcOmegaMax, dcOmegaMin
+@retval FALSE Fail to set frequencies.
+retval TRUE Success to set frequencies.
+*/
 int SetOmega()
 {
   FILE *fp;
@@ -68,7 +68,7 @@ int SetOmega()
       sprintf(sdt, "%s_Lanczos_Step.dat", Def::CDataFileHead);
       childfopenMPI(sdt, "r", &fp);
       if (fp == NULL) {
-        fprintf(stdoutMPI, "Error: xx_Lanczos_Step.dat does not exist.\n");
+        fprintf(MP::STDOUT, "Error: xx_Lanczos_Step.dat does not exist.\n");
         return FALSE;
       }
       fgetsMPI(ctmp, 256, fp); //1st line is skipped
@@ -95,7 +95,7 @@ int SetOmega()
       }
       fclose(fp);
       if (istp < 4) {
-        fprintf(stdoutMPI, "Error: Lanczos step must be greater than 4 for using spectrum calculation.\n");
+        fprintf(MP::STDOUT, "Error: Lanczos step must be greater than 4 for using spectrum calculation.\n");
         return FALSE;
       }
     }/*if (Def::iCalcType == Lanczos || Def::iCalcType == FullDiag)*/
@@ -104,13 +104,13 @@ int SetOmega()
       sprintf(sdt, "%s_energy.dat", Def::CDataFileHead);
       childfopenMPI(sdt, "r", &fp);
       if (fp == NULL) {
-        fprintf(stdoutMPI, "Error: xx_energy.dat does not exist.\n");
+        fprintf(MP::STDOUT, "Error: xx_energy.dat does not exist.\n");
         return FALSE;
       }/*if (fp == NULL)*/
       fgetsMPI(ctmp, 256, fp); //1st line is skipped
       fgetsMPI(ctmp, 256, fp); //1st line is skipped
       sscanf(ctmp, "  Energy  %lf \n", &E1);
-      Emax = LargeValue;
+      Emax = Step::LargeValue;
     }/**/
     //Read Lanczos_Step
     if (Def::iFlgSpecOmegaMax == FALSE) {
@@ -124,8 +124,8 @@ int SetOmega()
   return TRUE;
 }
 ///
-/// \brief Make the lists for the excited state; list_1, list_2_1 and list_2_2 (for canonical ensemble).
-/// The original lists before the excitation are given by list_xxx_org
+/// \brief Make the lists for the excited state; List::c1, List::c2_1 and List::c2_2 (for canonical ensemble).
+/// The original lists before the excitation are given by List::cxxx_org
 /// Output: iCalcModel (From HubbardNConserved to Hubbard), {Ne, Nup, Ndown, Nsite, Total2Sz} (update for MPI)
 ///
 /// \param iFlgListModifed [out] If the list is modified due to the excitation, the value becomes TRUE(1), otherwise FALSE(0).
@@ -182,31 +182,31 @@ int MakeExcitedList(
 
   if (*iFlgListModifed == TRUE) {
     if (GetlistSize() == TRUE) {
-      list_1_org = li_1d_allocate(Check::idim_max + 1);
+      List::c1_org = li_1d_allocate(Check::idim_max + 1);
 #ifdef __MPI
       long int MAXidim_max;
       MAXidim_max = MaxMPI_li(Check::idim_max);
-      list_1buf_org = li_1d_allocate(MAXidim_max + 1);
+      List::c1buf_org = li_1d_allocate(MAXidim_max + 1);
 #endif // MPI
-      list_2_1_org = li_1d_allocate(Large::SizeOflist_2_1);
-      list_2_2_org = li_1d_allocate(Large::SizeOflist_2_2);
-      if (list_1_org == NULL
-        || list_2_1_org == NULL
-        || list_2_2_org == NULL
+      List::c2_1_org = li_1d_allocate(Large::SizeOflist_2_1);
+      List::c2_2_org = li_1d_allocate(Large::SizeOflist_2_2);
+      if (List::c1_org == NULL
+        || List::c2_1_org == NULL
+        || List::c2_2_org == NULL
         )
       {
         return -1;
       }
       for (j = 0; j < Large::SizeOflist_2_1; j++) {
-        list_2_1_org[j] = 0;
+        List::c2_1_org[j] = 0;
       }
       for (j = 0; j < Large::SizeOflist_2_2; j++) {
-        list_2_2_org[j] = 0;
+        List::c2_2_org[j] = 0;
       }
 
     }
 
-    if (sz(list_1_org, list_2_1_org, list_2_2_org) != 0) {
+    if (sz(List::c1_org, List::c2_1_org, List::c2_2_org) != 0) {
       return FALSE;
     }
 
@@ -307,11 +307,11 @@ int MakeExcitedList(
   }
 
   //set memory
-  if (setmem_large() != 0) {
-    fprintf(stdoutMPI, "Error: Fail for memory allocation.\n");
+  if (xsetmem::large() != 0) {
+    fprintf(MP::STDOUT, "Error: Fail for memory allocation.\n");
     exitMPI(-1);
   }
-  if (sz(list_1, list_2_1, list_2_2) != 0) {
+  if (sz(List::c1, List::c2_1, List::c2_2) != 0) {
     return FALSE;
   }
 #ifdef __MPI
@@ -319,8 +319,8 @@ int MakeExcitedList(
   MAXidim_max = MaxMPI_li(Check::idim_max);
   MAXidim_maxOrg = MaxMPI_li(Check::idim_maxOrg);
   if (MAXidim_max < MAXidim_maxOrg) {
-    free_cd_2d_allocate(v1buf);
-    v1buf = cd_2d_allocate(MAXidim_maxOrg + 1, 1);
+    free_cd_2d_allocate(Wave::v1buf);
+    Wave::v1buf = cd_2d_allocate(MAXidim_maxOrg + 1, 1);
   }
 #endif // MPI
 
@@ -331,24 +331,26 @@ int MakeExcitedList(
 #ifdef _DEBUG
   if (*iFlgListModifed == TRUE) {
     for (j = 1; j <= Check::idim_maxOrg; j++) {
-      fprintf(stdout, "Debug1: myrank=%d, list_1_org[ %ld] = %ld\n",
-        myrank, j, list_1_org[j] + myrank * Def::OrgTpow[2 * Def::NsiteMPI - 1]);
+      fprintf(stdout, "Debug1: MP::myrank=%d, list_1_org[ %ld] = %ld\n",
+        MP::myrank, j, List::c1_org[j] + MP::myrank * Def::OrgTpow[2 * Def::NsiteMPI - 1]);
     }
 
     for (j = 1; j <= Check::idim_max; j++) {
-      fprintf(stdout, "Debug2: myrank=%d, list_1[ %ld] = %ld\n", myrank, j, list_1[j] + myrank * 64);
+      fprintf(stdout, "Debug2: MP::myrank=%d, list_1[ %ld] = %ld\n", MP::myrank, j, List::c1[j] + MP::myrank * 64);
     }
   }
 #endif
   return TRUE;
 }
-/// \brief Output spectrum.
-/// \param Nomega [in] A total number of discrete frequencies.
-/// \param dcSpectrum [in] Array of spectrum.
-/// \param dcomega [in] Array of discrete frequencies.
-/// \retval FALSE Fail to open the output file.
-/// \retval TRUE Success to output the spectrum.
-int OutputSpectrum(
+/**
+\brief Output spectrum.
+\param Nomega [in] A total number of discrete frequencies.
+\param dcSpectrum [in] Array of spectrum.
+\param dcomega [in] Array of discrete frequencies.
+\retval FALSE Fail to open the output file.
+\retval TRUE Success to output the spectrum.
+*/
+void OutputSpectrum(
   int Nomega,
   int NdcSpectrum,
   std::complex<double> **dcSpectrum,
@@ -360,9 +362,7 @@ int OutputSpectrum(
 
   //output spectrum
   sprintf(sdt, "%s_DynamicalGreen.dat", Def::CDataFileHead);
-  if (childfopenMPI(sdt, "w", &fp) != 0) {
-    return FALSE;
-  }
+  if (childfopenMPI(sdt, "w", &fp) != 0) exitMPI(-1);
 
   for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
     for (iomega = 0; iomega < Nomega; iomega++) {
@@ -374,13 +374,14 @@ int OutputSpectrum(
   }
 
   fclose(fp);
-  return TRUE;
 }/*int OutputSpectrum*/
-/// \brief Parent function to calculate the excited state.
-/// \param tmp_v0 [out] Result @f$ v_0 = H_{ex} v_1 @f$.
-/// \param tmp_v1 [in] The original state before excitation  @f$ v_1 @f$.
-/// \retval FALSE Fail to calculate the excited state.
-/// \retval TRUE Success to calculate the excited state.
+/**
+\brief Parent function to calculate the excited state.
+\param tmp_v0 [out] Result @f$ v_0 = H_{ex} v_1 @f$.
+\param tmp_v1 [in] The original state before excitation  @f$ v_1 @f$.
+\retval FALSE Fail to calculate the excited state.
+\retval TRUE Success to calculate the excited state.
+*/
 int GetExcitedState
 (
   
@@ -416,7 +417,7 @@ int GetExcitedState
  * @author Youhei Yamaji (The University of Tokyo)
  *
  */
-int CalcSpectrum()
+void CalcSpectrum()
 {
   char sdt[D_FileNameMax];
   char *defname;
@@ -441,18 +442,18 @@ int CalcSpectrum()
     Def::Nup = Def::NupMPI;
     Def::Ndown = Def::NdownMPI;
     if (GetlistSize() == TRUE) {
-      free_li_1d_allocate(list_1);
-      free_li_1d_allocate(list_2_1);
-      free_li_1d_allocate(list_2_2);
+      free_li_1d_allocate(List::c1);
+      free_li_1d_allocate(List::c2_1);
+      free_li_1d_allocate(List::c2_2);
     }
-    free_d_1d_allocate(list_Diagonal);
-    free_cd_2d_allocate(v0);
+    free_d_1d_allocate(List::Diagonal);
+    free_cd_2d_allocate(Wave::v0);
     v1Org = cd_2d_allocate(Check::idim_max + 1, 1);
-    for (i = 1; i <= Check::idim_max; i++) v1Org[i][0] = v1[i][0];
-    free_cd_2d_allocate(v1);
+    for (i = 1; i <= Check::idim_max; i++) v1Org[i][0] = Wave::v1[i][0];
+    free_cd_2d_allocate(Wave::v1);
 #ifdef __MPI
-    free_li_1d_allocate(list_1buf);
-    free_cd_2d_allocate(v1buf);
+    free_li_1d_allocate(List::c1buf);
+    free_cd_2d_allocate(Wave::v1buf);
 #endif // MPI
     free_d_1d_allocate(Phys::num_down);
     free_d_1d_allocate(Phys::num_up);
@@ -474,7 +475,7 @@ int CalcSpectrum()
   }
   else {
     if (Def::iFlgSpecOmegaOrg == FALSE) {
-      Def::dcOmegaOrg = I * (Def::dcOmegaMax - Def::dcOmegaMin) / (double)Def::iNOmega;
+      Def::dcOmegaOrg = std::complex<double>(0.0,1.0) * (Def::dcOmegaMax - Def::dcOmegaMin) / (double)Def::iNOmega;
     }
   }
   /*
@@ -489,10 +490,10 @@ int CalcSpectrum()
      + (OmegaMax - OmegaMin) / (std::complex<double>)Nomega * (std::complex<double>)i;
   }
 
-  fprintf(stdoutMPI, "\nFrequency range:\n");
-  fprintf(stdoutMPI, "  Omega Max. : %15.5e %15.5e\n", real(OmegaMax), imag(OmegaMax));
-  fprintf(stdoutMPI, "  Omega Min. : %15.5e %15.5e\n", real(OmegaMin), imag(OmegaMin));
-  fprintf(stdoutMPI, "  Num. of Omega : %d\n", Nomega);
+  fprintf(MP::STDOUT, "\nFrequency range:\n");
+  fprintf(MP::STDOUT, "  Omega Max. : %15.5e %15.5e\n", real(OmegaMax), imag(OmegaMax));
+  fprintf(MP::STDOUT, "  Omega Min. : %15.5e %15.5e\n", real(OmegaMin), imag(OmegaMin));
+  fprintf(MP::STDOUT, "  Num. of Omega : %d\n", Nomega);
 
   if (Def::NNSingleExcitationOperator == 0) {
     if (Def::NNPairExcitationOperator == 0) {
@@ -514,7 +515,7 @@ int CalcSpectrum()
 
   //Make New Lists
   if (MakeExcitedList(&iFlagListModified) == FALSE) {
-    return FALSE;
+    exitMPI(-1);
   }
   Def::iFlagListModified = iFlagListModified;
 
@@ -526,26 +527,26 @@ int CalcSpectrum()
     v1Org = cd_2d_allocate(Check::idim_maxOrg + 1, 1);
     //input eigen vector
     StartTimer(6101);
-    fprintf(stdoutMPI, "  Start: An Eigenvector is inputted in CalcSpectrum.\n");
+    fprintf(MP::STDOUT, "  Start: An Eigenvector is inputted in CalcSpectrum.\n");
     TimeKeeper("%s_TimeKeeper.dat", "Reading an input Eigenvector starts: %s", "a");
     GetFileNameByKW(KWSpectrumVec, &defname);
     strcat(defname, "_rank_%d.dat");
-    //    sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", Def::CDataFileHead, Def::k_exct - 1, myrank);
-    sprintf(sdt, defname, myrank);
+    //    sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", Def::CDataFileHead, Def::k_exct - 1, MP::myrank);
+    sprintf(sdt, defname, MP::myrank);
     childfopenALL(sdt, "rb", &fp);
 
     if (fp == NULL) {
       fprintf(stderr, "Error: A file of Inputvector does not exist.\n");
-      return -1;
+      exitMPI(-1);
     }
 
     byte_size = fread(&i_stp, sizeof(i_stp), 1, fp);
     Large::itr = i_stp; //For TPQ
     byte_size = fread(&i_max, sizeof(i_max), 1, fp);
     if (i_max != Check::idim_maxOrg) {
-      fprintf(stderr, "Error: myrank=%d, i_max=%ld\n", myrank, i_max);
+      fprintf(stderr, "Error: MP::myrank=%d, i_max=%ld\n", MP::myrank, i_max);
       fprintf(stderr, "Error: A file of Input vector is incorrect.\n");
-      return -1;
+      exitMPI(-1);
     }
     byte_size = fread(&v1Org[0][0], sizeof(std::complex<double>), i_max + 1, fp);
     fclose(fp);
@@ -556,35 +557,24 @@ int CalcSpectrum()
 
   diagonalcalc();
 
-  int iret = TRUE;
-  fprintf(stdoutMPI, "  Start: Calculating a spectrum.\n\n");
+  fprintf(MP::STDOUT, "  Start: Calculating a spectrum.\n\n");
   TimeKeeper("%s_TimeKeeper.dat", "Calculating a spectrum starts: %s", "a");
   StartTimer(6200);
   switch (Def::iCalcType) {
   case CG:
-    iret = CalcSpectrumByBiCG(v0, v1, Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
-    if (iret != TRUE) {
-      return FALSE;
-    }
+    CalcSpectrumByBiCG(Wave::v0, Wave::v1, Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
     break;
   case FullDiag:
-    iret = CalcSpectrumByFullDiag(Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
+    CalcSpectrumByFullDiag(Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
     break;
   default:
     break;
   }
   StopTimer(6200);
 
-  if (iret != TRUE) {
-    fprintf(stderr, "  Error: The selected calculation type is not supported for calculating spectrum mode.\n");
-    return FALSE;
-  }
-
-  fprintf(stdoutMPI, "  End:  Calculating a spectrum.\n\n");
+  fprintf(MP::STDOUT, "  End:  Calculating a spectrum.\n\n");
   TimeKeeper("%s_TimeKeeper.dat", "Calculating a spectrum finishes: %s", "a");
-  iret = OutputSpectrum(Nomega, NdcSpectrum, dcSpectrum, dcomega);
+  OutputSpectrum(Nomega, NdcSpectrum, dcSpectrum, dcomega);
   free_cd_2d_allocate(dcSpectrum);
   free_cd_1d_allocate(dcomega);
-  return TRUE;
-
 }/*int CalcSpectrum*/

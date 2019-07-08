@@ -58,7 +58,7 @@ int output() {
     fclose(fp);
   }
   else{
-    fprintf(stdoutMPI, "Error: output function is used only for FullDiag mode.");
+    fprintf(MP::STDOUT, "Error: output function is used only for FullDiag mode.");
     return -1;
   }
 
@@ -79,10 +79,11 @@ int outputHam(){
   FILE *fp;
   char sdt[D_FileNameMax];
 
-#pragma omp parallel for default(none) reduction(+:ihermite) private(i, j) shared(v0,imax)
+#pragma omp parallel for default(none) reduction(+:ihermite) private(i, j) \
+shared(Wave::v0,imax)
   for (i = 1; i <= imax; i++) {
     for (j = 1; j <= i; j++) {
-      if (abs(v0[i][j]) > 1.0e-13) {
+      if (abs(Wave::v0[i][j]) > 1.0e-13) {
         ihermite += 1;
       }
     }
@@ -97,8 +98,8 @@ int outputHam(){
   fprintf(fp, "%ld %ld %ld \n", imax, imax, ihermite);
   for (i=1; i<=imax; i++){
     for (j=1; j<=i; j++){
-      if(abs(v0[i][j])>1.0e-13){
-        fprintf(fp, "%ld %ld %lf %lf\n",i,j,real(v0[i][j]),imag(v0[i][j]));
+      if(abs(Wave::v0[i][j])>1.0e-13){
+        fprintf(fp, "%ld %ld %lf %lf\n",i,j,real(Wave::v0[i][j]),imag(Wave::v0[i][j]));
       }
     }
   }

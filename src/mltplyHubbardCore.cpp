@@ -304,14 +304,14 @@ void CisAjt(
   std::complex<double> dmv;
   int one = 1;
 
-  ibit_tmp_1 = (list_1[j] & is1_spin);
-  ibit_tmp_2 = (list_1[j] & is2_spin);
+  ibit_tmp_1 = (List::c1[j] & is1_spin);
+  ibit_tmp_2 = (List::c1[j] & is2_spin);
   if (ibit_tmp_1 == 0 && ibit_tmp_2 != 0) {
-    bit = list_1[j] & diff_spin;
+    bit = List::c1[j] & diff_spin;
     SgnBit(bit, &sgn); // Fermion sign
-    iexchg = list_1[j] ^ sum_spin;
+    iexchg = List::c1[j] ^ sum_spin;
 
-    if(GetOffComp(list_2_1, list_2_2, iexchg, Large::irght, Large::ilft, Large::ihfbit, &off)==FALSE){
+    if(GetOffComp(List::c2_1, List::c2_2, iexchg, Large::irght, Large::ilft, Large::ihfbit, &off)==FALSE){
       return;
     }
     dmv = (std::complex<double>)sgn * tmp_V;
@@ -368,7 +368,7 @@ void GC_CisAjt(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int X_CisAjt(
-  long int list_1_j,//!<[in] Similer to ::list_1 ?
+  long int list_1_j,//!<[in] Similer to ::List::c1 ?
   //!<[in]
   long int is1_spin,//!<[in] Mask for occupation of (is)
   long int is2_spin,//!<[in] Mask for occupation of (jt)
@@ -381,7 +381,7 @@ int X_CisAjt(
 
   sgn = X_GC_CisAjt(list_1_j, is1_spin, is2_spin, sum_spin, diff_spin, tmp_off);
   if (sgn != 0) {
-    if(GetOffComp(list_2_1, list_2_2, *tmp_off, Large::irght, Large::ilft, Large::ihfbit, &off)!=TRUE){
+    if(GetOffComp(List::c2_1, List::c2_2, *tmp_off, Large::irght, Large::ilft, Large::ihfbit, &off)!=TRUE){
       *tmp_off = 0;
       return 0;
     }
@@ -400,7 +400,7 @@ int X_CisAjt(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int X_GC_CisAjt(
-  long int list_1_j,//!<[in] ::list_1 ?
+  long int list_1_j,//!<[in] ::List::c1 ?
   long int is1_spin,//!<[in] Mask for occupation of (is)
   long int is2_spin,//!<[in] Mask for occupation of (jt)
   long int sum_spin,//!<[in] Mask for hopping
@@ -459,15 +459,15 @@ void child_exchange_element(
   std::complex<double> tmp_J = Large::tmp_J;
   int one = 1;
 
-  ibit1_up = list_1[j] & is1_up;
-  ibit2_up = list_1[j] & is2_up;
-  ibit1_down = list_1[j] & is1_down;
-  ibit2_down = list_1[j] & is2_down;
+  ibit1_up = List::c1[j] & is1_up;
+  ibit2_up = List::c1[j] & is2_up;
+  ibit1_down = List::c1[j] & is1_down;
+  ibit2_down = List::c1[j] & is2_down;
 
   if (ibit1_up == 0 && ibit1_down != 0 && ibit2_up != 0 && ibit2_down == 0) {
-    iexchg = list_1[j] - (is1_down + is2_up);
+    iexchg = List::c1[j] - (is1_down + is2_up);
     iexchg += (is1_up + is2_down);
-    if(GetOffComp(list_2_1, list_2_2, iexchg, irght, ilft, ihfbit, &off)!=TRUE){
+    if(GetOffComp(List::c2_1, List::c2_2, iexchg, irght, ilft, ihfbit, &off)!=TRUE){
       return;
     }
     *tmp_off = off;
@@ -475,9 +475,9 @@ void child_exchange_element(
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[off][0], &one);
   }
   else if (ibit1_up != 0 && ibit1_down == 0 && ibit2_up == 0 && ibit2_down != 0) {
-    iexchg = list_1[j] - (is1_up + is2_down);
+    iexchg = List::c1[j] - (is1_up + is2_down);
     iexchg += (is1_down + is2_up);
-    if(GetOffComp(list_2_1, list_2_2, iexchg, irght, ilft, ihfbit, &off)!=TRUE){
+    if(GetOffComp(List::c2_1, List::c2_2, iexchg, irght, ilft, ihfbit, &off)!=TRUE){
       return;
     }
     *tmp_off = off;
@@ -511,16 +511,16 @@ void child_pairhopp_element(
   std::complex<double> tmp_J = Large::tmp_J;
   int one = 1;
 
-  ibit1_up = list_1[j] & is1_up;
-  ibit2_up = list_1[j] & is2_up;
-  ibit1_down = list_1[j] & is1_down;
-  ibit2_down = list_1[j] & is2_down;
+  ibit1_up = List::c1[j] & is1_up;
+  ibit2_up = List::c1[j] & is2_up;
+  ibit1_down = List::c1[j] & is1_down;
+  ibit2_down = List::c1[j] & is2_down;
 
   if (ibit1_up == 0 && ibit1_down == 0 && ibit2_up != 0 && ibit2_down != 0) {
-    iexchg = list_1[j] - (is2_up + is2_down);
+    iexchg = List::c1[j] - (is2_up + is2_down);
     iexchg += (is1_up + is1_down);
 
-    if(GetOffComp(list_2_1, list_2_2, iexchg, irght, ilft, ihfbit, &off)!=TRUE){
+    if(GetOffComp(List::c2_1, List::c2_2, iexchg, irght, ilft, ihfbit, &off)!=TRUE){
       return;
     }
     *tmp_off = off;
@@ -636,8 +636,8 @@ void child_CisAisCisAis_element(
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = X_CisAis(list_1[j], isite3);
-  tmp_sgn *= X_CisAis(list_1[j], isite1);
+  tmp_sgn = X_CisAis(List::c1[j], isite3);
+  tmp_sgn *= X_CisAis(List::c1[j], isite1);
   dmv = tmp_V * (std::complex<double>)tmp_sgn;
   zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
 }/*std::complex<double> child_CisAisCisAis_element*/
@@ -663,9 +663,9 @@ void child_CisAisCjtAku_element(
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = X_CisAjt(list_1[j], isite3, isite4, Bsum, Bdiff, tmp_off);
+  tmp_sgn = X_CisAjt(List::c1[j], isite3, isite4, Bsum, Bdiff, tmp_off);
   if (tmp_sgn != 0) {
-    tmp_sgn *= X_CisAis(list_1[*tmp_off], isite1);
+    tmp_sgn *= X_CisAis(List::c1[*tmp_off], isite1);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off][0], &one);
@@ -694,9 +694,9 @@ void child_CisAjtCkuAku_element(
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = X_CisAis(list_1[j], isite3);
+  tmp_sgn = X_CisAis(List::c1[j], isite3);
   if (tmp_sgn != 0) {
-    tmp_sgn *= X_CisAjt(list_1[j], isite1, isite2, Asum, Adiff, tmp_off);
+    tmp_sgn *= X_CisAjt(List::c1[j], isite1, isite2, Asum, Adiff, tmp_off);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off][0], &one);
@@ -730,7 +730,7 @@ void child_CisAjtCkuAlv_element(
   int one = 1;
 
   std::complex<double> dmv;
-  tmp_sgn = X_GC_CisAjt(list_1[j], isite3, isite4, Bsum, Bdiff, &tmp_off_1);
+  tmp_sgn = X_GC_CisAjt(List::c1[j], isite3, isite4, Bsum, Bdiff, &tmp_off_1);
 
   if (tmp_sgn != 0) {
     tmp_sgn *= X_CisAjt(tmp_off_1, isite1, isite2, Asum, Adiff, tmp_off_2);
@@ -897,7 +897,7 @@ void GC_Cis(
     SgnBit(bit, &sgn); // Fermion sign
     ipsgn = 1;
 #ifdef __MPI
-    SgnBit(myrank, &ipsgn); // Fermion sign
+    SgnBit(MP::myrank, &ipsgn); // Fermion sign
 #endif
     list_1_off = list_1_j | is1_spin; // OR
     *tmp_off = list_1_off;
@@ -943,7 +943,7 @@ void GC_Ajt(
     SgnBit(bit, &sgn); // Fermion sign
     ipsgn = 1;
 #ifdef __MPI
-    SgnBit(myrank, &ipsgn); // Fermion sign
+    SgnBit(MP::myrank, &ipsgn); // Fermion sign
 #endif
     list_1_off = list_1_j ^ is1_spin;
     *tmp_off = list_1_off;
@@ -966,9 +966,9 @@ int X_Cis(
   long int j,//!<[in] Index of initial wavefunction
   long int is1_spin,//!<[in] Bit mask
   long int *tmp_off,//!<[out] Index of final wavefunction
-  long int *list_1_org,//!<[in] Similar to ::list_1
-  long int *list_2_1_target,//!<[in] Similar to ::list_2_1
-  long int *list_2_2_target,//!<[in] Similar to ::list_2_2
+  long int *list_1_org,//!<[in] Similar to ::List::c1
+  long int *list_2_1_target,//!<[in] Similar to ::List::c2_1
+  long int *list_2_2_target,//!<[in] Similar to ::List::c2_2
   long int _irght,//!<[in] Similar to LargeList::irght
   long int _ilft,//!<[in] Similar to LargeList::ilft
   long int _ihfbit//!<[in] Similar to LargeList::ihfbit
@@ -992,7 +992,7 @@ int X_Cis(
     SgnBit(bit, &sgn); // Fermion sign
     ipsgn = 1;
 #ifdef __MPI
-    SgnBit(myrank, &ipsgn); // Fermion sign
+    SgnBit(MP::myrank, &ipsgn); // Fermion sign
 #endif
     list_1_off = list_1_j | is1_spin; // OR
 
@@ -1020,9 +1020,9 @@ int X_Ajt(
   long int j,//!<[in] Index of initial wavefunction
   long int is1_spin,//!<[in] Bit mask
   long int *tmp_off,//!<[out] Index of final wavefunction
-  long int *list_1_org,//!<[in] Similar to ::list_1
-  long int *list_2_1_target,//!<[in] Similar to ::list_2_1
-  long int *list_2_2_target,//!<[in] Similar to ::list_2_2
+  long int *list_1_org,//!<[in] Similar to ::List::c1
+  long int *list_2_1_target,//!<[in] Similar to ::List::c2_1
+  long int *list_2_2_target,//!<[in] Similar to ::List::c2_2
   long int _irght,//!<[in] Similar to LargeList::irght
   long int _ilft,//!<[in] Similar to LargeList::ilft
   long int _ihfbit//!<[in] Similar to LargeList::ihfbit
@@ -1045,7 +1045,7 @@ int X_Ajt(
     SgnBit(bit, &sgn); // Fermion sign
     ipsgn = 1;
 #ifdef __MPI
-    SgnBit(myrank, &ipsgn); // Fermion sign
+    SgnBit(MP::myrank, &ipsgn); // Fermion sign
 #endif
     list_1_off = list_1_j ^ is1_spin;
     if(GetOffComp(list_2_1_target, list_2_2_target, list_1_off, _irght, _ilft, _ihfbit, tmp_off)!=TRUE){

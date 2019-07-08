@@ -194,7 +194,7 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
     return FALSE;
   }  
 
-  //fprintf(stdoutMPI, "Debug: comb_sum= %ld \n",comb_sum);
+  //fprintf(MP::STDOUT, "Debug: comb_sum= %ld \n",comb_sum);
 
   Check::idim_max = comb_sum;
   switch(Def::iCalcType) {
@@ -221,7 +221,7 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
         case KondoGC:
         case Spin:
           if (Def::iFlgCalcSpec != CALCSPEC_NOT) {
-            Check::max_mem = NumAve * 3 * Check::idim_max * 16.0 / (pow(10, 9));
+            Check::max_mem = Step::NumAve * 3 * Check::idim_max * 16.0 / (pow(10, 9));
           } else {
             Check::max_mem = 4.5 * Check::idim_max * 16.0 / (pow(10, 9));
           }
@@ -229,7 +229,7 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
         case HubbardGC:
         case SpinGC:
           if (Def::iFlgCalcSpec != CALCSPEC_NOT) {
-            Check::max_mem = NumAve * 3 * Check::idim_max * 16.0 / (pow(10, 9));
+            Check::max_mem = Step::NumAve * 3 * Check::idim_max * 16.0 / (pow(10, 9));
           } else {
             Check::max_mem = 3.5 * Check::idim_max * 16.0 / (pow(10, 9));
           }
@@ -247,12 +247,12 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
       //break;
   }
 
-  //fprintf(stdoutMPI, "  MAX DIMENSION idim_max=%ld \n",Check::idim_max);
-  //fprintf(stdoutMPI, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",Check::max_mem);
+  //fprintf(MP::STDOUT, "  MAX DIMENSION idim_max=%ld \n",Check::idim_max);
+  //fprintf(MP::STDOUT, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",Check::max_mem);
   long int li_dim_max=MaxMPI_li(Check::idim_max);
-  fprintf(stdoutMPI, "  MAX DIMENSION idim_max=%ld \n",li_dim_max);
+  fprintf(MP::STDOUT, "  MAX DIMENSION idim_max=%ld \n",li_dim_max);
   double dmax_mem=MaxMPI_d(Check::max_mem);
-  fprintf(stdoutMPI, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",dmax_mem);
+  fprintf(MP::STDOUT, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",dmax_mem);
   if(childfopenMPI("CHECK_Memory.dat","w", &fp)!=0){
     free_li_2d_allocate(comb);
     return FALSE;
@@ -295,7 +295,7 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
     }
     break;
   default:
-    fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", Def::iCalcModel);
+    fprintf(MP::STDOUT, "Error: CalcModel %d is incorrect.\n", Def::iCalcModel);
     free_li_2d_allocate(comb);
     return FALSE;
   }  
@@ -312,13 +312,13 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
   case HubbardNConserved:
   case Hubbard:
   case Kondo:
-    //fprintf(stdoutMPI, "sdim=%ld =2^%d\n",Check::sdim,Def::Nsite);
+    //fprintf(MP::STDOUT, "sdim=%ld =2^%d\n",Check::sdim,Def::Nsite);
     fprintf(fp,"sdim=%ld =2^%d\n",Check::sdim,Def::Nsite);
     break;
   case Spin:
   case SpinGC:
     if(Def::iFlgGeneralSpin==FALSE){
-      //fprintf(stdoutMPI, "sdim=%ld =2^%d\n",Check::sdim,Def::Nsite/2);
+      //fprintf(MP::STDOUT, "sdim=%ld =2^%d\n",Check::sdim,Def::Nsite/2);
       fprintf(fp,"sdim=%ld =2^%d\n",Check::sdim,Def::Nsite/2);
     }
     break;
@@ -381,7 +381,7 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
    }     
     break;
   default:
-    fprintf(stdoutMPI, "Error: CalcModel %d is incorrect.\n", Def::iCalcModel);
+    fprintf(MP::STDOUT, "Error: CalcModel %d is incorrect.\n", Def::iCalcModel);
     free_li_2d_allocate(comb);
     return FALSE;
   }  

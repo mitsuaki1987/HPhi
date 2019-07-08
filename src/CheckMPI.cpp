@@ -51,29 +51,29 @@ int CheckMPI()
     */
     NDimInterPE = 1;
     for (isite = Def::NsiteMPI; isite > 0; isite--) {
-      if (NDimInterPE == nproc) {
+      if (NDimInterPE == MP::nproc) {
         Def::Nsite = isite;
         break;
-      } /*if (NDimInterPE == nproc)*/
+      } /*if (NDimInterPE == MP::nproc)*/
       NDimInterPE *= 4;
     } /*for (isite = NsiteMPI; isite > 0; isite--)*/
 
     if (isite == 0) {
-      fprintf(stdoutMPI, "%s", "Error ! The number of PROCESS should be 4-exponent !\n");
-      fprintf(stdoutMPI, "        The number of PROCESS : %d\n", nproc);
+      fprintf(MP::STDOUT, "%s", "Error ! The number of PROCESS should be 4-exponent !\n");
+      fprintf(MP::STDOUT, "        The number of PROCESS : %d\n", MP::nproc);
       NDimInterPE = 1;
       int ismallNproc = 1;
       int ilargeNproc = 1;
       for (isite = Def::NsiteMPI; isite > 0; isite--) {
-        if (NDimInterPE > nproc) {
+        if (NDimInterPE > MP::nproc) {
           ilargeNproc = NDimInterPE;
           if (isite > 1)
             ismallNproc = NDimInterPE / 4;
           break;
-        }/*if (NDimInterPE > nproc)*/
+        }/*if (NDimInterPE > MP::nproc)*/
         NDimInterPE *= 4;
       }/*for (isite = Def::NsiteMPI; isite > 0; isite--)*/
-      fprintf(stdoutMPI, "        Set the number of PROCESS as %d or %d.\n", ismallNproc, ilargeNproc);
+      fprintf(MP::STDOUT, "        Set the number of PROCESS as %d or %d.\n", ismallNproc, ilargeNproc);
       return FALSE;
       //return FALSE;
     } /*if (isite == 0)*/
@@ -86,7 +86,7 @@ int CheckMPI()
       DefineList::Nup, DefineList::Ndown, and DefineList::Ne should be
       differerent in each PE.</li>
       */
-      SmallDim = myrank;
+      SmallDim = MP::myrank;
       for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++) {
         SpinNum = SmallDim % 4;
         SmallDim /= 4;
@@ -112,7 +112,7 @@ int CheckMPI()
       <li>For N-conserved canonical Hubbard
       DefineList::Ne should be differerent in each PE.</li>
       */
-      SmallDim = myrank;
+      SmallDim = MP::myrank;
       for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++) {
         SpinNum = SmallDim % 4;
         SmallDim /= 4;
@@ -133,7 +133,7 @@ int CheckMPI()
         if (Def::LocSpn[isite] != ITINERANT) Def::NLocSpn -= 1;
 
       if (Def::iCalcModel == Kondo) {
-        SmallDim = myrank;
+        SmallDim = MP::myrank;
         for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++) {
           SpinNum = SmallDim % 4;
           SmallDim /= 4;
@@ -153,7 +153,7 @@ int CheckMPI()
             }
           }
           else {
-            fprintf(stdoutMPI, "\n Stop because local spin in the inter process region\n");
+            fprintf(MP::STDOUT, "\n Stop because local spin in the inter process region\n");
             return FALSE;
           }
         }/*for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++)*/
@@ -186,29 +186,29 @@ int CheckMPI()
       */
       NDimInterPE = 1;
       for (isite = Def::NsiteMPI; isite > 0; isite--) {
-        if (NDimInterPE == nproc) {
+        if (NDimInterPE == MP::nproc) {
           Def::Nsite = isite;
           break;
-        }/*if (NDimInterPE == nproc)*/
+        }/*if (NDimInterPE == MP::nproc)*/
         NDimInterPE *= 2;
       }/*for (isite = Def::NsiteMPI; isite > 0; isite--)*/
 
       if (isite == 0) {
-        fprintf(stdoutMPI, "%s", "Error ! The number of PROCESS should be 2-exponent !\n");
-        fprintf(stdoutMPI, "        The number of PROCESS : %d\n", nproc);
+        fprintf(MP::STDOUT, "%s", "Error ! The number of PROCESS should be 2-exponent !\n");
+        fprintf(MP::STDOUT, "        The number of PROCESS : %d\n", MP::nproc);
         NDimInterPE = 1;
         int ismallNproc = 1;
         int ilargeNproc = 1;
         for (isite = Def::NsiteMPI; isite > 0; isite--) {
-          if (NDimInterPE > nproc) {
+          if (NDimInterPE > MP::nproc) {
             ilargeNproc = NDimInterPE;
             if (isite > 1)
               ismallNproc = NDimInterPE / 2;
             break;
-          }/*if (NDimInterPE > nproc)*/
+          }/*if (NDimInterPE > MP::nproc)*/
           NDimInterPE *= 2;
         }/*for (isite = Def::NsiteMPI; isite > 0; isite--)*/
-        fprintf(stdoutMPI, "        Set the number of PROCESS as %d or %d.\n", ismallNproc, ilargeNproc);
+        fprintf(MP::STDOUT, "        Set the number of PROCESS as %d or %d.\n", ismallNproc, ilargeNproc);
         return FALSE;
       }/*if (isite == 0)*/
 
@@ -216,7 +216,7 @@ int CheckMPI()
         /*Def::NeMPI = Def::Ne;*/
 
         /* Ne should be different in each PE */
-        SmallDim = myrank;
+        SmallDim = MP::myrank;
         for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++) {
           SpinNum = SmallDim % 2;
           SmallDim /= 2;
@@ -238,29 +238,29 @@ int CheckMPI()
       */
       NDimInterPE = 1;
       for (isite = Def::NsiteMPI; isite > 0; isite--) {
-        if (NDimInterPE == nproc) {
+        if (NDimInterPE == MP::nproc) {
           Def::Nsite = isite;
           break;
-        }/*if (NDimInterPE == nproc)*/
+        }/*if (NDimInterPE == MP::nproc)*/
         NDimInterPE *= Def::SiteToBit[isite - 1];
       }/*for (isite = Def::NsiteMPI; isite > 0; isite--)*/
 
       if (isite == 0) {
-        fprintf(stdoutMPI, "%s", "Error ! The number of PROCESS is wrong !\n");
-        fprintf(stdoutMPI, "        The number of PROCESS : %d\n", nproc);
+        fprintf(MP::STDOUT, "%s", "Error ! The number of PROCESS is wrong !\n");
+        fprintf(MP::STDOUT, "        The number of PROCESS : %d\n", MP::nproc);
         NDimInterPE = 1;
         int ismallNproc = 1;
         int ilargeNproc = 1;
         for (isite = Def::NsiteMPI; isite > 0; isite--) {
-          if (NDimInterPE > nproc) {
+          if (NDimInterPE > MP::nproc) {
             ilargeNproc = NDimInterPE;
             if (isite > 1)
               ismallNproc = NDimInterPE / Def::SiteToBit[isite - 2];
             break;
-          }/*if (NDimInterPE > nproc)*/
+          }/*if (NDimInterPE > MP::nproc)*/
           NDimInterPE *= Def::SiteToBit[isite - 1];
         }/*for (isite = Def::NsiteMPI; isite > 0; isite--)*/
-        fprintf(stdoutMPI, "        Set the number of PROCESS as %d or %d.\n", ismallNproc, ilargeNproc);
+        fprintf(MP::STDOUT, "        Set the number of PROCESS as %d or %d.\n", ismallNproc, ilargeNproc);
         return FALSE;
       }/*if (isite == 0)*/
 
@@ -268,7 +268,7 @@ int CheckMPI()
         Def::Total2SzMPI = Def::Total2Sz;
 
         /* Ne should be different in each PE */
-        SmallDim = myrank;
+        SmallDim = MP::myrank;
         for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++) {
           SpinNum = SmallDim % Def::SiteToBit[isite];
           SmallDim /= Def::SiteToBit[isite];
@@ -282,7 +282,7 @@ int CheckMPI()
     break; /*case SpinGC, Spin*/
 
   default:
-    fprintf(stdoutMPI, "Error ! Wrong model !\n");
+    fprintf(MP::STDOUT, "Error ! Wrong model !\n");
     return FALSE;
   }/*switch (Def::iCalcModel)*/
 
@@ -307,11 +307,11 @@ int CheckMPI()
     NDimInterPE = 1;
     for (isite = 0; isite < isiteMax; isite++) NDimInterPE *= 2;
 
-    if (NDimInterPE < nproc) {
+    if (NDimInterPE < MP::nproc) {
       fprintf(stderr, "\n Error ! in ReadDefFileIdxPara.\n");
       fprintf(stderr, "Too many MPI processes ! It should be <= %d. \n\n", NDimInterPE);
       exitMPI(-1);
-    }/*if (NDimInterPE < nproc)*/
+    }/*if (NDimInterPE < MP::nproc)*/
   }/*if (Boost::flgBoost == 1)*/
 
   return TRUE;
@@ -328,9 +328,9 @@ void CheckMPI_Summary()
   long int idimMPI;
 
   if (Def::iFlgScaLAPACK == 0) {
-    fprintf(stdoutMPI, "\n\n######  MPI site separation summary  ######\n\n");
-    fprintf(stdoutMPI, "  INTRA process site\n");
-    fprintf(stdoutMPI, "    Site    Bit\n");
+    fprintf(MP::STDOUT, "\n\n######  MPI site separation summary  ######\n\n");
+    fprintf(MP::STDOUT, "  INTRA process site\n");
+    fprintf(MP::STDOUT, "    Site    Bit\n");
     for (isite = 0; isite < Def::Nsite; isite++) {
       switch (Def::iCalcModel) {
       case HubbardGC:
@@ -339,17 +339,17 @@ void CheckMPI_Summary()
       case Kondo:
       case KondoGC:
 
-        fprintf(stdoutMPI, "    %4d    %4d\n", isite, 4);
+        fprintf(MP::STDOUT, "    %4d    %4d\n", isite, 4);
         break;
 
       case Spin:
       case SpinGC:
 
         if (Def::iFlgGeneralSpin == FALSE) {
-          fprintf(stdoutMPI, "    %4d    %4d\n", isite, 2);
+          fprintf(MP::STDOUT, "    %4d    %4d\n", isite, 2);
         }/*if (Def::iFlgGeneralSpin == FALSE)*/
         else {
-          fprintf(stdoutMPI, "    %4d    %4ld\n", isite, Def::SiteToBit[isite]);
+          fprintf(MP::STDOUT, "    %4d    %4ld\n", isite, Def::SiteToBit[isite]);
         }/*if (Def::iFlgGeneralSpin == TRUE)*/
 
         break;
@@ -357,8 +357,8 @@ void CheckMPI_Summary()
       } /*switch (Def::iCalcModel)*/
     } /*for (isite = 0; isite < Def::Nsite; isite++)*/
 
-    fprintf(stdoutMPI, "\n  INTER process site\n");
-    fprintf(stdoutMPI, "    Site    Bit\n");
+    fprintf(MP::STDOUT, "\n  INTER process site\n");
+    fprintf(MP::STDOUT, "    Site    Bit\n");
     for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++) {
       switch (Def::iCalcModel) {
       case HubbardGC:
@@ -367,17 +367,17 @@ void CheckMPI_Summary()
       case Kondo:
       case KondoGC:
 
-        fprintf(stdoutMPI, "    %4d    %4d\n", isite, 4);
+        fprintf(MP::STDOUT, "    %4d    %4d\n", isite, 4);
         break;
 
       case Spin:
       case SpinGC:
 
         if (Def::iFlgGeneralSpin == FALSE) {
-          fprintf(stdoutMPI, "    %4d    %4d\n", isite, 2);
+          fprintf(MP::STDOUT, "    %4d    %4d\n", isite, 2);
         }/*if (Def::iFlgGeneralSpin == FALSE) */
         else {
-          fprintf(stdoutMPI, "    %4d    %4ld\n", isite, Def::SiteToBit[isite]);
+          fprintf(MP::STDOUT, "    %4d    %4ld\n", isite, Def::SiteToBit[isite]);
         }/*if (Def::iFlgGeneralSpin == TRUE) */
 
         break;
@@ -385,36 +385,36 @@ void CheckMPI_Summary()
       }/*switch (Def::iCalcModel)*/
     }/*for (isite = Def::Nsite; isite < NsiteMPI; isite++)*/
 
-    fprintf(stdoutMPI, "\n  Process element info\n");
-    fprintf(stdoutMPI, "    Process       Dimension   Nup  Ndown  Nelec  Total2Sz   State\n");
+    fprintf(MP::STDOUT, "\n  Process element info\n");
+    fprintf(MP::STDOUT, "    Process       Dimension   Nup  Ndown  Nelec  Total2Sz   State\n");
 
-    for (iproc = 0; iproc < nproc; iproc++) {
+    for (iproc = 0; iproc < MP::nproc; iproc++) {
 
-      fprintf(stdoutMPI, "    %7d", iproc);
+      fprintf(MP::STDOUT, "    %7d", iproc);
 
-      if (myrank == iproc) idimMPI = Check::idim_max;
+      if (MP::myrank == iproc) idimMPI = Check::idim_max;
       else idimMPI = 0;
-      fprintf(stdoutMPI, " %15ld", SumMPI_li(idimMPI));
+      fprintf(MP::STDOUT, " %15ld", SumMPI_li(idimMPI));
 
-      if (myrank == iproc) Nelec = Def::Nup;
+      if (MP::myrank == iproc) Nelec = Def::Nup;
       else Nelec = 0;
-      fprintf(stdoutMPI, "  %4d", SumMPI_i(Nelec));
+      fprintf(MP::STDOUT, "  %4d", SumMPI_i(Nelec));
 
-      if (myrank == iproc) Nelec = Def::Ndown;
+      if (MP::myrank == iproc) Nelec = Def::Ndown;
       else Nelec = 0;
-      fprintf(stdoutMPI, "  %5d", SumMPI_i(Nelec));
+      fprintf(MP::STDOUT, "  %5d", SumMPI_i(Nelec));
 
-      if (myrank == iproc) {
+      if (MP::myrank == iproc) {
         Nelec = Def::Ne; //Def::Nup
         if (Def::iCalcModel == Spin || Def::iCalcModel == SpinGC) Nelec += Def::Ndown;
       }
       else Nelec = 0;
 
-      fprintf(stdoutMPI, "  %5d", SumMPI_i(Nelec));
+      fprintf(MP::STDOUT, "  %5d", SumMPI_i(Nelec));
 
-      if (myrank == iproc) Nelec = Def::Total2Sz;
+      if (MP::myrank == iproc) Nelec = Def::Total2Sz;
       else Nelec = 0;
-      fprintf(stdoutMPI, "  %8d   ", SumMPI_i(Nelec));
+      fprintf(MP::STDOUT, "  %8d   ", SumMPI_i(Nelec));
       /**@brief
        Print the configuration in the inter process region of each PE
        as a binary (excepting general spin) format.
@@ -430,10 +430,10 @@ void CheckMPI_Summary()
         for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++) {
           SpinNum = SmallDim % 4;
           SmallDim /= 4;
-          if (SpinNum == 0) fprintf(stdoutMPI, "00");
-          else if (SpinNum == 1) fprintf(stdoutMPI, "01");
-          else if (SpinNum == 2) fprintf(stdoutMPI, "10");
-          else if (SpinNum == 3) fprintf(stdoutMPI, "11");
+          if (SpinNum == 0) fprintf(MP::STDOUT, "00");
+          else if (SpinNum == 1) fprintf(MP::STDOUT, "01");
+          else if (SpinNum == 2) fprintf(MP::STDOUT, "10");
+          else if (SpinNum == 3) fprintf(MP::STDOUT, "11");
         } /*for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++)*/
 
         break;
@@ -446,7 +446,7 @@ void CheckMPI_Summary()
           for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++) {
             SpinNum = SmallDim % 2;
             SmallDim /= 2;
-            fprintf(stdoutMPI, "%1d", SpinNum);
+            fprintf(MP::STDOUT, "%1d", SpinNum);
           }/*for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++)*/
         }/*if (Def::iFlgGeneralSpin == FALSE)*/
         else {
@@ -454,25 +454,25 @@ void CheckMPI_Summary()
           for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++) {
             SpinNum = SmallDim % (int)Def::SiteToBit[isite];
             SmallDim /= Def::SiteToBit[isite];
-            fprintf(stdoutMPI, "%1d", SpinNum);
+            fprintf(MP::STDOUT, "%1d", SpinNum);
           }/*for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++)*/
         }/*if (Def::iFlgGeneralSpin == TRUE)*/
 
         break;
 
       }/*switch (Def::iCalcModel)*/
-      fprintf(stdoutMPI, "\n");
-    }/*for (iproc = 0; iproc < nproc; iproc++)*/
+      fprintf(MP::STDOUT, "\n");
+    }/*for (iproc = 0; iproc < MP::nproc; iproc++)*/
 
     Check::idim_maxMPI = SumMPI_li(Check::idim_max);
-    fprintf(stdoutMPI, "\n   Total dimension : %ld\n\n", Check::idim_maxMPI);
+    fprintf(MP::STDOUT, "\n   Total dimension : %ld\n\n", Check::idim_maxMPI);
     if (Check::idim_maxMPI < 1) {
-      fprintf(stdoutMPI, "ERROR! Total dimension < 1\n");
+      fprintf(MP::STDOUT, "ERROR! Total dimension < 1\n");
       exitMPI(-1);
     }
   }
   else {
-    fprintf(stdoutMPI, "\n   Total dimension : %ld\n\n", Check::idim_max);
+    fprintf(MP::STDOUT, "\n   Total dimension : %ld\n\n", Check::idim_max);
   }
 
   /**@brief

@@ -29,6 +29,11 @@
 #ifdef __MPI
 #include <mpi.h>
 #endif
+
+ //For Timer
+double* Timer; /**> The procedure execution time.*/
+double* TimerStart;/**> Timer when the procedure starts.*/
+
 /** 
  * 
  * @brief function for displaying elapse time

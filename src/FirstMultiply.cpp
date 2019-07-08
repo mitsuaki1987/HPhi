@@ -58,14 +58,14 @@ int FirstMultiply() {
   Ns = 1.0*Def::NsiteMPI;
   i_max = Check::idim_max;
 
-  for (rand_i = 0; rand_i < NumAve; rand_i++) {
+  for (rand_i = 0; rand_i < Step::NumAve; rand_i++) {
 #pragma omp parallel default(none) private(i, mythread, u_long_i, dsfmt) \
-shared(I, v0, v1, nthreads, myrank, rand_i, stdoutMPI,i_max,Def::initial_iv,Def::iInitialVecType)
+shared(Wave::v0,Wave::v1,MP::nthreads,MP::myrank,rand_i,MP::STDOUT,i_max,Def::initial_iv,Def::iInitialVecType)
   {
 #pragma omp for
     for (i = 1; i <= i_max; i++) {
-      v0[i][rand_i] = 0.0;
-      v1[i][rand_i] = 0.0;
+      Wave::v0[i][rand_i] = 0.0;
+      Wave::v1[i][rand_i] = 0.0;
     }
     /*
     Initialise MT
@@ -75,7 +75,7 @@ shared(I, v0, v1, nthreads, myrank, rand_i, stdoutMPI,i_max,Def::initial_iv,Def:
 #else
     mythread = 0;
 #endif
-    u_long_i = 123432 + (rand_i + 1)*labs(Def::initial_iv) + mythread + nthreads * myrank;
+    u_long_i = 123432 + (rand_i + 1)*labs(Def::initial_iv) + mythread + MP::nthreads * MP::myrank;
     dsfmt_init_gen_rand(&dsfmt, u_long_i);
 
     if (Def::iInitialVecType == 0) {
@@ -83,12 +83,14 @@ shared(I, v0, v1, nthreads, myrank, rand_i, stdoutMPI,i_max,Def::initial_iv,Def:
       StartTimer(3101);
 #pragma omp for
       for (i = 1; i <= i_max; i++)
-        v1[i][rand_i] = 2.0*(dsfmt_genrand_close_open(&dsfmt) - 0.5) + 2.0*(dsfmt_genrand_close_open(&dsfmt) - 0.5)*I;
+        Wave::v1[i][rand_i] = std::complex<double>
+        (2.0*(dsfmt_genrand_close_open(&dsfmt) - 0.5),
+          2.0*(dsfmt_genrand_close_open(&dsfmt) - 0.5));
       }/*if (Def::iInitialVecType == 0)*/
       else {
 #pragma omp for
         for (i = 1; i <= i_max; i++)
-          v1[i][rand_i] = 2.0*(dsfmt_genrand_close_open(&dsfmt) - 0.5);
+          Wave::v1[i][rand_i] = 2.0*(dsfmt_genrand_close_open(&dsfmt) - 0.5);
       }
       StopTimer(3101);
     }/*#pragma omp parallel*/
@@ -97,58 +99,59 @@ shared(I, v0, v1, nthreads, myrank, rand_i, stdoutMPI,i_max,Def::initial_iv,Def:
     */
   dnorm = 0.0;
 #pragma omp parallel for default(none) private(i) \
-shared(v1, i_max, rand_i) reduction(+:dnorm)
+shared(Wave::v1, i_max, rand_i) reduction(+:dnorm)
       for (i = 1; i <= i_max; i++)
-        dnorm += real(conj(v1[i][rand_i])*v1[i][rand_i]);
+        dnorm += real(conj(Wave::v1[i][rand_i])*Wave::v1[i][rand_i]);
     dnorm = SumMPI_d(dnorm);
     dnorm = sqrt(dnorm);
-    global_1st_norm[rand_i] = dnorm;
-#pragma omp parallel for default(none) private(i) shared(v1,rand_i,i_max, dnorm)
-    for (i = 1; i <= i_max; i++) v1[i][rand_i] = v1[i][rand_i] / dnorm;
-  }/*for (rand_i = 0; rand_i < NumAve; rand_i++)*/
+    Step::global_1st_norm[rand_i] = dnorm;
+#pragma omp parallel for default(none) private(i) shared(Wave::v1,rand_i,i_max, dnorm)
+    for (i = 1; i <= i_max; i++) Wave::v1[i][rand_i] = Wave::v1[i][rand_i] / dnorm;
+  }/*for (rand_i = 0; rand_i < Step::NumAve; rand_i++)*/
 
-  TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", "set %d step %d:TPQ begins: %s", "a", rand_i, step_i);
+  TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", 
+    "set %d step %d:TPQ begins: %s", "a", rand_i, Step::step_i);
   /**@brief
 Compute expectation value at infinite temperature
 */
   Def::istep = 0;
   StartTimer(3300);
-  iret = expec_cisajs(NumAve, v0, v1);
+  iret = expec_cisajs(Step::NumAve, Wave::v0, Wave::v1);
   StopTimer(3300);
   if (iret != 0) return -1;
 
   StartTimer(3400);
-  iret = expec_cisajscktaltdc(NumAve, v0, v1);
+  iret = expec_cisajscktaltdc(Step::NumAve, Wave::v0, Wave::v1);
   StopTimer(3400);
   if (iret != 0) return -1;
 
-#pragma omp parallel for default(none) private(i,rand_i) shared(v0,v1,i_max,NumAve)
+#pragma omp parallel for default(none) private(i,rand_i) shared(Wave::v0,Wave::v1,i_max,Step::NumAve)
   for (i = 1; i <= i_max; i++) 
-    for (rand_i = 0; rand_i < NumAve; rand_i++) v0[i][rand_i] = v1[i][rand_i];
+    for (rand_i = 0; rand_i < Step::NumAve; rand_i++) Wave::v0[i][rand_i] = Wave::v1[i][rand_i];
   StartTimer(3102);
-  if(expec_energy_flct(NumAve, v0, v1) !=0){
+  if(expec_energy_flct(Step::NumAve, Wave::v0, Wave::v1) !=0){
     StopTimer(3102);
     return -1;
   }
   StopTimer(3102);
 
-  for (rand_i = 0; rand_i < NumAve; rand_i++) {
+  for (rand_i = 0; rand_i < Step::NumAve; rand_i++) {
 #pragma omp parallel for default(none) private(i) \
-shared(v0, v1, list_1,rand_i, i_max, Ns, LargeValue, myrank)
+shared(Wave::v0, Wave::v1,rand_i, i_max, Ns, Step::LargeValue, MP::myrank)
     for (i = 1; i <= i_max; i++) {
-      v0[i][rand_i] = LargeValue * v1[i][rand_i] - v0[i][rand_i] / Ns;
+      Wave::v0[i][rand_i] = Step::LargeValue * Wave::v1[i][rand_i] - Wave::v0[i][rand_i] / Ns;
     }
 
     dnorm = 0.0;
-#pragma omp parallel for default(none) private(i) shared(v0,rand_i,i_max) reduction(+:dnorm)
+#pragma omp parallel for default(none) private(i) shared(Wave::v0,rand_i,i_max) reduction(+:dnorm)
     for (i = 1; i <= i_max; i++)
-      dnorm += real(conj(v0[i][rand_i])*v0[i][rand_i]);
+      dnorm += real(conj(Wave::v0[i][rand_i])*Wave::v0[i][rand_i]);
     dnorm = SumMPI_d(dnorm);
     dnorm = sqrt(dnorm);
-    global_norm[rand_i] = dnorm;
-#pragma omp parallel for default(none) private(i) shared(v0,rand_i,i_max, dnorm)
-    for (i = 1; i <= i_max; i++) v0[i][rand_i] = v0[i][rand_i] / dnorm;
-  }/*for (rand_i = 0; rand_i < NumAve; rand_i++)*/
-  TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", "set %d step %d:TPQ finishes: %s", "a", rand_i, step_i);
+    Step::global_norm[rand_i] = dnorm;
+#pragma omp parallel for default(none) private(i) shared(Wave::v0,rand_i,i_max, dnorm)
+    for (i = 1; i <= i_max; i++) Wave::v0[i][rand_i] = Wave::v0[i][rand_i] / dnorm;
+  }/*for (rand_i = 0; rand_i < Step::NumAve; rand_i++)*/
+  TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", "set %d step %d:TPQ finishes: %s", "a", rand_i, Step::step_i);
   return 0;
 }

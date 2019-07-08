@@ -103,28 +103,28 @@ int CalcByTEM(
   FILE *fp;
   double Time = Param::Tinit;
   double dt = ((Def::NLaser == 0) ? 0.0 : Param::TimeSlice);
-  std::complex<double> **v2;  /**< Ttemporary vector for time evolution calculation, @f$ v2 = H*v1 = H^coef |psi(t)>@f$.*/
+  std::complex<double> **v2;  /**< Ttemporary vector for time evolution calculation, @f$ v2 = H*Wave::v1 = H^coef |psi(t)>@f$.*/
 
-  global_norm = d_1d_allocate(1);
+  Step::global_norm = d_1d_allocate(1);
 
   if (Def::NTETimeSteps < Def::Lanczos_max) {
-    fprintf(stdoutMPI, "Error: NTETimeSteps must be larger than Lanczos_max.\n");
+    fprintf(MP::STDOUT, "Error: NTETimeSteps must be larger than Lanczos_max.\n");
     return -1;
   }
-  step_spin = ExpecInterval;
+  Step::step_spin = ExpecInterval;
   Def::St = 0;
-  fprintf(stdoutMPI, "%s", "######  Start: TimeEvolution by Taylor Expansion.  ######\n\n");
+  fprintf(MP::STDOUT, "%s", "######  Start: TimeEvolution by Taylor Expansion.  ######\n\n");
   if (Def::iInputEigenVec == FALSE) {
     fprintf(stderr, "Error: A file of Inputvector is not inputted.\n");
     return -1;
   }
   else {
-    //input v1
-    fprintf(stdoutMPI, "%s", "An Initial Vector is inputted.\n");
+    //input Wave::v1
+    fprintf(MP::STDOUT, "%s", "An Initial Vector is inputted.\n");
     TimeKeeper("%s_TimeKeeper.dat", "Reading an input Eigenvector starts: %s", "a");
     GetFileNameByKW(KWSpectrumVec, &defname);
     strcat(defname, "_rank_%d.dat");
-    sprintf(sdt, defname, myrank);
+    sprintf(sdt, defname, MP::myrank);
     childfopenALL(sdt, "rb", &fp);
     if (fp == NULL) {
       fprintf(stderr, "Error: A file of Inputvector does not exist.\n");
@@ -139,7 +139,7 @@ int CalcByTEM(
       printf("byte_size : %d\n", (int)byte_size);
       exitMPI(-1);
     }
-    byte_size = fread(&v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+    byte_size = fread(&Wave::v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
     fclose(fp);
     if (Def::iReStart == RESTART_NOT || Def::iReStart == RESTART_OUT) {
       step_initial = 0;
@@ -150,36 +150,36 @@ int CalcByTEM(
   if (childfopenMPI(sdt_phys, "w", &fp) != 0) {
     return -1;
   }
-  fprintf(fp, "%s", " # time, energy, phys_var, phys_doublon, phys_num, step_i\n");
+  fprintf(fp, "%s", " # time, energy, phys_var, phys_doublon, phys_num, Step::step_i\n");
   fclose(fp);
 
   sprintf(sdt_norm, "%s", "Norm.dat");
   if (childfopenMPI(sdt_norm, "w", &fp) != 0) {
     return -1;
   }
-  fprintf(fp, "%s", " # time, norm, step_i \n");
+  fprintf(fp, "%s", " # time, norm, Step::step_i \n");
   fclose(fp);
 
   sprintf(sdt_flct, "%s", "Flct.dat");
   if (childfopenMPI(sdt_flct, "w", &fp) != 0) {
     return -1;
   }
-  fprintf(fp, "%s", " # time, N, N^2, D, D^2, Sz, Sz^2, step_i \n");
+  fprintf(fp, "%s", " # time, N, N^2, D, D^2, Sz, Sz^2, Step::step_i \n");
   fclose(fp);
 
 
   int iInterAllOffDiagonal_org = Def::NInterAll_OffDiagonal;
   int iTransfer_org = Def::EDNTransfer;
   v2 = cd_2d_allocate(Check::idim_max + 1, 1);
-  for (step_i = step_initial; step_i < Def::Lanczos_max; step_i++) {
-    Def::istep = step_i;
+  for (Step::step_i = step_initial; Step::step_i < Def::Lanczos_max; Step::step_i++) {
+    Def::istep = Step::step_i;
 
     //Reset total number of interactions (changed in MakeTED***function.)
     Def::EDNTransfer = iTransfer_org;
     Def::NInterAll_OffDiagonal = iInterAllOffDiagonal_org;
 
-    if (step_i % (Def::Lanczos_max / 10) == 0) {
-      fprintf(stdoutMPI, "    step_i/total_step = %d/%d \n", step_i, Def::Lanczos_max);
+    if (Step::step_i % (Def::Lanczos_max / 10) == 0) {
+      fprintf(MP::STDOUT, "    Step::step_i/total_step = %d/%d \n", Step::step_i, Def::Lanczos_max);
     }
 
     if (Def::NLaser != 0) {
@@ -187,38 +187,38 @@ int CalcByTEM(
     }
     else {
       // common procedure
-      Time = Def::TETime[step_i];
-      if (step_i == 0) dt = 0.0;
+      Time = Def::TETime[Step::step_i];
+      if (Step::step_i == 0) dt = 0.0;
       else {
-        dt = Def::TETime[step_i] - Def::TETime[step_i - 1];
+        dt = Def::TETime[Step::step_i] - Def::TETime[Step::step_i - 1];
       }
       Param::TimeSlice = dt;
 
       // Set interactions
       if (Def::NTETransferMax != 0 && Def::NTEInterAllMax != 0) {
-        fprintf(stdoutMPI,
+        fprintf(MP::STDOUT,
           "Error: Time Evolution mode does not support TEOneBody and TETwoBody interactions at the same time. \n");
         return -1;
       }
       else if (Def::NTETransferMax > 0) { //One-Body type
-        MakeTEDTransfer(step_i);
+        MakeTEDTransfer(Step::step_i);
       }
       else if (Def::NTEInterAllMax > 0) { //Two-Body type
-        MakeTEDInterAll(step_i);
+        MakeTEDInterAll(Step::step_i);
       }
       //[e] Yoshimi
     }
 
-    if (step_i == step_initial) {
-      TimeKeeperWithStep("%s_Time_TE_Step.dat", "step %d:TE begins: %s", "w", step_i);
+    if (Step::step_i == step_initial) {
+      TimeKeeperWithStep("%s_Time_TE_Step.dat", "step %d:TE begins: %s", "w", Step::step_i);
     }
     else {
-      TimeKeeperWithStep("%s_Time_TE_Step.dat", "step %d:TE begins: %s", "a", step_i);
+      TimeKeeperWithStep("%s_Time_TE_Step.dat", "step %d:TE begins: %s", "a", Step::step_i);
     }
     MultiplyForTEM(v2);
     //Add Diagonal Parts
     //Multiply Diagonal
-    expec_energy_flct(1, v0, v1);
+    expec_energy_flct(1, Wave::v0, Wave::v1);
 
     if (Def::NLaser > 0) Time += dt;
     if (childfopenMPI(sdt_phys, "a", &fp) != 0) {
@@ -226,13 +226,13 @@ int CalcByTEM(
     }
     fprintf(fp, "%.16lf  %.16lf %.16lf %.16lf %.16lf %d\n",
             Time, Phys::energy[0], Phys::var[0],
-            Phys::doublon[0], Phys::num[0], step_i);
+            Phys::doublon[0], Phys::num[0], Step::step_i);
     fclose(fp);
 
     if (childfopenMPI(sdt_norm, "a", &fp) != 0) {
       return -1;
     }
-    fprintf(fp, "%.16lf %.16lf %d\n", Time, global_norm[0], step_i);
+    fprintf(fp, "%.16lf %.16lf %d\n", Time, Step::global_norm[0], Step::step_i);
     fclose(fp);
 
     if (childfopenMPI(sdt_flct, "a", &fp) != 0) {
@@ -240,41 +240,41 @@ int CalcByTEM(
     }
     fprintf(fp, "%.16lf %.16lf %.16lf %.16lf %.16lf %.16lf %.16lf %d\n", 
       Time, Phys::num[0], Phys::num2[0], Phys::doublon[0],
-            Phys::doublon2[0], Phys::Sz[0], Phys::Sz2[0], step_i);
+            Phys::doublon2[0], Phys::Sz[0], Phys::Sz2[0], Step::step_i);
     fclose(fp);
 
-    if (step_i % step_spin == 0) {
-      expec_cisajs(1, v2, v1);
-      expec_cisajscktaltdc(1, v2, v1);
+    if (Step::step_i % Step::step_spin == 0) {
+      expec_cisajs(1, v2, Wave::v1);
+      expec_cisajscktaltdc(1, v2, Wave::v1);
     }
     if (Def::iOutputEigenVec == TRUE) {
-      if (step_i % Param::OutputInterval == 0) {
-        sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", Def::CDataFileHead, step_i, myrank);
+      if (Step::step_i % Param::OutputInterval == 0) {
+        sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", Def::CDataFileHead, Step::step_i, MP::myrank);
         if (childfopenALL(sdt, "wb", &fp) != 0) {
           fclose(fp);
           exitMPI(-1);
         }
-        fwrite(&step_i, sizeof(step_i), 1, fp);
+        fwrite(&Step::step_i, sizeof(Step::step_i), 1, fp);
         fwrite(&Check::idim_max, sizeof(long int), 1, fp);
-        fwrite(&v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+        fwrite(&Wave::v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
         fclose(fp);
       }
     }
-  }/*for (step_i = step_initial; step_i < Def::Lanczos_max; step_i++)*/
+  }/*for (Step::step_i = step_initial; Step::step_i < Def::Lanczos_max; Step::step_i++)*/
   free_cd_2d_allocate(v2);
 
   if (Def::iOutputEigenVec == TRUE) {
-    sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", Def::CDataFileHead, rand_i, myrank);
+    sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", Def::CDataFileHead, rand_i, MP::myrank);
     if (childfopenALL(sdt, "wb", &fp) != 0) {
       fclose(fp);
       exitMPI(-1);
     }
-    fwrite(&step_i, sizeof(step_i), 1, fp);
+    fwrite(&Step::step_i, sizeof(Step::step_i), 1, fp);
     fwrite(&Check::idim_max, sizeof(long int), 1, fp);
-    fwrite(&v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+    fwrite(&Wave::v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
     fclose(fp);
   }
 
-  fprintf(stdoutMPI, "%s", "######  End  : TimeEvolution by Taylor Expansion.  ######\n\n");
+  fprintf(MP::STDOUT, "%s", "######  End  : TimeEvolution by Taylor Expansion.  ######\n\n");
   return 0;
 }

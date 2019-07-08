@@ -270,7 +270,7 @@ void X_GC_child_CisAisCjtAjt_Hubbard_MPI(
   long int tmp_off, j;
   int one = 1;
 
-  iCheck=CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, (long int) myrank);
+  iCheck=CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, (long int) MP::myrank);
   if(iCheck != TRUE){
     return;
   }
@@ -318,7 +318,7 @@ void X_GC_child_CisAjtCkuAku_Hubbard_MPI(
   long int org_rankbit;
   int one = 1;
 
-  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, (long int) myrank, &origin);
+  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, (long int) MP::myrank, &origin);
   isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
   isite2 = Def::Tpow[2 * org_isite2 + org_ispin2];
   isite3 = Def::Tpow[2 * org_isite3 + org_ispin3];
@@ -333,7 +333,7 @@ void X_GC_child_CisAjtCkuAku_Hubbard_MPI(
     else Adiff = tmp_isite1 - tmp_isite2 * 2;
   }
   else {
-    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, (long int) myrank, &origin);
+    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, (long int) MP::myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
       tmp_isite4 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
@@ -352,9 +352,9 @@ void X_GC_child_CisAjtCkuAku_Hubbard_MPI(
     }
   }
 
-  if (myrank == origin) {// only k is in PE
+  if (MP::myrank == origin) {// only k is in PE
 
-    if (CheckBit_Ajt(isite3, myrank, &tmp_off) == FALSE) return;
+    if (CheckBit_Ajt(isite3, MP::myrank, &tmp_off) == FALSE) return;
 
 #pragma omp parallel default(none) private(j,tmp_off) \
 shared(i_max,Asum,Adiff,isite1,isite2, tmp_V,tmp_v0, tmp_v1,nstate,Large::mode)
@@ -370,32 +370,32 @@ shared(i_max,Asum,Adiff,isite1,isite2, tmp_V,tmp_v0, tmp_v1,nstate,Large::mode)
       }/*if (Large::mode != M_CORR)*/
     }/*End of paralle region*/
     return;
-  }//myrank =origin
+  }//MP::myrank =origin
   else {
     idim_max_buf = SendRecv_i(origin, Check::idim_max);
-    SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+    SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
 #pragma omp parallel default(none) private(j,dmv,tmp_off,Fsgn,org_rankbit,Adiff) \
-shared(v1buf,tmp_v1,nstate,one,tmp_v0,myrank,origin,isite3,org_isite3,isite1,isite2, Def::OrgTpow, \
+shared(Wave::v1buf,tmp_v1,nstate,one,tmp_v0,MP::myrank,origin,isite3,org_isite3,isite1,isite2, Def::OrgTpow, \
 org_isite2,org_isite1,idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4, Def::Nsite)
     {
       if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite) {
         if (isite2 > isite1) Adiff = isite2 - isite1 * 2;
         else Adiff = isite1 - isite2 * 2;
-        SgnBit(((long int) myrank & Adiff), &Fsgn);
+        SgnBit(((long int) MP::myrank & Adiff), &Fsgn);
         tmp_V *= Fsgn;
 
         if (org_isite3 + 1 > Def::Nsite) {
 #pragma omp for
           for (j = 1; j <= idim_max_buf; j++) {
-            zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[j][0], &one);
+            zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[j][0], &one);
           }/*for (j = 1; j <= idim_max_buf; j++)*/
         }
         else { //org_isite3 <= Def::Nsite
 #pragma omp for
           for (j = 1; j <= idim_max_buf; j++) {
             if (CheckBit_Ajt(isite3, j - 1, &tmp_off) == TRUE) {
-              zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[j][0], &one);
+              zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[j][0], &one);
             }
           }/*for (j = 1; j <= idim_max_buf; j++)*/
         }
@@ -406,12 +406,12 @@ org_isite2,org_isite1,idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_is
         for (j = 1; j <= idim_max_buf; j++) {
           if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, (j - 1) + org_rankbit, &tmp_off) == TRUE) {
             dmv = tmp_V * (std::complex<double>)Fsgn;
-            zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[tmp_off + 1][0], &one);
+            zaxpy_(&nstate, &dmv, &Wave::v1buf[j][0], &one, &tmp_v0[tmp_off + 1][0], &one);
           }
         }/*for (j = 1; j <= idim_max_buf; j++)*/
       }
     }/*End of parallel region*/
-  }/*myrank != origin*/
+  }/*MP::myrank != origin*/
 }/*std::complex<double> X_GC_child_CisAjtCkuAku_Hubbard_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{is} c_{jt}^\dagger c_{ku}@f$
@@ -465,7 +465,7 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
 
   iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2,
                                org_isite3, org_ispin3, org_isite4, org_ispin4,
-                               (long int) myrank, &origin);
+                               (long int) MP::myrank, &origin);
   isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
   isite2 = Def::Tpow[2 * org_isite2 + org_ispin2];
   isite3 = Def::Tpow[2 * org_isite3 + org_ispin3];
@@ -480,7 +480,7 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
   else {
     iCheck = CheckBit_InterAllPE(org_isite4, org_ispin4, org_isite3, org_ispin3,
                                  org_isite2, org_ispin2, org_isite1, org_ispin1,
-                                 (long int) myrank, &origin);
+                                 (long int) MP::myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
       tmp_isite4 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
@@ -497,7 +497,7 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
     }
   }
 
-  if (myrank == origin) {
+  if (MP::myrank == origin) {
     if (isite1 == isite4 && isite2 == isite3) { // CisAjvCjvAis =Cis(1-njv)Ais=nis-nisnjv
             //calc nis
       X_GC_child_CisAis_Hubbard_MPI(org_isite1, org_ispin1, tmp_V, nstate, tmp_v0, tmp_v1);
@@ -537,10 +537,10 @@ shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
       }/*if (Large::mode != M_CORR)*/
     }/*if (isite2 != isite3)*/
     return;
-  }//myrank =origin
+  }//MP::myrank =origin
   else {
     idim_max_buf = SendRecv_i(origin, Check::idim_max);
-    SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+    SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
     if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite
      && org_isite3 + 1 > Def::Nsite && org_isite4 + 1 > Def::Nsite) {
@@ -551,30 +551,30 @@ shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
       else Bdiff = isite3 - isite4 * 2;
 
       if (iFlgHermite == FALSE) {
-        Fsgn = X_GC_CisAjt((long int) myrank, isite2, isite1, (isite1 + isite2), Adiff, &tmp_off2);
+        Fsgn = X_GC_CisAjt((long int) MP::myrank, isite2, isite1, (isite1 + isite2), Adiff, &tmp_off2);
         Fsgn *= X_GC_CisAjt(tmp_off2, isite4, isite3, (isite3 + isite4), Bdiff, &tmp_off);
         tmp_V *= Fsgn;
       }/*if (iFlgHermite == FALSE)*/
       else {
-        Fsgn = X_GC_CisAjt((long int) myrank, isite3, isite4, (isite3 + isite4), Bdiff, &tmp_off2);
+        Fsgn = X_GC_CisAjt((long int) MP::myrank, isite3, isite4, (isite3 + isite4), Bdiff, &tmp_off2);
         Fsgn *= X_GC_CisAjt(tmp_off2, isite1, isite2, (isite1 + isite2), Adiff, &tmp_off);
         tmp_V *= Fsgn;
       }/*if (iFlgHermite == TRUE)*/
 
-      zaxpy_long(i_max*nstate, tmp_V, &v1buf[1][0], &tmp_v0[1][0]);
+      zaxpy_long(i_max*nstate, tmp_V, &Wave::v1buf[1][0], &tmp_v0[1][0]);
     }
     else {
       org_rankbit = Def::OrgTpow[2 * Def::Nsite] * origin;
 #pragma omp parallel for default(none) private(j,dmv,tmp_off,Fsgn) \
-shared(idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,org_rankbit,v1buf,tmp_v1,tmp_v0,nstate,one)
+shared(idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,org_rankbit,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
       for (j = 1; j <= idim_max_buf; j++) {
         if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, (j - 1) + org_rankbit, &tmp_off) == TRUE) {
           dmv = tmp_V * (std::complex<double>)Fsgn;
-          zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[tmp_off + 1][0], &one);
+          zaxpy_(&nstate, &dmv, &Wave::v1buf[j][0], &one, &tmp_v0[tmp_off + 1][0], &one);
         }
       }/*for (j = 1; j <= idim_max_buf; j++)*/
     }
-  }/*myrank != origin*/
+  }/*MP::myrank != origin*/
 }/*std::complex<double> X_GC_child_CisAjtCkuAlv_Hubbard_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{is}@f$
@@ -594,7 +594,7 @@ void X_GC_child_CisAis_Hubbard_MPI(
 
   isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
   if (org_isite1 + 1 > Def::Nsite) {
-    if (CheckBit_Ajt(isite1, (long int) myrank, &tmp_off) == FALSE) return;
+    if (CheckBit_Ajt(isite1, (long int) MP::myrank, &tmp_off) == FALSE) return;
 
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
   }/*if (org_isite1 + 1 > Def::Nsite)*/
@@ -654,7 +654,7 @@ void X_child_CisAisCjtAjt_Hubbard_MPI(
   long int tmp_off, j;
   int one = 1;
 
-  iCheck = CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, (long int) myrank);
+  iCheck = CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, (long int) MP::myrank);
   if (iCheck != TRUE) return;
   
   if (org_isite1 + 1 > Def::Nsite && org_isite3 + 1 > Def::Nsite) {
@@ -665,9 +665,9 @@ void X_child_CisAisCjtAjt_Hubbard_MPI(
     else                         tmp_ispin1 = Def::Tpow[2 * org_isite1 + org_ispin1];
 
 #pragma omp parallel for default(none) private(j,tmp_off) \
-shared(tmp_v0,tmp_v1,list_1,org_isite1,org_ispin1,org_isite3,org_ispin3,nstate,one, i_max,tmp_V,tmp_ispin1)
+shared(tmp_v0,tmp_v1,List::c1,org_isite1,org_ispin1,org_isite3,org_ispin3,nstate,one, i_max,tmp_V,tmp_ispin1)
     for (j = 1; j <= i_max; j++) {
-      if (CheckBit_Ajt(tmp_ispin1, list_1[j], &tmp_off) == TRUE) {
+      if (CheckBit_Ajt(tmp_ispin1, List::c1[j], &tmp_off) == TRUE) {
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
       }
     }/*for (j = 1; j <= i_max; j++)*/
@@ -705,8 +705,8 @@ void X_child_CisAjtCkuAlv_Hubbard_MPI(
 
   iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2,
                                org_isite3, org_ispin3, org_isite4, org_ispin4,
-                               (long int) myrank, &origin);
-  //printf("iCheck=%d, myrank=%d, origin=%d\n", iCheck, myrank, origin);
+                               (long int) MP::myrank, &origin);
+  //printf("iCheck=%d, MP::myrank=%d, origin=%d\n", iCheck, MP::myrank, origin);
   isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
   isite2 = Def::Tpow[2 * org_isite2 + org_ispin2];
   isite3 = Def::Tpow[2 * org_isite3 + org_ispin3];
@@ -721,7 +721,7 @@ void X_child_CisAjtCkuAlv_Hubbard_MPI(
   else {
     iCheck = CheckBit_InterAllPE(org_isite4, org_ispin4, org_isite3, org_ispin3,
                                  org_isite2, org_ispin2, org_isite1, org_ispin1,
-                                 (long int) myrank, &origin);
+                                 (long int) MP::myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
       tmp_isite4 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
@@ -734,7 +734,7 @@ void X_child_CisAjtCkuAlv_Hubbard_MPI(
     else return;
   }/*if (iCheck == FALSE)*/
 
-  if (myrank == origin) {
+  if (MP::myrank == origin) {
     if (isite1 == isite4 && isite2 == isite3) { // CisAjvCjvAis =Cis(1-njv)Ais=nis-nisnjv
             //calc nis
       X_child_CisAis_Hubbard_MPI(org_isite1, org_ispin1, tmp_V, nstate, tmp_v0, tmp_v1);
@@ -747,7 +747,7 @@ void X_child_CisAjtCkuAlv_Hubbard_MPI(
 
       //calc CisAku
 #pragma omp parallel for default(none) private(j, tmp_off) \
-shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, nstate, tmp_v0, list_1)
+shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, nstate, tmp_v0, List::c1)
       for (j = 1; j <= i_max; j++)
         CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite4, (isite1 + isite4), Adiff, tmp_V);
       
@@ -775,12 +775,12 @@ shared(i_max, tmp_V, isite1, isite4, Adiff,tmp_v1, tmp_v0,nstate)
                                          org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1);    
     }/*if (isite2 != isite3)*/
     return;
-  }//myrank =origin
+  }//MP::myrank =origin
   else {
     idim_max_buf = SendRecv_i(origin, Check::idim_max);
-    SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
+    SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
 
-    SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+    SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
     if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite
      && org_isite3 + 1 > Def::Nsite && org_isite4 + 1 > Def::Nsite)
     {
@@ -790,25 +790,25 @@ shared(i_max, tmp_V, isite1, isite4, Adiff,tmp_v1, tmp_v0,nstate)
       else Bdiff = isite3 - isite4 * 2;
 
       if (iFlgHermite == FALSE) {
-        Fsgn = X_GC_CisAjt((long int) myrank, isite2, isite1, (isite1 + isite2), Adiff, &tmp_off2);
+        Fsgn = X_GC_CisAjt((long int) MP::myrank, isite2, isite1, (isite1 + isite2), Adiff, &tmp_off2);
         Fsgn *= X_GC_CisAjt(tmp_off2, isite4, isite3, (isite3 + isite4), Bdiff, &tmp_off);
         tmp_V *= Fsgn;
       }/*if (iFlgHermite == FALSE)*/
       else {
-        Fsgn = X_GC_CisAjt((long int) myrank, isite3, isite4, (isite3 + isite4), Bdiff, &tmp_off2);
+        Fsgn = X_GC_CisAjt((long int) MP::myrank, isite3, isite4, (isite3 + isite4), Bdiff, &tmp_off2);
         Fsgn *= X_GC_CisAjt(tmp_off2, isite1, isite2, (isite1 + isite2), Adiff, &tmp_off);
         tmp_V *= Fsgn;
       }/*if (iFlgHermite == TRUE)*/
 #pragma omp parallel default(none) private(j,ioff) \
 shared(idim_max_buf,tmp_V,Large::irght, Large::ilft, Large::ihfbit, \
-v1buf,tmp_v1,nstate,tmp_v0,list_2_1,list_2_2,list_1buf,one)
+Wave::v1buf,tmp_v1,nstate,tmp_v0,List::c2_1,List::c2_2,List::c1buf,one)
       {
 #pragma omp for
         for (j = 1; j <= idim_max_buf; j++) {
-          if (GetOffComp(list_2_1, list_2_2, list_1buf[j],
+          if (GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
             Large::irght, Large::ilft, Large::ihfbit, &ioff) == TRUE)
           {
-            zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+            zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
           }
         }/*for (j = 1; j <= idim_max_buf; j++)*/
       }/*End of parallel region*/
@@ -818,25 +818,25 @@ v1buf,tmp_v1,nstate,tmp_v0,list_2_1,list_2_2,list_1buf,one)
       org_rankbit = Def::OrgTpow[2 * Def::Nsite] * origin;
 
 #pragma omp parallel default(none) private(j, dmv, tmp_off, Fsgn, ioff) \
-shared(myrank, idim_max_buf, tmp_V, tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4, org_rankbit, \
+shared(MP::myrank, idim_max_buf, tmp_V, tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4, org_rankbit, \
 org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite4, org_ispin4, \
-v1buf, tmp_v1, nstate,one, tmp_v0, list_1buf, list_2_1, list_2_2, Large::irght, Large::ilft, Large::ihfbit)
+Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::c1buf, List::c2_1, List::c2_2, Large::irght, Large::ilft, Large::ihfbit)
       {
 #pragma omp for
         for (j = 1; j <= idim_max_buf; j++) {
           if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, 
-            list_1buf[j] + org_rankbit, &tmp_off) == TRUE)
+            List::c1buf[j] + org_rankbit, &tmp_off) == TRUE)
           {
-            if (GetOffComp(list_2_1, list_2_2, tmp_off, Large::irght, Large::ilft, Large::ihfbit, &ioff) == TRUE)
+            if (GetOffComp(List::c2_1, List::c2_2, tmp_off, Large::irght, Large::ilft, Large::ihfbit, &ioff) == TRUE)
             {
               dmv = tmp_V * (std::complex<double>)Fsgn;
-              zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+              zaxpy_(&nstate, &dmv, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
             }
           }
         }/*for (j = 1; j <= idim_max_buf; j++)*/
       }/*End of parallel region*/
     }
-  }/*if (myrank != origin)*/
+  }/*if (MP::myrank != origin)*/
 }/*std::complex<double> X_child_CisAjtCkuAlv_Hubbard_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{jt} c_{ku}^\dagger c_{ku}@f$
@@ -865,8 +865,8 @@ void X_child_CisAjtCkuAku_Hubbard_MPI(
   long int org_rankbit;
   int one = 1;
   //printf("Deubg0-0: org_isite1=%d, org_ispin1=%d, org_isite2=%d, org_ispin2=%d, org_isite3=%d, org_ispin3=%d\n", org_isite1, org_ispin1,org_isite2, org_ispin2,org_isite3, org_ispin3);
-  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, (long int) myrank, &origin);
-  //printf("iCheck=%d, myrank=%d, origin=%d\n", iCheck, myrank, origin);
+  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, (long int) MP::myrank, &origin);
+  //printf("iCheck=%d, MP::myrank=%d, origin=%d\n", iCheck, MP::myrank, origin);
 
   isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
   isite2 = Def::Tpow[2 * org_isite2 + org_ispin2];
@@ -882,7 +882,7 @@ void X_child_CisAjtCkuAku_Hubbard_MPI(
     else Adiff = tmp_isite1 - tmp_isite2 * 2;
   }/*if (iCheck == TRUE)*/
   else {
-    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, (long int) myrank, &origin);
+    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, (long int) MP::myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
       tmp_isite4 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
@@ -898,7 +898,7 @@ void X_child_CisAjtCkuAku_Hubbard_MPI(
     else return;   
   }/*if (iCheck == FALSE)*/
 
-  if (myrank == origin) {// only k is in PE
+  if (MP::myrank == origin) {// only k is in PE
     //for hermite
 #pragma omp parallel default(none) private(j) \
 shared(i_max, Asum, Adiff, isite1, isite2, tmp_V, Large::mode, tmp_v0, tmp_v1,nstate)
@@ -914,39 +914,39 @@ shared(i_max, Asum, Adiff, isite1, isite2, tmp_V, Large::mode, tmp_v0, tmp_v1,ns
       }/*if (Large::mode != M_CORR)*/
     }/*End of parallel region*/
     return;
-  }//myrank =origin
+  }//MP::myrank =origin
   else {
     idim_max_buf = SendRecv_i(origin, Check::idim_max);
-    SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
-    SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+    SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
+    SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
 #pragma omp parallel default(none) private(j,dmv,ioff,tmp_off,Fsgn,Adiff,org_rankbit) \
-shared(idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,isite3,v1buf,tmp_v1, \
-nstate,one,tmp_v0,list_1buf,list_2_1,list_2_2,origin,org_isite3,myrank,isite1,isite2, \
+shared(idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,isite3,Wave::v1buf,tmp_v1, \
+nstate,one,tmp_v0,List::c1buf,List::c2_1,List::c2_2,origin,org_isite3,MP::myrank,isite1,isite2, \
 org_isite1,org_isite2,Def::Nsite,Large::irght, Large::ilft, Large::ihfbit,Def::OrgTpow)
     {
 
       if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite) {
         if (isite2 > isite1) Adiff = isite2 - isite1 * 2;
         else Adiff = isite1 - isite2 * 2;
-        SgnBit(((long int) myrank & Adiff), &Fsgn);
+        SgnBit(((long int) MP::myrank & Adiff), &Fsgn);
         tmp_V *= Fsgn;
 
         if (org_isite3 + 1 > Def::Nsite) {
 #pragma omp for
           for (j = 1; j <= idim_max_buf; j++) {
-            GetOffComp(list_2_1, list_2_2, list_1buf[j],
+            GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
               Large::irght, Large::ilft, Large::ihfbit, &ioff);
-            zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+            zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
           }/*for (j = 1; j <= idim_max_buf; j++)*/
         }/*if (org_isite3 + 1 > Def::Nsite)*/
         else { //org_isite3 <= Def::Nsite
 #pragma omp for
           for (j = 1; j <= idim_max_buf; j++) {
-            if (CheckBit_Ajt(isite3, list_1buf[j], &tmp_off) == TRUE) {
-              GetOffComp(list_2_1, list_2_2, list_1buf[j],
+            if (CheckBit_Ajt(isite3, List::c1buf[j], &tmp_off) == TRUE) {
+              GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
                 Large::irght, Large::ilft, Large::ihfbit, &ioff);
-              zaxpy_(&nstate, &tmp_V, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+              zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
             }
           }/*for (j = 1; j <= idim_max_buf; j++)*/
         }/*if (org_isite3 + 1 <= Def::Nsite)*/
@@ -956,16 +956,16 @@ org_isite1,org_isite2,Def::Nsite,Large::irght, Large::ilft, Large::ihfbit,Def::O
 #pragma omp for
         for (j = 1; j <= idim_max_buf; j++) {
           if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, 
-            list_1buf[j] + org_rankbit, &tmp_off) == TRUE) {
+            List::c1buf[j] + org_rankbit, &tmp_off) == TRUE) {
             dmv = tmp_V * (std::complex<double>)Fsgn;
-            GetOffComp(list_2_1, list_2_2, tmp_off,
+            GetOffComp(List::c2_1, List::c2_2, tmp_off,
               Large::irght, Large::ilft, Large::ihfbit, &ioff);
-            zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+            zaxpy_(&nstate, &dmv, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
           }
         }/*for (j = 1; j <= idim_max_buf; j++)*/
       }
     }/*End of parallel region*/
-  }/*if (myrank != origin)*/
+  }/*if (MP::myrank != origin)*/
 }/*std::complex<double> X_child_CisAjtCkuAku_Hubbard_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{is} c_{jt}^\dagger c_{ku}@f$
@@ -1003,18 +1003,18 @@ void X_child_CisAis_Hubbard_MPI(
 
   isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
   if (org_isite1 + 1 > Def::Nsite) {
-    if (CheckBit_Ajt(isite1, (long int) myrank, &tmp_off) == FALSE)
+    if (CheckBit_Ajt(isite1, (long int) MP::myrank, &tmp_off) == FALSE)
       return;
 
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
   }/*if (org_isite1 + 1 > Def::Nsite)*/
   else {
 #pragma omp parallel for default(none) private(j, tmp_off) \
-shared(tmp_v0, tmp_v1, list_1,nstate,one, i_max, tmp_V, isite1)
+shared(tmp_v0, tmp_v1, List::c1,nstate,one, i_max, tmp_V, isite1)
     for (j = 1; j <= i_max; j++) {
-      if (X_CisAis(list_1[j], isite1) != 0) {
+      if (X_CisAis(List::c1[j], isite1) != 0) {
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
-      }/*if (X_CisAis(list_1[j], isite1) != 0)*/
+      }/*if (X_CisAis(List::c1[j], isite1) != 0)*/
     }/*for (j = 1; j <= i_max; j++)*/
   }/*if (org_isite1 + 1 <= Def::Nsite)*/
 }/*std::complex<double> X_child_CisAis_Hubbard_MPI*/
@@ -1042,19 +1042,19 @@ void X_GC_Cis_MPI(
   // org_isite >= Nsite
   mask2 = (int)Tpow[2 * org_isite + org_ispin];
 
-  origin = myrank ^ mask2; // XOR
+  origin = MP::myrank ^ mask2; // XOR
   state2 = origin & mask2;
 
-  //if state2 = mask2, the state (org_isite, org_ispin) is not occupied in myrank
-  //origin: if the state (org_isite, org_ispin) is occupied in myrank, the state is not occupied in origin.
+  //if state2 = mask2, the state (org_isite, org_ispin) is not occupied in MP::myrank
+  //origin: if the state (org_isite, org_ispin) is occupied in MP::myrank, the state is not occupied in origin.
 
-  bit2diff = myrank - ((2 * mask2 - 1) & myrank);
+  bit2diff = MP::myrank - ((2 * mask2 - 1) & MP::myrank);
 
   //SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
   SgnBit((long int) (bit2diff), &Fsgn); // Fermion sign
 
   idim_max_buf = SendRecv_i(origin, idim_max);
-  SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
   if (state2 == mask2) {
     trans = 0;
@@ -1064,7 +1064,7 @@ void X_GC_Cis_MPI(
   }
   else return;
 
-  zaxpy_long(idim_max_buf*nstate, trans, &v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(idim_max_buf*nstate, trans, &Wave::v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_GC_Cis_MPI*/
 /**
 @brief Single creation/annihilation operator
@@ -1090,25 +1090,25 @@ void X_GC_Ajt_MPI(
   // org_isite >= Nsite
   mask2 = (int)Tpow[2 * org_isite + org_ispin];
 
-  origin = myrank ^ mask2; // XOR
+  origin = MP::myrank ^ mask2; // XOR
   state2 = origin & mask2;
 
-  //if state2 = mask2, the state (org_isite, org_ispin) is not occupied in myrank
-  //origin: if the state (org_isite, org_ispin) is occupied in myrank, the state is not occupied in origin.
+  //if state2 = mask2, the state (org_isite, org_ispin) is not occupied in MP::myrank
+  //origin: if the state (org_isite, org_ispin) is occupied in MP::myrank, the state is not occupied in origin.
 
-  bit2diff = myrank - ((2 * mask2 - 1) & myrank);
+  bit2diff = MP::myrank - ((2 * mask2 - 1) & MP::myrank);
 
   //SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
   SgnBit((long int) (bit2diff), &Fsgn); // Fermion sign
 
   idim_max_buf = SendRecv_i(origin, idim_max);
-  SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
   if (     state2 == 0    ) trans = 0;
   else if (state2 == mask2) trans = (double)Fsgn * tmp_trans;
   else return;
 
-  zaxpy_long(idim_max_buf*nstate, trans, &v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(idim_max_buf*nstate, trans, &Wave::v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> X_GC_Ajt_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger@f$
@@ -1135,19 +1135,19 @@ void X_Cis_MPI(
   // org_isite >= Nsite
   mask2 = (int)Tpow[2 * org_isite + org_ispin];
 
-  origin = myrank ^ mask2; // XOR
+  origin = MP::myrank ^ mask2; // XOR
   state2 = origin & mask2;
 
-  //if state2 = mask2, the state (org_isite, org_ispin) is not occupied in myrank
-  //origin: if the state (org_isite, org_ispin) is occupied in myrank, the state is not occupied in origin.
+  //if state2 = mask2, the state (org_isite, org_ispin) is not occupied in MP::myrank
+  //origin: if the state (org_isite, org_ispin) is occupied in MP::myrank, the state is not occupied in origin.
 
-  bit2diff = myrank - ((2 * mask2 - 1) & myrank);
+  bit2diff = MP::myrank - ((2 * mask2 - 1) & MP::myrank);
 
   SgnBit((long int) (bit2diff), &Fsgn); // Fermion sign
 
   idim_max_buf = SendRecv_i(origin, idim_max);
-  SendRecv_iv(origin, idim_max + 1, idim_max_buf + 1, list_1_org, list_1buf_org);
-  SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_iv(origin, idim_max + 1, idim_max_buf + 1, List::c1_org, List::c1buf_org);
+  SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
   if (state2 == mask2) {
     trans = 0;
@@ -1158,12 +1158,12 @@ void X_Cis_MPI(
   else return;
 
 #pragma omp parallel for default(none) private(j) \
-shared(idim_max_buf, trans, ioff, _irght, _ilft, _ihfbit, list_2_1, list_2_2, \
-v1buf, tmp_v1, nstate,one, tmp_v0, list_1buf_org)
+shared(idim_max_buf, trans, ioff, _irght, _ilft, _ihfbit, List::c2_1, List::c2_2, \
+Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::c1buf_org)
   for (j = 1; j <= idim_max_buf; j++) {//idim_max_buf -> original
-    GetOffComp(list_2_1, list_2_2, list_1buf_org[j],
+    GetOffComp(List::c2_1, List::c2_2, List::c1buf_org[j],
       _irght, _ilft, _ihfbit, &ioff);
-    zaxpy_(&nstate, &trans, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+    zaxpy_(&nstate, &trans, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
   }/*for (j = 1; j <= idim_max_buf; j++)*/
 }/*std::complex<double> X_GC_Cis_MPI*/
 /**
@@ -1190,18 +1190,18 @@ void X_Ajt_MPI(
   // org_isite >= Nsite
   mask2 = (int)Tpow[2 * org_isite + org_ispin];
 
-  origin = myrank ^ mask2; // XOR
+  origin = MP::myrank ^ mask2; // XOR
   state2 = origin & mask2;
 
-  //if state2 = mask2, the state (org_isite, org_ispin) is not occupied in myrank
-  //origin: if the state (org_isite, org_ispin) is occupied in myrank, the state is not occupied in origin.
+  //if state2 = mask2, the state (org_isite, org_ispin) is not occupied in MP::myrank
+  //origin: if the state (org_isite, org_ispin) is occupied in MP::myrank, the state is not occupied in origin.
 
-  bit2diff = myrank - ((2 * mask2 - 1) & myrank);
+  bit2diff = MP::myrank - ((2 * mask2 - 1) & MP::myrank);
 
   SgnBit((long int) (bit2diff), &Fsgn); // Fermion sign
   idim_max_buf = SendRecv_i(origin, idim_max);
-  SendRecv_iv(origin, idim_max + 1, idim_max_buf + 1, list_1_org, list_1buf_org);
-  SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_iv(origin, idim_max + 1, idim_max_buf + 1, List::c1_org, List::c1buf_org);
+  SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
   if (state2 == 0) {
     trans = 0;
@@ -1212,11 +1212,11 @@ void X_Ajt_MPI(
   else return;
 
 #pragma omp parallel for default(none) private(j, ioff) \
-shared(idim_max_buf, trans, _irght, _ilft, _ihfbit, list_2_1, list_2_2, \
-v1buf, tmp_v1, nstate,one, tmp_v0, list_1buf_org)
+shared(idim_max_buf, trans, _irght, _ilft, _ihfbit, List::c2_1, List::c2_2, \
+Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::c1buf_org)
   for (j = 1; j <= idim_max_buf; j++) {
-    GetOffComp(list_2_1, list_2_2, list_1buf_org[j],
+    GetOffComp(List::c2_1, List::c2_2, List::c1buf_org[j],
       _irght, _ilft, _ihfbit, &ioff);
-    zaxpy_(&nstate, &trans, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+    zaxpy_(&nstate, &trans, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
   }
 }/*std::complex<double> X_Ajt_MPI*/

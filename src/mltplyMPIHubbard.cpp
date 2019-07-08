@@ -55,14 +55,13 @@ void X_GC_child_general_hopp_MPIdouble(
   std::complex<double> **tmp_v1 //!< [in] v0 = H v1
 ) {
   int mask1, mask2, state1, state2, origin, bitdiff, Fsgn;
-  long int idim_max_buf;
   std::complex<double> trans;
 
   mask1 = (int)Def::Tpow[2 * org_isite1 + org_ispin1];
   mask2 = (int)Def::Tpow[2 * org_isite2 + org_ispin2];
   if (mask2 > mask1) bitdiff = mask2 - mask1 * 2;
   else bitdiff = mask1 - mask2 * 2;
-  origin = myrank ^ (mask1 + mask2);
+  origin = MP::myrank ^ (mask1 + mask2);
 
   state1 = origin & mask1;
   state2 = origin & mask2;
@@ -78,10 +77,9 @@ void X_GC_child_general_hopp_MPIdouble(
   }/*if (state1 == mask1 && state2 == 0)*/
   else return;
 
-  idim_max_buf = SendRecv_i(origin, Check::idim_max);
-  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
-  zaxpy_long(Check::idim_max*nstate, trans, &v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, trans, &Wave::v1buf[1][0], &tmp_v0[1][0]);
 }/*void GC_child_general_hopp_MPIdouble*/
 /**
 @brief Hopping term in Hubbard + MPI
@@ -108,7 +106,7 @@ void X_child_CisAjt_MPIdouble(
   mask2 = (int) Def::Tpow[2 * org_isite2 + org_ispin2];
   if (mask2 > mask1) bitdiff = mask2 - mask1 * 2;
   else bitdiff = mask1 - mask2 * 2;
-  origin = myrank ^ (mask1 + mask2);
+  origin = MP::myrank ^ (mask1 + mask2);
 
   state1 = origin & mask1;
   state2 = origin & mask2;
@@ -127,16 +125,16 @@ void X_child_CisAjt_MPIdouble(
   else return;
 
   idim_max_buf = SendRecv_i(origin, Check::idim_maxOrg);
-  SendRecv_iv(origin, Check::idim_maxOrg + 1, idim_max_buf + 1, list_1_org, list_1buf_org);
-  SendRecv_cv(origin, Check::idim_maxOrg*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_iv(origin, Check::idim_maxOrg + 1, idim_max_buf + 1, List::c1_org, List::c1buf_org);
+  SendRecv_cv(origin, Check::idim_maxOrg*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
   
 #pragma omp parallel for default(none) private(j, ioff) \
-shared(idim_max_buf, trans, list_2_1, list_2_2, list_1buf_org,v1buf, tmp_v0, \
+shared(idim_max_buf, trans,List::c2_1,List::c2_2,List::c1buf_org,Wave::v1buf, tmp_v0, \
 nstate,one,Large::irght, Large::ilft, Large::ihfbit)
   for (j = 1; j <= idim_max_buf; j++) {
-    GetOffComp(list_2_1, list_2_2, list_1buf_org[j],
+    GetOffComp(List::c2_1, List::c2_2, List::c1buf_org[j],
                Large::irght, Large::ilft, Large::ihfbit, &ioff);
-    zaxpy_(&nstate, &trans, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+    zaxpy_(&nstate, &trans, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
   }/*for (j = 1; j <= idim_max_buf; j++)*/
 }/*void child_CisAjt_MPIdouble*/
 /**
@@ -180,14 +178,14 @@ void X_GC_child_general_hopp_MPIsingle(
   */
   mask2 = (int) Def::Tpow[2 * org_isite2 + org_ispin2];
   bit2diff = mask2 - 1;
-  origin = myrank ^ mask2;
+  origin = MP::myrank ^ mask2;
   state2 = origin & mask2;
 
   SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
 
   idim_max_buf = SendRecv_i(origin, Check::idim_max);
 
-  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
   /*
     Index in the intra PE
@@ -208,7 +206,7 @@ void X_GC_child_general_hopp_MPIsingle(
   bit1diff = Def::Tpow[2 * Def::Nsite - 1] * 2 - mask1 * 2;
 
 #pragma omp parallel default(none) private(j,dmv,state1,Fsgn,ioff) \
-shared(idim_max_buf,trans,mask1,state1check,bit1diff,v1buf,tmp_v1,tmp_v0,nstate,one)
+shared(idim_max_buf,trans,mask1,state1check,bit1diff,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
   {
 #pragma omp for
     for (j = 0; j < idim_max_buf; j++) {
@@ -221,7 +219,7 @@ shared(idim_max_buf,trans,mask1,state1check,bit1diff,v1buf,tmp_v1,tmp_v0,nstate,
         ioff = j ^ mask1;
 
         dmv = (double)Fsgn * trans;
-        zaxpy_(&nstate, &dmv, &v1buf[j + 1][0], &one, &tmp_v0[ioff + 1][0], &one);
+        zaxpy_(&nstate, &dmv, &Wave::v1buf[j + 1][0], &one, &tmp_v0[ioff + 1][0], &one);
       }/*if (state1 == state1check)*/
     }/*for (j = 0; j < idim_max_buf; j++)*/
 
@@ -268,7 +266,7 @@ void X_child_general_hopp_MPIdouble(
 
   if (mask2 > mask1) bitdiff = mask2 - mask1 * 2;
   else bitdiff = mask1 - mask2 * 2;
-  origin = myrank ^ (mask1 + mask2);
+  origin = MP::myrank ^ (mask1 + mask2);
 
   state1 = origin & mask1;
   state2 = origin & mask2;
@@ -285,18 +283,18 @@ void X_child_general_hopp_MPIdouble(
   else return;
 
   idim_max_buf = SendRecv_i(origin, Check::idim_max);
-  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
-  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
 #pragma omp parallel default(none) private(j,Fsgn,ioff) \
 shared(idim_max_buf,trans,Large::irght, Large::ilft, Large::ihfbit, \
-list_2_1,list_2_2,list_1buf,v1buf,tmp_v1,tmp_v0,nstate,one)
+List::c2_1,List::c2_2,List::c1buf,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
   {
 #pragma omp for
     for (j = 1; j <= idim_max_buf; j++) {
-      GetOffComp(list_2_1, list_2_2, list_1buf[j],
+      GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
                  Large::irght, Large::ilft, Large::ihfbit, &ioff);
-      zaxpy_(&nstate, &trans, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+      zaxpy_(&nstate, &trans, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
     }/*for (j = 1; j <= idim_max_buf; j++)*/
   }/*End of parallel region*/
 }/*void child_general_hopp_MPIdouble*/
@@ -340,15 +338,15 @@ void X_child_general_hopp_MPIsingle(
   */
   mask2 = (int)Def::Tpow[2 * org_isite2+org_ispin2];
   bit2diff = mask2 - 1;
-  origin = myrank ^ mask2;
+  origin = MP::myrank ^ mask2;
 
   state2 = origin & mask2;
 
   SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
 
   idim_max_buf = SendRecv_i(origin, Check::idim_max);
-  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
-  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
   /*
     Index in the intra PE
   */
@@ -369,22 +367,22 @@ void X_child_general_hopp_MPIsingle(
   bit1diff = Def::Tpow[2 * Def::Nsite - 1] * 2 - mask1 * 2;
 
 #pragma omp parallel default(none) private(j,dmv,Fsgn,ioff,jreal,state1) \
-shared(idim_max_buf,trans,mask1,state1check,bit1diff,myrank,Large::irght, Large::ilft, Large::ihfbit, \
-list_1,list_2_1,list_2_2,list_1buf,v1buf,tmp_v1,tmp_v0,nstate,one)
+shared(idim_max_buf,trans,mask1,state1check,bit1diff,MP::myrank,Large::irght, Large::ilft, Large::ihfbit, \
+List::c1,List::c2_1,List::c2_2,List::c1buf,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
   {
 #pragma omp for
     for (j = 1; j <= idim_max_buf; j++) {
 
-      jreal = list_1buf[j];
+      jreal = List::c1buf[j];
       state1 = jreal & mask1;
 
       if (state1 == state1check) {
         SgnBit(jreal & bit1diff,&Fsgn);
-        GetOffComp(list_2_1, list_2_2, jreal ^ mask1,
+        GetOffComp(List::c2_1, List::c2_2, jreal ^ mask1,
             Large::irght, Large::ilft, Large::ihfbit, &ioff);
 
         dmv = (double)Fsgn * trans;
-        zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+        zaxpy_(&nstate, &dmv, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
       }/*if (state1 == state1check)*/
     }/*for (j = 1; j <= idim_max_buf; j++)*/
   }/*End of parallel region*/
@@ -414,15 +412,15 @@ void X_child_CisAjt_MPIsingle(
   */
   mask2 = (int)Def::Tpow[2 * org_isite2+org_ispin2];
   bit2diff = mask2 - 1;
-  origin = myrank ^ mask2;
+  origin = MP::myrank ^ mask2;
 
   state2 = origin & mask2;
 
   SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
 
   idim_max_buf = SendRecv_i(origin, Check::idim_maxOrg);
-  SendRecv_iv(origin, Check::idim_maxOrg + 1, idim_max_buf + 1, list_1_org, list_1buf_org);
-  SendRecv_cv(origin, Check::idim_maxOrg*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_iv(origin, Check::idim_maxOrg + 1, idim_max_buf + 1, List::c1_org, List::c1buf_org);
+  SendRecv_cv(origin, Check::idim_maxOrg*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
   /*
     Index in the intra PE
   */
@@ -440,18 +438,18 @@ void X_child_CisAjt_MPIsingle(
   bit1diff = Def::Tpow[2 * Def::Nsite - 1] * 2 - mask1 * 2;
 
 #pragma omp parallel for default(none) private(j,dmv,Fsgn,ioff,jreal,state1) \
-shared(idim_max_buf,trans,mask1,state1check,bit1diff,list_2_1,list_2_2,list_1buf_org,list_1, \
-v1buf, tmp_v0,nstate,one,Large::irght, Large::ilft, Large::ihfbit)
+shared(idim_max_buf,trans,mask1,state1check,bit1diff,List::c2_1,List::c2_2,List::c1buf_org, \
+List::c1,Wave::v1buf, tmp_v0,nstate,one,Large::irght, Large::ilft, Large::ihfbit)
   for (j = 1; j <= idim_max_buf; j++) {
-    jreal = list_1buf_org[j];
+    jreal = List::c1buf_org[j];
     state1 = jreal & mask1;
     if (state1 == state1check) {
       SgnBit(jreal & bit1diff, &Fsgn);
-      GetOffComp(list_2_1, list_2_2, jreal ^ mask1,
+      GetOffComp(List::c2_1, List::c2_2, jreal ^ mask1,
         Large::irght, Large::ilft, Large::ihfbit, &ioff);
       if (ioff != 0) {
         dmv = (double)Fsgn * trans;
-        zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+        zaxpy_(&nstate, &dmv, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
       }/*if(ioff !=0)*/
     }/*if (state1 == state1check)*/
   }/*for (j = 1; j <= idim_max_buf; j++)*/

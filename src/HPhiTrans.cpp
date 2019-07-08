@@ -157,7 +157,8 @@ int TransferWithPeierls( const double time) {
     }
     dir = dirX * (ri_x - rj_x) + dirY * (ri_y - rj_y);
     
-    Def::EDParaGeneralTransfer[i] = Def::ParaGeneralTransfer[i] * std::exp(-I * VecPot * dir);
+    Def::EDParaGeneralTransfer[i] = Def::ParaGeneralTransfer[i] 
+      * std::exp(-std::complex<double>(0.0, 1.0) * VecPot * dir);
   }
 
   return 0;

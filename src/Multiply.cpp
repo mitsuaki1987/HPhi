@@ -51,20 +51,20 @@ int Multiply
 
   i_max = Check::idim_max;
   Ns = 1.0*Def::NsiteMPI;
-  // mltply is in expec_energy.cpp v0=H*v1
+  // mltply is in expec_energy.cpp Wave::v0=H*Wave::v1
 #pragma omp parallel for default(none) private(i,rand_i)  \
-shared(v0, v1,NumAve,i_max, Ns, LargeValue)
+shared(Wave::v0, Wave::v1,Step::NumAve,i_max, Ns, Step::LargeValue)
   for (i = 1; i <= i_max; i++) {
-    for (rand_i = 0; rand_i < NumAve; rand_i++) {
-      v0[i][rand_i] = LargeValue * v1[i][rand_i] - v0[i][rand_i] / Ns;  //v0=(l-H/Ns)*v1
+    for (rand_i = 0; rand_i < Step::NumAve; rand_i++) {
+      Wave::v0[i][rand_i] = Step::LargeValue * Wave::v1[i][rand_i] - Wave::v0[i][rand_i] / Ns;  //Wave::v0=(l-H/Ns)*Wave::v1
     }
   }
-  NormMPI_dv(i_max, NumAve, v0, global_norm);
+  NormMPI_dv(i_max, Step::NumAve, Wave::v0, Step::global_norm);
 #pragma omp parallel for default(none) private(i_max,i,rand_i) \
-shared(v0,NumAve,global_norm)
+shared(Wave::v0,Step::NumAve,Step::global_norm)
   for (i = 1; i <= i_max; i++) 
-    for (rand_i = 0; rand_i < NumAve; rand_i++)
-      v0[i][rand_i] = v0[i][rand_i] / global_norm[rand_i];
+    for (rand_i = 0; rand_i < Step::NumAve; rand_i++)
+      Wave::v0[i][rand_i] = Wave::v0[i][rand_i] / Step::global_norm[rand_i];
   return 0;
 }
 /**
@@ -88,56 +88,56 @@ int MultiplyForTEM
   std::complex<double> tmp2 = 0.0;
   double dt = Param::TimeSlice;
 
-  //Make |v0> = |psi(t+dt)> from |v1> = |psi(t)> and |v0> = H |psi(t)>
+  //Make |Wave::v0> = |psi(t+dt)> from |Wave::v1> = |psi(t)> and |Wave::v0> = H |psi(t)>
   i_max = Check::idim_max;
-  // mltply is in expec_energy.cpp v0=H*v1
+  // mltply is in expec_energy.cpp Wave::v0=H*Wave::v1
   if (dt < pow(10.0, -14)) {
 #pragma omp parallel for default(none) private(i, tmp2) \
-shared(I,v0, v1, v2,i_max, dt)
+shared(Wave::v0, Wave::v1, v2,i_max, dt)
     for (i = 1; i <= i_max; i++) {
-      tmp2 = v0[i][0];
-      v0[i][0] = v1[i][0];  //v0=(1-i*dt*H)*v1
-      v1[i][0] = tmp2;
-      v2[i][0] = 0.0 + I * 0.0;
+      tmp2 = Wave::v0[i][0];
+      Wave::v0[i][0] = Wave::v1[i][0];  //Wave::v0=(1-i*dt*H)*Wave::v1
+      Wave::v1[i][0] = tmp2;
+      v2[i][0] = 0.0;
     }
-    mltply(1, v2, v1);
+    mltply(1, v2, Wave::v1);
   }
   else {
-    tmp1 *= -I * dt;
+    tmp1 *= std::complex<double>(0.0, -dt);
 #pragma omp parallel for default(none) private(i, tmp2) \
-shared(v0, v1, v2,I,i_max, dt, tmp1)
+shared(Wave::v0, Wave::v1, v2,i_max, dt, tmp1)
     for (i = 1; i <= i_max; i++) {
-      tmp2 = v0[i][0];
-      v0[i][0] = v1[i][0] + tmp1 * tmp2;  //v0=(1-i*dt*H)*v1
-      v1[i][0] = tmp2;
-      v2[i][0] = 0.0 + I * 0.0;
+      tmp2 = Wave::v0[i][0];
+      Wave::v0[i][0] = Wave::v1[i][0] + tmp1 * tmp2;  //Wave::v0=(1-i*dt*H)*Wave::v1
+      Wave::v1[i][0] = tmp2;
+      v2[i][0] = 0.0;
     }
     for (coef = 2; coef <= Param::ExpandCoef; coef++) {
-      tmp1 *= -I * dt / (std::complex<double>)coef;
-      //v2 = H*v1 = H^coef |psi(t)>
-      mltply(1, v2, v1);
+      tmp1 *= std::complex<double>(0.0, -dt) / (std::complex<double>)coef;
+      //v2 = H*Wave::v1 = H^coef |psi(t)>
+      mltply(1, v2, Wave::v1);
 
 #pragma omp parallel for default(none) private(i) \
-shared(I, v0, v1, v2,i_max, tmp1, myrank)
+shared(Wave::v0, Wave::v1, v2,i_max, tmp1, MP::myrank)
       for (i = 1; i <= i_max; i++) {
-        v0[i][0] += tmp1 * v2[i][0];
-        v1[i][0] = v2[i][0];
-        v2[i][0] = 0.0 + I * 0.0;
+        Wave::v0[i][0] += tmp1 * v2[i][0];
+        Wave::v1[i][0] = v2[i][0];
+        v2[i][0] = 0.0;
       }
     }
   }
   dnorm = 0.0;
 #pragma omp parallel for default(none) reduction(+: dnorm) private(i) \
-shared(v0,i_max)
+shared(Wave::v0,i_max)
   for (i = 1; i <= i_max; i++) {
-    dnorm += real(conj(v0[i][0])*v0[i][0]);
+    dnorm += real(conj(Wave::v0[i][0])*Wave::v0[i][0]);
   }
   dnorm = SumMPI_d(dnorm);
   dnorm = sqrt(dnorm);
-  global_norm[0] = dnorm;
-#pragma omp parallel for default(none) private(i) shared(v0,i_max, dnorm)
+  Step::global_norm[0] = dnorm;
+#pragma omp parallel for default(none) private(i) shared(Wave::v0,i_max, dnorm)
   for (i = 1; i <= i_max; i++) {
-    v0[i][0] = v0[i][0] / dnorm;
+    Wave::v0[i][0] = Wave::v0[i][0] / dnorm;
   }
   return 0;
 }

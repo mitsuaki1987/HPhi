@@ -69,7 +69,7 @@ int GetPairExcitedStateHalfSpinGC(
           }
         }
         else {  // transverse magnetic field
-            //fprintf(stdoutMPI, "Debug: test, org_isite1=%d, org_sigma1=%d, orgsima_2=%d\n", org_isite1, org_sigma1, org_sigma2);
+            //fprintf(MP::STDOUT, "Debug: test, org_isite1=%d, org_sigma1=%d, orgsima_2=%d\n", org_isite1, org_sigma1, org_sigma2);
           X_GC_child_CisAit_spin_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, tmp_trans, nstate, tmp_v0, tmp_v1);
         }
       }
@@ -97,7 +97,7 @@ shared(tmp_v0, tmp_v1,one,nstate,i_max, isite1, org_sigma1, tmp_trans)
         }
         else {
           // transverse magnetic field
-          // fprintf(stdoutMPI, "Debug: isite1=%d, org_sigma2=%d\n", isite1, org_sigma2);
+          // fprintf(MP::STDOUT, "Debug: isite1=%d, org_sigma2=%d\n", isite1, org_sigma2);
 #pragma omp parallel for default(none) private(j, tmp_sgn, tmp_off,dmv)    \
 shared(tmp_v0, tmp_v1,one,nstate,i_max, isite1, org_sigma2, tmp_trans)
           for (j = 1; j <= i_max; j++) {
@@ -111,7 +111,7 @@ shared(tmp_v0, tmp_v1,one,nstate,i_max, isite1, org_sigma2, tmp_trans)
       }
     }
     else {
-      fprintf(stdoutMPI, "ERROR: hopping is not allowed in localized spin system\n");
+      fprintf(MP::STDOUT, "ERROR: hopping is not allowed in localized spin system\n");
       return FALSE;
     }
   }
@@ -202,7 +202,7 @@ Def::SiteToBit, Def::Tpow)
       }
     }
     else {
-      fprintf(stdoutMPI, "ERROR: hopping is not allowed in localized spin system\n");
+      fprintf(MP::STDOUT, "ERROR: hopping is not allowed in localized spin system\n");
       return FALSE;
     }
   }
@@ -270,7 +270,7 @@ int GetPairExcitedStateHalfSpin(
       if (org_isite1 == org_isite2) {
         if (org_isite1 > Def::Nsite) {
           is1_up = Def::Tpow[org_isite1 - 1];
-          ibit1 = X_SpinGC_CisAis((long int) myrank + 1, is1_up, org_sigma1);
+          ibit1 = X_SpinGC_CisAis((long int) MP::myrank + 1, is1_up, org_sigma1);
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
             if (ibit1 == 0) {
               dmv = -tmp_trans;
@@ -312,7 +312,7 @@ shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma1,tmp_trans)
         }
       }
       else {
-        fprintf(stdoutMPI, "Error: isite1 must be equal to isite2 for Spin system. \n");
+        fprintf(MP::STDOUT, "Error: isite1 must be equal to isite2 for Spin system. \n");
         return FALSE;
       }
     }
@@ -324,7 +324,7 @@ shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma1,tmp_trans)
       else {
         isite1 = Def::Tpow[org_isite1 - 1];
 #pragma omp parallel for default(none) private(j,tmp_off,num1,dmv) \
-shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma2,tmp_trans,list_1_org,list_1,list_2_1,list_2_2)
+shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma2,tmp_trans)
         for (j = 1; j <= i_max; j++) {
           num1 = X_Spin_CisAit(j, isite1, org_sigma2, &tmp_off);
           if (num1 != 0) {
@@ -372,7 +372,7 @@ int GetPairExcitedStateGeneralSpin(
       if (org_isite1 > Def::Nsite) {
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
-          num1 = BitCheckGeneral((long int) myrank,
+          num1 = BitCheckGeneral((long int) MP::myrank,
             org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
             if (num1 == 0) {
@@ -404,20 +404,20 @@ shared(tmp_v0, tmp_v1,one,nstate,i_max, tmp_trans)
           // longitudinal magnetic field
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
 #pragma omp parallel for default(none) private(j, num1,dmv) \
-shared(tmp_v0, tmp_v1, list_1,one,nstate,i_max, org_isite1, org_sigma1, tmp_trans, \
+shared(tmp_v0, tmp_v1, List::c1,one,nstate,i_max, org_isite1, org_sigma1, tmp_trans, \
 Def::SiteToBit, Def::Tpow)
             for (j = 1; j <= i_max; j++) {
-              num1 = BitCheckGeneral(list_1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
+              num1 = BitCheckGeneral(List::c1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
               dmv = -tmp_trans * (1.0 - num1);
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
             }
           }
           else {
 #pragma omp parallel for default(none) private(j, num1,dmv) \
-shared(tmp_v0, tmp_v1, list_1,one,nstate,i_max, org_isite1, \
+shared(tmp_v0, tmp_v1, List::c1,one,nstate,i_max, org_isite1, \
 org_sigma1, tmp_trans, Def::SiteToBit, Def::Tpow)
             for (j = 1; j <= i_max; j++) {
-              num1 = BitCheckGeneral(list_1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
+              num1 = BitCheckGeneral(List::c1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
               dmv = tmp_trans * (std::complex<double>)num1;
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
             }
@@ -425,10 +425,10 @@ org_sigma1, tmp_trans, Def::SiteToBit, Def::Tpow)
         }//org_sigma1=org_sigma2
         else {//org_sigma1 != org_sigma2
 #pragma omp parallel for default(none) private(j, tmp_sgn, tmp_off, off) \
-shared(tmp_v0, tmp_v1, list_1_org, list_1,one,nstate, i_max, org_isite1, Large::ihfbit, \
-org_sigma1, org_sigma2, tmp_trans, myrank, Def::SiteToBit, Def::Tpow)
+shared(tmp_v0, tmp_v1, List::c1_org,one,nstate, i_max, org_isite1, Large::ihfbit, \
+org_sigma1, org_sigma2, tmp_trans, MP::myrank, Def::SiteToBit, Def::Tpow)
           for (j = 1; j <= i_max; j++) {
-            tmp_sgn = GetOffCompGeneralSpin(list_1_org[j], org_isite1, org_sigma2, org_sigma1, &off,
+            tmp_sgn = GetOffCompGeneralSpin(List::c1_org[j], org_isite1, org_sigma2, org_sigma1, &off,
               Def::SiteToBit, Def::Tpow);
             if (tmp_sgn != FALSE) {
               ConvertToList1GeneralSpin(off, Large::ihfbit, &tmp_off);
@@ -439,7 +439,7 @@ org_sigma1, org_sigma2, tmp_trans, myrank, Def::SiteToBit, Def::Tpow)
       }
     }
     else {
-      fprintf(stdoutMPI, "ERROR: hopping is not allowed in localized spin system\n");
+      fprintf(MP::STDOUT, "ERROR: hopping is not allowed in localized spin system\n");
       return FALSE;
     }//org_isite1 != org_isite2
   }

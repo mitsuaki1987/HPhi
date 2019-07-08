@@ -116,7 +116,7 @@ int diag_magma_cmp(int xNsize, std::complex<double> **A,
     k=0;
     for(i=0;i<xNsize;i++){
         for(j=0;j<xNsize;j++){
-            vec[i][j] = MAGMA_Z_REAL(a[k]) + MAGMA_Z_IMAG(a[k]) * I;
+            vec[i][j] = std::complex<double>(MAGMA_Z_REAL(a[k]), MAGMA_Z_IMAG(a[k]));
             k++;
         }
     }

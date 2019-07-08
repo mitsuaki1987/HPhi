@@ -86,13 +86,13 @@ int mltply( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp
 
   StartTimer(100);
 #pragma omp parallel for default(none) private(dmv) \
-shared(tmp_v0, tmp_v1, list_Diagonal,one,nstate,i_max)
+shared(tmp_v0, tmp_v1, List::Diagonal,one,nstate,i_max)
   for (j = 1; j <= i_max; j++) {
-    dmv = list_Diagonal[j];
+    dmv = List::Diagonal[j];
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
   }
   StopTimer(100);
-  if (Def::iCalcType == TimeEvolution) diagonalcalcForTE(step_i, &tmp_v0[0][0], &tmp_v1[0][0]);
+  if (Def::iCalcType == TimeEvolution) diagonalcalcForTE(Step::step_i, &tmp_v0[0][0], &tmp_v1[0][0]);
   
   switch (Def::iCalcModel) {
   case HubbardGC:

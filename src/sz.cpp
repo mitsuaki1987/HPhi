@@ -527,7 +527,7 @@ int child_omp_sz_Kondo(
          */
         list_2_1_[ia]=ja+1;
         list_2_2_[ib]=jb+1;
-        //printf("DEBUG: rank=%d, list_1[%d]=%d, list_2_1_[%d]=%d, list_2_2_[%d]=%d\n", myrank, ja+jb, list_1_[ja+jb], ia, list_2_1[ia], ib, list_2_2[ib]);
+        //printf("DEBUG: rank=%d, list_1[%d]=%d, list_2_1_[%d]=%d, list_2_2_[%d]=%d\n", MP::myrank, ja+jb, list_1_[ja+jb], ia, list_2_1[ia], ib, list_2_2[ib]);
         ja+=1;
       }
     }
@@ -728,7 +728,7 @@ int child_omp_sz_spin_hacker(
       if (ia != 0) {
         ia = snoob(ia);
         while (ia < (unsigned long)ihfbit) {
-          //fprintf(stdoutMPI, " X: ia= %ld ia=%ld \n", ia,ia);
+          //fprintf(MP::STDOUT, " X: ia= %ld ia=%ld \n", ia,ia);
           list_1_[ja + jb] = ia + ib * ihfbit;
           list_2_1_[ia] = ja + 1;
           list_2_2_[ib] = jb + 1;
@@ -847,7 +847,7 @@ int Read_sz
   }else{
     while(NULL != fgetsMPI(buf,sizeof(buf),fp)){  
       dam=atol(buf);  
-      list_1[icnt]=dam;
+      List::c1[icnt]=dam;
             
       ia= dam & irght;
       ib= dam & ilft;
@@ -861,8 +861,8 @@ int Read_sz
         jb=icnt-1;
       }
             
-      list_2_1[ia]=ja;
-      list_2_2[ib]=jb;
+      List::c2_1[ia]=ja;
+      List::c2_2[ib]=jb;
       icnt+=1;
                 
     }
@@ -955,7 +955,7 @@ int sz
   int iSpnup, iMinup, iAllup;
   int N2 = 0;
   int N = 0;
-  fprintf(stdoutMPI, "%s", "  Start: Calculate HilbertNum for fixed Sz. \n");
+  fprintf(MP::STDOUT, "%s", "  Start: Calculate HilbertNum for fixed Sz. \n");
   TimeKeeper("%s_sz_TimeKeeper.dat", "initial sz : %s", "w");
   TimeKeeper("%s_TimeKeeper.dat", "initial sz : %s", "a");
 
@@ -973,7 +973,7 @@ int sz
       N = Def::Nsite;
       idim = pow(2.0, N2);
       for (j = 0; j < N; j++) {
-        fprintf(stdoutMPI, "  j  =  %ld loc %d \n", j, Def::LocSpn[j]);
+        fprintf(MP::STDOUT, "  j  =  %ld loc %d \n", j, Def::LocSpn[j]);
       }
       break;
     case SpinGC:
@@ -1006,11 +1006,11 @@ int sz
         Large::irght = irght;
         Large::ilft = ilft;
         Large::ihfbit = ihfbit;
-        //fprintf(stdoutMPI, "idim=%lf irght=%ld ilft=%ld ihfbit=%ld \n",idim,irght,ilft,ihfbit);
+        //fprintf(MP::STDOUT, "idim=%lf irght=%ld ilft=%ld ihfbit=%ld \n",idim,irght,ilft,ihfbit);
       }
       else {
         ihfbit = Check::sdim;
-        //fprintf(stdoutMPI, "idim=%lf ihfbit=%ld \n",idim, ihfbit);
+        //fprintf(MP::STDOUT, "idim=%lf ihfbit=%ld \n",idim, ihfbit);
       }
       break;
     default:
@@ -1294,7 +1294,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
         // this part can not be parallelized
         N_all_up = Def::Nup;
         N_all_down = Def::Ndown;
-        fprintf(stdoutMPI, "  N_all_up = %d N_all_down = %d \n", N_all_up, N_all_down);
+        fprintf(MP::STDOUT, "  N_all_up = %d N_all_down = %d \n", N_all_up, N_all_down);
 
         jb = 0;
         num_loc = 0;
@@ -1394,7 +1394,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
         // this part can not be parallelized
         if (Def::iFlgGeneralSpin == FALSE) {
           hacker = Def::read_hacker;
-          //printf(" rank=%d:Ne=%ld ihfbit=%ld sdim=%ld\n", myrank,Def::Ne,ihfbit,Check::sdim);
+          //printf(" rank=%d:Ne=%ld ihfbit=%ld sdim=%ld\n", MP::myrank,Def::Ne,ihfbit,Check::sdim);
           // using hacker's delight only + no open mp 
           if (hacker == -1) {
             icnt = 1;
@@ -1462,7 +1462,7 @@ shared(ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb, Check::sdim)
             for (ib = 0; ib < Check::sdim; ib++) {
               icnt += child_omp_sz_spin_hacker(ib, ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb);
             }
-            //printf(" rank=%d ib=%ld:Ne=%d icnt=%ld :idim_max=%ld N=%d\n", myrank,ib,Def::Ne,icnt,Check::idim_max,N);
+            //printf(" rank=%d ib=%ld:Ne=%d icnt=%ld :idim_max=%ld N=%d\n", MP::myrank,ib,Def::Ne,icnt,Check::idim_max,N);
             // old version
           }
           else if (hacker == 0) {
@@ -1556,7 +1556,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb, ilftdim,
         exitMPI(-1);
       }
       i_max = icnt;
-      //fprintf(stdoutMPI, "Debug: Xicnt=%ld \n",icnt);
+      //fprintf(MP::STDOUT, "Debug: Xicnt=%ld \n",icnt);
       TimeKeeper("%s_sz_TimeKeeper.dat", "omp parallel sz finishes: %s", "a");
       TimeKeeper("%s_TimeKeeper.dat", "omp parallel sz finishes: %s", "a");
     }
@@ -1583,7 +1583,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb, ilftdim,
 
     free_li_2d_allocate(comb);
   }
-  fprintf(stdoutMPI, "%s", "  End  : Calculate HilbertNum for fixed Sz. \n\n");
+  fprintf(MP::STDOUT, "%s", "  End  : Calculate HilbertNum for fixed Sz. \n\n");
 
   free(list_jb);
   if (Def::iFlgGeneralSpin == TRUE) {

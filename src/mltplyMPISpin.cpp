@@ -64,7 +64,7 @@ void X_child_general_int_spin_MPIdouble(
 
   mask1 = (int)Def::Tpow[org_isite1];
   mask2 = (int)Def::Tpow[org_isite3];
-  origin = myrank ^ (mask1 + mask2);
+  origin = MP::myrank ^ (mask1 + mask2);
 
   state1 = (origin & mask1) / mask1;
   state2 = (origin & mask2) / mask2;
@@ -81,16 +81,16 @@ void X_child_general_int_spin_MPIdouble(
   else return;
 
   idim_max_buf = SendRecv_i(origin, Check::idim_max);
-  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
-  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
 #pragma omp parallel for default(none) private(j, ioff) \
 shared(idim_max_buf,Jint,Large::irght, Large::ilft, Large::ihfbit, \
-list_2_1,list_2_2,list_1buf,v1buf,tmp_v1,tmp_v0,nstate,one)
+List::c2_1,List::c2_2,List::c1buf,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
   for (j = 1; j <= idim_max_buf; j++) {
-    GetOffComp(list_2_1, list_2_2, list_1buf[j],
+    GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
         Large::irght, Large::ilft, Large::ihfbit, &ioff);
-    zaxpy_(&nstate, &Jint, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+    zaxpy_(&nstate, &Jint, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
   }/*for (j = 1; j <= idim_max_buf; j++)*/
 }/*std::complex<double> X_child_general_int_spin_MPIdouble*/
 /**
@@ -111,8 +111,8 @@ void X_child_general_int_spin_TotalS_MPIdouble(
 
   mask1 = (int)Def::Tpow[org_isite1];
   mask2 = (int)Def::Tpow[org_isite3];
-  if (mask1 == mask2) origin = myrank ^ mask1;
-  else origin = myrank ^ (mask1 + mask2);
+  if (mask1 == mask2) origin = MP::myrank ^ mask1;
+  else origin = MP::myrank ^ (mask1 + mask2);
   num1_up = (origin & mask1) / mask1;
   num2_up = (origin & mask2) / mask2;
 
@@ -120,16 +120,16 @@ void X_child_general_int_spin_TotalS_MPIdouble(
   if (ibit_tmp == 0) return;
 
   idim_max_buf = SendRecv_i(origin, Check::idim_max);
-  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
-  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
 #pragma omp parallel for default(none)  private(j, dmv, ioff) \
 shared(idim_max_buf, Large::irght, Large::ilft, Large::ihfbit, \
-list_2_1, list_2_2, list_1buf, v1buf, tmp_v1, tmp_v0,nstate,one)
+List::c2_1, List::c2_2, List::c1buf, Wave::v1buf, tmp_v1, tmp_v0,nstate,one)
   for (j = 1; j <= idim_max_buf; j++) {
-    GetOffComp(list_2_1, list_2_2, list_1buf[j],
+    GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
       Large::irght, Large::ilft, Large::ihfbit, &ioff);
-    zaxpy_(&nstate, &dmv, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+    zaxpy_(&nstate, &dmv, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
   }/*for (j = 1; j <= idim_max_buf; j++)*/
   return;
 }/*std::complex<double> X_child_general_int_spin_MPIdouble*/
@@ -175,7 +175,7 @@ void X_child_general_int_spin_MPIsingle(
   Prepare index in the inter PE
   */
   mask2 = (int)Def::Tpow[org_isite3];
-  origin = myrank ^ mask2;
+  origin = MP::myrank ^ mask2;
   state2 = (origin & mask2) / mask2;
 
   if (state2 == org_ispin4) {
@@ -192,8 +192,8 @@ void X_child_general_int_spin_MPIsingle(
   else return;
 
   idim_max_buf = SendRecv_i(origin, Check::idim_max);
-  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, list_1, list_1buf);
-  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &v1buf[1][0]);
+  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
+  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
   /*
   Index in the intra PE
   */
@@ -203,15 +203,15 @@ void X_child_general_int_spin_MPIsingle(
 #pragma omp parallel for default(none) private(j, ioff, jreal, state1) \
 shared(idim_max_buf, Jint, mask1, state1check, org_isite1, \
 Large::irght, Large::ilft, Large::ihfbit, \
-list_2_1, list_2_2, list_1buf, v1buf, tmp_v1, tmp_v0,nstate,one)
+List::c2_1, List::c2_2, List::c1buf, Wave::v1buf, tmp_v1, tmp_v0,nstate,one)
   for (j = 1; j <= idim_max_buf; j++) {
-    jreal = list_1buf[j];
+    jreal = List::c1buf[j];
 
     state1 = (jreal & mask1) / mask1;
     if (state1 == state1check) {
-      GetOffComp(list_2_1, list_2_2, jreal ^ mask1,
+      GetOffComp(List::c2_1, List::c2_2, jreal ^ mask1,
         Large::irght, Large::ilft, Large::ihfbit, &ioff);
-      zaxpy_(&nstate, &Jint, &v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
+      zaxpy_(&nstate, &Jint, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
     }
   }
 }/*std::complex<double> X_child_general_int_spin_MPIsingle*/

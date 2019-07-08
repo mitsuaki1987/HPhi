@@ -32,15 +32,15 @@ int use_scalapack = 0;
 /**
  * @brief compute block size for scalapack
  * @param[in] Msize size of matrix (Msize x Msize)
- * @param[in] nproc number of processes
+ * @param[in] MP::nproc number of processes
  * @return block size for scalapack
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @author Yusuke Konishi (Academeia Co., Ltd.)
  */
-long int GetBlockSize(long int Msize, long int nproc) {
+long int GetBlockSize(long int Msize, long int MP::nproc) {
   long int block_size = 16;
-  if(Msize*Msize/nproc > block_size*block_size)
+  if(Msize*Msize/MP::nproc > block_size*block_size)
     return block_size;
   return 1;
 }

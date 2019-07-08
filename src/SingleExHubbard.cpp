@@ -67,10 +67,10 @@ int GetSingleExcitedStateHubbard(
       }
       else {
 #pragma omp parallel for default(none) private(j,  isgn,tmp_off,dmv) \
-shared(Large::irght, Large::ilft, Large::ihfbit,nstate,tmp_v0, tmp_v1, list_1_org,one, \
-idim_max, tmpphi, org_isite, ispin, list_2_1, list_2_2, is1_spin)
+shared(Large::irght, Large::ilft, Large::ihfbit,nstate,tmp_v0, tmp_v1, List::c1_org,one, \
+idim_max, tmpphi, org_isite, ispin, List::c2_1, List::c2_2, is1_spin)
         for (j = 1; j <= idim_max; j++) {//idim_max -> original dimension
-          isgn = X_Cis(j, is1_spin, &tmp_off, list_1_org, list_2_1, list_2_2,
+          isgn = X_Cis(j, is1_spin, &tmp_off, List::c1_org, List::c2_1, List::c2_2,
             Large::irght, Large::ilft, Large::ihfbit);
           dmv = (std::complex<double>)isgn * tmpphi;
           zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[tmp_off], &one);
@@ -84,10 +84,10 @@ idim_max, tmpphi, org_isite, ispin, list_2_1, list_2_2, is1_spin)
       }
       else {
 #pragma omp parallel for default(none) private(j, isgn, tmp_off,dmv) \
-shared(tmp_v0,tmp_v1,list_1_org,list_1,one,nstate,idim_max,tmpphi,org_isite,ispin, \
-list_2_1,list_2_2,is1_spin,myrank, Large::irght, Large::ilft, Large::ihfbit)
+shared(tmp_v0,tmp_v1,List::c1_org,List::c1,one,nstate,idim_max,tmpphi,org_isite,ispin, \
+List::c2_1,List::c2_2,is1_spin,MP::myrank, Large::irght, Large::ilft, Large::ihfbit)
         for (j = 1; j <= idim_max; j++) {//idim_max -> original dimension
-          isgn = X_Ajt(j, is1_spin, &tmp_off, list_1_org, list_2_1, list_2_2, 
+          isgn = X_Ajt(j, is1_spin, &tmp_off, List::c1_org, List::c2_1, List::c2_2,
             Large::irght, Large::ilft, Large::ihfbit);
           dmv = (std::complex<double>)isgn * tmpphi;
           zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[tmp_off], &one);

@@ -37,7 +37,7 @@ int childfopenMPI(
   *_fp = fopenMPI(ctmpPath, _cmode);
   
   if(*_fp == NULL){
-    fprintf(stdoutMPI, "FileOpenError: %s.\n", ctmpPath);
+    fprintf(MP::STDOUT, "FileOpenError: %s.\n", ctmpPath);
     return -1;
   }
     

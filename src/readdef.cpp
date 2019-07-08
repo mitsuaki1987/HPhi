@@ -59,6 +59,7 @@ static char cKWListOfFileNameList[][D_CharTmpReadDef]={
 };
 
 int D_iKWNumDef = sizeof(cKWListOfFileNameList)/sizeof(cKWListOfFileNameList[0]);
+double eps_CheckImag0;/**> epsilon for checking values of one-body and two-body interactions.*/
 
 /**
  * File Name List in NameListFile.
@@ -98,7 +99,7 @@ int InputInterAllInfo(
 int ReadDefFileError(
                      const char *defname
                      ){
-  fprintf(stdoutMPI, "Error: %s (Broken file or Not exist)\n", defname);
+  fprintf(MP::STDOUT, "Error: %s (Broken file or Not exist)\n", defname);
   return (-1);
 }
 
@@ -190,13 +191,13 @@ int GetKWWithIdx(
   *itmp = strtol(ctmpRead, &cerror, 0);
   //if ctmpRead is not integer type
   if(*cerror != '\0'){
-    fprintf(stdoutMPI, "Error: incorrect format= %s. \n", cerror);
+    fprintf(MP::STDOUT, "Error: incorrect format= %s. \n", cerror);
     return(-1);
   }
 
   ctmpRead = strtok( NULL, csplit );
   if(ctmpRead != NULL){
-    fprintf(stdoutMPI, "Error: incorrect format= %s. \n", ctmpRead);
+    fprintf(MP::STDOUT, "Error: incorrect format= %s. \n", ctmpRead);
     return(-1);
   }
     
@@ -251,7 +252,7 @@ int ReadcalcmodFile(
     if(CheckWords(ctmp, "CalcType")==0){
       Def::iCalcType=itmp;
       if (Def::iCalcType == Lanczos) {
-        fprintf(stdoutMPI, "  LOBPCG is used alternative to Lanczos.\n");
+        fprintf(MP::STDOUT, "  LOBPCG is used alternative to Lanczos.\n");
         Def::iCalcType = CG;
       }
     }
@@ -300,7 +301,7 @@ int ReadcalcmodFile(
 #endif
     }
     else{
-      fprintf(stdoutMPI, "Error: In %s, wrong parameter name:%s \n", defname, ctmp);
+      fprintf(MP::STDOUT, "Error: In %s, wrong parameter name:%s \n", defname, ctmp);
       return(-1);
     }
   }
@@ -308,64 +309,64 @@ int ReadcalcmodFile(
     
   /* Check values*/
   if(ValidateValue(Def::iCalcModel, 0, NUM_CALCMODEL-1)){
-    fprintf(stdoutMPI, "Error in %s\n CalcType: 0: Lanczos Method, 1: Thermal Pure Quantum State Method, 2: Full Diagonalization Method, 3: Calculation Spectrum mode.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s\n CalcType: 0: Lanczos Method, 1: Thermal Pure Quantum State Method, 2: Full Diagonalization Method, 3: Calculation Spectrum mode.\n", defname);
     return (-1);
   }
   if(ValidateValue(Def::iCalcType, 0, NUM_CALCTYPE-1)){
-    fprintf(stdoutMPI, "Error in %s\n CalcType: 0: Lanczos Method, 1: Thermal Pure Quantum State Method, 2: Full Diagonalization Method, 3: Calculation Spectrum mode.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s\n CalcType: 0: Lanczos Method, 1: Thermal Pure Quantum State Method, 2: Full Diagonalization Method, 3: Calculation Spectrum mode.\n", defname);
     return (-1);
   }
   if(ValidateValue(Def::iOutputMode, 0, NUM_OUTPUTMODE-1)){
-    fprintf(stdoutMPI, "Error in %s\n OutputMode: \n 0: calc one body green function and two body green functions,\n 1: calc one body green function and two body green functions and correlatinos for charge and spin.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s\n OutputMode: \n 0: calc one body green function and two body green functions,\n 1: calc one body green function and two body green functions and correlatinos for charge and spin.\n", defname);
     return (-1);
   }
   
   if(ValidateValue(Def::iCalcEigenVec, -1, NUM_CALCEIGENVEC-1)){
-    fprintf(stdoutMPI, "Error in %s\n CalcEigenVec: \n 0: Lanczos+CG method,\n 1: Lanczos method.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s\n CalcEigenVec: \n 0: Lanczos+CG method,\n 1: Lanczos method.\n", defname);
     return (-1);
   }
   
   if(ValidateValue(Def::iInitialVecType, 0, NUM_SETINITAILVEC-1)){
-    fprintf(stdoutMPI, "Error in %s\n InitialVecType: \n 0: complex type,\n 1: real type.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s\n InitialVecType: \n 0: complex type,\n 1: real type.\n", defname);
     return (-1);
   }
 
   if(ValidateValue(Def::iOutputHam, 0, NUM_OUTPUTHAM-1)){
-    fprintf(stdoutMPI, "Error in %s\n OutputHam: \n 0: not output Hamiltonian,\n 1: output Hamiltonian.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s\n OutputHam: \n 0: not output Hamiltonian,\n 1: output Hamiltonian.\n", defname);
     return (-1);
   }
   if(ValidateValue(Def::iInputHam, 0, NUM_INPUTHAM-1)){
-    fprintf(stdoutMPI, "Error in %s\n InputHam: 0: not input Hamiltonian,\n 1: input Hamiltonian.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s\n InputHam: 0: not input Hamiltonian,\n 1: input Hamiltonian.\n", defname);
     return (-1);
   }
   if(Def::iInputHam == 1 && Def::iOutputHam==1){
-    fprintf(stdoutMPI,
+    fprintf(MP::STDOUT,
             "Error in %s\n OutputHam=1 and InputHam=1.\n", defname);
     return (-1);
   }
   if(ValidateValue(Def::iReStart, 0, NUM_RESTART-1)){
-    fprintf(stdoutMPI, "Error in %s Restart: \n 0: not restart (default).\n 1: output a restart vector.\n 2: input a restart vector and output a new restart vector.\n 3: input a restart vector.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s Restart: \n 0: not restart (default).\n 1: output a restart vector.\n 2: input a restart vector and output a new restart vector.\n 3: input a restart vector.\n", defname);
     return (-1);
   }
   if(Def::iNGPU < 0){
-    fprintf(stdoutMPI, "Error in %s\n NGPU: NGPU must be greater than 0.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s\n NGPU: NGPU must be greater than 0.\n", defname);
     return (-1);
   }
   if(ValidateValue(Def::iFlgScaLAPACK, 0, 1)){
-    fprintf(stdoutMPI, "Error in %s\n NGPU: NGPU must be greater than 0.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s\n NGPU: NGPU must be greater than 0.\n", defname);
     return (-1);
   }
 
   /* In the case of Full Diagonalization method(iCalcType=2)*/
   if(Def::iCalcType==2 && ValidateValue(Def::iFlgFiniteTemperature, 0, 1)){
-    fprintf(stdoutMPI,
+    fprintf(MP::STDOUT,
             "Error in %s\n FlgFiniteTemperature: Finite Temperature, 1: Zero Temperature.\n",
             defname);
     return (-1);
   }
 
   if(Def::iCalcType !=2 && Def::iOutputHam ==TRUE) {
-    fprintf(stdoutMPI,
+    fprintf(MP::STDOUT,
             "Error in %s\n OutputHam is only defined for FullDiag mode, CalcType=2.\n",
             defname);
     return (-1);
@@ -410,7 +411,7 @@ int GetFileName(
       continue;
     }
     else if(strcmp(ctmpKW, "")*strcmp(ctmpFileName, "")==0){
-      fprintf(stdoutMPI,
+      fprintf(MP::STDOUT,
               "Error: keyword and filename must be set as a pair in %s.\n",
               cFileListNameFile);
       fclose(fplist);
@@ -418,17 +419,17 @@ int GetFileName(
     }
     /*!< Check KW */
     if( CheckKW(ctmpKW, cKWListOfFileNameList, D_iKWNumDef, &itmpKWidx)!=0 ){
-      fprintf(stdoutMPI, "Error: Wrong keywords %s in %s.\n", ctmpKW, cFileListNameFile);
-      fprintf(stdoutMPI, "%s", "Choose Keywords as follows: \n");
+      fprintf(MP::STDOUT, "Error: Wrong keywords %s in %s.\n", ctmpKW, cFileListNameFile);
+      fprintf(MP::STDOUT, "%s", "Choose Keywords as follows: \n");
       for(i=0; i<D_iKWNumDef;i++){
-        fprintf(stdoutMPI, "%s \n", cKWListOfFileNameList[i]);
+        fprintf(MP::STDOUT, "%s \n", cKWListOfFileNameList[i]);
       }
       fclose(fplist);
       return(-1);
     }
     /*!< Check cFileNameList to prevent from double registering the file name */
     if(strcmp(cFileNameList[itmpKWidx], "") !=0){
-      fprintf(stdoutMPI, "Error: Same keywords exist in %s.\n", cFileListNameFile);
+      fprintf(MP::STDOUT, "Error: Same keywords exist in %s.\n", cFileListNameFile);
       fclose(fplist);
       return(-1);
     }
@@ -468,13 +469,13 @@ int ReadDefFileNInt(
   int iReadNCond = FALSE;
   Boost::flgBoost = FALSE;
   InitializeInteractionNum();
-  NumAve = 1;
+  Step::NumAve = 1;
   Param::ExpecInterval = 1;
   cFileNameListFile = (char**)malloc(sizeof(char*)*D_iKWNumDef);
   for (i = 0; i < D_iKWNumDef; i++)
     cFileNameListFile[i] = (char*)malloc(sizeof(char)*D_CharTmpReadDef);
 
-  fprintf(stdoutMPI, "  Read File %s.\n", xNameListFile);
+  fprintf(MP::STDOUT, "  Read File %s.\n", xNameListFile);
   if (GetFileName(xNameListFile, cFileNameListFile) != 0) {
     return(-1);
   }
@@ -492,7 +493,7 @@ int ReadDefFileNInt(
       case KWCalcMod:
       case KWModPara:
       case KWLocSpin:
-        fprintf(stdoutMPI, "Error: Need to make a def file for %s.\n", cKWListOfFileNameList[iKWidx]);
+        fprintf(MP::STDOUT, "Error: Need to make a def file for %s.\n", cKWListOfFileNameList[iKWidx]);
         return(-1);
       default:
         break;
@@ -507,7 +508,7 @@ int ReadDefFileNInt(
     if (iKWidx == KWSpectrumVec) {
       continue;
     }
-    fprintf(stdoutMPI, "  Read File %s for %s.\n", defname, cKWListOfFileNameList[iKWidx]);
+    fprintf(MP::STDOUT, "  Read File %s for %s.\n", defname, cKWListOfFileNameList[iKWidx]);
     fp = fopenMPI(defname, "r");
     if (fp == NULL) return ReadDefFileError(defname);
     switch (iKWidx) {
@@ -559,7 +560,7 @@ int ReadDefFileNInt(
         }
         else if (CheckWords(ctmp, "Ncond") == 0) {
           if ((int)dtmp < 0) {
-            fprintf(stdoutMPI, "Error in %s\n Ncond must be greater than 0.\n", defname);
+            fprintf(MP::STDOUT, "Error in %s\n Ncond must be greater than 0.\n", defname);
             return (-1);
           }
           Def::NCond = (int)dtmp;
@@ -584,10 +585,10 @@ int ReadDefFileNInt(
           Def::LanczosTarget = (int)dtmp;
         }
         else if (CheckWords(ctmp, "LargeValue") == 0) {
-          LargeValue = dtmp;
+          Step::LargeValue = dtmp;
         }
         else if (CheckWords(ctmp, "NumAve") == 0) {
-          NumAve = (int)dtmp;
+          Step::NumAve = (int)dtmp;
         }
         else if (strcmp(ctmp, "TimeSlice") == 0) {
           Param::TimeSlice = dtmp;
@@ -608,19 +609,19 @@ int ReadDefFileNInt(
           Def::read_hacker = (int)dtmp;
         }
         else if (CheckWords(ctmp, "OmegaMax") == 0) {
-          Def::dcOmegaMax = dtmp + dtmp2 * I;
+          Def::dcOmegaMax = std::complex<double>(dtmp, dtmp2);
           Def::iFlgSpecOmegaMax = TRUE;
         }
         else if (CheckWords(ctmp, "OmegaMin") == 0) {
-          Def::dcOmegaMin = dtmp + dtmp2 * I;
+          Def::dcOmegaMin = std::complex<double>(dtmp, dtmp2);
           Def::iFlgSpecOmegaMin = TRUE;
         }
         else if (CheckWords(ctmp, "OmegaIm") == 0) {
-          Def::dcOmegaOrg += dtmp * I;
+          Def::dcOmegaOrg += std::complex<double>(0.0, dtmp);
           Def::iFlgSpecOmegaOrg = TRUE;
         }
         else if (CheckWords(ctmp, "OmegaOrg") == 0) {
-          Def::dcOmegaOrg += dtmp + dtmp2 * I;
+          Def::dcOmegaOrg += std::complex<double>(dtmp, dtmp2);
           Def::iFlgSpecOmegaOrg = TRUE;
         }
         else if (CheckWords(ctmp, "NOmega") == 0) {
@@ -800,7 +801,7 @@ int ReadDefFileNInt(
       break;
 
     default:
-      fprintf(stdoutMPI, "%s", "Error: incorrect file.\n");
+      fprintf(MP::STDOUT, "%s", "Error: incorrect file.\n");
       fclose(fp);
       return (-1);
     }
@@ -817,13 +818,13 @@ int ReadDefFileNInt(
 
     if (iReadNCond == TRUE) {
       if (Def::iCalcModel == Spin) {
-        fprintf(stdoutMPI, "For Spin, Ncond should not be defined.\n");
+        fprintf(MP::STDOUT, "For Spin, Ncond should not be defined.\n");
         return(-1);
       }
       else {
         if (Def::iFlgSzConserved == TRUE) {
           if (Def::iCalcModel == SpinlessFermion) {
-            fprintf(stdoutMPI, "  Warning: For Spinless fermion, 2Sz should not be defined.\n");
+            fprintf(MP::STDOUT, "  Warning: For Spinless fermion, 2Sz should not be defined.\n");
             Def::Ne = Def::NCond;
             Def::Nup = Def::NCond;
             Def::Ndown = 0;
@@ -839,7 +840,7 @@ int ReadDefFileNInt(
           if (Def::iCalcModel == Hubbard) {
             Def::Ne = Def::NCond;
             if (Def::Ne < 1) {
-              fprintf(stdoutMPI, "Ncond is incorrect.\n");
+              fprintf(MP::STDOUT, "Ncond is incorrect.\n");
               return(-1);
             }
             Def::iCalcModel = HubbardNConserved;
@@ -850,7 +851,7 @@ int ReadDefFileNInt(
             Def::Ndown = 0;
           }
           else {
-            fprintf(stdoutMPI, " 2Sz is not defined.\n");
+            fprintf(MP::STDOUT, " 2Sz is not defined.\n");
             return(-1);
           }
         }
@@ -858,7 +859,7 @@ int ReadDefFileNInt(
     }
     else if (iReadNCond == FALSE && Def::iFlgSzConserved == TRUE) {
       if (Def::iCalcModel != Spin) {
-        fprintf(stdoutMPI, " NCond is not defined.\n");
+        fprintf(MP::STDOUT, " NCond is not defined.\n");
         return(-1);
       }
       Def::Nup = Def::NLocSpn + Def::Total2Sz;
@@ -869,11 +870,11 @@ int ReadDefFileNInt(
     else {
       if (Def::Nup == 0 && Def::Ndown == 0) {
         if (Def::iCalcModel == Spin) {
-          fprintf(stdoutMPI, " 2Sz is not defined.\n");
+          fprintf(MP::STDOUT, " 2Sz is not defined.\n");
           return(-1);
         }
         else {
-          fprintf(stdoutMPI, " NCond is not defined.\n");
+          fprintf(MP::STDOUT, " NCond is not defined.\n");
           return(-1);
         }
       }
@@ -887,8 +888,8 @@ int ReadDefFileNInt(
         Def::Ne = Def::Nup + Def::Ndown;
       }
       if (Def::NLocSpn > Def::Ne) {
-        fprintf(stdoutMPI, "%s", "Error: Ne=Nup+Ndown must be (Ne >= NLocalSpin).\n");
-        fprintf(stdoutMPI, "NLocalSpin=%d, Ne=%d\n", Def::NLocSpn, Def::Ne);
+        fprintf(MP::STDOUT, "%s", "Error: Ne=Nup+Ndown must be (Ne >= NLocalSpin).\n");
+        fprintf(MP::STDOUT, "NLocalSpin=%d, Ne=%d\n", Def::NLocSpn, Def::Ne);
         return(-1);
       }
     }
@@ -898,7 +899,7 @@ int ReadDefFileNInt(
   case HubbardGC:
   case SpinlessFermionGC:
     if (iReadNCond == TRUE || Def::iFlgSzConserved == TRUE) {
-      fprintf(stdoutMPI, "\n  Warning: For GC, both Ncond and 2Sz should not be defined.\n");
+      fprintf(MP::STDOUT, "\n  Warning: For GC, both Ncond and 2Sz should not be defined.\n");
       //return(-1);
     }
     break;
@@ -908,23 +909,23 @@ int ReadDefFileNInt(
 
   /* Check values (Positive)*/
   if (Def::Nsite <= 0) {// Nsite must be positve
-    fprintf(stdoutMPI, "Error in %s\n Nsite must be positive value.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s\n Nsite must be positive value.\n", defname);
     return (-1);
   }
   if (Def::Lanczos_max <= 0) {// Lanczos_max must be positive
-    fprintf(stdoutMPI, "Error in %s\n Lanczos_max must be positive value.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s\n Lanczos_max must be positive value.\n", defname);
     return (-1);
   }
   if (Def::LanczosEps <= 0) {// Lanczos_eps must be positive
-    fprintf(stdoutMPI, "Error in %s\n Lanczos_eps must be positive value.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s\n Lanczos_eps must be positive value.\n", defname);
     return (-1);
   }
-  if (NumAve <= 0) { // Average number must be positive
-    fprintf(stdoutMPI, "Error in %s\n NumAve must be positive value.\n", defname);
+  if (Step::NumAve <= 0) { // Average number must be positive
+    fprintf(MP::STDOUT, "Error in %s\n Step::NumAve must be positive value.\n", defname);
     return (-1);
   }
   if (Param::ExpecInterval <= 0) {// Interval to calculate expected values must be positive
-    fprintf(stdoutMPI, "Error in %s\n ExpecInterval must be positive value.\n", defname);
+    fprintf(MP::STDOUT, "Error in %s\n ExpecInterval must be positive value.\n", defname);
     return (-1);
   }
   if (Def::nvec == 0) {
@@ -937,13 +938,13 @@ int ReadDefFileNInt(
   if (Def::LanczosTarget < Def::k_exct) Def::LanczosTarget = Def::k_exct;
 
   if (ValidateValue(Def::k_exct, 1, Def::nvec)) {
-    fprintf(stdoutMPI, "Error in %s \n exct=%d must be greater than 1 and smaller than nvec=%d.\n", 
+    fprintf(MP::STDOUT, "Error in %s \n exct=%d must be greater than 1 and smaller than nvec=%d.\n", 
       defname, Def::k_exct, Def::nvec);
     return (-1);
   }
 
   if (Def::k_exct > Def::LanczosTarget) {
-    fprintf(stdoutMPI, "Error in %s\n LanczosTarget=%d must be greater than exct=%d.\n", defname, Def::LanczosTarget, Def::k_exct);
+    fprintf(MP::STDOUT, "Error in %s\n LanczosTarget=%d must be greater than exct=%d.\n", defname, Def::LanczosTarget, Def::k_exct);
     return (-1);
   }
 
@@ -1022,7 +1023,7 @@ static int CheckInterAllHermite
               icheckHermiteCount = TRUE; //for not double counting
               if (i <= j) {
                 if (2 * icntHermite >= NInterAllOffDiagonal) {
-                  fprintf(stdoutMPI, "Elements of InterAll are incorrect.\n");
+                  fprintf(MP::STDOUT, "Elements of InterAll are incorrect.\n");
                   return (-1);
                 }
 
@@ -1051,7 +1052,7 @@ static int CheckInterAllHermite
                 icheckHermiteCount = TRUE; // for not double-counting
                 if (i <= j) {
                   if (2 * icntHermite >= NInterAllOffDiagonal) {
-                    fprintf(stdoutMPI, "Elements of InterAll are incorrect.\n");
+                    fprintf(MP::STDOUT, "Elements of InterAll are incorrect.\n");
                     return (-1);
                   }
                   for (itmpIdx = 0; itmpIdx < 8; itmpIdx++) {
@@ -1078,7 +1079,7 @@ static int CheckInterAllHermite
     }
     //if counterpart for satisfying hermite conjugate does not exist.
     if (itmpret != 1) {
-      fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj, k, spnk, l, spnl) = (%d, %d, %d, %d, %d, %d, %d, %d), InterAll_re= %lf, InterAll_im= %lf . \n", isite1, isigma1, isite2, isigma2, isite3, isigma3, isite4, isigma4,
+      fprintf(MP::STDOUT, "Error: NonHermite (i, spni, j, spnj, k, spnk, l, spnl) = (%d, %d, %d, %d, %d, %d, %d, %d), InterAll_re= %lf, InterAll_im= %lf . \n", isite1, isigma1, isite2, isigma2, isite3, isigma3, isite4, isigma4,
         real(ParaInterAllOffDiagonal[i]), imag(ParaInterAllOffDiagonal[i]));
       icntincorrect++;
     }
@@ -1203,7 +1204,7 @@ int GetDiagonalInterAll
         else {
           // Sz symmetry is assumed
           if (iCalcModel == Hubbard || iCalcModel == Kondo) {
-            fprintf(stdoutMPI, 
+            fprintf(MP::STDOUT, 
               "Error: This operator breaks Sz Symmetry (i, spni, j, spnj, k, spnk, l, spnl) = (%d, %d, %d, %d, %d, %d, %d, %d), InterAll_re= %lf, InterAll_im= %lf . \n",
               isite1,
               isigma1,
@@ -1315,10 +1316,10 @@ static int CheckTETransferHermite
             itmperrsite2 = itmpsite2;
             itmperrsigma2 = itmpsigma2;
             dcerrTrans = tmp_paraTETransfer[j];
-            fprintf(stdoutMPI, 
+            fprintf(MP::STDOUT, 
               "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", 
               isite1, isigma1, isite2, isigma2, real(tmp_paraTETransfer[i]), imag(tmp_paraTETransfer[i]));
-            fprintf(stdoutMPI,
+            fprintf(MP::STDOUT,
               "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n",
               itmperrsite1, itmperrsigma1, itmperrsite2, itmperrsigma2, real(dcerrTrans), imag(dcerrTrans));
             iCount++;
@@ -1355,12 +1356,12 @@ static int CheckTETransferHermite
 
     //if counterpart for satisfying hermite conjugate does not exist.
     if (icheckHermiteCount == FALSE) {
-      fprintf(stdoutMPI,
+      fprintf(MP::STDOUT,
         "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n",
         isite1, isigma1, isite2, isigma2, 
         real(tmp_paraTETransfer[i]), imag(tmp_paraTETransfer[i]));
       iCount++;
-      //fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", itmperrsite1, itmperrsigma1, itmperrsite2, itmperrsigma2, real(dcerrTrans), imag(dcerrTrans));
+      //fprintf(MP::STDOUT, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", itmperrsite1, itmperrsigma1, itmperrsite2, itmperrsigma2, real(dcerrTrans), imag(dcerrTrans));
       //return(-1);
     }
   }
@@ -1419,7 +1420,7 @@ int ReadDefFileIdxPara()
   for (iKWidx = KWLocSpin; iKWidx < D_iKWNumDef; iKWidx++) {
     strcpy(defname, cFileNameListFile[iKWidx]);
     if (strcmp(defname, "") == 0 || iKWidx == KWSpectrumVec) continue;
-    fprintf(stdoutMPI, "  Read File %s.\n", defname);
+    fprintf(MP::STDOUT, "  Read File %s.\n", defname);
     fp = fopenMPI(defname, "r");
     if (fp == NULL) return ReadDefFileError(defname);
     if (iKWidx != KWBoost) {
@@ -1481,7 +1482,7 @@ int ReadDefFileIdxPara()
           if (isite1 == isite2 && isigma1 == isigma2) {
             if (fabs(dvalue_im) > eps_CheckImag0) {
               //NonHermite
-              fprintf(stdoutMPI,
+              fprintf(MP::STDOUT,
                 "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n",
                 isite1, isigma1, isite2, isigma2, dvalue_re, dvalue_im);
               fclose(fp);
@@ -1492,7 +1493,7 @@ int ReadDefFileIdxPara()
           if (Def::iCalcModel == Spin) {
             if (isite1 != isite2) {
               iboolLoc = 1;
-              fprintf(stdoutMPI, "Warning: Site component of (i, j) =(%d, %d) is ignored.\n",
+              fprintf(MP::STDOUT, "Warning: Site component of (i, j) =(%d, %d) is ignored.\n",
                 isite1, isite2);
             }
           }
@@ -1500,7 +1501,7 @@ int ReadDefFileIdxPara()
             if (Def::LocSpn[isite1] != ITINERANT || Def::LocSpn[isite2] != ITINERANT) {
               if (isite1 != isite2) {
                 iboolLoc = 1;
-                fprintf(stdoutMPI, "Error: Site component of (i, j) =(%d, %d) is incorrect.\n", isite1, isite2);
+                fprintf(MP::STDOUT, "Error: Site component of (i, j) =(%d, %d) is incorrect.\n", isite1, isite2);
               }
             }
           }
@@ -1520,7 +1521,7 @@ int ReadDefFileIdxPara()
             if (isite1 == Def::GeneralTransfer[i][0] && isite2 == Def::GeneralTransfer[i][2]
               && isigma1 == Def::GeneralTransfer[i][1] && isigma2 == Def::GeneralTransfer[i][3])
             {
-              Def::ParaGeneralTransfer[i] += dvalue_re + dvalue_im * I;
+              Def::ParaGeneralTransfer[i] += std::complex<double>(dvalue_re, dvalue_im);
               iflg_trans = 1;
               continue;
             }
@@ -1531,7 +1532,7 @@ int ReadDefFileIdxPara()
             Def::GeneralTransfer[icnt_trans][1] = isigma1;
             Def::GeneralTransfer[icnt_trans][2] = isite2;
             Def::GeneralTransfer[icnt_trans][3] = isigma2;
-            Def::ParaGeneralTransfer[icnt_trans] = dvalue_re + dvalue_im * I;
+            Def::ParaGeneralTransfer[icnt_trans] = std::complex<double>(dvalue_re, dvalue_im);
             icnt_trans++;
           }
           idx++;
@@ -1551,7 +1552,7 @@ int ReadDefFileIdxPara()
       }
 
       if (CheckTransferHermite() != 0) {
-        fprintf(stdoutMPI, "%s", "Error: NonHermite Pair exists in transfer integral. \n");
+        fprintf(MP::STDOUT, "%s", "Error: NonHermite Pair exists in transfer integral. \n");
         fclose(fp);
         return(-1);
       }
@@ -1632,7 +1633,7 @@ int ReadDefFileIdxPara()
     case KWPairHop:
       /*pairhop.def---------------------------------------*/
       if (Def::iCalcModel == Spin || Def::iCalcModel == SpinGC) {
-        fprintf(stdoutMPI, "PairHop is not active in Spin and SpinGC.\n");
+        fprintf(MP::STDOUT, "PairHop is not active in Spin and SpinGC.\n");
         return(-1);
       }
 
@@ -1722,7 +1723,7 @@ int ReadDefFileIdxPara()
       /*pairlift.def--------------------------------------*/
       if (Def::NPairLiftCoupling > 0) {
         if (Def::iCalcModel != SpinGC) {
-          fprintf(stdoutMPI, "PairLift is active only in SpinGC.\n");
+          fprintf(MP::STDOUT, "PairLift is active only in SpinGC.\n");
           return(-1);
         }
         while (fgetsMPI(ctmp2, 256, fp) != NULL)
@@ -1815,7 +1816,7 @@ int ReadDefFileIdxPara()
         Def::InterAll_OffDiagonal, Def::ParaInterAll_OffDiagonal,
         Def::NInterAll_OffDiagonal, Def::iCalcModel
       ) != 0) {
-        fprintf(stdoutMPI, "%s", "Error: NonHermite Pair exists in InterAll. \n");
+        fprintf(MP::STDOUT, "%s", "Error: NonHermite Pair exists in InterAll. \n");
         fclose(fp);
         return (-1);
       }
@@ -1837,7 +1838,7 @@ int ReadDefFileIdxPara()
 
           if (Def::iCalcModel == Spin) {
             if (isite1 != isite2) {
-              fprintf(stdoutMPI, "Warning: Site component of (i, j) =(%d, %d) is ignored.\n",
+              fprintf(MP::STDOUT, "Warning: Site component of (i, j) =(%d, %d) is ignored.\n",
                 isite1, isite2);
               Def::NCisAjt--;
               continue;
@@ -1942,7 +1943,7 @@ int ReadDefFileIdxPara()
             Def::TETransfer[idx][i][1] = isigma1;
             Def::TETransfer[idx][i][2] = isite2;
             Def::TETransfer[idx][i][3] = isigma2;
-            Def::ParaTETransfer[idx][i] = dvalue_re + dvalue_im * I;
+            Def::ParaTETransfer[idx][i] = std::complex<double>(dvalue_re, dvalue_im);
           }
           //check Transfer Hermite
           if (CheckTETransferHermite(Def::NTETransfer[idx], idx) != 0) {
@@ -2016,7 +2017,7 @@ int ReadDefFileIdxPara()
             Def::TEInterAllOffDiagonal[idx], Def::ParaTEInterAllOffDiagonal[idx],
             Def::NTEInterAllOffDiagonal[idx], Def::iCalcModel
           ) != 0) {
-            fprintf(stdoutMPI, "%s", "Error: NonHermite Pair exists in InterAll. \n");
+            fprintf(MP::STDOUT, "%s", "Error: NonHermite Pair exists in InterAll. \n");
             fclose(fp);
             return (-1);
           }
@@ -2150,7 +2151,8 @@ int ReadDefFileIdxPara()
             Def::SingleExcitationOperator[idx][i][0] = isite1;
             Def::SingleExcitationOperator[idx][i][1] = isigma1;
             Def::SingleExcitationOperator[idx][i][2] = itype;
-            Def::ParaSingleExcitationOperator[idx][i] = dvalue_re + I * dvalue_im;
+            Def::ParaSingleExcitationOperator[idx][i] 
+              = std::complex<double>(dvalue_re,dvalue_im);
           }/*for (i = 0; i < Def::NSingleExcitationOperator[idx]; ++i)*/
           idx++;
         }
@@ -2192,7 +2194,8 @@ int ReadDefFileIdxPara()
               Def::PairExcitationOperator[idx][i][2] = isite2;
               Def::PairExcitationOperator[idx][i][3] = isigma2;
               Def::PairExcitationOperator[idx][i][4] = itype;
-              Def::ParaPairExcitationOperator[idx][i] = dvalue_re + I * dvalue_im;
+              Def::ParaPairExcitationOperator[idx][i] = 
+                std::complex<double>(dvalue_re, dvalue_im);
             }
             else {
               Def::PairExcitationOperator[idx][i][0] = isite2;
@@ -2200,7 +2203,8 @@ int ReadDefFileIdxPara()
               Def::PairExcitationOperator[idx][i][2] = isite1;
               Def::PairExcitationOperator[idx][i][3] = isigma1;
               Def::PairExcitationOperator[idx][i][4] = itype;
-              Def::ParaPairExcitationOperator[idx][i] = -(dvalue_re + I * dvalue_im);
+              Def::ParaPairExcitationOperator[idx][i] = 
+                std::complex<double>(-dvalue_re, -dvalue_im);
             }
           }/*for (i = 0; i < Def::NPairExcitationOperator[idx]; ++i)*/
           idx++;
@@ -2226,7 +2230,7 @@ int ReadDefFileIdxPara()
     case KWIsing:
     case KWPairLift:
       if (Def::iFlgGeneralSpin == TRUE) {
-        fprintf(stdoutMPI, "%s", 
+        fprintf(MP::STDOUT, "%s", 
           "Error: Use only InterAll for setteing interactions for general spin.\n");
         return(-1);
       }
@@ -2365,9 +2369,9 @@ int CheckTransferHermite
             itmperrsite2 = itmpsite2;
             itmperrsigma2 = itmpsigma2;
             dcerrTrans = Def::ParaGeneralTransfer[j];
-            fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n",
+            fprintf(MP::STDOUT, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n",
               isite1, isigma1, isite2, isigma2, real(Def::ParaGeneralTransfer[i]), imag(Def::ParaGeneralTransfer[i]));
-            fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", 
+            fprintf(MP::STDOUT, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", 
               itmperrsite1, itmperrsigma1, itmperrsite2, itmperrsigma2, real(dcerrTrans), imag(dcerrTrans));
             iCount++;
           }
@@ -2404,7 +2408,7 @@ int CheckTransferHermite
 
     //if counterpart for satisfying hermite conjugate does not exist.
     if (icheckHermiteCount == FALSE) {
-      fprintf(stdoutMPI, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", isite1, isigma1, isite2, isigma2, real(Def::ParaGeneralTransfer[i]), imag(Def::ParaGeneralTransfer[i]));
+      fprintf(MP::STDOUT, "Error: NonHermite (i, spni, j, spnj) = (%d,  %d, %d, %d), trans_re= %lf, trans_im= %lf.\n", isite1, isigma1, isite2, isigma2, real(Def::ParaGeneralTransfer[i]), imag(Def::ParaGeneralTransfer[i]));
       iCount++;
     }
   }
@@ -2474,20 +2478,20 @@ int JudgeDefType
            (CheckWords(argv[1], "-v") == 0
             || CheckWords(argv[1], "--version") == 0)
            ) {
-    fprintf(stdoutMPI, "\nHPhi version %d.%d.%d \n\n", ver_maj, ver_min, ver_pat);
+    fprintf(MP::STDOUT, "\nHPhi version %d.%d.%d \n\n", ver_maj, ver_min, ver_pat);
     exit(-1);
   }
   else{
-    fprintf(stdoutMPI, "\n[Usage] \n");
-    fprintf(stdoutMPI, "* Expert mode \n");
-    fprintf(stdoutMPI, "   $ HPhi -e {namelist_file} \n");
-    fprintf(stdoutMPI, "* Standard mode \n");
-    fprintf(stdoutMPI, "   $ HPhi -s {input_file} \n");
-    fprintf(stdoutMPI, "* Standard DRY mode \n");
-    fprintf(stdoutMPI, "   $ HPhi -sdry {input_file} \n");
-    fprintf(stdoutMPI, "   In this mode, Hphi stops after it generats expert input files. \n");
-    fprintf(stdoutMPI, "* Print the version \n");
-    fprintf(stdoutMPI, "   $ HPhi -v \n\n");
+    fprintf(MP::STDOUT, "\n[Usage] \n");
+    fprintf(MP::STDOUT, "* Expert mode \n");
+    fprintf(MP::STDOUT, "   $ HPhi -e {namelist_file} \n");
+    fprintf(MP::STDOUT, "* Standard mode \n");
+    fprintf(MP::STDOUT, "   $ HPhi -s {input_file} \n");
+    fprintf(MP::STDOUT, "* Standard DRY mode \n");
+    fprintf(MP::STDOUT, "   $ HPhi -sdry {input_file} \n");
+    fprintf(MP::STDOUT, "   In this mode, Hphi stops after it generats expert input files. \n");
+    fprintf(MP::STDOUT, "* Print the version \n");
+    fprintf(MP::STDOUT, "   $ HPhi -v \n\n");
     exit(-1);
   }
 
@@ -2519,7 +2523,7 @@ int CheckFormatForSpinInt
     return 0;
   }
 
-  fprintf(stdoutMPI,
+  fprintf(MP::STDOUT,
           "Warning: Site component of (i, j, k, l) =(%d, %d, %d, %d) is not correct; i=j and k=l must be satisfied. \n",
           site1, site2, site3, site4);
   return(-1);
@@ -2547,13 +2551,13 @@ int CheckFormatForKondoInt
 {
   if (iLocInfo[isite1] != ITINERANT || iLocInfo[isite2] != ITINERANT) {
     if (isite1 != isite2) {
-      fprintf(stdoutMPI, "Error: Site component of (i, j, k, l) =(%d, %d, %d, %d) is incorrect.\n", isite1, isite2, isite3, isite4);
+      fprintf(MP::STDOUT, "Error: Site component of (i, j, k, l) =(%d, %d, %d, %d) is incorrect.\n", isite1, isite2, isite3, isite4);
       return -1;
     }
   }
   if (iLocInfo[isite3] != ITINERANT || iLocInfo[isite4] != ITINERANT) {
     if (isite3 != isite4) {
-      fprintf(stdoutMPI, "Error: Site component of (i, j, k, l) =(%d, %d, %d, %d) is incorrect.\n", isite1, isite2, isite3, isite4);
+      fprintf(MP::STDOUT, "Error: Site component of (i, j, k, l) =(%d, %d, %d, %d) is incorrect.\n", isite1, isite2, isite3, isite4);
       return -1;
     }
   }
@@ -2568,21 +2572,14 @@ int CheckFormatForKondoInt
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
-void SetConvergenceFactor
-(
- 
- )
+void SetConvergenceFactor()
 {
   //In future, convergence facator can be set by a def file.
   int neps = -8;
   int nepsCG =-8;
   int nEnergy = -12;
-  eps=pow(10.0, neps);
-  eps_CG=pow(10.0, nepsCG);
-  eps_Lanczos     = pow(10,-Def::LanczosEps);
-  eps_Energy = pow(10.0, nEnergy);
+  Def::eps_Lanczos     = pow(10,-Def::LanczosEps);
 }
-
 /** 
  * @brief function of checking indexies of localized spin
  * 
@@ -2594,10 +2591,7 @@ void SetConvergenceFactor
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @author Takahiro Misawa (The University of Tokyo)
  */
-int CheckLocSpin
-(
- 
- )
+int CheckLocSpin()
 {
 
   int i=0;
@@ -2648,7 +2642,6 @@ int CheckLocSpin
   }
   return TRUE;
 }  
-
 /** 
  * 
  * @brief function of resetting number of interactions
@@ -2658,10 +2651,7 @@ int CheckLocSpin
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @author Takahiro Misawa (The University of Tokyo)
  */
-void ResetInteractionNum
-(
- 
- )
+void ResetInteractionNum()
 {
   Def::NHundCoupling += Def::NIsingCoupling;
   Def::NCoulombInter += Def::NIsingCoupling;
@@ -2675,10 +2665,7 @@ void ResetInteractionNum
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @author Takahiro Misawa (The University of Tokyo)
  */
-void InitializeInteractionNum
-(
- 
- )
+void InitializeInteractionNum()
 {
   Def::NTransfer=0;
   Def::NCoulombIntra=0;
@@ -2732,7 +2719,7 @@ int CheckGeneralSpinIndexForInterAll
 {
    if( isigma1 > iLocInfo[isite1] || isigma2 >iLocInfo[isite2]
          ||isigma3 > iLocInfo[isite3] || isigma4 >iLocInfo[isite4]){
-        fprintf(stdoutMPI, "%s", "Error: Spin index is incorrect for interactions defined in InterAll file.\n");
+        fprintf(MP::STDOUT, "%s", "Error: Spin index is incorrect for interactions defined in InterAll file.\n");
         return FALSE;
     }
   return TRUE;
@@ -2748,29 +2735,25 @@ int CheckGeneralSpinIndexForInterAll
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @author Takahiro Misawa (The University of Tokyo)
  */
-int CheckSpinIndexForTrans
-(
- 
- )
+int CheckSpinIndexForTrans()
 {
-  int i=0;
+  int i = 0;
   int isite1, isite2;
   int isigma1, isigma2;
-  if(Def::iFlgGeneralSpin==TRUE){
-    for(i=0; i<Def::NTransfer; i++){
-      isite1 =Def::GeneralTransfer[i][0];
-      isigma1=Def::GeneralTransfer[i][1];
-      isite2 =Def::GeneralTransfer[i][2];
-      isigma2=Def::GeneralTransfer[i][3];
-      if(isigma1 > Def::LocSpn[isite1] || isigma2 >Def::LocSpn[isite2]){
-        fprintf(stdoutMPI, "%s", "Error: Spin index is incorrect for transfers defined in Trans file.\n");
+  if (Def::iFlgGeneralSpin == TRUE) {
+    for (i = 0; i < Def::NTransfer; i++) {
+      isite1 = Def::GeneralTransfer[i][0];
+      isigma1 = Def::GeneralTransfer[i][1];
+      isite2 = Def::GeneralTransfer[i][2];
+      isigma2 = Def::GeneralTransfer[i][3];
+      if (isigma1 > Def::LocSpn[isite1] || isigma2 > Def::LocSpn[isite2]) {
+        fprintf(MP::STDOUT, "%s", "Error: Spin index is incorrect for transfers defined in Trans file.\n");
         return FALSE;
       }
     }
   }
   return TRUE;
 }
-
 /** 
  * @brief function of checking an input data of total2Sz
  * 
@@ -2781,17 +2764,14 @@ int CheckSpinIndexForTrans
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @author Takahiro Misawa (The University of Tokyo)
  */
-int CheckTotal2Sz
-(
- 
- )
+int CheckTotal2Sz()
 {
   if(Def::iFlgSzConserved==TRUE && Def::iFlgGeneralSpin==FALSE){
     int tmp_Nup=Def::NLocSpn+Def::NCond+Def::Total2Sz;
     int tmp_Ndown=Def::NLocSpn+Def::NCond-Def::Total2Sz;
     if(tmp_Nup%2 != 0 && tmp_Ndown%2 !=0){
       printf("Nup=%d, Ndown=%d\n",Def::Nup,Def::Ndown);
-      fprintf(stdoutMPI, "2Sz is incorrect.\n");
+      fprintf(MP::STDOUT, "2Sz is incorrect.\n");
       return FALSE;
     }
   }
@@ -2909,33 +2889,25 @@ int CheckInterAllCondition(
   }
   return 0;
 }
-
-///
-/// \brief Input InterAll Interactions (Operators of the same kinds are grouped together).
-/// \param icnt_interall total number of interall interactions
-/// \param iInterAllInfo arrays of information of interall interactions
-/// \param cInterAllValue arrays of values of interall interactions
-/// \param[in] isite1 a site number on the site 1.
-/// \param[in] isigma1 a spin index on the site 1.
-/// \param[in] isite2 a site number on the site 2.
-/// \param[in] isigma2 a spin index on the site 2.
-/// \param[in] isite3 a site number on the site 3.
-/// \param[in] isigma3 a spin index on the site 3.
-/// \param[in] isite4 a site number on the site 4.
-/// \param[in] isigma4 a spin index on the site 4.
-/// \param dvalue_re
-/// \param dvalue_im
-/// \return 0 Interaction is off-diagonal
-/// \return 1 Interaction is diagonal
+/**
+\brief Input InterAll Interactions (Operators of the same kinds are grouped together).
+\return 0 Interaction is off-diagonal
+\return 1 Interaction is diagonal
+*/
 int InputInterAllInfo(
-        int *icnt_interall,
-        int **iInterAllInfo,
-        std::complex<double> *cInterAllValue,
-        int isite1, int isigma1,
-        int isite2, int isigma2,
-        int isite3, int isigma3,
-        int isite4, int isigma4,
-        double dvalue_re, double dvalue_im
+  int* icnt_interall,/**<total number of interall interactions*/
+  int** iInterAllInfo,/**<arrays of information of interall interactions*/
+  std::complex<double>* cInterAllValue,/**<arrays of values of interall interactions*/
+  int isite1,/**<[in] site number on the site 1*/
+  int isigma1,/**<[in] spin index on the site 1*/
+  int isite2,/**<[in] site number on the site 2*/
+  int isigma2,/**<[in] spin index on the site 2*/
+  int isite3,/**<[in] site number on the site 3*/
+  int isigma3,/**<[in] spin index on the site 3*/
+  int isite4, /**<[in] site number on the site 4*/
+  int isigma4,/**<[in] spin index on the site 4*/
+  double dvalue_re, /**<[in]*/
+  double dvalue_im/**<[in]*/
 ) {
   int i = 0;
   int iflg_interall = 0;
@@ -2945,7 +2917,7 @@ int InputInterAllInfo(
         isite3 == iInterAllInfo[i][4] && isite4 == iInterAllInfo[i][6] &&
         isigma1 == iInterAllInfo[i][1] && isigma2 == iInterAllInfo[i][3] &&
         isigma3 == iInterAllInfo[i][5] && isigma4 == iInterAllInfo[i][7]) {
-      cInterAllValue[i] += dvalue_re + dvalue_im * I;
+      cInterAllValue[i] += std::complex<double>(dvalue_re, dvalue_im);
       iflg_interall = 1;
       return 0;
     }
@@ -2961,7 +2933,7 @@ int InputInterAllInfo(
     iInterAllInfo[*icnt_interall][5] = isigma3;
     iInterAllInfo[*icnt_interall][6] = isite4;
     iInterAllInfo[*icnt_interall][7] = isigma4;
-    cInterAllValue[*icnt_interall] = dvalue_re + I * dvalue_im;
+    cInterAllValue[*icnt_interall] = std::complex<double>(dvalue_re, dvalue_im);
     *icnt_interall+=1;
     //Check Diagonal part or not
     if (isite1 == isite2 && isite3 == isite4 &&
@@ -3048,7 +3020,7 @@ to get the name of keyword, i.e. cKWListOfFileNameList[KWTest] = "Test".
     if(iKWidx==KWSpectrumVec){
       continue;
     }
-    fprintf(stdoutMPI, "  Read File %s for %s.\n", defname, cKWListOfFileNameList[iKWidx]);
+    fprintf(MP::STDOUT, "  Read File %s for %s.\n", defname, cKWListOfFileNameList[iKWidx]);
     fp = fopenMPI(defname, "r");
     if (fp == NULL) return ReadDefFileError(defname);
     switch (iKWidx) {
@@ -3085,8 +3057,8 @@ to get the name of keyword, i.e. cKWListOfFileNameList[KWTest] = "Test".
 }
  ```
     @sa  InitializeInteractionNum
-5. The memories of arrays are stored by setmem_def function in @c xsetmem.cpp.
-   @sa  setmem_def
+5. The memories of arrays are stored by xsetmem::def function in @c xsetmem.cpp.
+   @sa  xsetmem::def
  **/
 
 /**

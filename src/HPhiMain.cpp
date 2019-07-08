@@ -92,7 +92,7 @@
   Use @c shared.
 - For MPI parallelization, use the following functions for I/O and abortation:
   - fgetsMPI() instead of @c fgets
-  - @c fprintf(::stdoutMPI,... instead of @c printf(...
+  - @c fprintf(::MP::STDOUT,... instead of @c printf(...
   - fopenMPI() instead of @c fopen
   - exitMPI() instead of @c exit
 - When you add new features into HPhi, please run <tt>make test</tt>,
@@ -184,15 +184,15 @@ int main(int argc, char* argv[]){
   int mode=0;
   char cFileListName[D_FileNameMax];
 
-  stdoutMPI = stdout;
+  MP::STDOUT = stdout;
   if(JudgeDefType(argc, argv, &mode)!=0){
       exitMPI(-1);
   }
 
   if (mode == STANDARD_DRY_MODE) {
-    myrank = 0;
-    nproc = 1;
-    stdoutMPI = stdout;
+    MP::myrank = 0;
+    MP::nproc = 1;
+    MP::STDOUT = stdout;
     splash();
   }
   else InitializeMPI(argc, argv);
@@ -203,19 +203,19 @@ int main(int argc, char* argv[]){
  
   //MakeDirectory for output
   struct stat tmpst;
-  if (myrank == 0) {
+  if (MP::myrank == 0) {
     if (stat("./output/", &tmpst) != 0) {
       if (mkdir("./output/", 0777) != 0) {
-        fprintf(stdoutMPI, "%s", "Error: Fail to make output folder in current directory. \n");
+        fprintf(MP::STDOUT, "%s", "Error: Fail to make output folder in current directory. \n");
         exitMPI(-1);
       }
     }
-  }/*if (myrank == 0)*/
+  }/*if (MP::myrank == 0)*/
 
   strcpy(cFileListName, argv[2]);
   
   if(mode==STANDARD_MODE || mode == STANDARD_DRY_MODE){
-    if (myrank == 0) StdFace_main(argv[2]);
+    if (MP::myrank == 0) StdFace_main(argv[2]);
     strcpy(cFileListName, "namelist.def");
     if (mode == STANDARD_DRY_MODE){
       fprintf(stdout, "Dry run is Finished. \n\n");
@@ -223,32 +223,32 @@ int main(int argc, char* argv[]){
     }
   }
 
-  setmem_HEAD();
+  xsetmem::HEAD();
   if(ReadDefFileNInt(cFileListName)!=0){
-    fprintf(stdoutMPI, "%s", "Error: Definition files(*.def) are incomplete.\n");
+    fprintf(MP::STDOUT, "%s", "Error: Definition files(*.def) are incomplete.\n");
     exitMPI(-1);
   }
 
   if (Def::nvec < Def::k_exct){
-    fprintf(stdoutMPI, "%s", "Error: nvec should be smaller than exct are incorrect.\n");
-    fprintf(stdoutMPI, "Error: nvec = %d, exct=%d.\n", Def::nvec, Def::k_exct);
+    fprintf(MP::STDOUT, "%s", "Error: nvec should be smaller than exct are incorrect.\n");
+    fprintf(MP::STDOUT, "Error: nvec = %d, exct=%d.\n", Def::nvec, Def::k_exct);
     exitMPI(-1);
   }
-  fprintf(stdoutMPI, "%s", "\n######  Definition files are correct.  ######\n\n");
+  fprintf(MP::STDOUT, "%s", "\n######  Definition files are correct.  ######\n\n");
   
   /*ALLOCATE-------------------------------------------*/
-  setmem_def();
+  xsetmem::def();
   /*-----------------------------------------------------*/
 
   /*Read Def files.*/
   TimeKeeper("%s_TimeKeeper.dat", "Read File starts:   %s", "w");
   if (ReadDefFileIdxPara() != 0) {
-    fprintf(stdoutMPI,
+    fprintf(MP::STDOUT,
             "Error: Indices and Parameters of Definition files(*.def) are incomplete.\n");
     exitMPI(-1);
   }
   TimeKeeper("%s_TimeKeeper.dat", "Read File finishes: %s", "a");
-  fprintf(stdoutMPI, "%s", "\n######  Indices and Parameters of Definition files(*.def) are complete.  ######\n\n");
+  fprintf(MP::STDOUT, "%s", "\n######  Indices and Parameters of Definition files(*.def) are complete.  ######\n\n");
 
   /*Set convergence Factor*/
   SetConvergenceFactor();
@@ -266,13 +266,13 @@ int main(int argc, char* argv[]){
     }
     
     /*LARGE VECTORS ARE ALLOCATED*/
-    if (setmem_large() != 0) {
-      fprintf(stdoutMPI, "Error: Fail for memory allocation.");
+    if (xsetmem::large() != 0) {
+      fprintf(MP::STDOUT, "Error: Fail for memory allocation.");
       exitMPI(-1);
     }
     
     StartTimer(1000);
-    if(sz(list_1, list_2_1, list_2_2)!=0){
+    if(sz(List::c1, List::c2_1, List::c2_2)!=0){
       exitMPI(-1);
     }
 
@@ -287,15 +287,15 @@ int main(int argc, char* argv[]){
       
     switch (Def::iCalcType) {
     case CG:
-      if (CalcByLOBPCG() != TRUE) {
+      if (CalcByLOBPCG::main() != TRUE) {
           exitMPI(-3);
       }
       break;
 
     case FullDiag:
       StartTimer(5000);
-      if (Def::iFlgScaLAPACK == 0 && nproc != 1) {
-        fprintf(stdoutMPI, "Error: Full Diagonalization by LAPACK is only allowed for one process.\n");
+      if (Def::iFlgScaLAPACK == 0 && MP::nproc != 1) {
+        fprintf(MP::STDOUT, "Error: Full Diagonalization by LAPACK is only allowed for one process.\n");
         FinalizeMPI();
       }
       if (CalcByFullDiag::CalcByFullDiag() != TRUE) {
@@ -306,7 +306,7 @@ int main(int argc, char* argv[]){
 
     case TPQCalc:
       StartTimer(3000);
-      if (CalcByTPQ(NumAve, Param::ExpecInterval) != TRUE) {
+      if (CalcByTPQ(Step::NumAve, Param::ExpecInterval) != TRUE) {
         StopTimer(3000);
         exitMPI(-3);
       }
@@ -327,10 +327,7 @@ int main(int argc, char* argv[]){
 
   if(Def::iFlgCalcSpec != CALCSPEC_NOT){
     StartTimer(6000);
-    if (CalcSpectrum() != TRUE) {
-      StopTimer(6000);
-      exitMPI(-3);
-    }
+    CalcSpectrum();
     StopTimer(6000);
   }
   

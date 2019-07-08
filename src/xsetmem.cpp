@@ -31,22 +31,21 @@
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
 
-///
-/// \brief Set size of memories headers of output files.
-/// Output: CDataFileHead, CParaFileHead
-/// \version 0.1
-void setmem_HEAD()
+/**
+@brief Set size of memories headers of output files.
+Output: CDataFileHead, CParaFileHead
+@version 0.1
+*/
+void xsetmem::HEAD()
 {
   Def::CDataFileHead = (char*)malloc(D_FileNameMax*sizeof(char));
   Def::CParaFileHead = (char*)malloc(D_FileNameMax*sizeof(char));
 }
-
-///
-/// \brief Set size of memories for Def and Phys in BindStruct.
-/// \param X [in,out] BindStruct to get information of Def and Phys structs.
-/// \param xBoost [in,out] Struct for Boost mode.
-/// \version 0.1
-void setmem_def()
+/**
+@brief Set size of memories for Def and Phys in BindStruct.
+@version 0.1
+*/
+void xsetmem::def()
 {
   Def::Tpow = li_1d_allocate(2 * Def::Nsite + 2);
   Def::OrgTpow = li_1d_allocate(2 * Def::Nsite + 2);
@@ -136,28 +135,29 @@ void setmem_def()
     Def::ParaTEChemi = d_2d_allocate(Def::NTETimeSteps, Def::NTEInterAllMax);
   }
 }
-///
-/// \brief Set size of memories for vectors(vg, v0, v1, v2, vec, alpha, beta), lists (list_1, list_2_1, list_2_2, list_Diagonal) and Phys(BindStruct.PhysList) struct in the case of Full Diag mode.
-/// \retval -1 Fail to set memories.
-/// \retval 0 Normal to set memories.
-/// \version 0.1
-int setmem_large()
+/**
+@brief Set size of memories for vectors(vg, v0, v1, v2, vec, alpha, beta), lists (list_1, list_2_1, list_2_2, List::Diagonal) and Phys(BindStruct.PhysList) struct in the case of Full Diag mode.
+@retval -1 Fail to set memories.
+@retval 0 Normal to set memories.
+@version 0.1
+*/
+int xsetmem::large()
 {
   int nstate;
 
   if (GetlistSize() == TRUE) {
-    list_1 = li_1d_allocate(Check::idim_max + 1);
-    list_2_1 = li_1d_allocate(Large::SizeOflist_2_1);
-    list_2_2 = li_1d_allocate(Large::SizeOflist_2_2);
-    if (list_1 == NULL
-      || list_2_1 == NULL
-      || list_2_2 == NULL
+    List::c1 = li_1d_allocate(Check::idim_max + 1);
+    List::c2_1 = li_1d_allocate(Large::SizeOflist_2_1);
+    List::c2_2 = li_1d_allocate(Large::SizeOflist_2_2);
+    if (List::c1 == NULL
+      || List::c2_1 == NULL
+      || List::c2_2 == NULL
       ) {
       return -1;
     }
   }
 
-  list_Diagonal = d_1d_allocate(Check::idim_max + 1);
+  List::Diagonal = d_1d_allocate(Check::idim_max + 1);
 
   if (Def::iCalcType == FullDiag) {
     nstate = Check::idim_max;
@@ -166,18 +166,18 @@ int setmem_large()
     nstate = Def::k_exct;
   }
   else if (Def::iCalcType == TPQCalc) {
-    nstate = NumAve;
+    nstate = Step::NumAve;
   }
   else {
     nstate = 1;
   }
-  v0 = cd_2d_allocate(Check::idim_max + 1, nstate);
-  v1 = cd_2d_allocate(Check::idim_max + 1, nstate);
+  Wave::v0 = cd_2d_allocate(Check::idim_max + 1, nstate);
+  Wave::v1 = cd_2d_allocate(Check::idim_max + 1, nstate);
 #ifdef __MPI
   long int MAXidim_max;
   MAXidim_max = MaxMPI_li(Check::idim_max);
-  if (GetlistSize() == TRUE) list_1buf = li_1d_allocate(MAXidim_max + 1);
-  v1buf = cd_2d_allocate(MAXidim_max + 1, nstate);
+  if (GetlistSize() == TRUE) List::c1buf = li_1d_allocate(MAXidim_max + 1);
+  Wave::v1buf = cd_2d_allocate(MAXidim_max + 1, nstate);
 #else
   if (Def::iCalcType == CG) v1buf = cd_2d_allocate(Check::idim_max + 1, nstate);
 #endif // MPI
@@ -194,7 +194,7 @@ int setmem_large()
   Phys::Sz2 = d_1d_allocate(nstate);
   Phys::s2 = d_1d_allocate(nstate);
 
-  fprintf(stdoutMPI, "%s", "\n######  LARGE ALLOCATE FINISH !  ######\n\n");
+  fprintf(MP::STDOUT, "%s", "\n######  LARGE ALLOCATE FINISH !  ######\n\n");
   return 0;
 }
 ///
@@ -245,19 +245,19 @@ int GetlistSize()
 
  For example, ```char_malloc2(N1, N2)``` function sets the size of memories N1@f$ \times @f$ N2 characters to two dimensional array X.
 
- To set memories to global arrays, we prepare two functions, setmem_def() and setmem_large() functions.
+ To set memories to global arrays, we prepare two functions, xsetmem::def() and xsetmem::large() functions.
 
- - setmem_def()
+ - xsetmem::def()
 
     In this function, the memories of the arrays which do not have large memory are stored.
 
     Arrays for defining interactions and correlation functions are mainly defined.
 
- - setmem_large()
+ - xsetmem::large()
 
     In this function, the memories of the arrays which have large memory are stored.
 
     Arrays for defining Hamiltonian and vectors are mainly defined.
 
-@sa setmem_def(), setmem_large()
+@sa xsetmem::def(), xsetmem::large()
 */

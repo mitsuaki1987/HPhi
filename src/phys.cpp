@@ -59,53 +59,53 @@ void phys( //!<[inout]
   i_max = Check::idim_max;
 
   if(use_scalapack){
-  fprintf(stdoutMPI, "In scalapack fulldiag, total spin is not calculated !\n");
+  fprintf(MP::STDOUT, "In scalapack fulldiag, total spin is not calculated !\n");
   vec_tmp = malloc(i_max*sizeof(std::complex<double>));
   }
   for (i = 0; i < neig; i++) {
     for (j = 0; j < i_max; j++) {
-      v0[j + 1] = 0.0;
+      Wave::v0[j + 1] = 0.0;
     }
     if (use_scalapack) {
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       GetEigenVector(i, i_max, Z_vec, descZ_vec, vec_tmp);
       if (rank == 0) {
         for (j = 0; j < i_max; j++) {
-          v0[j + 1] = vec_tmp[j];
+          Wave::v0[j + 1] = vec_tmp[j];
         }
       }
       else {
         for (j = 0; j < i_max; j++) {
-          v0[j + 1] = 0.0;
+          Wave::v0[j + 1] = 0.0;
         }
       }
     }
     else {
       if (Def::iCalcType == FullDiag) {
-        if (myrank == 0) {
+        if (MP::myrank == 0) {
           for (j = 0; j < i_max; j++) {
-            v0[j + 1] = v1[i][j];
+            Wave::v0[j + 1] = Wave::v1[i][j];
           }
         }
       }
       else {
         for (j = 0; j < i_max; j++) {
-          v0[j + 1] = v1[i][j];
+          Wave::v0[j + 1] = Wave::v1[i][j];
         }
       }
     }
   }/*for (i = 0; i < neig; i++)*/
 #endif
 
-  if (expec_energy_flct(neig, v0, v1) != 0) {
+  if (expec_energy_flct(neig, Wave::v0, Wave::v1) != 0) {
     fprintf(stderr, "Error: calc expec_energy.\n");
     exitMPI(-1);
   }
-  if (expec_cisajs(neig, v0, v1) != 0) {
+  if (expec_cisajs(neig, Wave::v0, Wave::v1) != 0) {
     fprintf(stderr, "Error: calc OneBodyG.\n");
     exitMPI(-1);
   }
-  if (expec_cisajscktaltdc(neig, v0, v1) != 0) {
+  if (expec_cisajscktaltdc(neig, Wave::v0, Wave::v1) != 0) {
     fprintf(stderr, "Error: calc TwoBodyG.\n");
     exitMPI(-1);
   }
@@ -119,7 +119,7 @@ void phys( //!<[inout]
   }
   else {
     if (Def::iCalcType == FullDiag) {
-      if (expec_totalspin(v1) != 0) {
+      if (expec_totalspin(Wave::v1) != 0) {
         fprintf(stderr, "Error: calc TotalSpin.\n");
         exitMPI(-1);
       }
@@ -127,7 +127,7 @@ void phys( //!<[inout]
   }
 #else
   if (Def::iCalcType == FullDiag) {
-    if (expec_totalspin(neig, v1) != 0) {
+    if (expec_totalspin(neig, Wave::v1) != 0) {
       fprintf(stderr, "Error: calc TotalSpin.\n");
       exitMPI(-1);
     }
@@ -144,20 +144,20 @@ void phys( //!<[inout]
     if (Def::iCalcType == FullDiag) {
 #ifdef _SCALAPACK
       if (use_scalapack) {
-        fprintf(stdoutMPI, "i=%5ld Energy=%10lf N=%10lf Sz=%10lf Doublon=%10lf \n", i, Phys::energy, tmp_N,
+        fprintf(MP::STDOUT, "i=%5ld Energy=%10lf N=%10lf Sz=%10lf Doublon=%10lf \n", i, Phys::energy, tmp_N,
           Phys::Sz, Phys::doublon);
       }
       else {
-        fprintf(stdoutMPI, "i=%5ld Energy=%10lf N=%10lf Sz=%10lf S2=%10lf Doublon=%10lf \n", i, Phys::energy, tmp_N,
+        fprintf(MP::STDOUT, "i=%5ld Energy=%10lf N=%10lf Sz=%10lf S2=%10lf Doublon=%10lf \n", i, Phys::energy, tmp_N,
           Phys::Sz, Phys::s2, Phys::doublon);
       }
 #else
-      fprintf(stdoutMPI, "i=%5ld Energy=%10lf N=%10lf Sz=%10lf S2=%10lf Doublon=%10lf \n",
+      fprintf(MP::STDOUT, "i=%5ld Energy=%10lf N=%10lf Sz=%10lf S2=%10lf Doublon=%10lf \n",
         i, Phys::energy[i], tmp_N, Phys::Sz[i], Phys::s2[i], Phys::doublon[i]);
 #endif      
     }
     else if (Def::iCalcType == CG)
-      fprintf(stdoutMPI, "i=%5ld Energy=%10lf N=%10lf Sz=%10lf Doublon=%10lf \n",
+      fprintf(MP::STDOUT, "i=%5ld Energy=%10lf N=%10lf Sz=%10lf Doublon=%10lf \n",
         i, Phys::energy[i], tmp_N, Phys::Sz[i], Phys::doublon[i]);
   }
 #ifdef _SCALAPACK

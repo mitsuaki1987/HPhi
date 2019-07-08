@@ -61,6 +61,7 @@ namespace Def {
   int NeMPI = 0;/**<@brief Total number of electrons across process.
                      Differ from DefineList::Ne .*/
   int Lanczos_max = 0;/**<@brief Maximum number of iterations.*/
+  double eps_Lanczos;/**> epsilon used in LOBPCG, BiCG and Lanczos eigen value.*/
   int Lanczos_restart = 0;/**<@brief Number of iterations performed in the restart computation.*/
   long int initial_iv = 0;/**<@brief Seed of random number for initial guesss of wavefunctions.*/
 
@@ -69,7 +70,7 @@ namespace Def {
   int St = 0;/**<@brief 0 or 1, but it affects nothing.*/
 
   int* LocSpn;/**<@brief [DefineList::NLocSpn] Flag (and size) of the local spin.
-              malloc in setmem_def().*/
+              malloc in xsetmem::def().*/
   int NLocSpn = 0;/**<@brief Number of local spins*/
   int NCond = 0;/**<@brief Number of itinerant electrons*/
   int iFlgGeneralSpin = 0;/**<@brief Flag for the general (Sz/=1/2) spin*/
@@ -77,73 +78,73 @@ namespace Def {
 
   int fidx = 0;/**<@brief Always 0, it is not used ???*/
   long int* Tpow;/**<@brief [2 * DefineList::NsiteMPI] @f$2^n@f$
-                          malloc in setmem_def().*/
+                          malloc in xsetmem::def().*/
   long int* OrgTpow;/**<@brief [2 * DefineList::NsiteMPI] @f$2^n@f$
-                             malloc in setmem_def().*/
+                             malloc in xsetmem::def().*/
   long int* SiteToBit;/**<@brief [DefineList::NsiteMPI] Similar to DefineList::Tpow.
                       For general spin.*/
 
   int EDNChemi = 0;/**<@brief Number of on-site term.*/
-  int* EDChemi;/**<@brief [DefineList::Nsite] Chemical potential. malloc in setmem_def().*/
+  int* EDChemi;/**<@brief [DefineList::Nsite] Chemical potential. malloc in xsetmem::def().*/
   int* EDSpinChemi;/**<@brief [DefineList::Nsite]*/
   double* EDParaChemi;/**<@brief [DefineList::Nsite] On-site potential parameter.
-                      malloc in setmem_def().*/
+                      malloc in xsetmem::def().*/
 
                       //[s] Transfer
   int NTransfer = 0;/**<@brief Number of transfer integrals obtained by a def file.*/
   int EDNTransfer = 0;/**<@brief Number of transfer integrals for calculation. */
   int** GeneralTransfer;/**<@brief Index of transfer integrals obtained by a def file.
-                        malloc in setmem_def().\n
+                        malloc in xsetmem::def().\n
                         Data Format [DefineList::NTransfer][4]:
                         0->site number i, 1-> spin index on i, 2-> site number j, 3-> spin index on j. */
   int** EDGeneralTransfer;/**<@brief Index of transfer integrals for calculation.
-                          malloc in setmem_def().\n
+                          malloc in xsetmem::def().\n
                           Data Format [DefineList::NTransfer][4]: 0->site number i, 1-> spin index on i, 2-> site number j, 3-> spin index on j. */
   std::complex<double>* ParaGeneralTransfer;/**<@brief Value of general transfer integrals by a def file.
-                                      malloc in setmem_def().\n
+                                      malloc in xsetmem::def().\n
                                       Data Format [DefineList::NTransfer].*/
   std::complex<double>* EDParaGeneralTransfer;/**<@brief Value of general transfer integrals  by a def file.
-                                        malloc in setmem_def().\n
+                                        malloc in xsetmem::def().\n
                                         Data Format [DefineList::NTransfer].*/
                                         //[e] Transfer
 
   int NCoulombIntra = 0;/**< Number of on-site Coulomb interaction*/
   int** CoulombIntra;/**< [DefineList::NCoulombIntra][1] Index of on-site coulomb interaction.
-                     malloc in setmem_def().*/
+                     malloc in xsetmem::def().*/
   double* ParaCoulombIntra;/**< [DefineList::NCoulombIntra] Coupling constant of on-site
-                           Coulomb interaction. malloc in setmem_def().*/
+                           Coulomb interaction. malloc in xsetmem::def().*/
 
   int NCoulombInter = 0;/**<@brief Number of off-site Coulomb interaction*/
   int** CoulombInter;/**< [DefineList::NCoulombInter][2] Index of off-site coulomb interaction.
-                     malloc in setmem_def().*/
+                     malloc in xsetmem::def().*/
   double* ParaCoulombInter;/**<@brief [DefineList::NCoulombInter]Coupling constant of off-site
-                           Coulomb interaction. malloc in setmem_def().*/
+                           Coulomb interaction. malloc in xsetmem::def().*/
 
   int NHundCoupling = 0;/**<@brief Number of Hund coupling*/
   int** HundCoupling;/**<@brief [DefineList::NHundCoupling][2] Index of Hund coupling.
-                     malloc in setmem_def().*/
+                     malloc in xsetmem::def().*/
   double* ParaHundCoupling;/**<@brief [DefineList::NHundCoupling] Hund coupling constant.
-                           malloc in setmem_def().*/
+                           malloc in xsetmem::def().*/
 
   int NPairHopping = 0;/**<@brief Number of pair-hopping term*/
   int** PairHopping;/**<@brief [DefineList::NPairHopping][2] Index of pair-hopping.
-                    malloc in setmem_def().*/
+                    malloc in xsetmem::def().*/
   double* ParaPairHopping;/**<@brief [DefineList::NPairHopping] Coupling constant of
-                          pair-hopping term. malloc in setmem_def().*/
+                          pair-hopping term. malloc in xsetmem::def().*/
 
   int NExchangeCoupling = 0;/**<@brief Number of exchange term*/
   int** ExchangeCoupling;/**<@brief [DefineList::NExchangeCoupling][2] Index of exchange term.
-                         malloc in setmem_def().*/
+                         malloc in xsetmem::def().*/
   double* ParaExchangeCoupling;/**<@brief [DefineList::NExchangeCoupling] Coupling constant of
-                               exchange term. malloc in setmem_def().*/
+                               exchange term. malloc in xsetmem::def().*/
 
   int NIsingCoupling = 0;/**<@brief Number of Ising term.*/
 
   int NPairLiftCoupling = 0;/**<@brief Number of pair-lift term*/
   int** PairLiftCoupling;/**<@brief [DefineList::NPairHopping][2] Index of pair-lift term.
-                         malloc in setmem_def().*/
+                         malloc in xsetmem::def().*/
   double* ParaPairLiftCoupling;/**<@brief [DefineList::NPairHopping] Coupling constant of
-                               pair-lift term. malloc in setmem_def().*/
+                               pair-lift term. malloc in xsetmem::def().*/
 
                                //[s] For InterAll
   int** InterAll;/**<@brief [DefineList::NinterAll][8] Interacted quartet*/
@@ -153,32 +154,32 @@ namespace Def {
   int NInterAll_Diagonal = 0;/**<@brief Number of interall term (diagonal)*/
   int NInterAll_OffDiagonal = 0;/**<@brief Number of interall term (off-diagonal)*/
   std::complex<double>* ParaInterAll;/**<@brief [DefineList::NInterAll] Coupling constant of
-                               inter-all term. malloc in setmem_def().*/
+                               inter-all term. malloc in xsetmem::def().*/
   double* ParaInterAll_Diagonal;/**<@brief [DefineList::NInterAll_Diagonal] Coupling constant of
-                               diagonal inter-all term. malloc in setmem_def().*/
+                               diagonal inter-all term. malloc in xsetmem::def().*/
   std::complex<double>* ParaInterAll_OffDiagonal;/**<@brief [DefineList::NInterAll_OffDiagonal] Coupling constant of
-                               off-diagonal inter-all term. malloc in setmem_def().*/
+                               off-diagonal inter-all term. malloc in xsetmem::def().*/
                                //[e] For InterAll
 
-  int** CisAjt;/**<@brief [DefineList::NCisAjt][4] Indices of one-body correlation function. malloc in setmem_def().*/
+  int** CisAjt;/**<@brief [DefineList::NCisAjt][4] Indices of one-body correlation function. malloc in xsetmem::def().*/
   int NCisAjt = 0;/**<@brief Number of indices of two-body correlation function.*/
 
-  int** CisAjtCkuAlvDC;/**<@brief [DefineList::NCisAjtCkuAlvDC][4] Indices of two-body correlation function. malloc in setmem_def().*/
+  int** CisAjtCkuAlvDC;/**<@brief [DefineList::NCisAjtCkuAlvDC][4] Indices of two-body correlation function. malloc in xsetmem::def().*/
   int NCisAjtCkuAlvDC = 0;/**<@brief Number of indices of two-body correlation function.*/
 
   int*** SingleExcitationOperator;/**<@brief [DefineList::NSingleExcitationOperator][3]
-                                 Indices of single excitaion operator for spectrum. malloc in setmem_def().*/
+                                 Indices of single excitaion operator for spectrum. malloc in xsetmem::def().*/
   int NNSingleExcitationOperator = 0;/**<@brief Number of single excitaion operator for spectrum.*/
   int* NSingleExcitationOperator;/**<@brief Number of single excitaion operator for spectrum.*/
   std::complex<double>** ParaSingleExcitationOperator;/**<@brief [DefineList::NSingleExcitationOperator]
-              Coefficient of single excitaion operator for spectrum. malloc in setmem_def().*/
+              Coefficient of single excitaion operator for spectrum. malloc in xsetmem::def().*/
 
   int*** PairExcitationOperator;/**<@brief [DefineList::NPairExcitationOperator][5]
-                               Indices of pair excitaion operator for spectrum. malloc in setmem_def().*/
+                               Indices of pair excitaion operator for spectrum. malloc in xsetmem::def().*/
   int NNPairExcitationOperator = 0;/**<@brief Number of pair excitaion operator for spectrum.*/
   int* NPairExcitationOperator;/**<@brief Number of pair excitaion operator for spectrum.*/
   std::complex<double>** ParaPairExcitationOperator;/**<@brief [DefineList::NPairExcitationOperator]
-                           Coefficient of pair excitaion operator for spectrum. malloc in setmem_def().*/
+                           Coefficient of pair excitaion operator for spectrum. malloc in xsetmem::def().*/
 
   int iCalcType = 0;/**<@brief Switch for calculation type. 0:Lanczos, 1:TPQCalc, 2:FullDiag.*/
   int iCalcEigenVec = 0;/**<@brief Switch for method to calculate eigenvectors.
@@ -375,36 +376,35 @@ namespace Boost {
   int*** list_6spin_pair;/**<@brief */
 };/*namespace BoostList*/
 
-std::complex<double> I(0.0, 1.0);
-std::complex<double> **v0;  /**< A vector after multiplying Hamiltonian, @f$ v_0 = H v_1@f$.*/
-std::complex<double> **v1;  /**< A vector before multiplying Hamiltonian, @f$ v_0 = H v_1@f$.*/
-std::complex<double> **v1buf; /**< A temporary vector for MPI. */
+namespace Wave {
+  std::complex<double>** v0;  /**< A vector after multiplying Hamiltonian, @f$ v_0 = H v_1@f$.*/
+  std::complex<double>** v1;  /**< A vector before multiplying Hamiltonian, @f$ v_0 = H v_1@f$.*/
+  std::complex<double>** v1buf; /**< A temporary vector for MPI. */
+}
 
-double *list_Diagonal; /**< list for diagonal components.*/
-long int *list_1; /**< list of getting real-space configuration for canonical state*/
-long int *list_1buf;/**< list of getting real-space configuration for canonical state across processes*/
-long int *list_2_1;/**< list to get index of list_1*/
-long int *list_2_2;/**< list to get index of list_1*/
+namespace List {
+  double* Diagonal; /**< list for diagonal components.*/
+  long int* c1; /**< list of getting real-space configuration for canonical state*/
+  long int* c1buf;/**< list of getting real-space configuration for canonical state across processes*/
+  long int* c2_1;/**< list to get index of list_1*/
+  long int* c2_2;/**< list to get index of list_1*/
 
-/*[s] For Spectrum */
-long int *list_1_org; /**< list of getting real-space configuration for canonical state before excitation*/
-long int *list_1buf_org;/**< list of getting real-space configuration for canonical state before excitation across processes*/
-long int *list_2_1_org;/**< list to get index of list_1_org*/
-long int *list_2_2_org;/**< list to get index of list_1_org*/
-/*[e] For Spectrum */
+  /*[s] For Spectrum */
+  long int* c1_org; /**< list of getting real-space configuration for canonical state before excitation*/
+  long int* c1buf_org;/**< list of getting real-space configuration for canonical state before excitation across processes*/
+  long int* c2_1_org;/**< list to get index of list_1_org*/
+  long int* c2_2_org;/**< list to get index of list_1_org*/
+  /*[e] For Spectrum */
+}
 
-/*[s] For Lanczos */
-int     initial_mode;/**< mode to get initial state (0: use same random generator for MPI, 1: use each random generator for MPI)*/
-/*[e] For Lanczos */
-
-/*[s] For TPQ*/
-double LargeValue;/**< constant value l for TPQ calculation.*/
-int    NumAve;/**< Average number for TPQ calculation*/
-int step_i;/**< step for TPQ calculation*/
-double *global_norm;/**< norm before normalization for TPQ calculation*/
-double *global_1st_norm;/**< 1-st norm for TPQ calculation*/
-int step_spin;/**< output step for TE calculation.*/
-/*[e] For TPQ*/
+namespace Step {
+  double LargeValue;/**< constant value l for TPQ calculation.*/
+  int    NumAve;/**< Average number for TPQ calculation*/
+  int step_i;/**< step for TPQ calculation*/
+  double* global_norm;/**< norm before normalization for TPQ calculation*/
+  double* global_1st_norm;/**< 1-st norm for TPQ calculation*/
+  int step_spin;/**< output step for TE calculation.*/
+}
 
 /*[s] For All Diagonalization*/
 #ifdef _SCALAPACK
@@ -412,28 +412,16 @@ std::complex<double> *Z_vec; /**> distributed matrix of eigen vector*/
 int descZ_vec[9]; /*descriptor for Z_vec*/
 #endif
 /*[e] For All Diagonalization*/
-
-//For Timer
-double *Timer; /**> The procedure execution time.*/
-double *TimerStart;/**> Timer when the procedure starts.*/
-
-/********************************************************************/
-/********************************************************************/
-double eps; /**> epsilon used in getting spectrum by Lanczos method and Lanczos eigenvector by CG method.*/
-double eps_CG;/**> epsilon used in getting Lanczos eigenvector by CG method.*/
-double eps_Lanczos;/**> epsilon used in LOBPCG, BiCG and Lanczos eigen value.*/
-double eps_Energy;/**> epsilon for energy*/
-double eps_CheckImag0;/**> epsilon for checking values of one-body and two-body interactions.*/
-
 /*
  Variables for the MPI parallelism
 */
-int nproc;//!< Number of processors, defined in InitializeMPI()
-int myrank;//!< Process ID, defined in InitializeMPI()
-int nthreads;//!< Number of Threads, defined in InitializeMPI()
-FILE *stdoutMPI;/**<@brief File pointer to the standard output
-                defined in InitializeMPI()*/
-
+namespace MP {
+  int nproc;//!< Number of processors, defined in InitializeMPI()
+  int myrank;//!< Process ID, defined in InitializeMPI()
+  int nthreads;//!< Number of Threads, defined in InitializeMPI()
+  FILE* STDOUT;/**<@brief File pointer to the standard output
+                  defined in InitializeMPI()*/
+}
 
 /**@page page_variable Global variables and Data structure
   In HPhi, global variables are used. List of them can be found in global.h
