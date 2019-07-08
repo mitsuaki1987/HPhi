@@ -180,7 +180,7 @@ void xsetmem::large()
   if (GetlistSize() == TRUE) List::c1buf = li_1d_allocate(MAXidim_max + 1);
   Wave::v1buf = cd_2d_allocate(MAXidim_max + 1, nstate);
 #else
-  if (Def::iCalcType == CG) v1buf = cd_2d_allocate(Check::idim_max + 1, nstate);
+  if (Def::iCalcType == CG)  Wave::v1buf = cd_2d_allocate(Check::idim_max + 1, nstate);
 #endif // MPI
 
   Phys::num_down = d_1d_allocate(nstate);
