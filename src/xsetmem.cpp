@@ -141,7 +141,7 @@ void xsetmem::def()
 @retval 0 Normal to set memories.
 @version 0.1
 */
-int xsetmem::large()
+void xsetmem::large()
 {
   int nstate;
 
@@ -153,7 +153,8 @@ int xsetmem::large()
       || List::c2_1 == NULL
       || List::c2_2 == NULL
       ) {
-      return -1;
+      fprintf(MP::STDOUT, "Error: Fail for memory allocation.\n");
+      exitMPI(-1);
     }
   }
 
@@ -195,7 +196,6 @@ int xsetmem::large()
   Phys::s2 = d_1d_allocate(nstate);
 
   fprintf(MP::STDOUT, "%s", "\n######  LARGE ALLOCATE FINISH !  ######\n\n");
-  return 0;
 }
 ///
 /// \brief Set size of lists for the canonical ensemble.

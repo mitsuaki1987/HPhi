@@ -307,10 +307,7 @@ int MakeExcitedList(
   }
 
   //set memory
-  if (xsetmem::large() != 0) {
-    fprintf(MP::STDOUT, "Error: Fail for memory allocation.\n");
-    exitMPI(-1);
-  }
+  xsetmem::large();
   if (sz(List::c1, List::c2_1, List::c2_2) != 0) {
     return FALSE;
   }

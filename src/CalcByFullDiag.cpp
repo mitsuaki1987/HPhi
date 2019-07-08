@@ -29,7 +29,7 @@
 @retval TRUE(=1) normally finished.
 @retval FALSE(=0) abnormally finished.
 */
-int CalcByFullDiag::CalcByFullDiag()
+int CalcByFullDiag::main()
 {
   int iret=0;
   long int idim;

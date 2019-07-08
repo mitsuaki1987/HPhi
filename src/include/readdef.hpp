@@ -56,7 +56,7 @@ int CheckPairSite(const int iList1ToSite, const int iList2ToSite, const int iMax
 int CheckQuadSite(const int iList1ToSite, const int iList2ToSite, const int iList3ToSite, 
   const int iList4ToSite, const int iMaxNum);
 int CheckTransferHermite();
-int JudgeDefType(const int argc, char* argv[], int* mode);
+void JudgeDefType(const int argc, char* argv[], int* mode);
 int CheckFormatForSpinInt(const int site1, const int site2, const int site3, const int site4);
 int CheckFormatForKondoInt(const int isite1, const int isite2, const int isite3, const int isite4, int* iLocInfo);
 void SetConvergenceFactor();

@@ -2441,7 +2441,7 @@ int CheckTransferHermite
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
-int JudgeDefType
+void JudgeDefType
 (
  const int argc,
  char *argv[],
@@ -2494,8 +2494,6 @@ int JudgeDefType
     fprintf(MP::STDOUT, "   $ HPhi -v \n\n");
     exit(-1);
   }
-
-  return 0;
 }
 
 /** 

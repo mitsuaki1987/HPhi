@@ -185,9 +185,7 @@ int main(int argc, char* argv[]){
   char cFileListName[D_FileNameMax];
 
   MP::STDOUT = stdout;
-  if(JudgeDefType(argc, argv, &mode)!=0){
-      exitMPI(-1);
-  }
+  JudgeDefType(argc, argv, &mode);
 
   if (mode == STANDARD_DRY_MODE) {
     MP::myrank = 0;
@@ -266,10 +264,7 @@ int main(int argc, char* argv[]){
     }
     
     /*LARGE VECTORS ARE ALLOCATED*/
-    if (xsetmem::large() != 0) {
-      fprintf(MP::STDOUT, "Error: Fail for memory allocation.");
-      exitMPI(-1);
-    }
+    xsetmem::large();
     
     StartTimer(1000);
     if(sz(List::c1, List::c2_1, List::c2_2)!=0){
@@ -298,7 +293,7 @@ int main(int argc, char* argv[]){
         fprintf(MP::STDOUT, "Error: Full Diagonalization by LAPACK is only allowed for one process.\n");
         FinalizeMPI();
       }
-      if (CalcByFullDiag::CalcByFullDiag() != TRUE) {
+      if (CalcByFullDiag::main() != TRUE) {
         FinalizeMPI();
       }
       StopTimer(5000);

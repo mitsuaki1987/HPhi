@@ -17,6 +17,6 @@
 namespace xsetmem {
   void HEAD();
   void def();
-  int large();
+  void large();
 }
 int GetlistSize();
