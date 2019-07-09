@@ -110,7 +110,7 @@ int CalcByTPQ(
     StopTimer(3600);
     Def::istep = Step::step_i;
     StartTimer(3200);
-    iret = expec_energy_flct(NumAve, Wave::v0, Wave::v1);
+    iret = expec::energy_flct::main(NumAve, Wave::v0, Wave::v1);
     StopTimer(3200);
     if (iret != 0) return -1;
 
@@ -176,7 +176,7 @@ int CalcByTPQ(
     Compute Wave::v1=0, and compute v0 = H*Wave::v1
     */
     StartTimer(3200);
-    iret = expec_energy_flct(NumAve, Wave::v0, Wave::v1); //v0 = H*Wave::v1
+    iret = expec::energy_flct::main(NumAve, Wave::v0, Wave::v1); //v0 = H*Wave::v1
     StopTimer(3200);
     if (iret != 0) return -1;
     Step::step_i += 1;
@@ -228,18 +228,18 @@ int CalcByTPQ(
 
     if (Step::step_i%Step::step_spin == 0) {
       StartTimer(3300);
-      iret = expec_cisajs(NumAve, Wave::v1, Wave::v0);
+      iret = expec::cisajs::main(NumAve, Wave::v1, Wave::v0);
       StopTimer(3300);
       if (iret != 0) return -1;
 
       StartTimer(3400);
-      iret = expec_cisajscktaltdc(NumAve, Wave::v1, Wave::v0);
+      iret = expec::cisajscktalt::main(NumAve, Wave::v1, Wave::v0);
       StopTimer(3400);
       if (iret != 0) return -1;
     }
 
     StartTimer(3200);
-    iret = expec_energy_flct(NumAve, Wave::v0, Wave::v1);
+    iret = expec::energy_flct::main(NumAve, Wave::v0, Wave::v1);
     StopTimer(3200);
     if (iret != 0) return -1;
 

@@ -196,9 +196,7 @@ int mltplyHubbard(
         isite2 = Def::EDGeneralTransfer[idx][2] + 1;
         sigma1 = Def::EDGeneralTransfer[idx][1];
         sigma2 = Def::EDGeneralTransfer[idx][3];
-        if (child_general_hopp_GetInfo(isite1, isite2, sigma1, sigma2) != 0) {
-          return -1;
-        }
+        child_general_hopp_GetInfo(isite1, isite2, sigma1, sigma2);
         tmp_trans = -Def::EDParaGeneralTransfer[idx];
         Large::tmp_trans = tmp_trans;
         child_general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
@@ -385,9 +383,7 @@ int mltplyHubbardGC(
         isite2 = Def::EDGeneralTransfer[idx][2] + 1;
         sigma1 = Def::EDGeneralTransfer[idx][1];
         sigma2 = Def::EDGeneralTransfer[idx][3];
-        if (child_general_hopp_GetInfo(isite1, isite2, sigma1, sigma2) != 0) {
-          return -1;
-        }
+        child_general_hopp_GetInfo(isite1, isite2, sigma1, sigma2);
         tmp_trans = -Def::EDParaGeneralTransfer[idx];
         GC_child_general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
       }

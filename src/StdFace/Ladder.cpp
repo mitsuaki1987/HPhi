@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @brief Setup a Hamiltonian for the generalized Heisenberg model on a square lattice
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_Ladder()
+void StdFace::Ladder()
 {
   FILE *fp;
   int isite, jsite;
@@ -45,30 +45,30 @@ void StdFace_Ladder()
   /**/
   fprintf(stdout, "  @ Lattice Size & Shape\n\n");
   
-  StdFace_PrintVal_d("a", &StdI::a, 1.0);
-  StdFace_PrintVal_d("Wlength", &StdI::length[0], StdI::a);
-  StdFace_PrintVal_d("Llength", &StdI::length[1], StdI::a);
-  StdFace_PrintVal_d("Wx", &StdI::direct[0][0], StdI::length[0]);
-  StdFace_PrintVal_d("Wy", &StdI::direct[0][1], 0.0);
-  StdFace_PrintVal_d("Lx", &StdI::direct[1][0], 0.0);
-  StdFace_PrintVal_d("Ly", &StdI::direct[1][1], StdI::length[1]);
+  StdFace::PrintVal_d("a", &StdI::a, 1.0);
+  StdFace::PrintVal_d("Wlength", &StdI::length[0], StdI::a);
+  StdFace::PrintVal_d("Llength", &StdI::length[1], StdI::a);
+  StdFace::PrintVal_d("Wx", &StdI::direct[0][0], StdI::length[0]);
+  StdFace::PrintVal_d("Wy", &StdI::direct[0][1], 0.0);
+  StdFace::PrintVal_d("Lx", &StdI::direct[1][0], 0.0);
+  StdFace::PrintVal_d("Ly", &StdI::direct[1][1], StdI::length[1]);
 
-  StdFace_RequiredVal_i("L", StdI::L);
-  StdFace_RequiredVal_i("W", StdI::W);
-  StdFace_NotUsed_i("a0W", StdI::box[0][0]);
-  StdFace_NotUsed_i("a0L", StdI::box[0][1]);
-  StdFace_NotUsed_i("a1W", StdI::box[1][0]);
-  StdFace_NotUsed_i("a1L", StdI::box[1][1]);
+  StdFace::RequiredVal_i("L", StdI::L);
+  StdFace::RequiredVal_i("W", StdI::W);
+  StdFace::NotUsed_i("a0W", StdI::box[0][0]);
+  StdFace::NotUsed_i("a0L", StdI::box[0][1]);
+  StdFace::NotUsed_i("a1W", StdI::box[1][0]);
+  StdFace::NotUsed_i("a1L", StdI::box[1][1]);
   /**/
-  StdFace_PrintVal_d("phase0", &StdI::phase[0], 0.0);
-  StdFace_NotUsed_d("phase1", StdI::phase[1]);
+  StdFace::PrintVal_d("phase0", &StdI::phase[0], 0.0);
+  StdFace::NotUsed_d("phase1", StdI::phase[1]);
   StdI::phase[1] = StdI::phase[0];
   StdI::phase[0] = 0.0;
   /**/
   StdI::NsiteUC = StdI::W;
   StdI::W = 1;
   StdI::direct[0][0] = (double)StdI::NsiteUC;
-  StdFace_InitSite(fp, 2);
+  StdFace::InitSite(fp, 2);
   for (isite = 0; isite < StdI::NsiteUC; isite++){
     StdI::tau[isite][0] = (double)isite / (double)StdI::NsiteUC;
     StdI::tau[isite][1] = 0.0; StdI::tau[isite][2] = 0.0;
@@ -77,66 +77,66 @@ void StdFace_Ladder()
   (2) check & store parameters of Hamiltonian
   */
   fprintf(stdout, "\n  @ Hamiltonian \n\n");
-  StdFace_NotUsed_J("J", StdI::JAll, StdI::J);
-  StdFace_NotUsed_J("J'", StdI::JpAll, StdI::Jp);
-  StdFace_NotUsed_c("t", StdI::t);
-  StdFace_NotUsed_c("t'", StdI::tp);
-  StdFace_NotUsed_d("V", StdI::V);
-  StdFace_NotUsed_d("V'", StdI::Vp);
-  StdFace_NotUsed_d("K", StdI::K);
-  StdFace_PrintVal_d("h", &StdI::h, 0.0);
-  StdFace_PrintVal_d("Gamma", &StdI::Gamma, 0.0);
+  StdFace::NotUsed_J("J", StdI::JAll, StdI::J);
+  StdFace::NotUsed_J("J'", StdI::JpAll, StdI::Jp);
+  StdFace::NotUsed_c("t", StdI::t);
+  StdFace::NotUsed_c("t'", StdI::tp);
+  StdFace::NotUsed_d("V", StdI::V);
+  StdFace::NotUsed_d("V'", StdI::Vp);
+  StdFace::NotUsed_d("K", StdI::K);
+  StdFace::PrintVal_d("h", &StdI::h, 0.0);
+  StdFace::PrintVal_d("Gamma", &StdI::Gamma, 0.0);
   /**/
   if (strcmp(StdI::model, "spin") == 0 ) {
-    StdFace_PrintVal_i("2S", &StdI::S2, 1);
-    StdFace_PrintVal_d("D", &StdI::D[2][2], 0.0);
-    StdFace_InputSpin(StdI::J0, StdI::J0All, "J0");
-    StdFace_InputSpin(StdI::J1, StdI::J1All, "J1");
-    StdFace_InputSpin(StdI::J2, StdI::J2All, "J2");
-    StdFace_InputSpin(StdI::J1p, StdI::J1pAll, "J1'");
-    StdFace_InputSpin(StdI::J2p, StdI::J2pAll, "J2'");
+    StdFace::PrintVal_i("2S", &StdI::S2, 1);
+    StdFace::PrintVal_d("D", &StdI::D[2][2], 0.0);
+    StdFace::InputSpin(StdI::J0, StdI::J0All, "J0");
+    StdFace::InputSpin(StdI::J1, StdI::J1All, "J1");
+    StdFace::InputSpin(StdI::J2, StdI::J2All, "J2");
+    StdFace::InputSpin(StdI::J1p, StdI::J1pAll, "J1'");
+    StdFace::InputSpin(StdI::J2p, StdI::J2pAll, "J2'");
     /**/
-    StdFace_NotUsed_d("mu", StdI::mu);
-    StdFace_NotUsed_d("U", StdI::U);
-    StdFace_NotUsed_c("t0", StdI::t0);
-    StdFace_NotUsed_c("t1", StdI::t1);
-    StdFace_NotUsed_c("t2", StdI::t2);
-    StdFace_NotUsed_c("t1'", StdI::t1p);
-    StdFace_NotUsed_c("t2'", StdI::t2p);
-    StdFace_NotUsed_d("V0", StdI::V0);
-    StdFace_NotUsed_d("V1", StdI::V1);
-    StdFace_NotUsed_d("V2", StdI::V2);
-    StdFace_NotUsed_d("V1'", StdI::V1p);
-    StdFace_NotUsed_d("V2'", StdI::V2p);
+    StdFace::NotUsed_d("mu", StdI::mu);
+    StdFace::NotUsed_d("U", StdI::U);
+    StdFace::NotUsed_c("t0", StdI::t0);
+    StdFace::NotUsed_c("t1", StdI::t1);
+    StdFace::NotUsed_c("t2", StdI::t2);
+    StdFace::NotUsed_c("t1'", StdI::t1p);
+    StdFace::NotUsed_c("t2'", StdI::t2p);
+    StdFace::NotUsed_d("V0", StdI::V0);
+    StdFace::NotUsed_d("V1", StdI::V1);
+    StdFace::NotUsed_d("V2", StdI::V2);
+    StdFace::NotUsed_d("V1'", StdI::V1p);
+    StdFace::NotUsed_d("V2'", StdI::V2p);
   }/*if (strcmp(StdI::model, "spin") == 0 )*/
   else {
-    StdFace_PrintVal_d("mu", &StdI::mu, 0.0);
-    StdFace_PrintVal_d("U", &StdI::U, 0.0);
-    StdFace_InputHopp(StdI::t, &StdI::t0, "t0");
-    StdFace_InputHopp(StdI::t, &StdI::t1, "t1");
-    StdFace_InputHopp(StdI::t, &StdI::t2, "t2");
-    StdFace_InputHopp(StdI::t, &StdI::t1p, "t1'");
-    StdFace_InputHopp(StdI::t, &StdI::t2p, "t2'");
-    StdFace_InputCoulombV(StdI::V, &StdI::V0, "V0");
-    StdFace_InputCoulombV(StdI::V, &StdI::V1, "V1");
-    StdFace_InputCoulombV(StdI::V, &StdI::V2, "V2");
-    StdFace_InputCoulombV(StdI::V, &StdI::V1p, "V1'");
-    StdFace_InputCoulombV(StdI::V, &StdI::V2p, "V2'");
+    StdFace::PrintVal_d("mu", &StdI::mu, 0.0);
+    StdFace::PrintVal_d("U", &StdI::U, 0.0);
+    StdFace::InputHopp(StdI::t, &StdI::t0, "t0");
+    StdFace::InputHopp(StdI::t, &StdI::t1, "t1");
+    StdFace::InputHopp(StdI::t, &StdI::t2, "t2");
+    StdFace::InputHopp(StdI::t, &StdI::t1p, "t1'");
+    StdFace::InputHopp(StdI::t, &StdI::t2p, "t2'");
+    StdFace::InputCoulombV(StdI::V, &StdI::V0, "V0");
+    StdFace::InputCoulombV(StdI::V, &StdI::V1, "V1");
+    StdFace::InputCoulombV(StdI::V, &StdI::V2, "V2");
+    StdFace::InputCoulombV(StdI::V, &StdI::V1p, "V1'");
+    StdFace::InputCoulombV(StdI::V, &StdI::V2p, "V2'");
     /**/
-    StdFace_NotUsed_J("J0", StdI::J0All, StdI::J0);
-    StdFace_NotUsed_J("J1", StdI::J1All, StdI::J1);
-    StdFace_NotUsed_J("J2", StdI::J2All, StdI::J2);
-    StdFace_NotUsed_J("J1p", StdI::J1pAll, StdI::J1p);
-    StdFace_NotUsed_J("J2p", StdI::J2pAll, StdI::J2p);
-    StdFace_NotUsed_d("D", StdI::D[2][2]);
+    StdFace::NotUsed_J("J0", StdI::J0All, StdI::J0);
+    StdFace::NotUsed_J("J1", StdI::J1All, StdI::J1);
+    StdFace::NotUsed_J("J2", StdI::J2All, StdI::J2);
+    StdFace::NotUsed_J("J1p", StdI::J1pAll, StdI::J1p);
+    StdFace::NotUsed_J("J2p", StdI::J2pAll, StdI::J2p);
+    StdFace::NotUsed_d("D", StdI::D[2][2]);
 
     if (strcmp(StdI::model, "hubbard") == 0 ) {
-      StdFace_NotUsed_i("2S", StdI::S2);
-      StdFace_NotUsed_J("J", StdI::JAll, StdI::J);
+      StdFace::NotUsed_i("2S", StdI::S2);
+      StdFace::NotUsed_J("J", StdI::JAll, StdI::J);
     }
     else {
-      StdFace_PrintVal_i("2S", &StdI::S2, 1);
-      StdFace_InputSpin(StdI::J, StdI::JAll, "J");
+      StdFace::PrintVal_i("2S", &StdI::S2, 1);
+      StdFace::InputSpin(StdI::J, StdI::JAll, "J");
     }
   }/*if (model != "spin")*/
   fprintf(stdout, "\n  @ Numerical conditions\n\n");
@@ -169,40 +169,40 @@ void StdFace_Ladder()
        Local term
       */
       if (strcmp(StdI::model, "spin") == 0 ) {
-        StdFace_MagField(StdI::S2, -StdI::h, -StdI::Gamma, isite);
-        StdFace_GeneralJ(StdI::D, StdI::S2, StdI::S2, isite, isite);
+        StdFace::MagField(StdI::S2, -StdI::h, -StdI::Gamma, isite);
+        StdFace::GeneralJ(StdI::D, StdI::S2, StdI::S2, isite, isite);
       }/*if (strcmp(StdI::model, "spin") == 0 )*/
       else {
-        StdFace_HubbardLocal(StdI::mu, -StdI::h, -StdI::Gamma, StdI::U, isite);
+        StdFace::HubbardLocal(StdI::mu, -StdI::h, -StdI::Gamma, StdI::U, isite);
         if (strcmp(StdI::model, "kondo") == 0 ) {
           jsite = isiteUC + iL * StdI::NsiteUC;
-          StdFace_GeneralJ(StdI::J, 1, StdI::S2, isite, jsite);
-          StdFace_MagField(StdI::S2, -StdI::h, -StdI::Gamma, jsite);
+          StdFace::GeneralJ(StdI::J, 1, StdI::S2, isite, jsite);
+          StdFace::MagField(StdI::S2, -StdI::h, -StdI::Gamma, jsite);
         }/*if (strcmp(StdI::model, "kondo") == 0 )*/
       }/*if (model != "spin")*/
       /*
        Nearest neighbor along the ladder
       */
-      StdFace_SetLabel(fp, 0, iL, 0, 1, isiteUC, isiteUC, &isite, &jsite, 1, &Cphase, dR);
+      StdFace::SetLabel(fp, 0, iL, 0, 1, isiteUC, isiteUC, &isite, &jsite, 1, &Cphase, dR);
       /**/
       if (strcmp(StdI::model, "spin") == 0 ) {
-        StdFace_GeneralJ(StdI::J1, StdI::S2, StdI::S2, isite, jsite);
+        StdFace::GeneralJ(StdI::J1, StdI::S2, StdI::S2, isite, jsite);
       }/*if (strcmp(StdI::model, "spin") == 0 )*/
       else {
-        StdFace_Hopping(Cphase * StdI::t1, isite, jsite, dR);
-        StdFace_Coulomb(StdI::V1, isite, jsite);
+        StdFace::Hopping(Cphase * StdI::t1, isite, jsite, dR);
+        StdFace::Coulomb(StdI::V1, isite, jsite);
       }/*if (model != "spin")*/
       /*
        Second nearest neighbor along the ladder
       */
-      StdFace_SetLabel(fp, 0, iL, 0, 2, isiteUC, isiteUC, &isite, &jsite, 2, &Cphase, dR);
+      StdFace::SetLabel(fp, 0, iL, 0, 2, isiteUC, isiteUC, &isite, &jsite, 2, &Cphase, dR);
       /**/
       if (strcmp(StdI::model, "spin") == 0 ) {
-        StdFace_GeneralJ(StdI::J1p, StdI::S2, StdI::S2, isite, jsite);
+        StdFace::GeneralJ(StdI::J1p, StdI::S2, StdI::S2, isite, jsite);
       }/*if (strcmp(StdI::model, "spin") == 0 )*/
       else {
-        StdFace_Hopping(Cphase * StdI::t1p, isite, jsite, dR);
-        StdFace_Coulomb(StdI::V1p, isite, jsite);
+        StdFace::Hopping(Cphase * StdI::t1p, isite, jsite, dR);
+        StdFace::Coulomb(StdI::V1p, isite, jsite);
       }/*if (model != "spin")*/
       /*
       Across rung
@@ -211,38 +211,38 @@ void StdFace_Ladder()
         /*
          Vertical
         */
-        StdFace_SetLabel(fp, 0, iL, 0, 0, isiteUC, isiteUC + 1, &isite, &jsite, 1, &Cphase, dR);
+        StdFace::SetLabel(fp, 0, iL, 0, 0, isiteUC, isiteUC + 1, &isite, &jsite, 1, &Cphase, dR);
         /**/
         if (strcmp(StdI::model, "spin") == 0 ) {
-          StdFace_GeneralJ(StdI::J0, StdI::S2, StdI::S2, isite, jsite);
+          StdFace::GeneralJ(StdI::J0, StdI::S2, StdI::S2, isite, jsite);
         }/*if (strcmp(StdI::model, "spin") == 0 )*/
         else {
-          StdFace_Hopping(Cphase * StdI::t0, isite, jsite, dR);
-          StdFace_Coulomb(StdI::V0, isite, jsite);
+          StdFace::Hopping(Cphase * StdI::t0, isite, jsite, dR);
+          StdFace::Coulomb(StdI::V0, isite, jsite);
         }/*if (model != "spin")*/
         /*
          Diagonal 1
         */
-        StdFace_SetLabel(fp, 0, iL, 0, 1, isiteUC, isiteUC + 1, &isite, &jsite, 1, &Cphase, dR);
+        StdFace::SetLabel(fp, 0, iL, 0, 1, isiteUC, isiteUC + 1, &isite, &jsite, 1, &Cphase, dR);
         /**/
         if (strcmp(StdI::model, "spin") == 0 ) {
-          StdFace_GeneralJ(StdI::J2, StdI::S2, StdI::S2, isite, jsite);
+          StdFace::GeneralJ(StdI::J2, StdI::S2, StdI::S2, isite, jsite);
         }/*if (strcmp(StdI::model, "spin") == 0 )*/
         else {
-          StdFace_Hopping(Cphase * StdI::t2, isite, jsite, dR);
-          StdFace_Coulomb(StdI::V2, isite, jsite);
+          StdFace::Hopping(Cphase * StdI::t2, isite, jsite, dR);
+          StdFace::Coulomb(StdI::V2, isite, jsite);
         }/*if (model != "spin")*/
         /*
          Diagonal 2
         */
-        StdFace_SetLabel(fp, 0, iL, 0, -1, isiteUC, isiteUC + 1, &isite, &jsite, 1, &Cphase, dR);
+        StdFace::SetLabel(fp, 0, iL, 0, -1, isiteUC, isiteUC + 1, &isite, &jsite, 1, &Cphase, dR);
         /**/
         if (strcmp(StdI::model, "spin") == 0 ) {
-          StdFace_GeneralJ(StdI::J2p, StdI::S2, StdI::S2, isite, jsite);
+          StdFace::GeneralJ(StdI::J2p, StdI::S2, StdI::S2, isite, jsite);
         }/*if (strcmp(StdI::model, "spin") == 0 )*/
         else {
-          StdFace_Hopping(Cphase * StdI::t2p, isite, jsite, dR);
-          StdFace_Coulomb(StdI::V2p, isite, jsite);
+          StdFace::Hopping(Cphase * StdI::t2p, isite, jsite, dR);
+          StdFace::Coulomb(StdI::V2p, isite, jsite);
         }/*if (model != "spin")*/
 
       }/*if (isiteUC < StdI::NsiteUC - 1)*/
@@ -252,8 +252,8 @@ void StdFace_Ladder()
 
   fprintf(fp, "plot \'-\' w d lc 7\n0.0 0.0\nend\npause -1\n");
   fclose(fp);
-  StdFace_PrintGeometry();
-}/*void StdFace_Ladder*/
+  StdFace::PrintGeometry();
+}/*void StdFace::Ladder*/
 
 #if defined(_HPhi)
 /**
@@ -262,7 +262,7 @@ void StdFace_Ladder()
 *
 * @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_Ladder_Boost()
+void StdFace::Ladder_Boost()
 {
   int isite, ipivot;
   int kintr;
@@ -321,20 +321,20 @@ void StdFace_Ladder_Boost()
   */
   if (StdI::S2 != 1) {
     fprintf(stdout, "\n ERROR! S2 must be 1 in Boost. \n\n");
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   StdI::ishift_nspin = 2;
   if (StdI::W != 2) {
     fprintf(stdout, "\n ERROR! W != 2 \n\n");
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   if (StdI::L % 2 != 0) {
     fprintf(stdout, "\n ERROR! L %% 2 != 0 \n\n");
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   if (StdI::L < 4) {
     fprintf(stdout, "\n ERROR! L < 4 \n\n");
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   StdI::W = StdI::L;
   StdI::L = 2;

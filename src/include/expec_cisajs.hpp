@@ -13,5 +13,15 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-
-int expec_cisajs(int nstate, std::complex<double>** Xvec, std::complex<double>** vec);
+#include <complex>
+namespace expec {
+  namespace cisajs {
+    int main(int nstate, std::complex<double>** Xvec, std::complex<double>** vec);
+    void HubbardGC(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
+    void Hubbard(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
+    void SpinHalf(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
+    void SpinGeneral(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
+    void SpinGCHalf(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
+    void SpinGCGeneral(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
+  }
+}

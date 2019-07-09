@@ -21,24 +21,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
        Check parameters.
 
 The following lattices are supported:
-- 1D Chain : StdFace_Chain()
-- 1D Ladder : StdFace_Ladder()
-- 2D Tetragonal : StdFace_Tetragonal()
-- 2D Triangular : StdFace_Triangular()
-- 2D Honeycomb : StdFace_Honeycomb()
-- 2D Kagome : StdFace_Kagome()
-- 3D Simple Orthorhombic : StdFace_Orthorhombic()
-- 3D Face Centered Orthorhombic : StdFace_FCOrtho()
-- 3D Pyrochlore : StdFace_Pyrochlore()
+- 1D Chain : StdFace::Chain()
+- 1D Ladder : StdFace::Ladder()
+- 2D Tetragonal : StdFace::Tetragonal()
+- 2D Triangular : StdFace::Triangular()
+- 2D Honeycomb : StdFace::Honeycomb()
+- 2D Kagome : StdFace::Kagome()
+- 3D Simple Orthorhombic : StdFace::Orthorhombic()
+- 3D Face Centered Orthorhombic : StdFace::FCOrtho()
+- 3D Pyrochlore : StdFace::Pyrochlore()
 
 */
+#include "StdFace_main.hpp"
+#include "StdFace_vals.hpp"
+#include "StdFace_ModelUtil.hpp"
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
 #include <cctype>
 #include <cmath>
-#include "StdFace_vals.hpp"
-#include "StdFace_ModelUtil.hpp"
 #include <complex>
 #include <iostream>
 #include <vector>
@@ -50,7 +51,7 @@ namespace StdI {
   */
   int NaN_i = 2147483647;/**<@brief It is used for initializing input parameter.
             This means that a parameter wich is not specified in input file.
-            Set in StdFace_ResetVals().*/
+            Set in StdFace::ResetVals().*/
   double pi = acos(-1.0);/**<@brief @f$\pi=3.14...@f$*/
   /*
   Parameters for LATTICE
@@ -63,16 +64,16 @@ namespace StdI {
   int L;/**<@brief Number of sites along the 2nd axis, input parameter.*/
   int Height;/**<@brief Number of sites along the 3rd axis, input parameter.*/
   double direct[3][3];/**<@brief The unit direct lattice vector.
-                      Set in StdFace_InitSite().*/
+                      Set in StdFace::InitSite().*/
   int box[3][3];/**<@brief The shape of the super-cell. Input parameter
                 a0W, a0L, a0H, etc. or defined from StdI::W, etc. in
-                StdFace_InitSite().*/
+                StdFace::InitSite().*/
   int rbox[3][3];/**<@brief The inversion of StdI::box.
-                 Set in StdFace_InitSite().*/
+                 Set in StdFace::InitSite().*/
   int NCell;/**<@brief The number of the unit cell in the super-cell
-            (determinant of StdI::box). Set in StdFace_InitSite().*/
+            (determinant of StdI::box). Set in StdFace::InitSite().*/
   int** Cell;/**<@brief [StdIntList][3] The cell position in the fractional
-             coordinate. Malloc and Set in StdFace_InitSite().*/
+             coordinate. Malloc and Set in StdFace::InitSite().*/
   int NsiteUC;/**<@brief Number of sites in the unit cell. Defined in the
               beginning of each lattice function*/
   double** tau;/**<@brief Cell-internal site position in the fractional
@@ -138,31 +139,31 @@ namespace StdI {
                    (2nd Near.), input parameter J'x, J'y, J'z, J'xy, etc.*/
   double J0[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                  (1st Near.), input parameter J0x, J0y, J0z, J0xy, etc.
-                 or set in StdFace_InputSpinNN().*/
+                 or set in StdFace::InputSpinNN().*/
   double J0p[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (2nd Near.), input parameter J0'x, J0'y, J0'z, J0'xy, etc.
-                   or set in StdFace_InputSpin().*/
+                   or set in StdFace::InputSpin().*/
   double J0pp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (3rd Near.), input parameter J0''x, J0''y, J0''z, J0''xy, etc.
-                   or set in StdFace_InputSpin().*/
+                   or set in StdFace::InputSpin().*/
   double J1[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                   (1st Near.), input parameter J1x, J1y, J1z, J1xy, etc.
-                  or set in StdFace_InputSpinNN().*/
+                  or set in StdFace::InputSpinNN().*/
   double J1p[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (2nd Near.), input parameter J1'x, J1'y, J1'z, J1'xy, etc.
-                   or set in StdFace_InputSpin().*/
+                   or set in StdFace::InputSpin().*/
   double J1pp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (3rd Near.), input parameter J1''x, J1''y, J1''z, J1''xy, etc.
-                   or set in StdFace_InputSpin().*/
+                   or set in StdFace::InputSpin().*/
   double J2[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                   (1st Near.), input parameter J2x, J2y, J2z, J2xy, etc.
-                  or set in StdFace_InputSpinNN().*/
+                  or set in StdFace::InputSpinNN().*/
   double J2p[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (2nd Near.), input parameter J2'x, J2'y, J2'z, J2'xy, etc.
-                   or set in StdFace_InputSpin().*/
+                   or set in StdFace::InputSpin().*/
   double J2pp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (3rd Near.), input parameter J2''x, J2''y, J2''z, J2''xy, etc.
-                   or set in StdFace_InputSpin().*/
+                   or set in StdFace::InputSpin().*/
   double Jpp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (3rd Near.), input parameter J''x, J''y, J''z, J''xy, etc.*/
   double D[3][3];/**<@brief Coefficient for @f${\hat S}_{i z} {\hat S}_{i z}@f$
@@ -173,7 +174,7 @@ namespace StdI {
   /*
    Phase for the boundary
   */
-  double pi180;/**<@brief @f$\pi/180@f$, set in StdFace_ResetVals().*/
+  double pi180;/**<@brief @f$\pi/180@f$, set in StdFace::ResetVals().*/
   double phase[3];/**<@brief Boundary phase, input parameter phase0, etc.*/
   std::complex<double> ExpPhase[3];/**<@brief @f$\exp(i \pi {\rm phase}/180)@f$.*/
   int AntiPeriod[3];/**<@brief If corresponding StdI::phase = 180,
@@ -185,66 +186,66 @@ namespace StdI {
   int* locspinflag;/**<@brief [StdI::nsite] LocSpin in Expert mode,
                    malloc and set in each lattice file.*/
   std::vector<std::vector<int> > transindx;/**<@brief [StdI::ntrans][4] Site/spin indices of
-                  one-body term, malloc in StdFace_MallocInteractions()
-                  and set in StdFace_trans().*/
+                  one-body term, malloc in StdFace::MallocInteractions()
+                  and set in StdFace::trans().*/
   std::vector<std::complex<double> > trans;/**<@brief [StdI::ntrans] Coefficient of
-                  one-body term, malloc in StdFace_MallocInteractions()
-                  and set in StdFace_trans().*/
+                  one-body term, malloc in StdFace::MallocInteractions()
+                  and set in StdFace::trans().*/
   int Lintr;/**<@brief Print interall.def or not, set in PrintInteractions().*/
   std::vector<std::vector<int> > intrindx;/**<@brief [StdI::nintr][8] Site/spin indices of
-                  two-body term, malloc in StdFace_MallocInteractions()
-                  and set in StdFace_intr().*/
+                  two-body term, malloc in StdFace::MallocInteractions()
+                  and set in StdFace::intr().*/
   std::vector<std::complex<double> > intr;/**<@brief [StdI::nintr] Coefficient of general
-                  two-body term, malloc in StdFace_MallocInteractions()
-                  and set in StdFace_intr().*/
+                  two-body term, malloc in StdFace::MallocInteractions()
+                  and set in StdFace::intr().*/
   int LCintra;/**<@brief Print coulombintra.def or not, set in PrintInteractions().*/
   std::vector<int> CintraIndx;/**<@brief [StdI::NCintra][1] Site indices of
-                  intra-site Coulomb term, malloc in StdFace_MallocInteractions()
-                  and set in StdFace_intr().*/
+                  intra-site Coulomb term, malloc in StdFace::MallocInteractions()
+                  and set in StdFace::intr().*/
   std::vector<double> Cintra;/**<@brief [StdI::NCintra] Coefficient of intra-site
-                  Coulomb term, malloc in StdFace_MallocInteractions()
-                  and set in StdFace_intr().*/
+                  Coulomb term, malloc in StdFace::MallocInteractions()
+                  and set in StdFace::intr().*/
   int LCinter;/**<@brief Print coulombinter.def or not, set in PrintInteractions().*/
   std::vector<std::vector<int> > CinterIndx;/**<@brief [StdI::NCinter][2] Site indices of
-                  inter-site Coulomb term, malloc in StdFace_MallocInteractions()
-                  and set in StdFace_intr().*/
+                  inter-site Coulomb term, malloc in StdFace::MallocInteractions()
+                  and set in StdFace::intr().*/
   std::vector<double> Cinter;/**<@brief [StdI::NCinter] Coefficient of inter-site
-                  Coulomb term, malloc in StdFace_MallocInteractions()
-                  and set in StdFace_intr().*/
+                  Coulomb term, malloc in StdFace::MallocInteractions()
+                  and set in StdFace::intr().*/
   int LHund;/**<@brief Print hund.def or not, set in PrintInteractions().*/
   std::vector<std::vector<int> > HundIndx;/**<@brief [StdI::NHund][2] Site indices of
-                  Hund term, malloc in StdFace_MallocInteractions()
-                  and set in StdFace_intr().*/
+                  Hund term, malloc in StdFace::MallocInteractions()
+                  and set in StdFace::intr().*/
   std::vector<double> Hund;/**<@brief [StdI::NHund] Coefficient of Hund term,
-               malloc in StdFace_MallocInteractions()
-                   and set in StdFace_intr().*/
+               malloc in StdFace::MallocInteractions()
+                   and set in StdFace::intr().*/
   int LEx;/**<@brief Print exchange.def or not, set in PrintInteractions().*/
   std::vector<std::vector<int> > ExIndx;/**<@brief [StdI::NEx][2] Site indices of
-                  exchange term, malloc in StdFace_MallocInteractions()
-                  and set in StdFace_intr().*/
+                  exchange term, malloc in StdFace::MallocInteractions()
+                  and set in StdFace::intr().*/
   std::vector<double> Ex;/**<@brief [StdI::NEx] Coefficient of exchange term,
-               malloc in StdFace_MallocInteractions()
-                   and set in StdFace_intr().*/
+               malloc in StdFace::MallocInteractions()
+                   and set in StdFace::intr().*/
   int LPairLift;/**<@brief Print pairlift.def or not, set in PrintInteractions().*/
   std::vector<std::vector<int> > PLIndx;/**<@brief [StdI::NPairLift][2] Site indices of
-                  pair-lift term, malloc in StdFace_MallocInteractions()
-                  and set in StdFace_intr().*/
+                  pair-lift term, malloc in StdFace::MallocInteractions()
+                  and set in StdFace::intr().*/
   std::vector<double> PairLift;/**<@brief [StdI::NPairLift] Coefficient of
-                   pair-lift term, malloc in StdFace_MallocInteractions()
-                   and set in StdFace_intr().*/
+                   pair-lift term, malloc in StdFace::MallocInteractions()
+                   and set in StdFace::intr().*/
   int LPairHopp;/**<@brief Print pairhopp.def or not, set in PrintInteractions().*/
   std::vector<std::vector<int> > PHIndx;/**<@brief [StdI::NPairLift][2] Site indices of
-               pair-hopping term, malloc in StdFace_MallocInteractions()
-               and set in StdFace_intr().*/
+               pair-hopping term, malloc in StdFace::MallocInteractions()
+               and set in StdFace::intr().*/
   std::vector<double> PairHopp;/**<@brief [StdI::NPairLift] Coefficient of
-                   pair-hopping term, malloc in StdFace_MallocInteractions()
-                   and set in StdFace_intr().*/
+                   pair-hopping term, malloc in StdFace::MallocInteractions()
+                   and set in StdFace::intr().*/
   int lBoost;
   /*
    Calculation conditions
   */
   int lGC;/**<@brief Switch for computing Grandcanonical ensemble(== 1).
-          Setted in StdFace_main() after all keywords are read.*/
+          Setted in StdFace::main() after all keywords are read.*/
   int nelec;/**<@brief Number of electrons, input from file.*/
   int S2;/**<@brief Total spin |S| of a local spin, input from file.*/
   char outputmode[256];/**<@brief Select amount of correlation function,
@@ -318,11 +319,11 @@ namespace StdI {
                    StdI::PumpType*/
   int* npump;/**<@brief [StdI::nt] Number of transfer, counted in each lattice file.*/
   std::vector<std::vector<std::vector<int> > > pumpindx;/**<@brief [StdI::nt][StdI::npump][4] Site/spin indices of
-                  one-body term, malloc in StdFace_MallocInteractions()
-                  and set in StdFace_trans().*/
+                  one-body term, malloc in StdFace::MallocInteractions()
+                  and set in StdFace::trans().*/
   std::vector<std::vector<std::complex<double> > > pump;/**<@brief [StdI::nt][StdI::npump] Coefficient of
-                        one-body term, malloc in StdFace_MallocInteractions()
-                        and set in StdFace_trans().*/
+                        one-body term, malloc in StdFace::MallocInteractions()
+                        and set in StdFace::trans().*/
   double** At;/**<@brief [StdI::nt][3] Vector potential.*/
   int ExpandCoef;/**<@brief The number of Hamiltonian-vector operation for the time-evolution*/
 #elif defined(_mVMC)
@@ -378,7 +379,7 @@ namespace StdI {
 @brief Set Largevalue (StdI::LargeValue) for TPQ.
        Sum absolute-value of all one- and two- body terms.
 */
-static void StdFace_LargeValue() {
+static void StdFace::LargeValue() {
   int ktrans, kintr;
   double LargeValue0;
 
@@ -405,8 +406,8 @@ static void StdFace_LargeValue() {
     LargeValue0 += 2.0 * std::abs(StdI::Hund.at(kintr));
   }
   LargeValue0 /= (double)StdI::nsite;
-  StdFace_PrintVal_d("LargeValue", &StdI::LargeValue, LargeValue0);
-}/*static void StdFace_LargeValue*/
+  StdFace::PrintVal_d("LargeValue", &StdI::LargeValue, LargeValue0);
+}/*static void StdFace::LargeValue*/
 /**
 @brief Print calcmod.def
 @author Mitsuaki Kawamura (The University of Tokyo)
@@ -426,7 +427,7 @@ static void PrintCalcMod()
   iCalcEigenvec = 0;
   if (strcmp(StdI::method, "****") == 0){
     fprintf(stdout, "ERROR ! Method is NOT specified !\n");
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   else if (strcmp(StdI::method, "lanczos") == 0) iCalcType = 0;
   else if (strcmp(StdI::method, "lanczosenergy") == 0) { 
@@ -439,7 +440,7 @@ static void PrintCalcMod()
   else if (strcmp(StdI::method, "timeevolution") == 0) iCalcType = 4;
   else{
     fprintf(stdout, "\n ERROR ! Unsupported Solver : %s\n", StdI::method);
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }/*if (strcmp(StdI::method, METHODS) != 0*/
   if (iCalcType != 4) StdI::PumpBody = 0;
   /*
@@ -475,7 +476,7 @@ static void PrintCalcMod()
     else if (strcmp(StdI::Restart, "restart_in") == 0) iRestart = 3;
     else {
       fprintf(stdout, "\n ERROR ! Restart Mode : %s\n", StdI::Restart);
-      StdFace_exit(-1);
+      StdFace::exit(-1);
     }
   }/*if (strcmp(StdI::Restart, "****") != 0)*/
   /*
@@ -492,7 +493,7 @@ static void PrintCalcMod()
     else if (strcmp(StdI::InitialVecType, "r") == 0) iInitialVecTpye = 1;
     else {
       fprintf(stdout, "\n ERROR ! Restart Mode : %s\n", StdI::Restart);
-      StdFace_exit(-1);
+      StdFace::exit(-1);
     }
   }/*if (strcmp(StdI::InitialVecType, "****") != 0)*/
   /*
@@ -515,7 +516,7 @@ static void PrintCalcMod()
     }/*if (strcmp(StdI::EigenVecIO, "inout") == 0)*/
     else {
       fprintf(stdout, "\n ERROR ! EigenVecIO Mode : %s\n", StdI::Restart);
-      StdFace_exit(-1);
+      StdFace::exit(-1);
     }
   }/*if (strcmp(StdI::EigenVecIO, "****") != 0)*/
   if (strcmp(StdI::method, "timeevolution") == 0) InputEigenVec = 1;
@@ -539,7 +540,7 @@ static void PrintCalcMod()
     else if (strcmp(StdI::CalcSpec, "scratch") == 0) iCalcSpec = 6;
     else {
       fprintf(stdout, "\n ERROR ! CalcSpec : %s\n", StdI::CalcSpec);
-      StdFace_exit(-1);
+      StdFace::exit(-1);
     }
   }/*if (strcmp(StdI::CalcSpec, "****") != 0)*/
 
@@ -586,9 +587,9 @@ static void PrintExcitation() {
   
   fprintf(stdout, "\n  @ Spectrum\n\n");
 
-  StdFace_PrintVal_d("SpectrumQW", &StdI::SpectrumQ[0], 0.0);
-  StdFace_PrintVal_d("SpectrumQL", &StdI::SpectrumQ[1], 0.0);
-  StdFace_PrintVal_d("SpectrumQH", &StdI::SpectrumQ[2], 0.0);
+  StdFace::PrintVal_d("SpectrumQW", &StdI::SpectrumQ[0], 0.0);
+  StdFace::PrintVal_d("SpectrumQL", &StdI::SpectrumQ[1], 0.0);
+  StdFace::PrintVal_d("SpectrumQH", &StdI::SpectrumQ[2], 0.0);
 
   if (strcmp(StdI::SpectrumType, "****") == 0) {
     strcpy(StdI::SpectrumType, "szsz\0");
@@ -695,7 +696,7 @@ static void PrintExcitation() {
     }
     else {
       fprintf(stdout, "\n ERROR ! SpectrumType : %s\n", StdI::SpectrumType);
-      StdFace_exit(-1);
+      StdFace::exit(-1);
     }
   }
 
@@ -825,16 +826,16 @@ static void VectorPotential() {
 
   fprintf(stdout, "\n  @ Time-evolution\n\n");
 
-  StdFace_PrintVal_d("VecPotW", &StdI::VecPot[0], 0.0);
-  StdFace_PrintVal_d("VecPotL", &StdI::VecPot[1], 0.0);
-  StdFace_PrintVal_d("VecPotH", &StdI::VecPot[2], 0.0);
-  StdFace_PrintVal_i("Lanczos_max", &StdI::Lanczos_max, 1000);
-  StdFace_PrintVal_d("dt", &StdI::dt, 0.1);
-  StdFace_PrintVal_d("freq", &StdI::freq, 0.1);
-  StdFace_PrintVal_d("tshift", &StdI::tshift, 0.0);
-  StdFace_PrintVal_d("tdump", &StdI::tdump, 0.1);
-  StdFace_PrintVal_d("Uquench", &StdI::Uquench, 0.0);
-  StdFace_PrintVal_i("ExpandCoef", &StdI::ExpandCoef, 10);
+  StdFace::PrintVal_d("VecPotW", &StdI::VecPot[0], 0.0);
+  StdFace::PrintVal_d("VecPotL", &StdI::VecPot[1], 0.0);
+  StdFace::PrintVal_d("VecPotH", &StdI::VecPot[2], 0.0);
+  StdFace::PrintVal_i("Lanczos_max", &StdI::Lanczos_max, 1000);
+  StdFace::PrintVal_d("dt", &StdI::dt, 0.1);
+  StdFace::PrintVal_d("freq", &StdI::freq, 0.1);
+  StdFace::PrintVal_d("tshift", &StdI::tshift, 0.0);
+  StdFace::PrintVal_d("tdump", &StdI::tdump, 0.1);
+  StdFace::PrintVal_d("Uquench", &StdI::Uquench, 0.0);
+  StdFace::PrintVal_i("ExpandCoef", &StdI::ExpandCoef, 10);
   StdI::At = (double **)malloc(sizeof(double*) * StdI::Lanczos_max);
   Et = (double **)malloc(sizeof(double*) * StdI::Lanczos_max);
   for (it = 0; it < StdI::Lanczos_max; it++) {
@@ -890,7 +891,7 @@ static void VectorPotential() {
     }/* if (strcmp(StdI::PumpType, "dclaser") == 0)*/
     else {
       fprintf(stdout, "\n ERROR ! PumpType : %s\n", StdI::PumpType);
-      StdFace_exit(-1);
+      StdFace::exit(-1);
     }
   }/*if (! strcmp(StdI::PumpType, "****"))*/
 
@@ -1195,7 +1196,7 @@ static void PrintGutzwiller()
 All variables refered in this function is modified.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-static void StdFace_ResetVals() {
+static void StdFace::ResetVals() {
   int i, j;
   double NaN_d;
   /*
@@ -1356,7 +1357,7 @@ static void StdFace_ResetVals() {
   StdI::Lsub = StdI::NaN_i;
   StdI::Wsub = StdI::NaN_i;
 #endif
-}/*static void StdFace_ResetVals*/
+}/*static void StdFace::ResetVals*/
 /*
 @brief Make all characters lower
 @author Mitsuaki Kawamura (The University of Tokyo)
@@ -1415,7 +1416,7 @@ static void StoreWithCheckDup_s(
 {
   if (strcmp(value, "****") != 0){
     fprintf(stdout, "ERROR !  Keyword %s is duplicated ! \n", keyword);
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   else{
     strcpy(value, valuestring);
@@ -1434,7 +1435,7 @@ static void StoreWithCheckDup_sl(
 {
   if (strcmp(value, "****") != 0) {
     fprintf(stdout, "ERROR !  Keyword %s is duplicated ! \n", keyword);
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   else {
     strcpy(value, valuestring);
@@ -1456,7 +1457,7 @@ static void StoreWithCheckDup_i(
 
   if (*value != NaN_i){
     fprintf(stdout, "ERROR !  Keyword %s is duplicated ! \n", keyword);
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   else{
     sscanf(valuestring, "%d", value);
@@ -1475,7 +1476,7 @@ static void StoreWithCheckDup_d(
 {
   if (std::isnan(*value) == 0){
     fprintf(stdout, "ERROR !  Keyword %s is duplicated ! \n", keyword);
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   else{
     sscanf(valuestring, "%lf", value);
@@ -1498,7 +1499,7 @@ static void StoreWithCheckDup_c(
 
   if (std::isnan(real(*value)) == 0) {
     fprintf(stdout, "ERROR !  Keyword %s is duplicated ! \n", keyword);
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   else {
 
@@ -2027,7 +2028,7 @@ static void UnsupportedSystem(
   fprintf(stdout, "  LATTICE : %s, \n", lattice);
   fprintf(stdout, "is unsupported in the STANDARD MODE...\n");
   fprintf(stdout, "Please use the EXPART MODE, or write a NEW FUNCTION and post us.\n");
-  StdFace_exit(-1);
+  StdFace::exit(-1);
 }/*static void UnsupportedSystem*/
 /**
 @brief Verify outputmode
@@ -2062,7 +2063,7 @@ static void CheckOutputMode()
   }
   else{
     fprintf(stdout, "\n ERROR ! Unsupported OutPutMode : %s\n", StdI::outputmode);
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
 }/*static void CheckOutputMode*/
 /**
@@ -2075,19 +2076,19 @@ static void CheckModPara()
 
   /**/
 #if defined(_HPhi)
-  StdFace_PrintVal_i("Lanczos_max", &StdI::Lanczos_max, 2000);
-  StdFace_PrintVal_i("initial_iv", &StdI::initial_iv, -1);
-  /*StdFace_PrintVal_i("nvec", &StdI::nvec, 1);*/
-  StdFace_PrintVal_i("exct", &StdI::exct, 1);
-  StdFace_PrintVal_i("LanczosEps", &StdI::LanczosEps, 14);
-  StdFace_PrintVal_i("LanczosTarget", &StdI::LanczosTarget, 2);
+  StdFace::PrintVal_i("Lanczos_max", &StdI::Lanczos_max, 2000);
+  StdFace::PrintVal_i("initial_iv", &StdI::initial_iv, -1);
+  /*StdFace::PrintVal_i("nvec", &StdI::nvec, 1);*/
+  StdFace::PrintVal_i("exct", &StdI::exct, 1);
+  StdFace::PrintVal_i("LanczosEps", &StdI::LanczosEps, 14);
+  StdFace::PrintVal_i("LanczosTarget", &StdI::LanczosTarget, 2);
   if(StdI::LanczosTarget < StdI::exct) StdI::LanczosTarget = StdI::exct;
-  StdFace_PrintVal_i("NumAve", &StdI::NumAve, 5);
-  StdFace_PrintVal_i("ExpecInterval", &StdI::ExpecInterval, 20);
-  StdFace_PrintVal_i("NOmega", &StdI::Nomega, 200);
-  StdFace_PrintVal_d("OmegaMax", &StdI::OmegaMax, StdI::LargeValue*StdI::nsite);
-  StdFace_PrintVal_d("OmegaMin", &StdI::OmegaMin, -StdI::LargeValue*StdI::nsite);
-  StdFace_PrintVal_d("OmegaIm", &StdI::OmegaIm, 0.01* (int)StdI::LargeValue);
+  StdFace::PrintVal_i("NumAve", &StdI::NumAve, 5);
+  StdFace::PrintVal_i("ExpecInterval", &StdI::ExpecInterval, 20);
+  StdFace::PrintVal_i("NOmega", &StdI::Nomega, 200);
+  StdFace::PrintVal_d("OmegaMax", &StdI::OmegaMax, StdI::LargeValue*StdI::nsite);
+  StdFace::PrintVal_d("OmegaMin", &StdI::OmegaMin, -StdI::LargeValue*StdI::nsite);
+  StdFace::PrintVal_d("OmegaIm", &StdI::OmegaIm, 0.01* (int)StdI::LargeValue);
 #elif defined(_mVMC)
   if (strcmp(StdI::CParaFileHead, "****") == 0) {
     strcpy(StdI::CParaFileHead, "zqp\0");
@@ -2095,34 +2096,34 @@ static void CheckModPara()
   }
   else fprintf(stdout, "    CParaFileHead = %-s\n", StdI::CParaFileHead);
   
-  StdFace_PrintVal_i("NVMCCalMode", &StdI::NVMCCalMode, 0);
-  StdFace_PrintVal_i("NLanczosMode", &StdI::NLanczosMode, 0);
-  StdFace_PrintVal_i("NDataIdxStart", &StdI::NDataIdxStart, 1);
+  StdFace::PrintVal_i("NVMCCalMode", &StdI::NVMCCalMode, 0);
+  StdFace::PrintVal_i("NLanczosMode", &StdI::NLanczosMode, 0);
+  StdFace::PrintVal_i("NDataIdxStart", &StdI::NDataIdxStart, 1);
 
-  if (StdI::NVMCCalMode == 0) StdFace_NotUsed_i("NDataQtySmp", StdI::NDataQtySmp);
-  /*else*/StdFace_PrintVal_i("NDataQtySmp", &StdI::NDataQtySmp, 1);
+  if (StdI::NVMCCalMode == 0) StdFace::NotUsed_i("NDataQtySmp", StdI::NDataQtySmp);
+  /*else*/StdFace::PrintVal_i("NDataQtySmp", &StdI::NDataQtySmp, 1);
 
   if (StdI::lGC == 0 && (StdI::Sz2 == 0 || StdI::Sz2 == StdI::NaN_i)) {
-    StdFace_PrintVal_i("NSPGaussLeg", &StdI::NSPGaussLeg, 8);
-    StdFace_PrintVal_i("NSPStot", &StdI::NSPStot, 0);
+    StdFace::PrintVal_i("NSPGaussLeg", &StdI::NSPGaussLeg, 8);
+    StdFace::PrintVal_i("NSPStot", &StdI::NSPStot, 0);
   }
   else {
-    StdFace_NotUsed_i("NSPGaussLeg", StdI::NSPGaussLeg);
-    StdFace_NotUsed_i("NSPStot", StdI::NSPStot);
+    StdFace::NotUsed_i("NSPGaussLeg", StdI::NSPGaussLeg);
+    StdFace::NotUsed_i("NSPStot", StdI::NSPStot);
   }
  
   if (StdI::AntiPeriod[0] == 1 || StdI::AntiPeriod[1] == 1 || StdI::AntiPeriod[2] == 2)
-    StdFace_PrintVal_i("NMPTrans", &StdI::NMPTrans, -1);
-  else StdFace_PrintVal_i("NMPTrans", &StdI::NMPTrans, 1);
+    StdFace::PrintVal_i("NMPTrans", &StdI::NMPTrans, -1);
+  else StdFace::PrintVal_i("NMPTrans", &StdI::NMPTrans, 1);
 
-  StdFace_PrintVal_i("NSROptItrStep", &StdI::NSROptItrStep, 1000);
+  StdFace::PrintVal_i("NSROptItrStep", &StdI::NSROptItrStep, 1000);
   
-  if (StdI::NVMCCalMode == 1) StdFace_NotUsed_i("NSROptItrSmp", StdI::NSROptItrSmp);
-  /*else*/ StdFace_PrintVal_i("NSROptItrSmp", &StdI::NSROptItrSmp, StdI::NSROptItrStep/10);
+  if (StdI::NVMCCalMode == 1) StdFace::NotUsed_i("NSROptItrSmp", StdI::NSROptItrSmp);
+  /*else*/ StdFace::PrintVal_i("NSROptItrSmp", &StdI::NSROptItrSmp, StdI::NSROptItrStep/10);
 
-  StdFace_PrintVal_i("NVMCWarmUp", &StdI::NVMCWarmUp, 10);
-  StdFace_PrintVal_i("NVMCInterval", &StdI::NVMCInterval, 1);
-  StdFace_PrintVal_i("NVMCSample", &StdI::NVMCSample, 1000);
+  StdFace::PrintVal_i("NVMCWarmUp", &StdI::NVMCWarmUp, 10);
+  StdFace::PrintVal_i("NVMCInterval", &StdI::NVMCInterval, 1);
+  StdFace::PrintVal_i("NVMCSample", &StdI::NVMCSample, 1000);
 
   if (strcmp(StdI::model, "hubbard") == 0) StdI::NExUpdatePath = 0;
   else if (strcmp(StdI::model, "spin") == 0) StdI::NExUpdatePath = 2;
@@ -2132,50 +2133,50 @@ static void CheckModPara()
   }
   fprintf(stdout, "  %15s = %-10d\n", "NExUpdatePath", StdI::NExUpdatePath);
 
-  StdFace_PrintVal_i("RndSeed", &StdI::RndSeed, 123456789);
-  StdFace_PrintVal_i("NSplitSize", &StdI::NSplitSize, 1);
-  StdFace_PrintVal_i("NStore", &StdI::NStore, 1);
-  StdFace_PrintVal_i("NSRCG", &StdI::NSRCG, 0);
+  StdFace::PrintVal_i("RndSeed", &StdI::RndSeed, 123456789);
+  StdFace::PrintVal_i("NSplitSize", &StdI::NSplitSize, 1);
+  StdFace::PrintVal_i("NStore", &StdI::NStore, 1);
+  StdFace::PrintVal_i("NSRCG", &StdI::NSRCG, 0);
 
-  StdFace_PrintVal_d("DSROptRedCut", &StdI::DSROptRedCut, 0.001);
-  StdFace_PrintVal_d("DSROptStaDel", &StdI::DSROptStaDel, 0.02);
-  StdFace_PrintVal_d("DSROptStepDt", &StdI::DSROptStepDt, 0.02);
+  StdFace::PrintVal_d("DSROptRedCut", &StdI::DSROptRedCut, 0.001);
+  StdFace::PrintVal_d("DSROptStaDel", &StdI::DSROptStaDel, 0.02);
+  StdFace::PrintVal_d("DSROptStepDt", &StdI::DSROptStepDt, 0.02);
 #endif
   /*
    (Un)Conserved variables (Number of electrons, total Sz)
   */
   if (strcmp(StdI::model, "hubbard") == 0){
 #if defined(_HPhi)
-    if (StdI::lGC == 0) StdFace_RequiredVal_i("nelec", StdI::nelec);
+    if (StdI::lGC == 0) StdFace::RequiredVal_i("nelec", StdI::nelec);
     else {
-      StdFace_NotUsed_i("nelec", StdI::nelec);
-      StdFace_NotUsed_i("2Sz", StdI::Sz2);
+      StdFace::NotUsed_i("nelec", StdI::nelec);
+      StdFace::NotUsed_i("2Sz", StdI::Sz2);
     }
 #else
-    StdFace_RequiredVal_i("nelec", StdI::nelec);
-    if (StdI::lGC == 0) StdFace_PrintVal_i("2Sz", &StdI::Sz2, 0);
-    else StdFace_NotUsed_i("2Sz", StdI::Sz2);
+    StdFace::RequiredVal_i("nelec", StdI::nelec);
+    if (StdI::lGC == 0) StdFace::PrintVal_i("2Sz", &StdI::Sz2, 0);
+    else StdFace::NotUsed_i("2Sz", StdI::Sz2);
 #endif
   }
   else if (strcmp(StdI::model, "spin") == 0) {
-    StdFace_NotUsed_i("nelec", StdI::nelec);
+    StdFace::NotUsed_i("nelec", StdI::nelec);
 #if defined(_mVMC)
     StdI::nelec = 0;
 #endif
-    if (StdI::lGC == 0) StdFace_RequiredVal_i("2Sz", StdI::Sz2);
-    else StdFace_NotUsed_i("2Sz", StdI::Sz2);
+    if (StdI::lGC == 0) StdFace::RequiredVal_i("2Sz", StdI::Sz2);
+    else StdFace::NotUsed_i("2Sz", StdI::Sz2);
   }/*else if (strcmp(StdI::model, "spin") == 0)*/
   else if (strcmp(StdI::model, "kondo") == 0) {
 #if defined(_HPhi)
-    if (StdI::lGC == 0) StdFace_RequiredVal_i("nelec", StdI::nelec);
+    if (StdI::lGC == 0) StdFace::RequiredVal_i("nelec", StdI::nelec);
     else {
-      StdFace_NotUsed_i("nelec", StdI::nelec);
-      StdFace_NotUsed_i("2Sz", StdI::Sz2);
+      StdFace::NotUsed_i("nelec", StdI::nelec);
+      StdFace::NotUsed_i("2Sz", StdI::Sz2);
     }
 #else
-    StdFace_RequiredVal_i("nelec", StdI::nelec);
-    if (StdI::lGC == 0) StdFace_PrintVal_i("2Sz", &StdI::Sz2, 0);
-    else StdFace_NotUsed_i("2Sz", StdI::Sz2);
+    StdFace::RequiredVal_i("nelec", StdI::nelec);
+    if (StdI::lGC == 0) StdFace::PrintVal_i("2Sz", &StdI::Sz2, 0);
+    else StdFace::NotUsed_i("2Sz", StdI::Sz2);
 #endif
   }/*else if (strcmp(StdI::model, "kondo") == 0)*/
 }/*static void CheckModPara*/
@@ -2589,7 +2590,7 @@ static void PrintInteractions()
 @brief Main routine for the standard mode
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_main(
+void StdFace::main(
   char *fname//!<[in] Input file name for the standard mode
 )
 {
@@ -2601,13 +2602,13 @@ void StdFace_main(
   fprintf(stdout, "\n######  Input Parameter of Standard Intarface  ######\n");
   if ((fp = fopen(fname, "r")) == NULL) {
     fprintf(stdout, "\n  ERROR !  Cannot open input file %s !\n\n", fname);
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   else {
     fprintf(stdout, "\n  Open Standard-Mode Inputfile %s \n\n", fname);
   }
 
-  StdFace_ResetVals();
+  StdFace::ResetVals();
 
   while (fgets(ctmpline, 256, fp) != NULL) {
 
@@ -2624,7 +2625,7 @@ void StdFace_main(
     value = strtok(NULL, "=");
     if (value == NULL) {
       fprintf(stdout, "\n  ERROR !  \"=\" is NOT found !\n\n");
-      StdFace_exit(-1);
+      StdFace::exit(-1);
     }
     Text2Lower(keyword);
     fprintf(stdout, "  KEYWORD : %-20s | VALUE : %s \n", keyword, value);
@@ -2902,7 +2903,7 @@ void StdFace_main(
 #endif
     else {
       fprintf(stdout, "ERROR ! Unsupported Keyword in Standard mode!\n");
-      StdFace_exit(-1);
+      StdFace::exit(-1);
     }
   }
   fflush(fp);
@@ -2973,42 +2974,42 @@ void StdFace_main(
   Generate Hamiltonian definition files
   */
   if (strcmp(StdI::lattice, "chain") == 0
-    || strcmp(StdI::lattice, "chainlattice") == 0) StdFace_Chain();
+    || strcmp(StdI::lattice, "chainlattice") == 0) StdFace::Chain();
   else if (strcmp(StdI::lattice, "face-centeredorthorhombic") == 0
     || strcmp(StdI::lattice, "fcorthorhombic") == 0
-    || strcmp(StdI::lattice, "fco") == 0) StdFace_FCOrtho();
+    || strcmp(StdI::lattice, "fco") == 0) StdFace::FCOrtho();
   else if (strcmp(StdI::lattice, "honeycomb") == 0
-    || strcmp(StdI::lattice, "honeycomblattice") == 0) StdFace_Honeycomb();
+    || strcmp(StdI::lattice, "honeycomblattice") == 0) StdFace::Honeycomb();
   else if (strcmp(StdI::lattice, "kagome") == 0
-    || strcmp(StdI::lattice, "kagomelattice") == 0) StdFace_Kagome();
+    || strcmp(StdI::lattice, "kagomelattice") == 0) StdFace::Kagome();
   else if (strcmp(StdI::lattice, "ladder") == 0
-    || strcmp(StdI::lattice, "ladderlattice") == 0) StdFace_Ladder();
+    || strcmp(StdI::lattice, "ladderlattice") == 0) StdFace::Ladder();
   else if (strcmp(StdI::lattice, "orthorhombic") == 0
-    || strcmp(StdI::lattice, "simpleorthorhombic") == 0) StdFace_Orthorhombic();
-  else if (strcmp(StdI::lattice, "pyrochlore") == 0) StdFace_Pyrochlore();
+    || strcmp(StdI::lattice, "simpleorthorhombic") == 0) StdFace::Orthorhombic();
+  else if (strcmp(StdI::lattice, "pyrochlore") == 0) StdFace::Pyrochlore();
   else if (strcmp(StdI::lattice, "tetragonal") == 0
     || strcmp(StdI::lattice, "tetragonallattice") == 0
     || strcmp(StdI::lattice, "square") == 0
-    || strcmp(StdI::lattice, "squarelattice") == 0) StdFace_Tetragonal();
+    || strcmp(StdI::lattice, "squarelattice") == 0) StdFace::Tetragonal();
   else if (strcmp(StdI::lattice, "triangular") == 0
-    || strcmp(StdI::lattice, "triangularlattice") == 0) StdFace_Triangular();
-  else if (strcmp(StdI::lattice, "wannier90") == 0) StdFace_Wannier90();
+    || strcmp(StdI::lattice, "triangularlattice") == 0) StdFace::Triangular();
+  else if (strcmp(StdI::lattice, "wannier90") == 0) StdFace::Wannier90();
   else UnsupportedSystem(StdI::model, StdI::lattice);//<<
   /**/
 #if defined(_HPhi)
-  StdFace_LargeValue();
+  StdFace::LargeValue();
   /*
   Generate Hamiltonian for Boost
   */
   if (StdI::lBoost == 1) {
     if (strcmp(StdI::lattice, "chain") == 0
-      || strcmp(StdI::lattice, "chainlattice") == 0) StdFace_Chain_Boost();
+      || strcmp(StdI::lattice, "chainlattice") == 0) StdFace::Chain_Boost();
     else if (strcmp(StdI::lattice, "honeycomb") == 0
-      || strcmp(StdI::lattice, "honeycomblattice") == 0) StdFace_Honeycomb_Boost();
+      || strcmp(StdI::lattice, "honeycomblattice") == 0) StdFace::Honeycomb_Boost();
     else if (strcmp(StdI::lattice, "kagome") == 0
-      || strcmp(StdI::lattice, "kagomelattice") == 0) StdFace_Kagome_Boost();
+      || strcmp(StdI::lattice, "kagomelattice") == 0) StdFace::Kagome_Boost();
     else if (strcmp(StdI::lattice, "ladder") == 0
-      || strcmp(StdI::lattice, "ladderlattice") == 0) StdFace_Ladder_Boost();
+      || strcmp(StdI::lattice, "ladderlattice") == 0) StdFace::Ladder_Boost();
     else UnsupportedSystem(StdI::model, StdI::lattice);
   }
 #endif
@@ -3028,11 +3029,11 @@ void StdFace_main(
 #elif defined(_mVMC)
 
   if(StdI::lGC == 0 && (StdI::Sz2 == 0 || StdI::Sz2 == StdI::NaN_i)) 
-    StdFace_PrintVal_i("ComplexType", &StdI::ComplexType, 0);
-  else StdFace_PrintVal_i("ComplexType", &StdI::ComplexType, 1);
+    StdFace::PrintVal_i("ComplexType", &StdI::ComplexType, 0);
+  else StdFace::PrintVal_i("ComplexType", &StdI::ComplexType, 1);
 
-  StdFace_generate_orb();
-  StdFace_Proj();
+  StdFace::generate_orb();
+  StdFace::Proj();
   PrintJastrow();
   if(StdI::lGC == 1 || (StdI::Sz2 != 0 && StdI::Sz2 != StdI::NaN_i) )
     PrintOrbPara();
@@ -3045,7 +3046,7 @@ void StdFace_main(
   PrintNamelist();
 
   fprintf(stdout, "\n######  Input files are generated.  ######\n\n");
-}/*void StdFace_main*/
+}/*void StdFace::main*/
 /**
 @page page_addstandard Add new lattice model into Standard mode
 
@@ -3111,7 +3112,7 @@ We add new input variable in Standard mode through the following procedure:
 
 @section sec_parse_standard Parse the input file
 
-The input file for Standared mode is read in StdFace_main().
+The input file for Standared mode is read in StdFace::main().
 In that function, the keyword value pair is found as follows:
 
 @dontinclude StdFace_main.cpp
@@ -3131,7 +3132,7 @@ If the inputted variable should be shared among routines in Standard mode,
 we have to add it to the list in StdFace_vals.hpp.
 
 Also, the variable should be intialized before it is read.
-This initiallization is performed in the function StdFace_ResetVals().
+This initiallization is performed in the function StdFace::ResetVals().
 We have to initialize new variable in this function as:
 @code{C}
 StdI::new_val = NaN_d;

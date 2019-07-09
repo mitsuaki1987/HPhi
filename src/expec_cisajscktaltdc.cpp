@@ -14,6 +14,7 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
+#include "expec_cisajscktaltdc.hpp"
 #include "mltply.hpp"
 #include "mltplyCommon.hpp"
 #include "FileIO.hpp"
@@ -42,11 +43,11 @@
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * 
  */
-///
-/// \brief Rearray interactions
-/// \param X  data list for calculation
-/// \return 0 normally finished
-/// \return -1 unnormally finished
+/**
+@brief Rearray interactions
+@return 0 normally finished
+@return -1 unnormally finished
+*/
 int Rearray_Interactions(
   int i,/**<[in]*/
   long int* org_isite1,/**<[in] site number on the site 1*/
@@ -60,66 +61,66 @@ int Rearray_Interactions(
   std::complex<double>* tmp_V/**<[in] value of interaction*/
 )
 {
-  long int tmp_org_isite1,tmp_org_isite2,tmp_org_isite3,tmp_org_isite4;
-  long int tmp_org_sigma1,tmp_org_sigma2,tmp_org_sigma3,tmp_org_sigma4;
+  long int tmp_org_isite1, tmp_org_isite2, tmp_org_isite3, tmp_org_isite4;
+  long int tmp_org_sigma1, tmp_org_sigma2, tmp_org_sigma3, tmp_org_sigma4;
 
-  tmp_org_isite1   = Def::CisAjtCkuAlvDC[i][0]+1;
-  tmp_org_sigma1   = Def::CisAjtCkuAlvDC[i][1];
-  tmp_org_isite2   = Def::CisAjtCkuAlvDC[i][2]+1;
-  tmp_org_sigma2   = Def::CisAjtCkuAlvDC[i][3];
-  tmp_org_isite3   = Def::CisAjtCkuAlvDC[i][4]+1;
-  tmp_org_sigma3   = Def::CisAjtCkuAlvDC[i][5];
-  tmp_org_isite4   = Def::CisAjtCkuAlvDC[i][6]+1;
-  tmp_org_sigma4   = Def::CisAjtCkuAlvDC[i][7];
+  tmp_org_isite1 = Def::CisAjtCkuAlvDC[i][0] + 1;
+  tmp_org_sigma1 = Def::CisAjtCkuAlvDC[i][1];
+  tmp_org_isite2 = Def::CisAjtCkuAlvDC[i][2] + 1;
+  tmp_org_sigma2 = Def::CisAjtCkuAlvDC[i][3];
+  tmp_org_isite3 = Def::CisAjtCkuAlvDC[i][4] + 1;
+  tmp_org_sigma3 = Def::CisAjtCkuAlvDC[i][5];
+  tmp_org_isite4 = Def::CisAjtCkuAlvDC[i][6] + 1;
+  tmp_org_sigma4 = Def::CisAjtCkuAlvDC[i][7];
 
-  if(tmp_org_isite1==tmp_org_isite2 && tmp_org_isite3==tmp_org_isite4){
-    if(tmp_org_isite1 > tmp_org_isite3){
-      *org_isite1   = tmp_org_isite3;
-      *org_sigma1   = tmp_org_sigma3;
-      *org_isite2   = tmp_org_isite4;
-      *org_sigma2   = tmp_org_sigma4;
-      *org_isite3   = tmp_org_isite1;
-      *org_sigma3   = tmp_org_sigma1;
-      *org_isite4   = tmp_org_isite2;
-      *org_sigma4   = tmp_org_sigma2;
+  if (tmp_org_isite1 == tmp_org_isite2 && tmp_org_isite3 == tmp_org_isite4) {
+    if (tmp_org_isite1 > tmp_org_isite3) {
+      *org_isite1 = tmp_org_isite3;
+      *org_sigma1 = tmp_org_sigma3;
+      *org_isite2 = tmp_org_isite4;
+      *org_sigma2 = tmp_org_sigma4;
+      *org_isite3 = tmp_org_isite1;
+      *org_sigma3 = tmp_org_sigma1;
+      *org_isite4 = tmp_org_isite2;
+      *org_sigma4 = tmp_org_sigma2;
     }
-    else{
-      *org_isite1   = tmp_org_isite1;
-      *org_sigma1   = tmp_org_sigma1;
-      *org_isite2   = tmp_org_isite2;
-      *org_sigma2   = tmp_org_sigma2;
-      *org_isite3   = tmp_org_isite3;
-      *org_sigma3   = tmp_org_sigma3;
-      *org_isite4   = tmp_org_isite4;
-      *org_sigma4   = tmp_org_sigma4;
+    else {
+      *org_isite1 = tmp_org_isite1;
+      *org_sigma1 = tmp_org_sigma1;
+      *org_isite2 = tmp_org_isite2;
+      *org_sigma2 = tmp_org_sigma2;
+      *org_isite3 = tmp_org_isite3;
+      *org_sigma3 = tmp_org_sigma3;
+      *org_isite4 = tmp_org_isite4;
+      *org_sigma4 = tmp_org_sigma4;
     }
     *tmp_V = 1.0;
 
   }
-  else if(tmp_org_isite1==tmp_org_isite4 && tmp_org_isite3==tmp_org_isite2){
-    if(tmp_org_isite1 > tmp_org_isite3){
-      *org_isite1   = tmp_org_isite3;
-      *org_sigma1   = tmp_org_sigma3;
-      *org_isite2   = tmp_org_isite2;
-      *org_sigma2   = tmp_org_sigma2;
-      *org_isite3   = tmp_org_isite1;
-      *org_sigma3   = tmp_org_sigma1;
-      *org_isite4   = tmp_org_isite4;
-      *org_sigma4   = tmp_org_sigma4;
+  else if (tmp_org_isite1 == tmp_org_isite4 && tmp_org_isite3 == tmp_org_isite2) {
+    if (tmp_org_isite1 > tmp_org_isite3) {
+      *org_isite1 = tmp_org_isite3;
+      *org_sigma1 = tmp_org_sigma3;
+      *org_isite2 = tmp_org_isite2;
+      *org_sigma2 = tmp_org_sigma2;
+      *org_isite3 = tmp_org_isite1;
+      *org_sigma3 = tmp_org_sigma1;
+      *org_isite4 = tmp_org_isite4;
+      *org_sigma4 = tmp_org_sigma4;
     }
-    else{
-      *org_isite1   = tmp_org_isite1;
-      *org_sigma1   = tmp_org_sigma1;
-      *org_isite2   = tmp_org_isite4;
-      *org_sigma2   = tmp_org_sigma4;
-      *org_isite3   = tmp_org_isite3;
-      *org_sigma3   = tmp_org_sigma3;
-      *org_isite4   = tmp_org_isite2;
-      *org_sigma4   = tmp_org_sigma2;
+    else {
+      *org_isite1 = tmp_org_isite1;
+      *org_sigma1 = tmp_org_sigma1;
+      *org_isite2 = tmp_org_isite4;
+      *org_sigma2 = tmp_org_sigma4;
+      *org_isite3 = tmp_org_isite3;
+      *org_sigma3 = tmp_org_sigma3;
+      *org_isite4 = tmp_org_isite2;
+      *org_sigma4 = tmp_org_sigma2;
     }
-    *tmp_V =-1.0;
+    *tmp_V = -1.0;
   }
-  else{
+  else {
     return -1;
   }
   return 0;
@@ -134,7 +135,7 @@ int Rearray_Interactions(
  * @retval -1 abnormally finished
  *
  */
-int expec_cisajscktalt_HubbardGC(
+void expec::cisajscktalt::HubbardGC(
   int nstate, 
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -234,7 +235,6 @@ shared(vec,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,t
     }
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
   }//Intra PE
-  return 0;
 }
 /**
  * @brief Child function to calculate two-body green's functions for Hubbard model
@@ -246,8 +246,7 @@ shared(vec,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,t
  * @retval -1 abnormally finished
  *
  */
-int expec_cisajscktalt_Hubbard(
-  
+void expec::cisajscktalt::Hubbard(
   int nstate, 
   std::complex<double> **Xvec, 
   std::complex<double> **vec,
@@ -358,7 +357,6 @@ shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,B
     }
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
   }
-  return 0;
 }
 /**
  * @brief Child function to calculate two-body green's functions for 1/2 Spin model
@@ -370,8 +368,7 @@ shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,B
  * @retval -1 abnormally finished
  *
  */
-int expec_cisajscktalt_SpinHalf(
-  
+void expec::cisajscktalt::SpinHalf(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec,
@@ -479,7 +476,6 @@ shared(vec,Xvec,nstate,one, i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
     }
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
   }
-  return 0;
 }
 /**
  * @brief Child function to calculate two-body green's functions for General Spin model
@@ -491,8 +487,7 @@ shared(vec,Xvec,nstate,one, i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
  * @retval -1 abnormally finished
  *
  */
-int expec_cisajscktalt_SpinGeneral(
-  
+void expec::cisajscktalt::SpinGeneral(
   int nstate, 
   std::complex<double> **Xvec, 
   std::complex<double> **vec, 
@@ -594,7 +589,6 @@ MP::myrank,tmp_V,vec,List::c1,Xvec,nstate,one,Def::SiteToBit, Def::Tpow, Check::
     }
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
   }
-  return 0;
 }
 /**
  * @brief Child function to calculate two-body green's functions for 1/2 Spin GC model
@@ -606,8 +600,7 @@ MP::myrank,tmp_V,vec,List::c1,Xvec,nstate,one,Def::SiteToBit, Def::Tpow, Check::
  * @retval -1 abnormally finished
  *
  */
-int expec_cisajscktalt_SpinGCHalf(
-  
+void expec::cisajscktalt::SpinGCHalf(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -721,7 +714,6 @@ shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
     }
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
   }
-  return 0;
 }
 /**
  * @brief Child function to calculate two-body green's functions for General Spin GC model
@@ -733,8 +725,7 @@ shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
  * @retval -1 abnormally finished
  *
  */
-int expec_cisajscktalt_SpinGCGeneral(
-  
+void expec::cisajscktalt::SpinGCGeneral(
   int nstate, 
   std::complex<double> **Xvec, 
   std::complex<double> **vec, 
@@ -867,59 +858,6 @@ tmp_V,vec,Xvec,nstate,one, Def::SiteToBit, Def::Tpow)
     }
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
   }
-  return 0;
-}
-/**
- * @brief Parent function to calculate two-body green's functions for Spin model
- *
- * @param X [in] data list for calculation
- * @param vec [in] eigenvectors
- * @param _fp [in] output file name
- * @retval 0 normally finished
- * @retval -1 abnormally finished
- *
- */
-int expec_cisajscktalt_Spin(
-  
-  int nstate,
-  std::complex<double> **Xvec,
-  std::complex<double> **vec,
-  std::complex<double> **prod
-) {
-  int info = 0;
-  if (Def::iFlgGeneralSpin == FALSE) {
-    info = expec_cisajscktalt_SpinHalf(nstate, Xvec, vec, prod);
-  }
-  else {
-    info = expec_cisajscktalt_SpinGeneral(nstate, Xvec, vec, prod);
-  }
-  return info;
-}
-/**
- * @brief Parent function to calculate two-body green's functions for Spin GC model
- *
- * @param X [in] data list for calculation
- * @param vec [in] eigenvectors
- * @param _fp [in] output file name
- * @retval 0 normally finished
- * @retval -1 abnormally finished
- *
- */
-int expec_cisajscktalt_SpinGC(
-  
-  int nstate,
-  std::complex<double> **Xvec,
-  std::complex<double> **vec,
-  std::complex<double> **prod
-) {
-  int info = 0;
-  if (Def::iFlgGeneralSpin == FALSE) {
-    info = expec_cisajscktalt_SpinGCHalf(nstate, Xvec, vec, prod);
-  }
-  else {
-    info = expec_cisajscktalt_SpinGCGeneral(nstate, Xvec, vec, prod);
-  }
-  return info;
 }
 /**
  * @brief Parent function to calculate two-body green's functions
@@ -938,9 +876,7 @@ int expec_cisajscktalt_SpinGC(
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
-int expec_cisajscktaltdc
-(
-  
+int expec::cisajscktalt::main(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec
@@ -977,33 +913,35 @@ int expec_cisajscktaltdc
 
   switch (Def::iCalcModel) {
   case DC::HubbardGC:
-    if (expec_cisajscktalt_HubbardGC(nstate, Xvec, vec, prod) != 0) {
-      return -1;
-    }
+    expec::cisajscktalt::HubbardGC(nstate, Xvec, vec, prod);
     break;
 
   case DC::KondoGC:
   case DC::Hubbard:
   case DC::Kondo:
-    if (expec_cisajscktalt_Hubbard(nstate, Xvec, vec, prod) != 0) {
-      return -1;
-    }
+    expec::cisajscktalt::Hubbard(nstate, Xvec, vec, prod);
     break;
 
   case DC::Spin:
-    if (expec_cisajscktalt_Spin(nstate, Xvec, vec, prod) != 0) {
-      return -1;
+    if (Def::iFlgGeneralSpin == FALSE) {
+      expec::cisajscktalt::SpinHalf(nstate, Xvec, vec, prod);
+    }
+    else {
+      expec::cisajscktalt::SpinGeneral(nstate, Xvec, vec, prod);
     }
     break;
 
   case DC::SpinGC:
-    if (expec_cisajscktalt_SpinGC(nstate, Xvec, vec, prod) != 0) {
-      return -1;
+    if (Def::iFlgGeneralSpin == FALSE) {
+      expec::cisajscktalt::SpinGCHalf(nstate, Xvec, vec, prod);
+    }
+    else {
+      expec::cisajscktalt::SpinGCGeneral(nstate, Xvec, vec, prod);
     }
     break;
 
   default:
-    return -1;
+    break;
   }
 
   for (istate = 0; istate < nstate; istate++) {

@@ -13,22 +13,17 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+#include <complex>
 
-std::complex<double> child_Cor_1(long int j,
-  long int is_A, long int is1, long int is2, long int is3,
-  long int b_sigma_A, long int irght, long int ilft, long int ihfbit, 
-  std::complex<double>* vec);
-
-std::complex<double> child_Cor_2(long int j,
-  long int is_B, long int is1,
-  long int is3, long int is4,
-  long int b_sigma_B, long int irght, long int ilft,
-  long int ihfbit, std::complex<double>* vec);
-
-std::complex<double> child_Cor_3(long int j,
-  long int is_A, long int is_B, long int is1,
-  long int is2, long int is3, long int is4,
-  long int b_sigma_A, long int b_sigma_B,
-  long int irght, long int ilft, long int ihfbit, std::complex<double>* vec);
-int expec_cisajscktaltdc(int nstate, std::complex<double>** Xvec, std::complex<double>** vec);
-void expec_cisajscktaltdc_alldiag_spin(std::complex<double>* vec);
+namespace expec {
+  namespace cisajscktalt {
+    int main(int nstate, std::complex<double>** Xvec, std::complex<double>** vec);
+    void HubbardGC(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
+    void Hubbard(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
+    void SpinHalf(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
+    void SpinGeneral(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
+    void SpinGCHalf(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
+    void SpinGCGeneral(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
+  }
+}
+//TODO void expec_cisajscktaltdc_alldiag_spin(std::complex<double>* vec);

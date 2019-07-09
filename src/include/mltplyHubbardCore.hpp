@@ -146,113 +146,41 @@ int X_GC_CisAjt
  );
 
 
-void CisAjt
-(
- long int j,
- int nstate, 
- std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- long int is1_spin,
- long int is2_spin,
- long int sum_spin,
- long int diff_spin,
- std::complex<double> tmp_V
- );
+void CisAjt(long int j, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+  long int is1_spin, long int is2_spin, long int sum_spin, long int diff_spin, std::complex<double> tmp_V);
 
 
-void GC_CisAjt
-(
- long int j,
- int nstate, 
- std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- long int is1_spin,
- long int is2_spin,
- long int sum_spin,
- long int diff_spin,
- std::complex<double> tmp_V,
- long int *tmp_off
-);
+void GC_CisAjt(long int j, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+ long int is1_spin, long int is2_spin, long int sum_spin, long int diff_spin,
+ std::complex<double> tmp_V, long int *tmp_off);
 
 
-int child_general_hopp_GetInfo
-(
- long int isite1,
- long int isite2,
- long int sigma1,
- long int sigma2
- );
+void child_general_hopp_GetInfo(long int isite1, long int isite2, long int sigma1, long int sigma2);
 
-int child_general_int_GetInfo
-(
- long int isite1,
- long int isite2,
- long int isite3,
- long int isite4,
- long int sigma1,
- long int sigma2,
- long int sigma3,
- long int sigma4,
- std::complex<double> tmp_V
- );
+void child_general_int_GetInfo( long int isite1, long int isite2, long int isite3, long int isite4,
+ long int sigma1, long int sigma2, long int sigma3, long int sigma4, std::complex<double> tmp_V );
 
-int child_pairhopp_GetInfo(int iPairHopp);
-int child_exchange_GetInfo(int iExchange);
+void child_pairhopp_GetInfo(int iPairHopp);
+void child_exchange_GetInfo(int iExchange);
 
-void GC_Ajt
-(
- long int j,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- long int is1_spin,
- std::complex<double> tmp_V,
- long int *tmp_off
- );
+void GC_Ajt( long int j, int nstate, std::complex<double> **tmp_v0,
+ std::complex<double> **tmp_v1, long int is1_spin,
+  std::complex<double> tmp_V, long int* tmp_off);
 
-void GC_Cis
-(
- long int j,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- long int is1_spin,
- std::complex<double> tmp_V,
- long int *tmp_off
- );
+void GC_Cis( long int j, int nstate, std::complex<double> **tmp_v0,
+ std::complex<double> **tmp_v1, long int is1_spin,
+ std::complex<double> tmp_V, long int *tmp_off );
 
-void GC_Ajt
-(
- long int j,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- long int is1_spin,
- std::complex<double> tmp_V,
- long int *tmp_off
- );
+void GC_Ajt( long int j, int nstate, std::complex<double> **tmp_v0,
+ std::complex<double> **tmp_v1, long int is1_spin,
+  std::complex<double> tmp_V, long int* tmp_off);
 
-int X_Cis
-(
- long int j,
- long int is1_spin,
- long int *tmp_off,
- long int *list_1_org,
- long int *list_2_1_target,
- long int *list_2_2_target,
- long int _irght,
- long int _ilft,
- long int _ihfbit
- );
+int X_Cis( long int j, long int is1_spin, long int *tmp_off,
+ long int *list_1_org, long int *list_2_1_target, long int *list_2_2_target,
+ long int _irght, long int _ilft, long int _ihfbit );
 
-int X_Ajt
-(
- long int j,
- long int is1_spin,
- long int *tmp_off,
- long int *list_1_org,
- long int *list_2_1_target,
- long int *list_2_2_target,
- long int _irght,
- long int _ilft,
- long int _ihfbit
- );
+int X_Ajt( long int j, long int is1_spin, long int *tmp_off,
+ long int *list_1_org, long int *list_2_1_target, long int *list_2_2_target,
+ long int _irght, long int _ilft, long int _ihfbit );
 
 #endif

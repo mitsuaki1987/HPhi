@@ -116,12 +116,12 @@ Compute expectation value at infinite temperature
 */
   Def::istep = 0;
   StartTimer(3300);
-  iret = expec_cisajs(Step::NumAve, Wave::v0, Wave::v1);
+  iret = expec::cisajs::main(Step::NumAve, Wave::v0, Wave::v1);
   StopTimer(3300);
   if (iret != 0) return -1;
 
   StartTimer(3400);
-  iret = expec_cisajscktaltdc(Step::NumAve, Wave::v0, Wave::v1);
+  iret = expec::cisajscktalt::main(Step::NumAve, Wave::v0, Wave::v1);
   StopTimer(3400);
   if (iret != 0) return -1;
 
@@ -129,7 +129,7 @@ Compute expectation value at infinite temperature
   for (i = 1; i <= i_max; i++) 
     for (rand_i = 0; rand_i < Step::NumAve; rand_i++) Wave::v0[i][rand_i] = Wave::v1[i][rand_i];
   StartTimer(3102);
-  if(expec_energy_flct(Step::NumAve, Wave::v0, Wave::v1) !=0){
+  if(expec::energy_flct::main(Step::NumAve, Wave::v0, Wave::v1) !=0){
     StopTimer(3102);
     return -1;
   }

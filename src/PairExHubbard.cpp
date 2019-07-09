@@ -111,9 +111,7 @@ shared(i_max,isite1, tmp_trans,tmp_v0,tmp_v1,nstate)
         }
       }
       else {
-        if (child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2) != 0) {
-          return -1;
-        }
+        child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
         GC_child_general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
       }
     }
@@ -237,9 +235,7 @@ shared(tmp_v0, tmp_v1,one,dmv,nstate,i_max, tmp_trans)
         }
       }
       else {
-        if (child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2) != 0) {
-          return -1;
-        }
+        child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
         if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {
           is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {

@@ -448,9 +448,7 @@ int mltplyHalfSpinGC(
         sigma1 = Def::EDGeneralTransfer[idx][1];
         sigma2 = Def::EDGeneralTransfer[idx][3];
         tmp_trans = -Def::EDParaGeneralTransfer[idx];
-        if (child_general_hopp_GetInfo(isite1, isite2, sigma1, sigma2) != 0) {
-          return -1;
-        }
+        child_general_hopp_GetInfo(isite1, isite2, sigma1, sigma2);
        
         if(sigma1==sigma2){
           fprintf(stderr, "Transverse_OffDiagonal component is illegal.\n");

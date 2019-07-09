@@ -356,7 +356,7 @@ static void PrintUHFinitial(
     Coulomb integral (U)
     */
     for (it = 0; it < NtUJ[1]; it++) {
-      StdFace_FindSite(iW, iL, iH,
+      StdFace::FindSite(iW, iL, iH,
         tUJindx[1][it][0], tUJindx[1][it][1], tUJindx[1][it][2],
         tUJindx[1][it][3], tUJindx[1][it][4], &isite, &jsite, &Cphase, dR);
       IniGuess[isite][jsite] = DenMat[tUJindx[1][it][0]][tUJindx[1][it][1]][tUJindx[1][it][2]]
@@ -368,7 +368,7 @@ static void PrintUHFinitial(
     Wxchange integral (J)
     */
     for (it = 0; it < NtUJ[2]; it++) {
-      StdFace_FindSite(iW, iL, iH,
+      StdFace::FindSite(iW, iL, iH,
         tUJindx[2][it][0], tUJindx[2][it][1], tUJindx[2][it][2],
         tUJindx[2][it][3], tUJindx[2][it][4], &isite, &jsite, &Cphase, dR);
       IniGuess[isite][jsite] = DenMat[tUJindx[2][it][0]][tUJindx[2][it][1]][tUJindx[2][it][2]]
@@ -416,7 +416,7 @@ static void PrintUHFinitial(
 @brief Setup a Hamiltonian for the Wannier90 *_hr.dat
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_Wannier90()
+void StdFace::Wannier90()
 {
   int isite, jsite, ispin;
   int iL, iW, iH, kCell, it, ii;
@@ -433,14 +433,14 @@ void StdFace_Wannier90()
   */
   fp = fopen("lattice.xsf", "w");
   /**/
-  StdFace_PrintVal_d("phase0", &StdI::phase[0], 0.0);
-  StdFace_PrintVal_d("phase1", &StdI::phase[1], 0.0);
-  StdFace_PrintVal_d("phase2", &StdI::phase[2], 0.0);
+  StdFace::PrintVal_d("phase0", &StdI::phase[0], 0.0);
+  StdFace::PrintVal_d("phase1", &StdI::phase[1], 0.0);
+  StdFace::PrintVal_d("phase2", &StdI::phase[2], 0.0);
   StdI::NsiteUC = 1;
-  StdFace_InitSite(fp, 3);
+  StdFace::InitSite(fp, 3);
   fprintf(stdout, "\n  @ Wannier90 Geometry \n\n");
   geometry_W90();
-  StdFace_PrintVal_i("DoubleCounting", &StdI::double_counting, 1);
+  StdFace::PrintVal_i("DoubleCounting", &StdI::double_counting, 1);
 
   tUJ = (std::complex<double> **)malloc(sizeof(std::complex<double>*) * 3);
   tUJindx = (int ***)malloc(sizeof(int**) * 3);
@@ -449,8 +449,8 @@ void StdFace_Wannier90()
   Read Hopping
   */
   fprintf(stdout, "\n  @ Wannier90 hopping \n\n");
-  StdFace_PrintVal_d("cutoff_t", &StdI::cutoff_t, 1.0e-8);
-  StdFace_PrintVal_d("cutoff_length_t", &StdI::cutoff_length_t, -1.0);
+  StdFace::PrintVal_d("cutoff_t", &StdI::cutoff_t, 1.0e-8);
+  StdFace::PrintVal_d("cutoff_length_t", &StdI::cutoff_length_t, -1.0);
   sprintf(filename, "%s_hr.dat", StdI::CDataFileHead);
   read_W90(filename,
     StdI::cutoff_t, StdI::cutoff_tR, StdI::cutoff_length_t,
@@ -459,8 +459,8 @@ void StdFace_Wannier90()
   Read Coulomb
   */
   fprintf(stdout, "\n  @ Wannier90 Coulomb \n\n");
-  StdFace_PrintVal_d("cutoff_u", &StdI::cutoff_u, 1.0e-8);
-  StdFace_PrintVal_d("cutoff_length_U", &StdI::cutoff_length_U, -1.0);
+  StdFace::PrintVal_d("cutoff_u", &StdI::cutoff_u, 1.0e-8);
+  StdFace::PrintVal_d("cutoff_length_U", &StdI::cutoff_length_U, -1.0);
   sprintf(filename, "%s_ur.dat", StdI::CDataFileHead);
   read_W90(filename,
     StdI::cutoff_u, StdI::cutoff_UR, StdI::cutoff_length_U, 
@@ -469,8 +469,8 @@ void StdFace_Wannier90()
   Read Hund
   */
   fprintf(stdout, "\n  @ Wannier90 Hund \n\n");
-  StdFace_PrintVal_d("cutoff_j", &StdI::cutoff_j, 1.0e-8);
-  StdFace_PrintVal_d("cutoff_length_J", &StdI::cutoff_length_J, -1.0);
+  StdFace::PrintVal_d("cutoff_j", &StdI::cutoff_j, 1.0e-8);
+  StdFace::PrintVal_d("cutoff_length_J", &StdI::cutoff_length_J, -1.0);
   sprintf(filename, "%s_jr.dat", StdI::CDataFileHead);
   read_W90(filename,
     StdI::cutoff_j, StdI::cutoff_JR, StdI::cutoff_length_J, 
@@ -485,20 +485,20 @@ void StdFace_Wannier90()
   (2) check & store parameters of Hamiltonian
   */
   fprintf(stdout, "\n  @ Hamiltonian \n\n");
-  StdFace_NotUsed_d("K", StdI::K);
-  StdFace_PrintVal_d("h", &StdI::h, 0.0);
-  StdFace_PrintVal_d("Gamma", &StdI::Gamma, 0.0);
-  StdFace_NotUsed_d("U", StdI::U);
+  StdFace::NotUsed_d("K", StdI::K);
+  StdFace::PrintVal_d("h", &StdI::h, 0.0);
+  StdFace::PrintVal_d("Gamma", &StdI::Gamma, 0.0);
+  StdFace::NotUsed_d("U", StdI::U);
   /**/
   if (strcmp(StdI::model, "spin") == 0 ) {
-    StdFace_PrintVal_i("2S", &StdI::S2, 1);
+    StdFace::PrintVal_i("2S", &StdI::S2, 1);
   }/*if (strcmp(StdI::model, "spin") == 0 )*/
   else if (strcmp(StdI::model, "hubbard") == 0) {
-    StdFace_PrintVal_d("mu", &StdI::mu, 0.0);
+    StdFace::PrintVal_d("mu", &StdI::mu, 0.0);
   }
   else{
     printf("wannier + Kondo is not available !\n");
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }/*if (model != "spin")*/
   fprintf(stdout, "\n  @ Numerical conditions\n\n");
   /**@brief
@@ -535,12 +535,12 @@ void StdFace_Wannier90()
     */
     if (strcmp(StdI::model, "spin") == 0) {
       for (isite = StdI::NsiteUC*kCell; isite < StdI::NsiteUC*(kCell + 1); isite++) {
-        StdFace_MagField(StdI::S2, -StdI::h, -StdI::Gamma, isite);
+        StdFace::MagField(StdI::S2, -StdI::h, -StdI::Gamma, isite);
       }
     }/*if (strcmp(StdI::model, "spin") == 0 )*/
     else {
       for (isite = StdI::NsiteUC*kCell; isite < StdI::NsiteUC*(kCell + 1); isite++) {
-        StdFace_HubbardLocal(StdI::mu, -StdI::h, -StdI::Gamma, 0.0, isite);
+        StdFace::HubbardLocal(StdI::mu, -StdI::h, -StdI::Gamma, 0.0, isite);
       }
     }/*if (strcmp(StdI::model, "spin") != 0 )*/
     /*
@@ -565,17 +565,17 @@ void StdFace_Wannier90()
         /*
          Non-local term
         */
-        StdFace_FindSite(iW, iL, iH,
+        StdFace::FindSite(iW, iL, iH,
           tUJindx[0][it][0], tUJindx[0][it][1], tUJindx[0][it][2],
           tUJindx[0][it][3], tUJindx[0][it][4], &isite, &jsite, &Cphase, dR);
         if (strcmp(StdI::model, "spin") == 0) {
           for (ii = 0; ii < 3; ii++) 
             Jtmp[ii][ii] = 2.0 * real(tUJ[0][it] * conj(tUJ[0][it]))
             * (1.0 / Uspin[tUJindx[0][it][3]] + 1.0 / Uspin[tUJindx[0][it][4]]);
-          StdFace_GeneralJ(Jtmp, StdI::S2, StdI::S2, isite, jsite);
+          StdFace::GeneralJ(Jtmp, StdI::S2, StdI::S2, isite, jsite);
         }/*if (strcmp(StdI::model, "spin") == 0 )*/
         else {
-          StdFace_Hopping(- Cphase * tUJ[0][it], jsite, isite, dR);
+          StdFace::Hopping(- Cphase * tUJ[0][it], jsite, isite, dR);
         }
       }/*Non-local term*/
     }/*for (it = 0; it < NtUJ[0]; it++)*/
@@ -607,10 +607,10 @@ void StdFace_Wannier90()
         /*
         Non-local term
         */
-        StdFace_FindSite(iW, iL, iH,
+        StdFace::FindSite(iW, iL, iH,
           tUJindx[1][it][0], tUJindx[1][it][1], tUJindx[1][it][2],
           tUJindx[1][it][3], tUJindx[1][it][4], &isite, &jsite, &Cphase, dR);
-        StdFace_Coulomb(real(tUJ[1][it]), isite, jsite);
+        StdFace::Coulomb(real(tUJ[1][it]), isite, jsite);
         /*
         Double-counting correction
         */
@@ -634,7 +634,7 @@ void StdFace_Wannier90()
           */
           DenMat0 = DenMat[tUJindx[1][it][0]][tUJindx[1][it][1]][tUJindx[1][it][2]]
             [tUJindx[1][it][3]][tUJindx[1][it][4]];
-          StdFace_Hopping(-0.5*Cphase * real(tUJ[1][it])*DenMat0, jsite, isite, dR);
+          StdFace::Hopping(-0.5*Cphase * real(tUJ[1][it])*DenMat0, jsite, isite, dR);
         }/*if (StdI::double_counting == 1)*/
       }/*Non-local term*/
     }/*for (it = 0; it < NtUJ[0]; it++)*/
@@ -648,7 +648,7 @@ void StdFace_Wannier90()
       if (tUJindx[2][it][0] != 0 || tUJindx[2][it][1] != 0 || tUJindx[2][it][2] != 0
         || tUJindx[2][it][3] != tUJindx[2][it][4])
       {
-        StdFace_FindSite(iW, iL, iH,
+        StdFace::FindSite(iW, iL, iH,
           tUJindx[2][it][0], tUJindx[2][it][1], tUJindx[2][it][2],
           tUJindx[2][it][3], tUJindx[2][it][4], &isite, &jsite, &Cphase, dR);
 
@@ -684,7 +684,7 @@ void StdFace_Wannier90()
             */
             DenMat0 = DenMat[tUJindx[2][it][0]][tUJindx[2][it][1]][tUJindx[2][it][2]]
                             [tUJindx[2][it][3]][tUJindx[2][it][4]];
-            StdFace_Hopping(
+            StdFace::Hopping(
               0.5*Cphase * real(tUJ[2][it])*(DenMat0 + 2.0*real(DenMat0)), jsite, isite, dR);
           }/*if (StdI::double_counting == 1)*/
         }
@@ -702,8 +702,8 @@ void StdFace_Wannier90()
 
   fclose(fp);
   PrintUHFinitial(NtUJ, DenMat, tUJindx);
-  StdFace_PrintXSF();
-  StdFace_PrintGeometry();
+  StdFace::PrintXSF();
+  StdFace::PrintGeometry();
 
   for (it = 0; it < NtUJ[0]; it++) free(tUJindx[0][it]);
   free(tUJindx[0]);
@@ -716,4 +716,4 @@ void StdFace_Wannier90()
   free(tUJ[2]); 
   if (strcmp(StdI::model, "spin") == 0) free(Uspin);
 
-}/*void StdFace_Wannier90*/
+}/*void StdFace::Wannier90*/

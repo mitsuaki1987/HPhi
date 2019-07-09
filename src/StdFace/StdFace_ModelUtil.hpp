@@ -18,66 +18,69 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <complex>
 #include <cstdio>
 
-void StdFace_exit(int errorcode);
+namespace StdFace {
+  void exit(int errorcode);
 
-void StdFace_intr(std::complex<double> intr0,
-  int site1, int spin1, int site2, int spin2,
-  int site3, int spin3, int site4, int spin4);
+  void intr(std::complex<double> intr0,
+    int site1, int spin1, int site2, int spin2,
+    int site3, int spin3, int site4, int spin4);
 
-void StdFace_Hopping(std::complex<double> trans0, int isite, int jsite, double *dR);
-void StdFace_trans(std::complex<double> trans0,int isite,int ispin,int jsite,int jspin);
-void StdFace_HubbardLocal(double mu0, double h0,
-  double Gamma0, double U0, int isite);
-void StdFace_MagField(int S2, double h, double Gamma, int isite);
+  void Hopping(std::complex<double> trans0, int isite, int jsite, double* dR);
+  void trans(std::complex<double> trans0, int isite, int ispin, int jsite, int jspin);
+  void HubbardLocal(double mu0, double h0,
+    double Gamma0, double U0, int isite);
+  void MagField(int S2, double h, double Gamma, int isite);
 
-void StdFace_Coulomb(double V, int isite, int jsite);
-void StdFace_GeneralJ(double J[3][3],
-  int Si2, int Sj2, int isite, int jsite);
+  void Coulomb(double V, int isite, int jsite);
+  void GeneralJ(double J[3][3],
+    int Si2, int Sj2, int isite, int jsite);
 
-void StdFace_PrintVal_d(const char* valname, double *val, double val0);
-void StdFace_PrintVal_dd(char* valname, double *val, double val0, double val1);
-void StdFace_PrintVal_c(const char* valname, std::complex<double> *val, std::complex<double> val0);
-void StdFace_PrintVal_i(const char* valname, int *val, int val0);
+  void PrintVal_d(const char* valname, double* val, double val0);
+  void PrintVal_dd(char* valname, double* val, double val0, double val1);
+  void PrintVal_c(const char* valname, std::complex<double>* val, std::complex<double> val0);
+  void PrintVal_i(const char* valname, int* val, int val0);
 
-void StdFace_NotUsed_d(const char* valname, double val);
-void StdFace_NotUsed_i(const char* valname, int val);
-void StdFace_NotUsed_c(const char* valname, std::complex<double> val);
-void StdFace_NotUsed_J(const char* valname, double JAll, double J[3][3]);
+  void NotUsed_d(const char* valname, double val);
+  void NotUsed_i(const char* valname, int val);
+  void NotUsed_c(const char* valname, std::complex<double> val);
+  void NotUsed_J(const char* valname, double JAll, double J[3][3]);
 
-void StdFace_RequiredVal_i(const char* valname, int val);
-void StdFace_InputSpinNN(double J[3][3], double JAll, double J0[3][3], double J0All, const char *J0name);
-void StdFace_InputSpin(double Jp[3][3], double JpAll, const char *Jpname);
-void StdFace_InputCoulombV(double V, double *V0, const char *V0name);
-void StdFace_InputHopp(std::complex<double> t, std::complex<double> *t0, const char *t0name);
+  void RequiredVal_i(const char* valname, int val);
+  void InputSpinNN(double J[3][3], double JAll, double J0[3][3], double J0All, const char* J0name);
+  void InputSpin(double Jp[3][3], double JpAll, const char* Jpname);
+  void InputCoulombV(double V, double* V0, const char* V0name);
+  void InputHopp(std::complex<double> t, std::complex<double>* t0, const char* t0name);
 
-void StdFace_InitSite(FILE *fp, int dim);
-void StdFace_SetLabel(FILE *fp,
-  int iW, int iL, int diW, int diL, int isiteUC, int jsiteUC,
-  int *isite, int *jsite, int connect, std::complex<double> *Cphase, double *dR);
-void StdFace_PrintGeometry();
-void StdFace_FindSite(int iW, int iL, int iH, int diW, int diL, int diH,
-  int isiteUC, int jsiteUC,
-  int *isite, int *jsite, std::complex<double> *Cphase, double *dR);
-void StdFace_PrintXSF();
+  void InitSite(FILE* fp, int dim);
+  void SetLabel(FILE* fp,
+    int iW, int iL, int diW, int diL, int isiteUC, int jsiteUC,
+    int* isite, int* jsite, int connect, std::complex<double>* Cphase, double* dR);
+  void PrintGeometry();
+  void FindSite(int iW, int iL, int iH, int diW, int diL, int diH,
+    int isiteUC, int jsiteUC,
+    int* isite, int* jsite, std::complex<double>* Cphase, double* dR);
+  void PrintXSF();
+  static void FoldSite(int iCellV[3], int nBox[3], int iCellV_fold[3]);
 
-void StdFace_Tetragonal();
-void StdFace_Chain();
-void StdFace_Ladder();
-void StdFace_Triangular();
-void StdFace_Honeycomb();
-void StdFace_Kagome();
-void StdFace_Orthorhombic();
-void StdFace_FCOrtho();
-void StdFace_Pyrochlore();
-void StdFace_Wannier90();
+  void Tetragonal();
+  void Chain();
+  void Ladder();
+  void Triangular();
+  void Honeycomb();
+  void Kagome();
+  void Orthorhombic();
+  void FCOrtho();
+  void Pyrochlore();
+  void Wannier90();
 
 #if defined(_HPhi)
-void StdFace_Chain_Boost();
-void StdFace_Ladder_Boost();
-void StdFace_Honeycomb_Boost();
-void StdFace_Kagome_Boost();
+  void Chain_Boost();
+  void Ladder_Boost();
+  void Honeycomb_Boost();
+  void Kagome_Boost();
 #elif defined(_mVMC)
-void StdFace_generate_orb();
-void StdFace_Proj();
-void PrintJastrow();
+  void generate_orb();
+  void Proj();
+  void PrintJastrow();
 #endif
+}

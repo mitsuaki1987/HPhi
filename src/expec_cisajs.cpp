@@ -14,6 +14,7 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
+#include "expec_cisajs.hpp"
 #include "mltply.hpp"
 #include "FileIO.hpp"
 #include "bitcalc.hpp"
@@ -28,6 +29,7 @@
 #include "DefCommon.hpp"
 #include "global.hpp"
 #include "log.hpp"
+#include <complex>
 
 /**
  * @file
@@ -42,15 +44,8 @@
  */
 /**
  * @brief function of calculation for one body green's function for Hubbard GC model.
- *
- * @param X  [in] list for getting information to calculate one body green's function.
- * @param vec [in] eigenvector
- * @param _fp [in] pointer to output file
- * @retval 0 normally finished.
- * @retval -1 abnormally finished.
  */
-int expec_cisajs_HubbardGC(
-  
+void expec::cisajs::HubbardGC(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -104,9 +99,7 @@ int expec_cisajs_HubbardGC(
       }
     }
     else {
-      if (child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2) != 0) {
-        return -1;
-      }
+      child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
       GC_child_general_hopp(nstate, Xvec, vec, tmp_OneGreen);
     }
 
@@ -114,19 +107,13 @@ int expec_cisajs_HubbardGC(
     if (complex_conj == 1) 
       for (istate = 0; istate < nstate; istate++) prod[i][istate] = conj(prod[i][istate]);
   }
-  return 0;
 }
 /**
  * @brief function of calculation for one body green's function for Hubbard model.
- *
- * @param X  [in] list for getting information to calculate one body green's function.
- * @param vec [in] eigenvector
- * @param _fp [in] pointer to output file
  * @retval 0 normally finished.
  * @retval -1 abnormally finished.
  */
-int expec_cisajs_Hubbard(
-  
+void expec::cisajs::Hubbard(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -192,9 +179,7 @@ int expec_cisajs_Hubbard(
       }
     }
     else {
-      if (child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2) != 0) {
-        return -1;
-      }
+      child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {
         is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
 
@@ -215,19 +200,13 @@ shared(List::c1, vec,Xvec,nstate,one,tmp_OneGreen, i_max, is)
     if (complex_conj == 1)
       for (istate = 0; istate < nstate; istate++) prod[i][istate] = conj(prod[i][istate]);
   }
-  return 0;
 }
 /**
  * @brief function of calculation for one body green's function for Half-Spin model.
- *
- * @param X  [in] list for getting information to calculate one body green's function.
- * @param vec [in] eigenvector
- * @param _fp [in] pointer to output file
  * @retval 0 normally finished.
  * @retval -1 abnormally finished.
  */
-int expec_cisajs_SpinHalf(
-  
+void expec::cisajs::SpinHalf(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -273,19 +252,11 @@ shared(i_max, isite1, org_sigma1, vec,Xvec,nstate,one)
     }
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
   }
-  return 0;
 }
 /**
  * @brief function of calculation for one body green's function for General-Spin model.
- *
- * @param X  [in] list for getting information to calculate one body green's function.
- * @param vec [in] eigenvector
- * @param _fp [in] pointer to output file
- * @retval 0 normally finished.
- * @retval -1 abnormally finished.
  */
-int expec_cisajs_SpinGeneral(
-  
+void expec::cisajs::SpinGeneral(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -330,23 +301,15 @@ shared(i_max, org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow, vec,Xvec, List:
     }
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
   }
-  return 0;
 }
 /**
  * @brief function of calculation for one body green's function for Half-SpinGC model.
- *
- * @param X  [in] list for getting information to calculate one body green's function.
- * @param vec [in] eigenvector
- * @param _fp [in] pointer to output file
- * @retval 0 normally finished.
- * @retval -1 abnormally finished.
  */
-int expec_cisajs_SpinGCHalf(
-  
+void expec::cisajs::SpinGCHalf(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
-    std::complex<double> **prod
+  std::complex<double>** prod
 ) {
   long int i, j;
   long int isite1;
@@ -402,19 +365,11 @@ shared(i_max, isite1, org_sigma2, vec,Xvec,nstate,one)
     }
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
   }
-  return 0;
 }
 /**
  * @brief function of calculation for one body green's function for General SpinGC model.
- *
- * @param X  [in] list for getting information to calculate one body green's function.
- * @param vec [in] eigenvector
- * @param _fp [in] pointer to output file
- * @retval 0 normally finished.
- * @retval -1 abnormally finished.
  */
-int expec_cisajs_SpinGCGeneral(
-  
+void expec::cisajs::SpinGCGeneral(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec,
@@ -476,58 +431,6 @@ shared(i_max, org_isite1, org_sigma1, org_sigma2, tmp_off,Def::SiteToBit, Def::T
     }
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
   }
-  return 0;
-}
-/**
- * @brief function of calculation for one body green's function for Spin model.
- *
- * @param X  [in] list for getting information to calculate one body green's function.
- * @param vec [in] eigenvector
- * @param _fp [in] pointer to output file
- * @retval 0 normally finished.
- * @retval -1 abnormally finished.
- */
-int expec_cisajs_Spin(
-  
-  int nstate,
-  std::complex<double> **Xvec,
-  std::complex<double> **vec,
-  std::complex<double> **prod
-) {
-  int info = 0;
-  if (Def::iFlgGeneralSpin == FALSE) {
-    info = expec_cisajs_SpinHalf(nstate, Xvec, vec, prod);
-  }
-  else {
-    info = expec_cisajs_SpinGeneral(nstate, Xvec, vec, prod);
-  }
-  return info;
-}
-
-/**
- * @brief function of calculation for one body green's function for SpinGC model.
- *
- * @param X  [in] list for getting information to calculate one body green's function.
- * @param vec [in] eigenvector
- * @param _fp [in] pointer to output file
- * @retval 0 normally finished.
- * @retval -1 abnormally finished.
- */
-int expec_cisajs_SpinGC(
-  
-  int nstate,
-  std::complex<double> **Xvec,
-  std::complex<double> **vec,
-  std::complex<double> **prod
-) {
-  int info = 0;
-  if (Def::iFlgGeneralSpin == FALSE) {
-    info = expec_cisajs_SpinGCHalf(nstate, Xvec, vec, prod);
-  }
-  else {
-    info = expec_cisajs_SpinGCGeneral(nstate, Xvec, vec, prod);
-  }
-  return info;
 }
 /**
  * @brief function of calculation for one body green's function
@@ -544,8 +447,7 @@ int expec_cisajs_SpinGC(
  * @retval 0 normally finished.
  * @retval -1 abnormally finished.
  */
-int expec_cisajs(
-  
+int expec::cisajs::main(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec
@@ -587,33 +489,35 @@ int expec_cisajs(
   prod = cd_2d_allocate(Def::NCisAjt, nstate);
   switch (Def::iCalcModel) {
   case DC::HubbardGC:
-    if (expec_cisajs_HubbardGC(nstate, Xvec, vec, prod) != 0) {
-      return -1;
-    }
+    expec::cisajs::HubbardGC(nstate, Xvec, vec, prod);
     break;
 
   case DC::KondoGC:
   case DC::Hubbard:
   case DC::Kondo:
-    if (expec_cisajs_Hubbard(nstate, Xvec, vec, prod) != 0) {
-      return -1;
-    }
+    expec::cisajs::Hubbard(nstate, Xvec, vec, prod);
     break;
 
   case DC::Spin: // for the Sz-conserved spin system
-    if (expec_cisajs_Spin(nstate, Xvec, vec, prod) != 0) {
-      return -1;
+    if (Def::iFlgGeneralSpin == FALSE) {
+      expec::cisajs::SpinHalf(nstate, Xvec, vec, prod);
+    }
+    else {
+      expec::cisajs::SpinGeneral(nstate, Xvec, vec, prod);
     }
     break;
 
   case DC::SpinGC:
-    if (expec_cisajs_SpinGC(nstate, Xvec, vec, prod) != 0) {
-      return -1;
+    if (Def::iFlgGeneralSpin == FALSE) {
+      expec::cisajs::SpinGCHalf(nstate, Xvec, vec, prod);
+    }
+    else {
+      expec::cisajs::SpinGCGeneral(nstate, Xvec, vec, prod);
     }
     break;
 
   default:
-    return -1;
+    break;
   }
 
   for (istate = 0; istate < nstate; istate++) {

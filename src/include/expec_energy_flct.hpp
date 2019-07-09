@@ -16,4 +16,12 @@
 
 #include <complex>
 
-int expec_energy_flct(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+namespace expec {
+  namespace energy_flct {
+    void HubbardGC(int nstate, std::complex<double>** tmp_v0);
+    void Hubbard(int nstate, std::complex<double>** tmp_v0);
+    void HalfSpinGC(int nstate, std::complex<double>** tmp_v0);
+    void GeneralSpinGC(int nstate, std::complex<double>** tmp_v0);
+    int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+  }
+}

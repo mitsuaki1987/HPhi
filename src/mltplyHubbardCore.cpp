@@ -28,12 +28,10 @@
 
 /**
 @brief Compute mask for bit operation of hopping term.
-@return Error-code, always return 0
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int child_general_hopp_GetInfo(
-  //!<[inout]
+void child_general_hopp_GetInfo(
   long int isite1,//!<[in] Site index
   long int isite2,//!<[in] Site index
   long int sigma1,//!<[in] Spin index
@@ -66,16 +64,13 @@ int child_general_hopp_GetInfo(
   Compute mask for hopping (LargeList::isA_spin)
   */
   Large::isA_spin = Large::is1_spin + Large::is2_spin;
-  return 0;
 }/*int child_general_hopp_GetInfo*/
 /**
 @brief Compute mask for bit operation of general interaction term.
-@return Error-code, always return 0
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int child_general_int_GetInfo(
-  //!<[inout]
+void child_general_int_GetInfo(
   long int isite1,//!<[in] Site index
   long int isite2,//!<[in] Site index
   long int isite3,//!<[in] Site index
@@ -157,16 +152,13 @@ int child_general_int_GetInfo(
   Large::isite2 = isite2;
   Large::isite3 = isite3;
   Large::isite4 = isite4;
-
-  return 0;
 }/*int child_general_int_GetInfo*/
 /**
 @brief Compute mask for bit operation of pairhop term.
-@return Error-code, always return 0
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int child_pairhopp_GetInfo(
+void child_pairhopp_GetInfo(
   int iPairHopp//!<[in] Index of pairhopp interaction
 ) {
   int isite1 = Def::PairHopping[iPairHopp][0] + 1;
@@ -184,16 +176,13 @@ int child_pairhopp_GetInfo(
   Large::is1_down = Def::Tpow[2 * isite1 - 1];
   Large::is2_up = Def::Tpow[2 * isite2 - 2];
   Large::is2_down = Def::Tpow[2 * isite2 - 1];
-
-  return 0;
 }/*int child_pairhopp_GetInfo*/
 /**
 @brief Compute mask for bit operation of exchange term.
-@return Error-code, always return 0
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int child_exchange_GetInfo(
+void child_exchange_GetInfo(
   int iExchange//!<[in] Index of exchange interaction
 ) {
   int isite1 = Def::ExchangeCoupling[iExchange][0] + 1;
@@ -211,8 +200,6 @@ int child_exchange_GetInfo(
   Large::is1_down = Def::Tpow[2 * isite1 - 1];
   Large::is2_up = Def::Tpow[2 * isite2 - 2];
   Large::is2_down = Def::Tpow[2 * isite2 - 1];
-
-  return 0;
 }/*int child_exchange_GetInfo*/
 
 /******************************************************************************/

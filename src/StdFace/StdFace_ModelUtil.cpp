@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /**@file
 @brief Various utility for constructing models
 */
+#include "StdFace_ModelUtil.hpp"
 #include "StdFace_vals.hpp"
 #include <cstdio>
 #include <cstdlib>
@@ -33,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @brief MPI Abortation wrapper
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_exit(int errorcode//!< [in]
+void StdFace::exit(int errorcode//!< [in]
 )
 {
   int ierr = 0;
@@ -53,7 +54,7 @@ set StdI::trans and StdI::transindx and
 increment StdI::ntrans
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_trans(
+void StdFace::trans(
   std::complex<double> trans0,//!<[in] Hopping integral @f$t, mu@f$, etc.
   int isite,//!<[in] @f$i@f$ for @f$c_{i \sigma}^\dagger@f$
   int ispin,//!<[in] @f$\sigma@f$ for @f$c_{i \sigma}^\dagger@f$
@@ -63,12 +64,12 @@ void StdFace_trans(
 {
   StdI::trans.push_back(trans0);
   StdI::transindx.push_back(std::vector<int>{isite, ispin, jsite, jspin});
-}/*void StdFace_trans*/
+}/*void StdFace::trans*/
 /**
 @brief Add Hopping for the both spin
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_Hopping(
+void StdFace::Hopping(
   std::complex<double> trans0,//!<[in] Hopping integral @f$t@f$
   int isite,//!<[in] @f$i@f$ for @f$c_{i \sigma}^\dagger@f$
   int jsite,//!<[in] @f$j@f$ for @f$c_{j \sigma}@f$
@@ -103,16 +104,16 @@ void StdFace_Hopping(
   else
 #endif
     for (ispin = 0; ispin < 2; ispin++) {
-      StdFace_trans(trans0, jsite, ispin, isite, ispin);
-      StdFace_trans(conj(trans0), isite, ispin, jsite, ispin);
+      StdFace::trans(trans0, jsite, ispin, isite, ispin);
+      StdFace::trans(conj(trans0), isite, ispin, jsite, ispin);
     }/*for (ispin = 0; ispin < 2; ispin++)*/
-}/*void StdFace_Hopping*/
+}/*void StdFace::Hopping*/
 /**
 @brief Add intra-Coulomb, magnetic field, chemical potential for the
 itenerant electron
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_HubbardLocal(
+void StdFace::HubbardLocal(
   double mu0,//!<[in] Chemical potential
   double h0,//!<[in] Longitudinal magnetic feild
   double Gamma0,//!<[in] Transvers magnetic feild
@@ -120,10 +121,10 @@ void StdFace_HubbardLocal(
   int isite//!<[in] i for @f$c_{i \sigma}^\dagger@f$
 )
 {
-  StdFace_trans(mu0 + 0.5 * h0, isite, 0, isite, 0);
-  StdFace_trans(mu0 - 0.5 * h0, isite, 1, isite, 1);
-  StdFace_trans(-0.5 * Gamma0, isite, 1, isite, 0);
-  StdFace_trans(-0.5 * Gamma0, isite, 0, isite, 1);
+  StdFace::trans(mu0 + 0.5 * h0, isite, 0, isite, 0);
+  StdFace::trans(mu0 - 0.5 * h0, isite, 1, isite, 1);
+  StdFace::trans(-0.5 * Gamma0, isite, 1, isite, 0);
+  StdFace::trans(-0.5 * Gamma0, isite, 0, isite, 1);
   /**@brief
   Set StdI::Cintra and StdI::CintraIndx
   with the input argument and increase the number
@@ -131,12 +132,12 @@ void StdFace_HubbardLocal(
   */
   StdI::Cintra.push_back(U0);
   StdI::CintraIndx.push_back(isite);
-}/*void StdFace_HubbardLocal*/
+}/*void StdFace::HubbardLocal*/
 /**
 @brief Add longitudinal and transvars magnetic field to the list
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_MagField(
+void StdFace::MagField(
   int S2,//!<[in] Spin moment in @f$i@f$ site
   double h,//!<[in] Longitudinal magnetic field @f$h@f$
   double Gamma,//!<[in] Transvars magnetic field @f$h@f$
@@ -158,7 +159,7 @@ void StdFace_MagField(
     @f]
     */
     Sz = (double)ispin - S;
-    StdFace_trans(-h * Sz, isite, ispin, isite, ispin);
+    StdFace::trans(-h * Sz, isite, ispin, isite, ispin);
     /**@brief
     Transvars part
     @f[
@@ -170,20 +171,20 @@ void StdFace_MagField(
     @f]
     */
     if (ispin < S2) {
-      StdFace_trans(-0.5 * Gamma * sqrt(S*(S + 1.0) - Sz*(Sz + 1.0)),
+      StdFace::trans(-0.5 * Gamma * sqrt(S*(S + 1.0) - Sz*(Sz + 1.0)),
         isite, ispin + 1, isite, ispin);
-      StdFace_trans(-0.5 * Gamma * sqrt(S*(S + 1.0) - Sz*(Sz + 1.0)),
+      StdFace::trans(-0.5 * Gamma * sqrt(S*(S + 1.0) - Sz*(Sz + 1.0)),
         isite, ispin, isite, ispin + 1);
     }/*if (ispin < S2)*/
   }/*for (ispin = 0; ispin <= S2; ispin++)*/
-}/*void StdFace_MagField*/
+}/*void StdFace::MagField*/
 /**
 @brief Add interaction (InterAll) to the list
 Set StdI::intr and StdI::intrindx and
 increase the number of that (StdI::nintr).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_intr(
+void StdFace::intr(
   std::complex<double> intr0,//!<[in] Interaction @f$U, V, J@f$, etc.
   int site1,//!<[in] @f$i_1@f$ for @f$c_{i_1 \sigma_1}^\dagger@f$
   int spin1,//!<[in] @f$sigma1_1@f$ for @f$c_{i_1 \sigma_1}^\dagger@f$
@@ -198,12 +199,12 @@ void StdFace_intr(
   StdI::intr.push_back(intr0);
   StdI::intrindx.push_back(std::vector<int>
   {site1, spin1, site2, spin2, site3, spin3, site4, spin4});
-}/*void StdFace_intr*/
+}/*void StdFace::intr*/
 /**
 @brief Treat J as a 3*3 matrix [(6S + 1)*(6S' + 1) interactions]
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_GeneralJ(
+void StdFace::GeneralJ(
   double J[3][3],//!<[in] The Spin interaction @f$J_x, J_{xy}@f$, ...
   int Si2,//!<[in] Spin moment in @f$i@f$ site
   int Sj2,//!<[in] Spin moment in @f$j@f$ site
@@ -281,7 +282,7 @@ void StdFace_GeneralJ(
       */
       if (ZGeneral == 1) {
         intr0 = J[2][2] * Siz * Sjz;
-        StdFace_intr(intr0,
+        StdFace::intr(intr0,
           isite, ispin, isite, ispin, jsite, jspin, jsite, jspin);
       }
       /**@brief (2)
@@ -299,9 +300,9 @@ void StdFace_GeneralJ(
         intr0 = 0.25 * std::complex<double>(J[0][0] + J[1][1], J[0][1] - J[1][0])
           * sqrt(Si * (Si + 1.0) - Siz * (Siz + 1.0))
           * sqrt(Sj * (Sj + 1.0) - Sjz * (Sjz + 1.0));
-        StdFace_intr(intr0,
+        StdFace::intr(intr0,
           isite, ispin + 1, isite, ispin, jsite, jspin, jsite, jspin + 1);
-        StdFace_intr(conj(intr0),
+        StdFace::intr(conj(intr0),
           isite, ispin, isite, ispin + 1, jsite, jspin + 1, jsite, jspin);
       }
       /**@brief (3)
@@ -319,9 +320,9 @@ void StdFace_GeneralJ(
         intr0 = 0.5 * 0.5 * std::complex<double>(J[0][0] - J[1][1], - (J[0][1] + J[1][0]))
           * sqrt(Si * (Si + 1.0) - Siz * (Siz + 1.0))
           * sqrt(Sj * (Sj + 1.0) - Sjz * (Sjz + 1.0));
-        StdFace_intr(intr0,
+        StdFace::intr(intr0,
           isite, ispin + 1, isite, ispin, jsite, jspin + 1, jsite, jspin);
-        StdFace_intr(conj(intr0),
+        StdFace::intr(conj(intr0),
           isite, ispin, isite, ispin + 1, jsite, jspin, jsite, jspin + 1);
       }
       /**@brief (4)
@@ -336,9 +337,9 @@ void StdFace_GeneralJ(
       */
       if (ispin < Si2) {
         intr0 = 0.5 * std::complex<double>(J[0][2], - J[1][2]) * sqrt(Si * (Si + 1.0) - Siz * (Siz + 1.0)) * Sjz;
-        StdFace_intr(intr0,
+        StdFace::intr(intr0,
           isite, ispin + 1, isite, ispin, jsite, jspin, jsite, jspin);
-        StdFace_intr(conj(intr0),
+        StdFace::intr(conj(intr0),
           jsite, jspin, jsite, jspin, isite, ispin, isite, ispin + 1);
       }/*if (ispin < Si2)*/
       /**@brief (5)
@@ -353,21 +354,21 @@ void StdFace_GeneralJ(
       */
       if (jspin < Sj2) {
         intr0 = 0.5 * std::complex<double>(J[2][0], - J[2][1]) * Siz * sqrt(Sj * (Sj + 1.0) - Sjz * (Sjz + 1.0));
-        StdFace_intr(intr0,
+        StdFace::intr(intr0,
           isite, ispin, isite, ispin, jsite, jspin + 1, jsite, jspin);
-        StdFace_intr(conj(intr0),
+        StdFace::intr(conj(intr0),
           jsite, jspin, jsite, jspin + 1, isite, ispin, isite, ispin);
       }/*if (jspin < Sj2)*/
     }/*for (jspin = 0; jspin <= Sj2; jspin++)*/
   }/*for (ispin = 0; ispin <= Si2; ispin++)*/
-}/*StdFace_GeneralJ*/
+}/*StdFace::GeneralJ*/
 /**
 @brief Add onsite/offsite Coulomb term to the list
 StdI::Cinter and StdI::CinterIndx,
 and increase the number of them (StdI::NCinter).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_Coulomb(
+void StdFace::Coulomb(
   double V,//!<[in] Coulomb integral U, V, etc.
   int isite,//!<[in] i of n_i
   int jsite//!<[in] j of n_j
@@ -375,14 +376,14 @@ void StdFace_Coulomb(
 {
   StdI::Cinter.push_back(V);
   StdI::CinterIndx.push_back(std::vector<int>{isite, jsite});
-}/*void StdFace_Coulomb*/
+}/*void StdFace::Coulomb*/
 /**
 @brief Print a valiable (real) read from the input file
 if it is not specified in the input file (=NaN), 
 set the default value.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_PrintVal_d(
+void StdFace::PrintVal_d(
   const char* valname,//!<[in] Name of the valiable
   double *val,//!<[inout] Valiable to be set 
   double val0//!<[in] The default value
@@ -393,14 +394,14 @@ void StdFace_PrintVal_d(
     fprintf(stdout, "  %15s = %-10.5f  ######  DEFAULT VALUE IS USED  ######\n", valname, *val);
   }
   else fprintf(stdout, "  %15s = %-10.5f\n", valname, *val);
-}/*void StdFace_PrintVal_d*/
+}/*void StdFace::PrintVal_d*/
 /**
 @brief Print a valiable (real) read from the input file
 if it is not specified in the input file (=NaN),
 set the default value.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_PrintVal_dd(
+void StdFace::PrintVal_dd(
   char* valname,//!<[in] Name of the valiable
   double *val,//!<[inout] Valiable to be set
   double val0,//!<[in] The primary default value, possible not to be specified
@@ -416,14 +417,14 @@ void StdFace_PrintVal_dd(
     fprintf(stdout, "  %15s = %-10.5f  ######  DEFAULT VALUE IS USED  ######\n", valname, *val);
   }
   else fprintf(stdout, "  %15s = %-10.5f\n", valname, *val);
-}/*void StdFace_PrintVal_dd*/
+}/*void StdFace::PrintVal_dd*/
 /**
 @brief Print a valiable (complex) read from the input file
 if it is not specified in the input file (=NaN),
 set the default value.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_PrintVal_c(
+void StdFace::PrintVal_c(
   const char* valname,//!<[in] Name of the valiable
   std::complex<double> *val,//!<[inout] Valiable to be set
   std::complex<double> val0//!<[in] The default value
@@ -434,14 +435,14 @@ void StdFace_PrintVal_c(
     fprintf(stdout, "  %15s = %-10.5f %-10.5f  ######  DEFAULT VALUE IS USED  ######\n", valname, real(*val), imag(*val));
   }
   else fprintf(stdout, "  %15s = %-10.5f %-10.5f\n", valname, real(*val), imag(*val));
-}/*void StdFace_PrintVal_c*/
+}/*void StdFace::PrintVal_c*/
 /**
 @brief Print a valiable (integer) read from the input file
 if it is not specified in the input file (=2147483647, the upper limt of Int)
 set the default value.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_PrintVal_i(
+void StdFace::PrintVal_i(
   const char* valname,//!<[in] Name of the valiable
   int *val,//!<[inout] Valiable to be set
   int val0//!<[in] The default value
@@ -454,13 +455,13 @@ void StdFace_PrintVal_i(
     fprintf(stdout, "  %15s = %-10d  ######  DEFAULT VALUE IS USED  ######\n", valname, *val);
   }
   else fprintf(stdout, "  %15s = %-10d\n", valname, *val);
-}/*void StdFace_PrintVal_i*/
+}/*void StdFace::PrintVal_i*/
 /**
 @brief Stop HPhi if a variable (real) not used is specified
 in the input file (!=NaN).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_NotUsed_d(
+void StdFace::NotUsed_d(
   const char* valname,//!<[in] Name of the valiable
   double val//!<[in]
 )
@@ -469,15 +470,15 @@ void StdFace_NotUsed_d(
     fprintf(stdout, "\n Check !  %s is SPECIFIED but will NOT be USED. \n", valname);
     fprintf(stdout, "            Please COMMENT-OUT this line \n");
     fprintf(stdout, "            or check this input is REALLY APPROPRIATE for your purpose ! \n\n");
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
-}/*void StdFace_NotUsed_d*/
+}/*void StdFace::NotUsed_d*/
 /**
 @brief Stop HPhi if a variable (complex) not used is specified
 in the input file (!=NaN).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_NotUsed_c(
+void StdFace::NotUsed_c(
   const char* valname,//!<[in] Name of the valiable
   std::complex<double> val//!<[in]
 )
@@ -486,15 +487,15 @@ void StdFace_NotUsed_c(
     fprintf(stdout, "\n Check !  %s is SPECIFIED but will NOT be USED. \n", valname);
     fprintf(stdout, "            Please COMMENT-OUT this line \n");
     fprintf(stdout, "            or check this input is REALLY APPROPRIATE for your purpose ! \n\n");
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
-}/*void StdFace_NotUsed_c*/
+}/*void StdFace::NotUsed_c*/
 /**
 @brief Stop HPhi if variables (real) not used is specified
 in the input file (!=NaN).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_NotUsed_J(
+void StdFace::NotUsed_J(
   const char* valname,//!<[in] Name of the valiable*/,
   double JAll,//!<[in]*/,
   double J[3][3]//!<[in]
@@ -513,20 +514,20 @@ void StdFace_NotUsed_J(
   sprintf(Jname[2][1], "%szy", valname);
   sprintf(Jname[2][2], "%sz", valname);
 
-  StdFace_NotUsed_d(valname, JAll);
+  StdFace::NotUsed_d(valname, JAll);
 
   for (i1 = 0; i1 < 3; i1++) {
     for (i2 = 0; i2 < 3; i2++) {
-      StdFace_NotUsed_d(Jname[i1][i2], J[i1][i2]);
+      StdFace::NotUsed_d(Jname[i1][i2], J[i1][i2]);
     }/*for (j = 0; j < 3; j++)*/
   }/*for (i = 0; i < 3; i++)*/
-}/*void StdFace_NotUsed_J*/
+}/*void StdFace::NotUsed_J*/
 /**
 @brief Stop HPhi if a variable (integer) not used is specified
 in the input file (!=2147483647, the upper limt of Int).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_NotUsed_i(
+void StdFace::NotUsed_i(
   const char* valname,//!<[in] Name of the valiable
   int val//!<[in]
 )
@@ -537,15 +538,15 @@ void StdFace_NotUsed_i(
     fprintf(stdout, "\n Check !  %s is SPECIFIED but will NOT be USED. \n", valname);
     fprintf(stdout, "            Please COMMENT-OUT this line \n");
     fprintf(stdout, "            or check this input is REALLY APPROPRIATE for your purpose ! \n\n");
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
-}/*void StdFace_NotUsed_i*/
+}/*void StdFace::NotUsed_i*/
 /**
 @brief Stop HPhi if a variable (integer) which must be specified
 is absent in the input file (=2147483647, the upper limt of Int).
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_RequiredVal_i(
+void StdFace::RequiredVal_i(
   const char* valname,//!<[in] Name of the valiable
   int val//!<[in]
 )
@@ -554,16 +555,16 @@ void StdFace_RequiredVal_i(
 
   if (val == NaN_i){
     fprintf(stdout, "ERROR ! %s is NOT specified !\n", valname);
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   else fprintf(stdout, "  %15s = %-3d\n", valname, val);
-}/*void StdFace_RequiredVal_i*/
+}/*void StdFace::RequiredVal_i*/
 /**
 @brief Move a site into the original supercell if it is outside the 
 original supercell.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-static void StdFace_FoldSite(
+static void StdFace::FoldSite(
   int iCellV[3],//!<[in] The fractional coordinate of a site
   int nBox[3], //!<[out] the index of supercell
   int iCellV_fold[3]/**<[out] The fractional coordinate of a site 
@@ -594,12 +595,12 @@ static void StdFace_FoldSite(
     for (jj = 0; jj < 3; jj++) iCellV_fold[ii] += StdI::box[jj][ii] * iCellV_frac[jj];
     iCellV_fold[ii] = (iCellV_fold[ii] + StdI::NCell * 1000) / StdI::NCell - 1000;
   }/*for (ii = 0; ii < 3; ii++)*/
-}/*static void StdFace_FoldSite*/
+}/*static void StdFace::FoldSite*/
 /**
 @brief Initialize the super-cell where simulation is performed.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_InitSite(
+void StdFace::InitSite(
   FILE *fp,//!<[in] File pointer to lattice.gp
   int dim//!<[in] dimension of system, if = 2, print lattice.gp
 )
@@ -622,13 +623,13 @@ void StdFace_InitSite(
     )
   {
     fprintf(stdout, "\nERROR ! (L, W, Height) and (a0W, ..., a2H) conflict !\n\n");
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   else if (StdI::L != StdI::NaN_i || StdI::W != StdI::NaN_i || StdI::Height != StdI::NaN_i)
   {
-    StdFace_PrintVal_i("L", &StdI::L, 1);
-    StdFace_PrintVal_i("W", &StdI::W, 1);
-    StdFace_PrintVal_i("Height", &StdI::Height, 1);
+    StdFace::PrintVal_i("L", &StdI::L, 1);
+    StdFace::PrintVal_i("W", &StdI::W, 1);
+    StdFace::PrintVal_i("Height", &StdI::Height, 1);
     for (ii = 0; ii < 3; ii++) for (jj = 0; jj < 3; jj++)
       StdI::box[ii][jj] = 0;
     StdI::box[0][0] = StdI::W;
@@ -637,15 +638,15 @@ void StdFace_InitSite(
   }
   else
   {
-    StdFace_PrintVal_i("a0W", &StdI::box[0][0], 1);
-    StdFace_PrintVal_i("a0L", &StdI::box[0][1], 0);
-    StdFace_PrintVal_i("a0H", &StdI::box[0][2], 0);
-    StdFace_PrintVal_i("a1W", &StdI::box[1][0], 0);
-    StdFace_PrintVal_i("a1L", &StdI::box[1][1], 1);
-    StdFace_PrintVal_i("a1H", &StdI::box[1][2], 0);
-    StdFace_PrintVal_i("a2W", &StdI::box[2][0], 0);
-    StdFace_PrintVal_i("a2L", &StdI::box[2][1], 0);
-    StdFace_PrintVal_i("a2H", &StdI::box[2][2], 1);
+    StdFace::PrintVal_i("a0W", &StdI::box[0][0], 1);
+    StdFace::PrintVal_i("a0L", &StdI::box[0][1], 0);
+    StdFace::PrintVal_i("a0H", &StdI::box[0][2], 0);
+    StdFace::PrintVal_i("a1W", &StdI::box[1][0], 0);
+    StdFace::PrintVal_i("a1L", &StdI::box[1][1], 1);
+    StdFace::PrintVal_i("a1H", &StdI::box[1][2], 0);
+    StdFace::PrintVal_i("a2W", &StdI::box[2][0], 0);
+    StdFace::PrintVal_i("a2L", &StdI::box[2][1], 0);
+    StdFace::PrintVal_i("a2H", &StdI::box[2][2], 1);
   }
   /*
    Parameters for the 3D system will not used.
@@ -689,7 +690,7 @@ void StdFace_InitSite(
   }
   printf("   Number of Cell = %d\n", abs(StdI::NCell));
   if (StdI::NCell == 0) {
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
 
   for (ii = 0; ii < 3; ii++) {
@@ -733,7 +734,7 @@ void StdFace_InitSite(
   for (iCellV[2] = bound[2][0]; iCellV[2] <= bound[2][1]; iCellV[2]++) {
     for (iCellV[1] = bound[1][0]; iCellV[1] <= bound[1][1]; iCellV[1]++) {
       for (iCellV[0] = bound[0][0]; iCellV[0] <= bound[0][1]; iCellV[0]++) {
-        StdFace_FoldSite(iCellV, nBox, iCellV_fold);
+        StdFace::FoldSite(iCellV, nBox, iCellV_fold);
         if (nBox[0] == 0 && nBox[1] == 0 && nBox[2] == 0) {
           for (ii = 0; ii < 3; ii++)
             StdI::Cell[jj][ii] = iCellV[ii];
@@ -785,11 +786,11 @@ void StdFace_InitSite(
     fprintf(fp, "set arrow from %f, %f to %f, %f nohead front ls 3\n", pos[3][0], pos[3][1], pos[2][0], pos[2][1]);
     fprintf(fp, "set arrow from %f, %f to %f, %f nohead front ls 3\n", pos[2][0], pos[2][1], pos[0][0], pos[0][1]);
   }/*if (dim == 2)*/
-}/*void StdFace_InitSite2D*/
+}/*void StdFace::InitSite2D*/
 /**
 @brief Find the index of transfer and interaction
 */
-void StdFace_FindSite(
+void StdFace::FindSite(
   int iW,//!<[in] position of initial site
   int iL,//!<[in] position of initial site
   int iH,//!<[in] position of initial site
@@ -814,7 +815,7 @@ void StdFace_FindSite(
   jCellV[0] = iW + diW;
   jCellV[1] = iL + diL;
   jCellV[2] = iH + diH;
-  StdFace_FoldSite(jCellV, nBox, jCellV);
+  StdFace::FoldSite(jCellV, nBox, jCellV);
   *Cphase = 1.0;
   for (ii = 0; ii < 3; ii++) *Cphase *= pow(StdI::ExpPhase[ii], (double)nBox[ii]);
   /**/
@@ -838,11 +839,11 @@ void StdFace_FindSite(
     *isite += StdI::NCell * StdI::NsiteUC;
     *jsite += StdI::NCell * StdI::NsiteUC;
   }
-}/*void StdFace_FindSite*/
+}/*void StdFace::FindSite*/
 /**
 @brief Set Label in the gnuplot display (Only used in 2D system)
 */
-void StdFace_SetLabel(
+void StdFace::SetLabel(
   FILE *fp,//!<[in] File pointer to lattice.gp
   int iW,//!<[in] position of initial site
   int iL,//!<[in] position of initial site
@@ -861,7 +862,7 @@ void StdFace_SetLabel(
   /**@brief
   First print the reversed one
   */
-  StdFace_FindSite(iW, iL, 0, -diW, -diL, 0, jsiteUC, isiteUC, isite, jsite, Cphase, dR);
+  StdFace::FindSite(iW, iL, 0, -diW, -diL, 0, jsiteUC, isiteUC, isite, jsite, Cphase, dR);
 
   xi = StdI::direct[0][0] * ((double)iW + StdI::tau[jsiteUC][0])
      + StdI::direct[1][0] * ((double)iL + StdI::tau[jsiteUC][1]);
@@ -882,7 +883,7 @@ void StdFace_SetLabel(
   /**@brief
   Then print the normal one, these are different when they cross boundary.
   */
-  StdFace_FindSite(iW, iL, 0, diW, diL, 0, isiteUC, jsiteUC, isite, jsite, Cphase, dR);
+  StdFace::FindSite(iW, iL, 0, diW, diL, 0, isiteUC, jsiteUC, isite, jsite, Cphase, dR);
 
   xi = StdI::direct[1][0] * ((double)iL + StdI::tau[isiteUC][1])
      + StdI::direct[0][0] * ((double)iW + StdI::tau[isiteUC][0]);
@@ -900,11 +901,11 @@ void StdFace_SetLabel(
   else            fprintf(fp, "set label \"%2d\" at %f, %f center front\n", *jsite, xj, yj);
   if (connect < 3)
     fprintf(fp, "set arrow from %f, %f to %f, %f nohead ls %d\n", xi, yi, xj, yj, connect);
-}/*void StdFace_SetLabel*/
+}/*void StdFace::SetLabel*/
 /**
 @brief Print lattice.xsf (XCrysDen format) 
 */
-void StdFace_PrintXSF() {
+void StdFace::PrintXSF() {
   FILE *fp;
   int ii, jj, kk, isite, iCell;
   double vec[3];
@@ -935,11 +936,11 @@ void StdFace_PrintXSF() {
   }
   fflush(fp);
   fclose(fp);
-}/*void StdFace_PrintXSF*/
+}/*void StdFace::PrintXSF*/
 /**
 @brief Input nearest-neighbor spin-spin interaction
 */
-void StdFace_InputSpinNN(
+void StdFace::InputSpinNN(
   double J[3][3],//!<[in] The anisotropic spin interaction
   double JAll,//!<[in] The isotropic interaction
   double J0[3][3],//!<[in] The anisotropic spin interaction
@@ -962,28 +963,28 @@ void StdFace_InputSpinNN(
 
   if (std::isnan(JAll) == 0 && std::isnan(J0All)  == 0) {
     fprintf(stdout, "\n ERROR! %s conflict !\n\n", J0name);
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   for (i1 = 0; i1 < 3; i1++) {
     for (i2 = 0; i2 < 3; i2++) {
       if (std::isnan(JAll) == 0 && std::isnan(J[i1][i2]) == 0) {
         fprintf(stdout, "\n ERROR! J%s conflict !\n\n", Jname[i1][i2]);
-        StdFace_exit(-1);
+        StdFace::exit(-1);
       }
       else if (std::isnan(J0All) == 0 && std::isnan(J[i1][i2]) == 0) {
         fprintf(stdout, "\n ERROR! %s and J%s conflict !\n\n",
           J0name, Jname[i1][i2]);
-        StdFace_exit(-1);
+        StdFace::exit(-1);
       }
       else if (std::isnan(J0All) == 0 && std::isnan(J0[i1][i2]) == 0) {
         fprintf(stdout, "\n ERROR! %s and %s%s conflict !\n\n", J0name,
           J0name, Jname[i1][i2]);
-        StdFace_exit(-1);
+        StdFace::exit(-1);
       }
       else if (std::isnan(J0[i1][i2]) == 0 && std::isnan(JAll) == 0) {
         fprintf(stdout, "\n ERROR! %s%s conflict !\n\n",
           J0name, Jname[i1][i2]);
-        StdFace_exit(-1);
+        StdFace::exit(-1);
       }
     }/*for (j = 0; j < 3; j++)*/
   }/*for (i = 0; i < 3; i++)*/
@@ -995,7 +996,7 @@ void StdFace_InputSpinNN(
           if (std::isnan(J0[i1][i2]) == 0 && std::isnan(J[i3][i4]) == 0) {
             fprintf(stdout, "\n ERROR! %s%s and J%s conflict !\n\n", 
               J0name, Jname[i1][i2], Jname[i3][i4]);
-            StdFace_exit(-1);
+            StdFace::exit(-1);
           }
         }/*for (i4 = 0; i4 < 3; i4++)*/
       }/*for (i3 = 0; i3 < 3; i3++)*/
@@ -1023,11 +1024,11 @@ void StdFace_InputSpinNN(
       }
     }/*for (i2 = 0; i2 < 3; i2++)*/
   }/*for (i = 0; i < 3; i++)*/
-}/*void StdFace_InputSpinNN*/
+}/*void StdFace::InputSpinNN*/
 /**
 @brief Input spin-spin interaction other than nearest-neighbor
 */
-void StdFace_InputSpin(
+void StdFace::InputSpin(
   double Jp[3][3],//!<[in] Fully anisotropic spin interaction
   double JpAll,//!<[in] The isotropic interaction
   const char *Jpname//!<The name of this spin interaction(e.g.J')
@@ -1051,7 +1052,7 @@ void StdFace_InputSpin(
       if (std::isnan(JpAll) == 0 && std::isnan(Jp[i1][i2]) == 0) {
         fprintf(stdout, "\n ERROR! %s and %s%s conflict !\n\n", Jpname,
           Jpname, Jname[i1][i2]);
-        StdFace_exit(-1);
+        StdFace::exit(-1);
       }
     }/*for (j = 0; j < 3; j++)*/
   }/*for (i = 0; i < 3; i++)*/
@@ -1069,13 +1070,13 @@ void StdFace_InputSpin(
       }
     }/*for (i2 = 0; i2 < 3; i2++)*/
   }/*for (i = 0; i < 3; i++)*/
-}/*void StdFace_InputSpin*/
+}/*void StdFace::InputSpin*/
 /**
 @brief Input off-site Coulomb interaction from the 
 input file, if it is not specified, use the default value (0
 or the isotropic Coulomb interaction StdI::V).
 */
-void StdFace_InputCoulombV(
+void StdFace::InputCoulombV(
   double V,//!<[in]
   double *V0,//!<[in]
   const char *V0name//!<[in] E.g. V1
@@ -1083,7 +1084,7 @@ void StdFace_InputCoulombV(
 {
   if (std::isnan(V) == 0 && std::isnan(*V0) == 0) {
     fprintf(stdout, "\n ERROR! %s conflicts !\n\n", V0name);
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   else if (std::isnan(*V0) == 0)
     fprintf(stdout, "  %15s = %-10.5f\n", V0name, *V0);
@@ -1094,13 +1095,13 @@ void StdFace_InputCoulombV(
   else {
     *V0 = 0.0;
   }
-}/*void StdFace_InputCoulombV*/
+}/*void StdFace::InputCoulombV*/
 /**
 @brief Input hopping integral from the
 input file, if it is not specified, use the default value(0
 or the isotropic hopping StdI::V).
 */
-void StdFace_InputHopp(
+void StdFace::InputHopp(
   std::complex<double> t,//!<[in]
   std::complex<double> *t0,//!<[in]
   const char *t0name//!<[in] E.g. t1
@@ -1108,7 +1109,7 @@ void StdFace_InputHopp(
 {
   if (std::isnan(real(t)) == 0 && std::isnan(real(*t0)) == 0) {
     fprintf(stdout, "\n ERROR! %s conflicts !\n\n", t0name);
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   else if (std::isnan(real(*t0)) == 0)
     fprintf(stdout, "  %15s = %-10.5f %-10.5f\n", t0name, real(*t0), imag(*t0));
@@ -1119,11 +1120,11 @@ void StdFace_InputHopp(
   else {
     *t0 = 0.0;
   }
-}/*void StdFace_InputHopp*/
+}/*void StdFace::InputHopp*/
 /**
 @brief Print geometry of sites for the pos-process of correlation function
 */
-void StdFace_PrintGeometry() {
+void StdFace::PrintGeometry() {
   FILE *fp;
   int isite, iCell, ii;
 
@@ -1160,13 +1161,13 @@ void StdFace_PrintGeometry() {
   }
   fflush(fp);
   fclose(fp);
-}/*void StdFace_PrintGeometry()*/
+}/*void StdFace::PrintGeometry()*/
 #if defined(_mVMC)
 /**
 @brief Define whether the specified site is in the unit cell or not.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-static void StdFace_FoldSiteSub(
+static void StdFace::FoldSiteSub(
   int iCellV[3],//!<[in]
   int nBox[3], //!<[out]
   int iCellV_fold[3]//!<[out]
@@ -1196,12 +1197,12 @@ static void StdFace_FoldSiteSub(
     for (jj = 0; jj < 3; jj++) iCellV_fold[ii] += StdI::boxsub[jj][ii] * iCellV_frac[jj];
     iCellV_fold[ii] = (iCellV_fold[ii] + StdI::NCellsub * 1000) / StdI::NCellsub - 1000;
   }
-}/*static void StdFace_FoldSiteSub*/
+}/*static void StdFace::FoldSiteSub*/
 /**
 @brief Print Quantum number projection
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void StdFace_Proj()
+void StdFace::Proj()
 {
   FILE *fp;
   int jsite, iCell, jCell, kCell;
@@ -1221,9 +1222,9 @@ void StdFace_Proj()
   StdI::NSym = 0;
   for (iCell = 0; iCell < StdI::NCell; iCell++) {
 
-    StdFace_FoldSiteSub(StdI::Cell[iCell], nBox, iCellV);
+    StdFace::FoldSiteSub(StdI::Cell[iCell], nBox, iCellV);
 
-    StdFace_FoldSite(iCellV, nBox, iCellV);
+    StdFace::FoldSite(iCellV, nBox, iCellV);
 
     if (iCellV[0] == StdI::Cell[iCell][0] && 
         iCellV[1] == StdI::Cell[iCell][1] && 
@@ -1234,7 +1235,7 @@ void StdFace_Proj()
       for (jCell = 0; jCell < StdI::NCell; jCell++) {
 
         for (ii = 0; ii < 3; ii++)jCellV[ii] = StdI::Cell[jCell][ii] + iCellV[ii];
-        StdFace_FoldSite(jCellV, nBox, jCellV);
+        StdFace::FoldSite(jCellV, nBox, jCellV);
 
         for (kCell = 0; kCell < StdI::NCell; kCell++) {
           if (jCellV[0] == StdI::Cell[kCell][0] && 
@@ -1298,12 +1299,12 @@ void StdFace_Proj()
   }
   free(Sym);
   free(Anti);
-}/*void StdFace_Proj()*/
+}/*void StdFace::Proj()*/
 /**
 @brief Initialize sub Cell
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-static void StdFace_InitSiteSub()
+static void StdFace::InitSiteSub()
 {
   int ii, jj, kk, prod;
   /**@brief
@@ -1315,12 +1316,12 @@ static void StdFace_InitSiteSub()
         StdI::boxsub[2][0] != StdI::NaN_i || StdI::boxsub[2][1] != StdI::NaN_i || StdI::boxsub[2][2] != StdI::NaN_i))
   {
     fprintf(stdout, "\nERROR ! (Lsub, Wsub, Hsub) and (a0Wsub, ..., a2Hsub) conflict !\n\n");
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
   else if (StdI::Wsub != StdI::NaN_i || StdI::Lsub != StdI::NaN_i || StdI::Hsub != StdI::NaN_i) {
-    StdFace_PrintVal_i("Lsub", &StdI::Lsub, 1);
-    StdFace_PrintVal_i("Wsub", &StdI::Wsub, 1);
-    StdFace_PrintVal_i("Hsub", &StdI::Hsub, 1);
+    StdFace::PrintVal_i("Lsub", &StdI::Lsub, 1);
+    StdFace::PrintVal_i("Wsub", &StdI::Wsub, 1);
+    StdFace::PrintVal_i("Hsub", &StdI::Hsub, 1);
     for (ii = 0; ii < 3; ii++) for (jj = 0; jj < 3; jj++)
       StdI::boxsub[ii][jj] = 0;
     StdI::boxsub[0][0] = StdI::Wsub;
@@ -1328,15 +1329,15 @@ static void StdFace_InitSiteSub()
     StdI::boxsub[2][2] = StdI::Hsub;
   }
   else {
-    StdFace_PrintVal_i("a0Wsub", &StdI::boxsub[0][0], StdI::box[0][0]);
-    StdFace_PrintVal_i("a0Lsub", &StdI::boxsub[0][1], StdI::box[0][1]);
-    StdFace_PrintVal_i("a0Hsub", &StdI::boxsub[0][2], StdI::box[0][2]);
-    StdFace_PrintVal_i("a1Wsub", &StdI::boxsub[1][0], StdI::box[1][0]);
-    StdFace_PrintVal_i("a1Lsub", &StdI::boxsub[1][1], StdI::box[1][1]);
-    StdFace_PrintVal_i("a1Hsub", &StdI::boxsub[1][2], StdI::box[1][2]);
-    StdFace_PrintVal_i("a2Wsub", &StdI::boxsub[2][0], StdI::box[2][0]);
-    StdFace_PrintVal_i("a2Lsub", &StdI::boxsub[2][1], StdI::box[2][1]);
-    StdFace_PrintVal_i("a2Hsub", &StdI::boxsub[2][2], StdI::box[2][2]);
+    StdFace::PrintVal_i("a0Wsub", &StdI::boxsub[0][0], StdI::box[0][0]);
+    StdFace::PrintVal_i("a0Lsub", &StdI::boxsub[0][1], StdI::box[0][1]);
+    StdFace::PrintVal_i("a0Hsub", &StdI::boxsub[0][2], StdI::box[0][2]);
+    StdFace::PrintVal_i("a1Wsub", &StdI::boxsub[1][0], StdI::box[1][0]);
+    StdFace::PrintVal_i("a1Lsub", &StdI::boxsub[1][1], StdI::box[1][1]);
+    StdFace::PrintVal_i("a1Hsub", &StdI::boxsub[1][2], StdI::box[1][2]);
+    StdFace::PrintVal_i("a2Wsub", &StdI::boxsub[2][0], StdI::box[2][0]);
+    StdFace::PrintVal_i("a2Lsub", &StdI::boxsub[2][1], StdI::box[2][1]);
+    StdFace::PrintVal_i("a2Hsub", &StdI::boxsub[2][2], StdI::box[2][2]);
   }
   /**@brief
   (2) Calculate reciprocal lattice vectors (times NCellsub)
@@ -1352,7 +1353,7 @@ static void StdFace_InitSiteSub()
   }
   printf("         Number of Cell in the sublattice: %d\n", abs(StdI::NCellsub));
   if (StdI::NCellsub == 0) {
-    StdFace_exit(-1);
+    StdFace::exit(-1);
   }
 
   for (ii = 0; ii < 3; ii++) {
@@ -1376,20 +1377,20 @@ static void StdFace_InitSiteSub()
       for (kk = 0; kk < 3; kk++) prod += StdI::rboxsub[ii][kk] * (double)StdI::box[jj][kk];
       if (prod % StdI::NCellsub != 0) {
         printf("\n ERROR ! Sublattice is INCOMMENSURATE !\n\n");
-        StdFace_exit(-1);
+        StdFace::exit(-1);
       }/*if (prod % StdI::NCellsub != 0)*/
     }
   }
-}/*void StdFace_InitSiteSub*/
+}/*void StdFace::InitSiteSub*/
 /**
 @brief Generate orbitalindex
 */
-void StdFace_generate_orb() {
+void StdFace::generate_orb() {
   int iCell, jCell, kCell, iCell2, jCell2, iOrb, isite, jsite, Anti;
   int nBox[3], iCellV[3], jCellV[3], dCellV[3], ii;
   int **CellDone;
 
-  StdFace_InitSiteSub();
+  StdFace::InitSiteSub();
 
   StdI::Orb = (int **)malloc(sizeof(int*) * StdI::nsite);
   StdI::AntiOrb = (int **)malloc(sizeof(int*) * StdI::nsite);
@@ -1408,9 +1409,9 @@ void StdFace_generate_orb() {
   iOrb = 0;
   for (iCell = 0; iCell < StdI::NCell; iCell++) {
 
-    StdFace_FoldSiteSub(StdI::Cell[iCell], nBox, iCellV);
+    StdFace::FoldSiteSub(StdI::Cell[iCell], nBox, iCellV);
 
-    StdFace_FoldSite(iCellV, nBox, iCellV);
+    StdFace::FoldSite(iCellV, nBox, iCellV);
 
     for (kCell = 0; kCell < StdI::NCell; kCell++) {
       if (iCellV[0] == StdI::Cell[kCell][0] && 
@@ -1426,7 +1427,7 @@ void StdFace_generate_orb() {
       for (ii = 0; ii < 3; ii++)
         jCellV[ii] = StdI::Cell[jCell][ii] + iCellV[ii] - StdI::Cell[iCell][ii];
 
-      StdFace_FoldSite(jCellV, nBox, jCellV);
+      StdFace::FoldSite(jCellV, nBox, jCellV);
 
       for (kCell = 0; kCell < StdI::NCell; kCell++) {
         if (jCellV[0] == StdI::Cell[kCell][0] &&
@@ -1441,7 +1442,7 @@ void StdFace_generate_orb() {
       */
       for (ii = 0; ii < 3; ii++)
         dCellV[ii] = StdI::Cell[jCell][ii] - StdI::Cell[iCell][ii];
-      StdFace_FoldSite(dCellV, nBox, dCellV);
+      StdFace::FoldSite(dCellV, nBox, dCellV);
       Anti = 0;
       for (ii = 0; ii < 3; ii++)Anti += StdI::AntiPeriod[ii] * nBox[ii];
       if (Anti % 2 == 0) Anti = 1;
@@ -1507,7 +1508,7 @@ void StdFace_generate_orb() {
 
   for (iCell = 0; iCell < StdI::NCell; iCell++) free(CellDone[iCell]);
   free(CellDone);
-}/*void StdFace_generate_orb*/
+}/*void StdFace::generate_orb*/
 /**
 @brief Output Jastrow
 @author Mitsuaki Kawamura (The University of Tokyo)
@@ -1612,7 +1613,7 @@ void PrintJastrow() {
       }/*if (strcmp(StdI::model, "kondo") == 0)*/
 
       for (dCell = 0; dCell < StdI::NCell; dCell++) {
-        StdFace_FindSite(
+        StdFace::FindSite(
           0, 0, 0,
           -StdI::Cell[dCell][0], -StdI::Cell[dCell][1], -StdI::Cell[dCell][2],
           0, 0, &isite, &jsite, &Cphase, dR);
@@ -1641,7 +1642,7 @@ void PrintJastrow() {
               StdI::Cell[dCell][2] == 0) continue;/*Diagonal*/
 
             for (iCell = 0; iCell < StdI::NCell; iCell++) {
-              StdFace_FindSite(
+              StdFace::FindSite(
                 StdI::Cell[iCell][0], StdI::Cell[iCell][1], StdI::Cell[iCell][2],
                 StdI::Cell[dCell][0], StdI::Cell[dCell][1], StdI::Cell[dCell][2],
                 isiteUC, jsiteUC, &isite, &jsite, &Cphase, dR);

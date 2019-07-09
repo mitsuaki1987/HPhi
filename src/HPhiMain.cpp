@@ -213,7 +213,7 @@ int main(int argc, char* argv[]){
   strcpy(cFileListName, argv[2]);
   
   if(mode==STANDARD_MODE || mode == STANDARD_DRY_MODE){
-    if (MP::myrank == 0) StdFace_main(argv[2]);
+    if (MP::myrank == 0) StdFace::main(argv[2]);
     strcpy(cFileListName, "namelist.def");
     if (mode == STANDARD_DRY_MODE){
       fprintf(stdout, "Dry run is Finished. \n\n");

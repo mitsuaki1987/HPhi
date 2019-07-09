@@ -218,7 +218,7 @@ int CalcByTEM(
     MultiplyForTEM(v2);
     //Add Diagonal Parts
     //Multiply Diagonal
-    expec_energy_flct(1, Wave::v0, Wave::v1);
+    expec::energy_flct::main(1, Wave::v0, Wave::v1);
 
     if (Def::NLaser > 0) Time += dt;
     if (childfopenMPI(sdt_phys, "a", &fp) != 0) {
@@ -244,8 +244,8 @@ int CalcByTEM(
     fclose(fp);
 
     if (Step::step_i % Step::step_spin == 0) {
-      expec_cisajs(1, v2, Wave::v1);
-      expec_cisajscktaltdc(1, v2, Wave::v1);
+      expec::cisajs::main(1, v2, Wave::v1);
+      expec::cisajscktalt::main(1, v2, Wave::v1);
     }
     if (Def::iOutputEigenVec == TRUE) {
       if (Step::step_i % Param::OutputInterval == 0) {

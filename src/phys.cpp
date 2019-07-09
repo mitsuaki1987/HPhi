@@ -97,15 +97,15 @@ void phys( //!<[inout]
   }/*for (i = 0; i < neig; i++)*/
 #endif
 
-  if (expec_energy_flct(neig, Wave::v0, Wave::v1) != 0) {
+  if (expec::energy_flct::main(neig, Wave::v0, Wave::v1) != 0) {
     fprintf(stderr, "Error: calc expec_energy.\n");
     exitMPI(-1);
   }
-  if (expec_cisajs(neig, Wave::v0, Wave::v1) != 0) {
+  if (expec::cisajs::main(neig, Wave::v0, Wave::v1) != 0) {
     fprintf(stderr, "Error: calc OneBodyG.\n");
     exitMPI(-1);
   }
-  if (expec_cisajscktaltdc(neig, Wave::v0, Wave::v1) != 0) {
+  if (expec::cisajscktalt::main(neig, Wave::v0, Wave::v1) != 0) {
     fprintf(stderr, "Error: calc TwoBodyG.\n");
     exitMPI(-1);
   }

@@ -14,6 +14,7 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
+#include "expec_energy_flct.hpp"
 #include "bitcalc.hpp"
 #include "mltplyCommon.hpp"
 #include "mltply.hpp"
@@ -32,7 +33,7 @@
 /// \param X [in, out] X Struct to get information about file header names, dimension of hirbert space, calc type and output physical quantities.
 /// \retval 0 normally finished.
 /// \retval -1 abnormally finished.
-int expec_energy_flct_HubbardGC(
+void expec::energy_flct::HubbardGC(
   int nstate,
   std::complex<double> **tmp_v0
 ) {
@@ -183,15 +184,13 @@ shared(tmp_v0,List::c1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
   free_d_2d_allocate(num2_t);
   free_d_2d_allocate(Sz_t);
   free_d_2d_allocate(Sz2_t);
-  return 0;
 }
 ///
 /// \brief Calculate expected values of energies and physical quantities for Hubbard model
 /// \param X [in, out] X Struct to get information about file header names, dimension of hirbert space, calc type and output physical quantities.
 /// \retval 0 normally finished.
 /// \retval -1 abnormally finished.
-int expec_energy_flct_Hubbard(
-  
+void expec::energy_flct::Hubbard(
   int nstate,
   std::complex<double> **tmp_v0
 ) {
@@ -343,14 +342,13 @@ private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
   free_d_2d_allocate(num2_t);
   free_d_2d_allocate(Sz_t);
   free_d_2d_allocate(Sz2_t);
-  return 0;
 }
 ///
 /// \brief Calculate expected values of energies and physical quantities for Half-SpinGC model
 /// \param X [in, out] X Struct to get information about file header names, dimension of hirbert space, calc type and output physical quantities.
 /// \retval 0 normally finished.
 /// \retval -1 abnormally finished.
-int expec_energy_flct_HalfSpinGC(
+void expec::energy_flct::HalfSpinGC(
   
   int nstate,
   std::complex<double> **tmp_v0
@@ -447,14 +445,13 @@ shared(tmp_v0,Sz_t,Sz2_t,nstate, i_max,MP::myrank,i_32,is1_up_a,is1_up_b,Def::Ns
 
   free_d_2d_allocate(Sz_t);
   free_d_2d_allocate(Sz2_t);
-  return 0;
 }
 ///
 /// \brief Calculate expected values of energies and physical quantities for General-SpinGC model
 /// \param X [in, out] X Struct to get information about file header names, dimension of hirbert space, calc type and output physical quantities.
 /// \retval 0 normally finished.
 /// \retval -1 abnormally finished.
-int expec_energy_flct_GeneralSpinGC(
+void expec::energy_flct::GeneralSpinGC(
   
   int nstate,
   std::complex<double> **tmp_v0
@@ -527,192 +524,6 @@ Def::SiteToBit, Def::Tpow,Def::Nsite,Def::NsiteMPI)
 
   free_d_2d_allocate(Sz_t);
   free_d_2d_allocate(Sz2_t);
-  return 0;
-}
-///
-/// \brief Calculate expected values of energies and physical quantities for Half-Spin model
-/// \param X [in, out] X Struct to get information about file header names, dimension of hirbert space, calc type and output physical quantities.
-/// \retval 0 normally finished.
-/// \retval -1 abnormally finished.
-int expec_energy_flct_HalfSpin(
-  
-  int nstate,
-  std::complex<double> **tmp_v0
-) {
-  long int j;
-  long int isite1;
-  long int is1_up_a, is1_up_b;
-
-  long int ibit1;
-  double Sz;
-  double *tmp_v02;
-  long int i_max, tmp_list_1;
-  int l_ibit1, u_ibit1, i_32;
-  int istate, mythread;
-  double **Sz_t, **Sz2_t;
-
-  i_max = Check::idim_max;
-  Sz_t = d_2d_allocate(MP::nthreads, nstate);
-  Sz2_t = d_2d_allocate(MP::nthreads, nstate);
-  i_32 = 0xFFFFFFFF; //2^32 - 1
-
-  //[s] for bit count
-  is1_up_a = 0;
-  is1_up_b = 0;
-  for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
-    if (isite1 > Def::Nsite) {
-      is1_up_a += Def::Tpow[isite1 - 1];
-    }
-    else {
-      is1_up_b += Def::Tpow[isite1 - 1];
-    }
-  }
-  //[e]
-#pragma omp parallel default(none) \
-private(j,Sz,ibit1,isite1,tmp_v02,u_ibit1,l_ibit1, tmp_list_1,mythread,istate) \
-shared(tmp_v0, List::c1,Sz_t,Sz2_t,nstate,i_max,MP::myrank,i_32,is1_up_a,is1_up_b,Def::NsiteMPI) 
-
-  {
-    tmp_v02 = d_1d_allocate(nstate);
-#ifdef _OPENMP
-    mythread = omp_get_thread_num();
-#else
-    mythread = 0;
-#endif
-#pragma omp for
-    for (j = 1; j <= i_max; j++) {
-      for (istate = 0; istate < nstate; istate++) \
-        tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
-      Sz = 0.0;
-      tmp_list_1 = List::c1[j];
-
-      // isite1 > Def::Nsite
-      ibit1 = (long int) MP::myrank & is1_up_a;
-      u_ibit1 = ibit1 >> 32;
-      l_ibit1 = ibit1 & i_32;
-      Sz += pop(u_ibit1);
-      Sz += pop(l_ibit1);
-      // isite1 <= Def::Nsite
-      ibit1 = (long int) tmp_list_1 &is1_up_b;
-      u_ibit1 = ibit1 >> 32;
-      l_ibit1 = ibit1 & i_32;
-      Sz += pop(u_ibit1);
-      Sz += pop(l_ibit1);
-      Sz = 2 * Sz - Def::NsiteMPI;
-
-      for (istate = 0; istate < nstate; istate++) {
-        Sz_t[mythread][istate] += tmp_v02[istate] * Sz;
-        Sz2_t[mythread][istate] += tmp_v02[istate] * Sz * Sz;
-      }
-    }/*for (j = 1; j <= i_max; j++)*/
-    free_d_1d_allocate(tmp_v02);
-  }/*End of parallel region*/
-  for (istate = 0; istate < nstate; istate++) {
-    Phys::Sz[istate] = 0.0;
-    Phys::Sz2[istate] = 0.0;
-    for (mythread = 0; mythread < MP::nthreads; mythread++) {
-      Phys::Sz[istate] += Sz_t[mythread][istate];
-      Phys::Sz2[istate] += Sz2_t[mythread][istate];
-    }
-  }
-  SumMPI_dv(nstate, Phys::Sz);
-  SumMPI_dv(nstate, Phys::Sz2);
-
-  for (istate = 0; istate < nstate; istate++) {
-    Phys::doublon[istate] = 0.0;
-    Phys::doublon2[istate] = 0.0;
-    Phys::num[istate] = Def::NsiteMPI;
-    Phys::num2[istate] = Def::NsiteMPI*Def::NsiteMPI;
-    Phys::Sz[istate] *= 0.5;
-    Phys::Sz2[istate] *= 0.25;
-    Phys::num_up[istate] = 0.5*(Phys::num[istate] + Phys::Sz[istate]);
-    Phys::num_down[istate] = 0.5*(Phys::num[istate] - Phys::Sz[istate]);
-  }
-
-  free_d_2d_allocate(Sz_t);
-  free_d_2d_allocate(Sz2_t); 
-  return 0;
-}
-///
-/// \brief Calculate expected values of energies and physical quantities for General-Spin model
-/// \param X [in, out] X Struct to get information about file header names, dimension of hirbert space, calc type and output physical quantities.
-/// \retval 0 normally finished.
-/// \retval -1 abnormally finished.
-int expec_energy_flct_GeneralSpin(
-  
-  int nstate,
-  std::complex<double> **tmp_v0
-) {
-  long int j;
-  long int isite1;
-  int istate, mythread;
-  double Sz;
-  double *tmp_v02;
-  long int i_max, tmp_list1;
-  double **Sz_t, **Sz2_t;
-
-  Sz_t = d_2d_allocate(MP::nthreads, nstate);
-  Sz2_t = d_2d_allocate(MP::nthreads, nstate);
-  i_max = Check::idim_max;
-
-#pragma omp parallel default(none) \
-private(j,Sz,isite1,tmp_v02, tmp_list1,istate,mythread) \
-shared(tmp_v0, List::c1,Sz_t,Sz2_t,nstate,i_max,MP::myrank, \
-Def::NsiteMPI, Def::SiteToBit, Def::Tpow,Def::Nsite)
-  {
-    tmp_v02 = d_1d_allocate(nstate);
-#ifdef _OPENMP
-    mythread = omp_get_thread_num();
-#else
-    mythread = 0;
-#endif
-#pragma omp for
-    for (j = 1; j <= i_max; j++) {
-      for (istate = 0; istate < nstate; istate++)
-        tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
-      Sz = 0.0;
-      tmp_list1 = List::c1[j];
-      for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
-        //prefactor 0.5 is added later.
-        if (isite1 > Def::Nsite) {
-          Sz += GetLocal2Sz(isite1, MP::myrank, Def::SiteToBit, Def::Tpow);
-        }
-        else {
-          Sz += GetLocal2Sz(isite1, tmp_list1, Def::SiteToBit, Def::Tpow);
-        }
-      }
-      for (istate = 0; istate < nstate; istate++) {
-        Sz_t[mythread][istate] += tmp_v02[istate] * Sz;
-        Sz2_t[mythread][istate] += tmp_v02[istate] * Sz * Sz;
-      }
-    }/*for (j = 1; j <= i_max; j++)*/
-    free_d_1d_allocate(tmp_v02);
-  }/*End of parallel region*/
-  for (istate = 0; istate < nstate; istate++) {
-    Phys::Sz[istate] = 0.0;
-    Phys::Sz2[istate] = 0.0;
-    for (mythread = 0; mythread < MP::nthreads; mythread++) {
-      Phys::Sz[istate] += Sz_t[mythread][istate];
-      Phys::Sz2[istate] += Sz2_t[mythread][istate];
-    }
-  }
-  SumMPI_dv(nstate, Phys::Sz);
-  SumMPI_dv(nstate, Phys::Sz2);
-
-  for (istate = 0; istate < nstate; istate++) {
-    Phys::doublon[istate] = 0.0;
-    Phys::doublon2[istate] = 0.0;
-    Phys::num[istate] = Def::NsiteMPI;
-    Phys::num2[istate] = Def::NsiteMPI*Def::NsiteMPI;
-    Phys::Sz[istate] *= 0.5;
-    Phys::Sz2[istate] *= 0.25;
-    Phys::num_up[istate] = 0.5*(Phys::num[istate] + Phys::Sz[istate]);
-    Phys::num_down[istate] = 0.5*(Phys::num[istate] - Phys::Sz[istate]);
-  }
-
-  free_d_2d_allocate(Sz_t);
-  free_d_2d_allocate(Sz2_t);
-  return 0;
 }
 /**
  * @brief Parent function to calculate expected values of energy and physical quantities.
@@ -724,7 +535,7 @@ Def::NsiteMPI, Def::SiteToBit, Def::Tpow,Def::Nsite)
  * \retval 0 normally finished.
  * \retval -1 abnormally finished.
  */
-int expec_energy_flct(
+int expec::energy_flct::main(
   
   int nstate,
   std::complex<double> **tmp_v0,
@@ -775,32 +586,24 @@ int expec_energy_flct(
 
   switch (Def::iCalcModel) {
   case DC::HubbardGC:
-    expec_energy_flct_HubbardGC(nstate, tmp_v0);
+    expec::energy_flct::HubbardGC(nstate, tmp_v0);
     break;
   case DC::KondoGC:
   case DC::Hubbard:
   case DC::Kondo:
-    expec_energy_flct_Hubbard(nstate, tmp_v0);
+    expec::energy_flct::Hubbard(nstate, tmp_v0);
     break;
 
   case DC::SpinGC:
     if (Def::iFlgGeneralSpin == FALSE) {
-      expec_energy_flct_HalfSpinGC(nstate, tmp_v0);
+      expec::energy_flct::HalfSpinGC(nstate, tmp_v0);
     }
     else {//for generalspin
-      expec_energy_flct_GeneralSpinGC(nstate, tmp_v0);
+      expec::energy_flct::GeneralSpinGC(nstate, tmp_v0);
     }
     break;/*case SpinGC*/
     /* SpinGCBoost */
   case DC::Spin:
-    /*
-    if(Def::iFlgGeneralSpin == FALSE){
-      expec_energy_flct_HalfSpin(X);
-    }
-    else{
-      expec_energy_flct_GeneralSpin(X);
-    }
-     */
     for (istate = 0; istate < nstate; istate++) {
       Phys::doublon[istate] = 0.0;
       Phys::doublon2[istate] = 0.0;
