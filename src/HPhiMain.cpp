@@ -257,7 +257,7 @@ int main(int argc, char* argv[]){
   }
 
   //Start Calculation
-  if (Def::iFlgCalcSpec == CALCSPEC_NOT || Def::iFlgCalcSpec == CALCSPEC_SCRATCH) {
+  if (Def::iFlgCalcSpec == DC::CALCSPEC_NOT || Def::iFlgCalcSpec == DC::CALCSPEC_SCRATCH) {
     
     if (check() == MPIFALSE) {
      exitMPI(-1);
@@ -281,13 +281,13 @@ int main(int argc, char* argv[]){
     StopTimer(2000);
       
     switch (Def::iCalcType) {
-    case CG:
+    case DC::CG:
       if (CalcByLOBPCG::main() != TRUE) {
           exitMPI(-3);
       }
       break;
 
-    case FullDiag:
+    case DC::FullDiag:
       StartTimer(5000);
       if (Def::iFlgScaLAPACK == 0 && MP::nproc != 1) {
         fprintf(MP::STDOUT, "Error: Full Diagonalization by LAPACK is only allowed for one process.\n");
@@ -299,7 +299,7 @@ int main(int argc, char* argv[]){
       StopTimer(5000);
       break;
 
-    case TPQCalc:
+    case DC::TPQCalc:
       StartTimer(3000);
       if (CalcByTPQ(Step::NumAve, Param::ExpecInterval) != TRUE) {
         StopTimer(3000);
@@ -308,7 +308,7 @@ int main(int argc, char* argv[]){
       StopTimer(3000);
       break;
 
-    case TimeEvolution:
+    case DC::TimeEvolution:
       if (CalcByTEM(Param::ExpecInterval) != 0) {
         exitMPI(-3);
       }
@@ -320,7 +320,7 @@ int main(int argc, char* argv[]){
     }
   }
 
-  if(Def::iFlgCalcSpec != CALCSPEC_NOT){
+  if(Def::iFlgCalcSpec != DC::CALCSPEC_NOT){
     StartTimer(6000);
     CalcSpectrum();
     StopTimer(6000);

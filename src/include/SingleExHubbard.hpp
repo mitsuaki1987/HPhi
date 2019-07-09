@@ -16,7 +16,11 @@
 
 #include <complex>
 
-int GetSingleExcitedStateHubbard( int nstate,
-  std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, int iEx);
-int GetSingleExcitedStateHubbardGC( int nstate,
-  std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, int iEx);
+namespace GetExcitedState {
+  namespace Single {
+    int Hubbard(int nstate,
+      std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, int iEx);
+    int HubbardGC(int nstate,
+      std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, int iEx);
+  }
+}

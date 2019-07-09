@@ -64,7 +64,7 @@ int SetOmega()
     return TRUE;
   }
   else {
-    if (Def::iCalcType == Lanczos || Def::iCalcType == FullDiag) {
+    if (Def::iCalcType == DC::Lanczos || Def::iCalcType == DC::FullDiag) {
       sprintf(sdt, "%s_Lanczos_Step.dat", Def::CDataFileHead);
       childfopenMPI(sdt, "r", &fp);
       if (fp == NULL) {
@@ -98,7 +98,7 @@ int SetOmega()
         fprintf(MP::STDOUT, "Error: Lanczos step must be greater than 4 for using spectrum calculation.\n");
         return FALSE;
       }
-    }/*if (Def::iCalcType == Lanczos || Def::iCalcType == FullDiag)*/
+    }/*if (Def::iCalcType == DC::Lanczos || Def::iCalcType == DC::FullDiag)*/
     else
     {
       sprintf(sdt, "%s_energy.dat", Def::CDataFileHead);
@@ -123,14 +123,14 @@ int SetOmega()
 
   return TRUE;
 }
-///
-/// \brief Make the lists for the excited state; List::c1, List::c2_1 and List::c2_2 (for canonical ensemble).
-/// The original lists before the excitation are given by List::cxxx_org
-/// Output: iCalcModel (From HubbardNConserved to Hubbard), {Ne, Nup, Ndown, Nsite, Total2Sz} (update for MPI)
-///
-/// \param iFlgListModifed [out] If the list is modified due to the excitation, the value becomes TRUE(1), otherwise FALSE(0).
-/// \retval -1 fail to make lists.
-/// \retval 0  sucsess to make lists.
+/**
+@brief Make the lists for the excited state; List::c1, List::c2_1 and List::c2_2 (for canonical ensemble).
+The original lists before the excitation are given by List::cxxx_org
+Output: iCalcModel (From HubbardNConserved to Hubbard), {Ne, Nup, Ndown, Nsite, Total2Sz} (update for MPI)
+@param iFlgListModifed [out] If the list is modified due to the excitation, the value becomes TRUE(1), otherwise FALSE(0).
+@retval -1 fail to make lists.
+@retval 0  sucsess to make lists.
+*/
 int MakeExcitedList(
   int *iFlgListModifed
 ) {
@@ -147,29 +147,29 @@ int MakeExcitedList(
 
   if (Def::NNSingleExcitationOperator > 0) {
     switch (Def::iCalcModel) {
-    case HubbardGC:
+    case DC::HubbardGC:
       break;
-    case HubbardNConserved:
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::HubbardNConserved:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
       *iFlgListModifed = TRUE;
       break;
-    case Spin:
-    case SpinGC:
+    case DC::Spin:
+    case DC::SpinGC:
       return FALSE;
     }
   }
   else if (Def::NNPairExcitationOperator > 0) {
     switch (Def::iCalcModel) {
-    case HubbardGC:
-    case SpinGC:
-    case HubbardNConserved:
+    case DC::HubbardGC:
+    case DC::SpinGC:
+    case DC::HubbardNConserved:
       break;
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
-    case Spin:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
+    case DC::Spin:
       if (Def::PairExcitationOperator[0][0][1] != Def::PairExcitationOperator[0][0][3]) {
         *iFlgListModifed = TRUE;
       }
@@ -212,9 +212,9 @@ int MakeExcitedList(
 
     if (Def::NNSingleExcitationOperator > 0) {
       switch (Def::iCalcModel) {
-      case HubbardGC:
+      case DC::HubbardGC:
         break;
-      case HubbardNConserved:
+      case DC::HubbardNConserved:
         if (Def::SingleExcitationOperator[0][0][2] == 1) { //cis
           Def::Ne = Def::NeMPI + 1;
         }
@@ -222,9 +222,9 @@ int MakeExcitedList(
           Def::Ne = Def::NeMPI - 1;
         }
         break;
-      case KondoGC:
-      case Hubbard:
-      case Kondo:
+      case DC::KondoGC:
+      case DC::Hubbard:
+      case DC::Kondo:
         if (Def::SingleExcitationOperator[0][0][2] == 1) { //cis
           Def::Ne = Def::NeMPI + 1;
           if (Def::SingleExcitationOperator[0][0][1] == 0) {//up
@@ -249,21 +249,21 @@ int MakeExcitedList(
           }
         }
         break;
-      case Spin:
-      case SpinGC:
+      case DC::Spin:
+      case DC::SpinGC:
         return FALSE;
       }
     }
     else if (Def::NNPairExcitationOperator > 0) {
       Def::Ne = Def::NeMPI;
       switch (Def::iCalcModel) {
-      case HubbardGC:
-      case SpinGC:
-      case HubbardNConserved:
+      case DC::HubbardGC:
+      case DC::SpinGC:
+      case DC::HubbardNConserved:
         break;
-      case KondoGC:
-      case Hubbard:
-      case Kondo:
+      case DC::KondoGC:
+      case DC::Hubbard:
+      case DC::Kondo:
         if (Def::PairExcitationOperator[0][0][1] != Def::PairExcitationOperator[0][0][3]) {
           if (Def::PairExcitationOperator[0][0][1] == 0) {//up
             Def::Nup = Def::NupOrg + 1;
@@ -275,7 +275,7 @@ int MakeExcitedList(
           }
         }
         break;
-      case Spin:
+      case DC::Spin:
         if (Def::PairExcitationOperator[0][0][1] != Def::PairExcitationOperator[0][0][3]) {
           if (Def::iFlgGeneralSpin == FALSE) {
             if (Def::PairExcitationOperator[0][0][1] == 0) {//down
@@ -321,8 +321,8 @@ int MakeExcitedList(
   }
 #endif // MPI
 
-  if (Def::iCalcModel == HubbardNConserved) {
-    Def::iCalcModel = Hubbard;
+  if (Def::iCalcModel == DC::HubbardNConserved) {
+    Def::iCalcModel = DC::Hubbard;
   }
 
 #ifdef _DEBUG
@@ -432,7 +432,7 @@ void CalcSpectrum()
   std::complex<double> *dcomega;
   size_t byte_size;
 
-  if (Def::iFlgCalcSpec == CALCSPEC_SCRATCH) {
+  if (Def::iFlgCalcSpec == DC::CALCSPEC_SCRATCH) {
     Def::Nsite = Def::NsiteMPI;
     Def::Total2Sz = Def::Total2SzMPI;
     Def::Ne = Def::NeMPI;
@@ -463,7 +463,7 @@ void CalcSpectrum()
     free_d_1d_allocate(Phys::Sz);
     free_d_1d_allocate(Phys::Sz2);
     free_d_1d_allocate(Phys::s2);
-  }/*if (Def::iFlgCalcSpec == CALCSPEC_SCRATCH)*/
+  }/*if (Def::iFlgCalcSpec == DC::CALCSPEC_SCRATCH)*/
 
   //set omega
   if (SetOmega() != TRUE) {
@@ -518,9 +518,9 @@ void CalcSpectrum()
 
   //Make excited state
   StartTimer(6100);
-  if (Def::iFlgCalcSpec == RECALC_NOT ||
-    Def::iFlgCalcSpec == RECALC_OUTPUT_TMComponents_VEC ||
-    (Def::iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC && Def::iCalcType == CG)) {
+  if (Def::iFlgCalcSpec == DC::RECALC_NOT ||
+    Def::iFlgCalcSpec == DC::RECALC_OUTPUT_TMComponents_VEC ||
+    (Def::iFlgCalcSpec == DC::RECALC_INOUT_TMComponents_VEC && Def::iCalcType == DC::CG)) {
     v1Org = cd_2d_allocate(Check::idim_maxOrg + 1, 1);
     //input eigen vector
     StartTimer(6101);
@@ -558,10 +558,10 @@ void CalcSpectrum()
   TimeKeeper("%s_TimeKeeper.dat", "Calculating a spectrum starts: %s", "a");
   StartTimer(6200);
   switch (Def::iCalcType) {
-  case CG:
+  case DC::CG:
     CalcSpectrumByBiCG(Wave::v0, Wave::v1, Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
     break;
-  case FullDiag:
+  case DC::FullDiag:
     CalcSpectrumByFullDiag(Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
     break;
   default:

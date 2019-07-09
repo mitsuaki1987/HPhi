@@ -38,11 +38,11 @@ int CheckMPI()
   Def::NsiteMPI = Def::Nsite;
   Def::Total2SzMPI = Def::Total2Sz;
   switch (Def::iCalcModel) {
-  case HubbardGC: /****************************************************/
-  case Hubbard:
-  case HubbardNConserved:
-  case Kondo:
-  case KondoGC:
+  case DC::HubbardGC: /****************************************************/
+  case DC::Hubbard:
+  case DC::HubbardNConserved:
+  case DC::Kondo:
+  case DC::KondoGC:
 
     /**@brief
      <li> For Hubbard & Kondo
@@ -80,7 +80,7 @@ int CheckMPI()
 
     switch (Def::iCalcModel) /*2 (inner)*/ {
 
-    case Hubbard:
+    case DC::Hubbard:
       /**@brief
       <li>For canonical Hubbard
       DefineList::Nup, DefineList::Ndown, and DefineList::Ne should be
@@ -107,7 +107,7 @@ int CheckMPI()
 
       break;/*case Hubbard:*/
 
-    case HubbardNConserved:
+    case DC::HubbardNConserved:
       /**@brief
       <li>For N-conserved canonical Hubbard
       DefineList::Ne should be differerent in each PE.</li>
@@ -122,8 +122,8 @@ int CheckMPI()
 
       break; /*case HubbardNConserved:*/
 
-    case KondoGC:
-    case Kondo:
+    case DC::KondoGC:
+    case DC::Kondo:
       /**@brief
       <li>For canonical Kondo system
       DefineList::Nup, DefineList::Ndown, and DefineList::Ne should be
@@ -132,7 +132,7 @@ int CheckMPI()
       for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++)
         if (Def::LocSpn[isite] != ITINERANT) Def::NLocSpn -= 1;
 
-      if (Def::iCalcModel == Kondo) {
+      if (Def::iCalcModel == DC::Kondo) {
         SmallDim = MP::myrank;
         for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++) {
           SpinNum = SmallDim % 4;
@@ -157,7 +157,7 @@ int CheckMPI()
             return FALSE;
           }
         }/*for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++)*/
-      } /*if (Def::iCalcModel == Kondo)*/
+      } /*if (Def::iCalcModel == DC::Kondo)*/
       else {
         Def::Nup = 0;
         Def::Ndown = 0;
@@ -166,7 +166,7 @@ int CheckMPI()
 
       break; /*case KondoGC, Kondo*/
 
-    case HubbardGC:
+    case DC::HubbardGC:
       Def::Nup = 0;
       Def::Ndown = 0;
       Def::Ne = 0;
@@ -176,8 +176,8 @@ int CheckMPI()
 
     break; /*case HubbardGC, Hubbard, HubbardNConserved, Kondo, KondoGC:*/
     /**@brief</ul>*/
-  case SpinGC:/********************************************************/
-  case Spin:
+  case DC::SpinGC:/********************************************************/
+  case DC::Spin:
 
     if (Def::iFlgGeneralSpin == FALSE) {
       /**@brief
@@ -212,7 +212,7 @@ int CheckMPI()
         return FALSE;
       }/*if (isite == 0)*/
 
-      if (Def::iCalcModel == Spin) {
+      if (Def::iCalcModel == DC::Spin) {
         /*Def::NeMPI = Def::Ne;*/
 
         /* Ne should be different in each PE */
@@ -228,7 +228,7 @@ int CheckMPI()
             Def::Nup -= 1;
           }
         }/*for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++)*/
-      }/*if (Def::iCalcModel == Spin)*/
+      }/*if (Def::iCalcModel == DC::Spin)*/
 
     } /*if (Def::iFlgGeneralSpin == FALSE)*/
     else {/* General Spin */
@@ -264,7 +264,7 @@ int CheckMPI()
         return FALSE;
       }/*if (isite == 0)*/
 
-      if (Def::iCalcModel == Spin) {
+      if (Def::iCalcModel == DC::Spin) {
         Def::Total2SzMPI = Def::Total2Sz;
 
         /* Ne should be different in each PE */
@@ -275,7 +275,7 @@ int CheckMPI()
 
           Def::Total2Sz += Def::SiteToBit[isite] - 1 - 2 * SpinNum;
         }/*for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++)*/
-      }/*if (Def::iCalcModel == Spin)*/
+      }/*if (Def::iCalcModel == DC::Spin)*/
     }/*if (Def::iFlgGeneralSpin == TRUE)*/
 
      /**@brief</ul>*/
@@ -333,17 +333,17 @@ void CheckMPI_Summary()
     fprintf(MP::STDOUT, "    Site    Bit\n");
     for (isite = 0; isite < Def::Nsite; isite++) {
       switch (Def::iCalcModel) {
-      case HubbardGC:
-      case Hubbard:
-      case HubbardNConserved:
-      case Kondo:
-      case KondoGC:
+      case DC::HubbardGC:
+      case DC::Hubbard:
+      case DC::HubbardNConserved:
+      case DC::Kondo:
+      case DC::KondoGC:
 
         fprintf(MP::STDOUT, "    %4d    %4d\n", isite, 4);
         break;
 
-      case Spin:
-      case SpinGC:
+      case DC::Spin:
+      case DC::SpinGC:
 
         if (Def::iFlgGeneralSpin == FALSE) {
           fprintf(MP::STDOUT, "    %4d    %4d\n", isite, 2);
@@ -361,17 +361,17 @@ void CheckMPI_Summary()
     fprintf(MP::STDOUT, "    Site    Bit\n");
     for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++) {
       switch (Def::iCalcModel) {
-      case HubbardGC:
-      case Hubbard:
-      case HubbardNConserved:
-      case Kondo:
-      case KondoGC:
+      case DC::HubbardGC:
+      case DC::Hubbard:
+      case DC::HubbardNConserved:
+      case DC::Kondo:
+      case DC::KondoGC:
 
         fprintf(MP::STDOUT, "    %4d    %4d\n", isite, 4);
         break;
 
-      case Spin:
-      case SpinGC:
+      case DC::Spin:
+      case DC::SpinGC:
 
         if (Def::iFlgGeneralSpin == FALSE) {
           fprintf(MP::STDOUT, "    %4d    %4d\n", isite, 2);
@@ -406,7 +406,7 @@ void CheckMPI_Summary()
 
       if (MP::myrank == iproc) {
         Nelec = Def::Ne; //Def::Nup
-        if (Def::iCalcModel == Spin || Def::iCalcModel == SpinGC) Nelec += Def::Ndown;
+        if (Def::iCalcModel == DC::Spin || Def::iCalcModel == DC::SpinGC) Nelec += Def::Ndown;
       }
       else Nelec = 0;
 
@@ -420,11 +420,11 @@ void CheckMPI_Summary()
        as a binary (excepting general spin) format.
       */
       switch (Def::iCalcModel) {
-      case HubbardGC: /****************************************************/
-      case Hubbard:
-      case HubbardNConserved:
-      case Kondo:
-      case KondoGC:
+      case DC::HubbardGC: /****************************************************/
+      case DC::Hubbard:
+      case DC::HubbardNConserved:
+      case DC::Kondo:
+      case DC::KondoGC:
 
         SmallDim = iproc;
         for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++) {
@@ -438,8 +438,8 @@ void CheckMPI_Summary()
 
         break;
 
-      case Spin:
-      case SpinGC:
+      case DC::Spin:
+      case DC::SpinGC:
 
         SmallDim = iproc;
         if (Def::iFlgGeneralSpin == FALSE) {
@@ -482,11 +482,11 @@ void CheckMPI_Summary()
     affected by the number of processes.
   */
   switch (Def::iCalcModel) {
-  case HubbardGC: /****************************************************/
-  case Hubbard:
-  case HubbardNConserved:
-  case Kondo:
-  case KondoGC:
+  case DC::HubbardGC: /****************************************************/
+  case DC::Hubbard:
+  case DC::HubbardNConserved:
+  case DC::Kondo:
+  case DC::KondoGC:
 
     Def::Tpow[2 * Def::Nsite] = 1;
     for (isite = 2 * Def::Nsite + 1; isite < 2 * Def::NsiteMPI; isite++)
@@ -498,8 +498,8 @@ void CheckMPI_Summary()
 
     break;
 
-  case SpinGC:/********************************************************/
-  case Spin:
+  case DC::SpinGC:/********************************************************/
+  case DC::Spin:
 
     if (Def::iFlgGeneralSpin == FALSE) {
 

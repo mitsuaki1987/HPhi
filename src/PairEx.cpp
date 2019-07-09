@@ -48,8 +48,8 @@
 /// \version 1.2
 int GetPairExcitedState
 (
-  
-  int nstate, std::complex<double> **tmp_v0,
+  int nstate,
+  std::complex<double> **tmp_v0,
   std::complex<double> **tmp_v1,
   int iEx
 )
@@ -76,22 +76,22 @@ int GetPairExcitedState
   Large::mode = M_CALCSPEC;
 
   switch (Def::iCalcModel) {
-  case HubbardGC:
-    iret = GetPairExcitedStateHubbardGC(nstate, tmp_v0, tmp_v1, iEx);
+  case DC::HubbardGC:
+    iret = GetExcitedState::Pair::HubbardGC(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
-  case KondoGC:
-  case Hubbard:
-  case Kondo:
-    iret = GetPairExcitedStateHubbard(nstate, tmp_v0, tmp_v1, iEx);
+  case DC::KondoGC:
+  case DC::Hubbard:
+  case DC::Kondo:
+    iret = GetExcitedState::Pair::Hubbard(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
-  case Spin: // for the Sz-conserved spin system
-    iret = GetPairExcitedStateSpin(nstate, tmp_v0, tmp_v1, iEx);
+  case DC::Spin: // for the Sz-conserved spin system
+    iret = GetExcitedState::Pair::Spin(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
-  case SpinGC:
-    iret = GetPairExcitedStateSpinGC(nstate, tmp_v0, tmp_v1, iEx);
+  case DC::SpinGC:
+    iret = GetExcitedState::Pair::SpinGC(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
   default:

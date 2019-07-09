@@ -962,41 +962,41 @@ int expec_cisajscktaltdc
   //Make File Name for output
   prod = cd_2d_allocate(Def::NCisAjtCkuAlvDC, nstate);
   switch (Def::iCalcType) {
-  case TPQCalc:
+  case DC::TPQCalc:
     step = Def::istep;
     TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", "set %d step %d:expec_cisajscktaltdc finishes: %s", "a", 0, step);
     break;
-  case TimeEvolution:
+  case DC::TimeEvolution:
     step = Def::istep;
     TimeKeeperWithStep("%s_TimeKeeper.dat", "step %d:expec_cisajscktaltdc finishes: %s", "a", step);
     break;
-  case FullDiag:
-  case CG:
+  case DC::FullDiag:
+  case DC::CG:
     break;
   }
 
   switch (Def::iCalcModel) {
-  case HubbardGC:
+  case DC::HubbardGC:
     if (expec_cisajscktalt_HubbardGC(nstate, Xvec, vec, prod) != 0) {
       return -1;
     }
     break;
 
-  case KondoGC:
-  case Hubbard:
-  case Kondo:
+  case DC::KondoGC:
+  case DC::Hubbard:
+  case DC::Kondo:
     if (expec_cisajscktalt_Hubbard(nstate, Xvec, vec, prod) != 0) {
       return -1;
     }
     break;
 
-  case Spin:
+  case DC::Spin:
     if (expec_cisajscktalt_Spin(nstate, Xvec, vec, prod) != 0) {
       return -1;
     }
     break;
 
-  case SpinGC:
+  case DC::SpinGC:
     if (expec_cisajscktalt_SpinGC(nstate, Xvec, vec, prod) != 0) {
       return -1;
     }
@@ -1008,16 +1008,16 @@ int expec_cisajscktaltdc
 
   for (istate = 0; istate < nstate; istate++) {
     switch (Def::iCalcType) {
-    case TPQCalc:
+    case DC::TPQCalc:
       step = Def::istep;
       sprintf(sdt, "%s_cisajscktalt_set%dstep%d.dat", Def::CDataFileHead, istate, step);
       break;
-    case TimeEvolution:
+    case DC::TimeEvolution:
       step = Def::istep;
       sprintf(sdt, "%s_cisajscktalt_step%d.dat", Def::CDataFileHead, step);
       break;
-    case FullDiag:
-    case CG:
+    case DC::FullDiag:
+    case DC::CG:
       sprintf(sdt, "%s_cisajscktalt_eigen%d.dat", Def::CDataFileHead, istate);
       break;
     }
@@ -1035,10 +1035,10 @@ int expec_cisajscktaltdc
     else return -1;
   }/*for (istate = 0; istate < nstate; istate++)*/
 
-  if (Def::iCalcType == TPQCalc) {
+  if (Def::iCalcType == DC::TPQCalc) {
     TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", "set %d step %d:expec_cisajscktaltdc finishes: %s", "a", rand_i, step);
   }
-  else if (Def::iCalcType == TimeEvolution) {
+  else if (Def::iCalcType == DC::TimeEvolution) {
     TimeKeeperWithStep("%s_TimeKeeper.dat", "step %d:expec_cisajscktaltdc finishes: %s", "a", step);
   }
   //[s] this part will be added

@@ -15,5 +15,19 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include <complex>
 
-int GetPairExcitedStateSpinGC( int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, int iEx);
-int GetPairExcitedStateSpin( int nstate, std::complex<double> **tmp_v0, std::complex<double> **tmp_v1, int iEx);
+namespace GetExcitedState {
+  namespace Pair {
+    int SpinGC(int nstate, std::complex<double>** tmp_v0,
+      std::complex<double>** tmp_v1, int iEx);
+    int Spin(int nstate, std::complex<double>** tmp_v0,
+      std::complex<double>** tmp_v1, int iEx);
+    int HalfSpinGC(int nstate, std::complex<double>** tmp_v0,
+      std::complex<double>** tmp_v1, int iEx);
+    int GeneralSpinGC(int nstate, std::complex<double>** tmp_v0,
+      std::complex<double>** tmp_v1, int iEx);
+    int HalfSpin(int nstate, std::complex<double>** tmp_v0,
+      std::complex<double>** tmp_v1, int iEx);
+    int GeneralSpin(int nstate, std::complex<double>** tmp_v0, 
+      std::complex<double>** tmp_v1, int iEx);
+  }
+}

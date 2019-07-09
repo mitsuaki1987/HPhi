@@ -156,7 +156,7 @@ int expec_cisajs_Hubbard(
       }
     }
 
-    if (Def::iCalcModel == Kondo || Def::iCalcModel == KondoGC) {
+    if (Def::iCalcModel == DC::Kondo || Def::iCalcModel == DC::KondoGC) {
       if ((Def::LocSpn[org_isite1 - 1] == 1 && Def::LocSpn[org_isite2 - 1] == 0) ||
           (Def::LocSpn[org_isite1 - 1] == 0 && Def::LocSpn[org_isite2 - 1] == 1)
         )
@@ -571,42 +571,42 @@ int expec_cisajs(
   Large::mode = M_CORR;
 
   switch (Def::iCalcType) {
-  case TPQCalc:
+  case DC::TPQCalc:
     step = Def::istep;
     TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", "set %d step %d:expec_cisajs begins: %s", "a", 0, step);
     break;
-  case TimeEvolution:
+  case DC::TimeEvolution:
     step = Def::istep;
     TimeKeeperWithStep("%s_TimeKeeper.dat", "step %d:expec_cisajs begins: %s", "a", step);
     break;
-  case FullDiag:
-  case CG:
+  case DC::FullDiag:
+  case DC::CG:
     break;
   }
 
   prod = cd_2d_allocate(Def::NCisAjt, nstate);
   switch (Def::iCalcModel) {
-  case HubbardGC:
+  case DC::HubbardGC:
     if (expec_cisajs_HubbardGC(nstate, Xvec, vec, prod) != 0) {
       return -1;
     }
     break;
 
-  case KondoGC:
-  case Hubbard:
-  case Kondo:
+  case DC::KondoGC:
+  case DC::Hubbard:
+  case DC::Kondo:
     if (expec_cisajs_Hubbard(nstate, Xvec, vec, prod) != 0) {
       return -1;
     }
     break;
 
-  case Spin: // for the Sz-conserved spin system
+  case DC::Spin: // for the Sz-conserved spin system
     if (expec_cisajs_Spin(nstate, Xvec, vec, prod) != 0) {
       return -1;
     }
     break;
 
-  case SpinGC:
+  case DC::SpinGC:
     if (expec_cisajs_SpinGC(nstate, Xvec, vec, prod) != 0) {
       return -1;
     }
@@ -618,16 +618,16 @@ int expec_cisajs(
 
   for (istate = 0; istate < nstate; istate++) {
     switch (Def::iCalcType) {
-    case TPQCalc:
+    case DC::TPQCalc:
       step = Def::istep;
       sprintf(sdt, "%s_cisajs_set%dstep%d.dat", Def::CDataFileHead, istate, step);
       break;
-    case TimeEvolution:
+    case DC::TimeEvolution:
       step = Def::istep;
       sprintf(sdt, "%s_cisajs_step%d.dat", Def::CDataFileHead, step);
       break;
-    case FullDiag:
-    case CG:
+    case DC::FullDiag:
+    case DC::CG:
       sprintf(sdt, "%s_cisajs_eigen%d.dat", Def::CDataFileHead, istate);
       break;
     }
@@ -643,10 +643,10 @@ int expec_cisajs(
   }/*for (istate = 0; istate < nstate; istate++)*/
 
   if (Def::St == 0) {
-    if (Def::iCalcType == TPQCalc) {
+    if (Def::iCalcType == DC::TPQCalc) {
       TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", "set %d step %d:expec_cisajs finishes: %s", "a", rand_i, step);
     }
-    else if (Def::iCalcType == TimeEvolution) {
+    else if (Def::iCalcType == DC::TimeEvolution) {
       TimeKeeperWithStep("%s_TimeKeeper.dat", "step %d:expec_cisajs finishes: %s", "a", step);
     }
   }

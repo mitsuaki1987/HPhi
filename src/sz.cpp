@@ -260,7 +260,7 @@ int child_omp_sz(
   tmp_num_up   = num_up;
   tmp_num_down = num_down;
 
-  if(Def::iCalcModel==Hubbard){
+  if(Def::iCalcModel== DC::Hubbard){
     for(ia=0;ia<Check::sdim;ia++){
       i=ia;
       num_up =  tmp_num_up;
@@ -282,7 +282,7 @@ int child_omp_sz(
       } 
     }
   }
-  else if(Def::iCalcModel==HubbardNConserved){
+  else if(Def::iCalcModel== DC::HubbardNConserved){
     for(ia=0;ia<Check::sdim;ia++){
       i=ia;
       num_up =  tmp_num_up;
@@ -355,7 +355,7 @@ int child_omp_sz_hacker(long int ib,
   tmp_num_up = num_up;
   tmp_num_down = num_down;
 
-  if (Def::iCalcModel == Hubbard) {
+  if (Def::iCalcModel == DC::Hubbard) {
     if (tmp_num_up <= (unsigned long)Def::Nup
       && tmp_num_down <= (unsigned long)Def::Ndown) { //do not exceed Nup and Ndown
       ia = Def::Tpow[Def::Nup + Def::Ndown - tmp_num_up - tmp_num_down] - 1;
@@ -401,7 +401,7 @@ int child_omp_sz_hacker(long int ib,
       }
     }
   }
-  else if (Def::iCalcModel == HubbardNConserved) {
+  else if (Def::iCalcModel == DC::HubbardNConserved) {
     if (tmp_num_up + tmp_num_down <= (unsigned long)Def::Ne) { //do not exceed Ne
       ia = Def::Tpow[Def::Ne - tmp_num_up - tmp_num_down] - 1;
       if (ia < (unsigned long)Check::sdim) {
@@ -821,13 +821,13 @@ int Read_sz
   TimeKeeper("%s_TimeKeeper.dat","READ = 1: read starts: %s", "a");
 
   switch(Def::iCalcModel){
-  case Hubbard:
-  case HubbardGC:
-  case Spin:
-  case SpinGC:
+  case DC::Hubbard:
+  case DC::HubbardGC:
+  case DC::Spin:
+  case DC::SpinGC:
     sprintf(sdt,"ListForModel_Ns%d_Nup%dNdown%d.dat", Def::Nsite, Def::Nup, Def::Ndown);
     break;
-  case Kondo:
+  case DC::Kondo:
     sprintf(sdt,"ListForKondo_Ns%d_Ncond%d.dat",Def::Nsite,Def::Ne);
     break;
   }
@@ -961,14 +961,14 @@ int sz
 
   if (Check::idim_max != 0) {
     switch (Def::iCalcModel) {
-    case HubbardGC:
-    case HubbardNConserved:
-    case Hubbard:
+    case DC::HubbardGC:
+    case DC::HubbardNConserved:
+    case DC::Hubbard:
       N2 = 2 * Def::Nsite;
       idim = pow(2.0, N2);
       break;
-    case KondoGC:
-    case Kondo:
+    case DC::KondoGC:
+    case DC::Kondo:
       N2 = 2 * Def::Nsite;
       N = Def::Nsite;
       idim = pow(2.0, N2);
@@ -976,8 +976,8 @@ int sz
         fprintf(MP::STDOUT, "  j  =  %ld loc %d \n", j, Def::LocSpn[j]);
       }
       break;
-    case SpinGC:
-    case Spin:
+    case DC::SpinGC:
+    case DC::Spin:
       N = Def::Nsite;
       if (Def::iFlgGeneralSpin == FALSE) {
         idim = pow(2.0, N);
@@ -994,11 +994,11 @@ int sz
     i_max = Check::idim_max;
 
     switch (Def::iCalcModel) {
-    case HubbardNConserved:
-    case Hubbard:
-    case KondoGC:
-    case Kondo:
-    case Spin:
+    case DC::HubbardNConserved:
+    case DC::Hubbard:
+    case DC::KondoGC:
+    case DC::Kondo:
+    case DC::Spin:
       if (Def::iFlgGeneralSpin == FALSE) {
         if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit) != 0) {
           exitMPI(-1);
@@ -1041,11 +1041,11 @@ int sz
       TimeKeeper("%s_sz_TimeKeeper.dat", "omp parallel sz starts: %s", "a");
       TimeKeeper("%s_TimeKeeper.dat", "omp parallel sz starts: %s", "a");
       switch (Def::iCalcModel) {
-      case HubbardGC:
+      case DC::HubbardGC:
         icnt = Def::Tpow[2 * Def::Nsite - 1] * 2 + 0;/*Tpow[2*Def::Nsit]=1*/
         break;
 
-      case SpinGC:
+      case DC::SpinGC:
         if (Def::iFlgGeneralSpin == FALSE) {
           icnt = Def::Tpow[Def::Nsite - 1] * 2 + 0;/*Tpow[Def::Nsit]=1*/
         }
@@ -1054,7 +1054,7 @@ int sz
         }
         break;
 
-      case KondoGC:
+      case DC::KondoGC:
         // this part can not be parallelized
         jb = 0;
         num_loc = 0;
@@ -1100,7 +1100,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
         }
         break;
 
-      case Hubbard:
+      case DC::Hubbard:
         hacker = Def::read_hacker;
         if (hacker == 0) {
           // this part can not be parallelized
@@ -1188,7 +1188,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, Check::sdim)
           return -1;
         }
 
-      case HubbardNConserved:
+      case DC::HubbardNConserved:
         hacker = Def::read_hacker;
         if (hacker == 0) {
           // this part can not be parallelized
@@ -1290,7 +1290,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
           return -1;
         }
 
-      case Kondo:
+      case DC::Kondo:
         // this part can not be parallelized
         N_all_up = Def::Nup;
         N_all_down = Def::Ndown;
@@ -1390,7 +1390,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
         }
         break;
 
-      case Spin:
+      case DC::Spin:
         // this part can not be parallelized
         if (Def::iFlgGeneralSpin == FALSE) {
           hacker = Def::read_hacker;
@@ -1561,9 +1561,9 @@ shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb, ilftdim,
       TimeKeeper("%s_TimeKeeper.dat", "omp parallel sz finishes: %s", "a");
     }
 
-    if (Def::iFlgCalcSpec == CALCSPEC_NOT) {
-      if (Def::iCalcModel == HubbardNConserved) {
-        Def::iCalcModel = Hubbard;
+    if (Def::iFlgCalcSpec == DC::CALCSPEC_NOT) {
+      if (Def::iCalcModel == DC::HubbardNConserved) {
+        Def::iCalcModel = DC::Hubbard;
       }
     }
 

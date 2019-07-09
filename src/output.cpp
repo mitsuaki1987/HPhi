@@ -32,16 +32,16 @@ int output() {
   long int i, i_max;
   i_max = Check::idim_max;
 
-  if (Def::iCalcType == FullDiag) {
+  if (Def::iCalcType == DC::FullDiag) {
     switch (Def::iCalcModel) {
-      case Spin:
-      case Hubbard:
-      case Kondo:
+      case DC::Spin:
+      case DC::Hubbard:
+      case DC::Kondo:
         sprintf(sdt, "%s_phys_Nup%d_Ndown%d.dat", Def::CDataFileHead, Def::Nup, Def::Ndown);
         break;
-      case SpinGC:
-      case HubbardGC:
-      case KondoGC:
+      case DC::SpinGC:
+      case DC::HubbardGC:
+      case DC::KondoGC:
         sprintf(sdt, "%s_phys.dat", Def::CDataFileHead);
         break;
       default:

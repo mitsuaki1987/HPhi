@@ -86,7 +86,7 @@ int CalcByTPQ(
   iret = 0;
 
   //Make or Read initial vector
-  if (Def::iReStart == RESTART_INOUT || Def::iReStart == RESTART_IN) {
+  if (Def::iReStart == DC::RESTART_INOUT || Def::iReStart == DC::RESTART_IN) {
     StartTimer(3600);
     TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector starts: %s\n", "a", 0, Step::step_i);
     fprintf(MP::STDOUT, "%s", "  Start:  Input vector.\n");
@@ -116,9 +116,9 @@ int CalcByTPQ(
 
     step_iO = Step::step_i - 1;
     if (byte_size == 0) printf("byte_size: %d \n", (int)byte_size);
-  }/*if (Def::iReStart == RESTART_INOUT || Def::iReStart == RESTART_IN)*/
+  }/*if (Def::iReStart == DC::RESTART_INOUT || Def::iReStart == DC::RESTART_IN)*/
 
-  if (Def::iReStart == RESTART_NOT || Def::iReStart == RESTART_OUT || iret == 1) {
+  if (Def::iReStart == DC::RESTART_NOT || Def::iReStart == DC::RESTART_OUT || iret == 1) {
     StartTimer(3600);
     for (rand_i = 0; rand_i < NumAve; rand_i++) {
       if (childfopenMPI(sdt_phys[rand_i], "w", &fp) == 0) {
@@ -211,7 +211,7 @@ int CalcByTPQ(
     Step::step_i += 1;
     Def::istep = Step::step_i;
     step_iO = 0;
-  }/*if (Def::iReStart == RESTART_NOT || Def::iReStart == RESTART_OUT || iret == 1)*/
+  }/*if (Def::iReStart == DC::RESTART_NOT || Def::iReStart == DC::RESTART_OUT || iret == 1)*/
 
   for (Step::step_i = Def::istep; Step::step_i < Def::Lanczos_max; Step::step_i++) {
     Def::istep = Step::step_i;
@@ -275,7 +275,7 @@ int CalcByTPQ(
     StopTimer(3600);
   }/*for (Step::step_i = Def::istep; Step::step_i < Def::Lanczos_max; Step::step_i++)*/
 
-  if (Def::iReStart == RESTART_OUT || Def::iReStart == RESTART_INOUT) {
+  if (Def::iReStart == DC::RESTART_OUT || Def::iReStart == DC::RESTART_INOUT) {
     TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector starts: %s\n", "a", 0, Step::step_i);
     fprintf(MP::STDOUT, "%s", "  Start:  Output vector.\n");
     sprintf(sdt, "tmpvec_set%d_rank_%d.dat", 0, MP::myrank);

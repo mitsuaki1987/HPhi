@@ -48,14 +48,14 @@ int output_list(){
   fprintf(MP::STDOUT, "%s", "  Start: output list. \n");
   i_max=Check::idim_max;
   switch(Def::iCalcModel){
-  case HubbardGC:
-  case Hubbard:
-  case Spin:
-  case SpinGC:
+  case DC::HubbardGC:
+  case DC::Hubbard:
+  case DC::Spin:
+  case DC::SpinGC:
     sprintf(sdt, "ListForModel_Ns%d_Nup%dNdown%d.dat", Def::Nsite,Def::Nup,Def::Ndown);
   break;
-  case Kondo:
-  case KondoGC:
+  case DC::Kondo:
+  case DC::KondoGC:
     sprintf(sdt, "ListForKondo_Ns%d_Ncond%d", Def::Nsite,Def::Ne);
     break;
   default:

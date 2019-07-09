@@ -109,8 +109,8 @@ void OutputTimer() {
   StampTime(fp, "All", 0);
   StampTime(fp, "  sz", 1000);
   StampTime(fp, "  diagonalcalc", 2000);
-  if (Def::iFlgCalcSpec == CALCSPEC_NOT) {
-    if (Def::iCalcType == TPQCalc) {
+  if (Def::iFlgCalcSpec == DC::CALCSPEC_NOT) {
+    if (Def::iCalcType == DC::TPQCalc) {
       StampTime(fp, "  CalcByTPQ", 3000);
       StampTime(fp, "    FirstMultiply", 3100);
       StampTime(fp, "      rand   in FirstMultiply", 3101);
@@ -123,7 +123,7 @@ void OutputTimer() {
       StampTime(fp, "    Multiply                 ", 3500);
       StampTime(fp, "    FileIO                   ", 3600);
     }
-    else if (Def::iCalcType == Lanczos) {
+    else if (Def::iCalcType == DC::Lanczos) {
       StampTime(fp, "  CalcByLanczos", 4000);
       StampTime(fp, "    LanczosEigenValue", 4100);
       StampTime(fp, "      mltply      in LanczosEigenValue", 4101);
@@ -142,7 +142,7 @@ void OutputTimer() {
       StampTime(fp, "    FileIO                   ", 4800);
       StampTime(fp, "      Read Input Eigenvec ", 4801);
     }
-    else if (Def::iCalcType == FullDiag) {
+    else if (Def::iCalcType == DC::FullDiag) {
       StampTime(fp, "  CalcByFullDiag", 5000);
       StampTime(fp, "    MakeHam", 5100);
       StampTime(fp, "    LapackDiag", 5200);
@@ -159,7 +159,7 @@ void OutputTimer() {
     StampTime(fp, "      Read origin state", 6101);
     StampTime(fp, "      Multiply excited operator", 6102);
     StampTime(fp, "    Calculate spectrum", 6200);
-    if (Def::iCalcType == Lanczos) {
+    if (Def::iCalcType == DC::Lanczos) {
       StampTime(fp, "      Read vector for recalculation", 6201);
       StampTime(fp, "      Read tridiagonal components for recalculation", 6202);
       StampTime(fp, "      Calculate tridiagonal components", 6203);
@@ -167,7 +167,7 @@ void OutputTimer() {
       StampTime(fp, "      Calculate spectrum by Lanczos method", 6205);
       StampTime(fp, "      Output vectors for recalculation", 6206);
     }
-    else if (Def::iCalcType == FullDiag) {
+    else if (Def::iCalcType == DC::FullDiag) {
       StampTime(fp, "      MakeHam", 6301);
       StampTime(fp, "      lapackdiag", 6302);
       StampTime(fp, "      Calculate v1", 6303);
@@ -181,7 +181,7 @@ void OutputTimer() {
   StampTime(fp, "  diagonal", 100);
 
   switch (Def::iCalcModel) {
-  case HubbardGC:
+  case DC::HubbardGC:
     StampTime(fp, "  HubbardGC", 200);
     StampTime(fp, "    trans    in HubbardGC", 210);
     StampTime(fp, "      double", 211);
@@ -198,7 +198,7 @@ void OutputTimer() {
     StampTime(fp, "      inner", 242);
     break;
 
-  case Hubbard:
+  case DC::Hubbard:
     StampTime(fp, "  Hubbard", 300);
     StampTime(fp, "    trans    in Hubbard", 310);
     StampTime(fp, "      double", 311);
@@ -215,7 +215,7 @@ void OutputTimer() {
     StampTime(fp, "      inner", 342);
     break;
 
-  case Spin:
+  case DC::Spin:
     fprintf(fp, "\n");
     StampTime(fp, "  Spin", 400);
     StampTime(fp, "    interall in Spin", 410);
@@ -230,7 +230,7 @@ void OutputTimer() {
     StampTime(fp, "      inner", 424);
     break;
 
-  case SpinGC:
+  case DC::SpinGC:
     StampTime(fp, "  SpinGC", 500);
     StampTime(fp, "    trans    in SpinGC", 510);
     StampTime(fp, "      double", 511);
@@ -278,7 +278,7 @@ void OutputTimer() {
     It is noted that both functions must have the same index defined in time.cpp.
  For example, the elapsed time of TPQ calculation can be measured as follows.
  ```
-       case TPQCalc:
+       case DC::TPQCalc:
         StartTimer(3000);
         if (CalcByTPQ(NumAve, X.Bind.Def.Param.ExpecInterval, &X) != TRUE) {
           FinalizeMPI();

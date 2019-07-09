@@ -87,15 +87,15 @@ int GetSplitBitByModel(
 {
   int tmpNsite=Nsite;
   switch(iCalcModel){    
-  case HubbardGC:
-  case KondoGC:
-  case HubbardNConserved:
-  case Hubbard:
-  case Kondo:
+  case DC::HubbardGC:
+  case DC::KondoGC:
+  case DC::HubbardNConserved:
+  case DC::Hubbard:
+  case DC::Kondo:
     tmpNsite *= 2;
     break;
-  case Spin:
-  case SpinGC:   
+  case DC::Spin:
+  case DC::SpinGC:   
     break;
   default:
     fprintf(stderr, "Error: CalcModel %d is incorrect.\n", iCalcModel);

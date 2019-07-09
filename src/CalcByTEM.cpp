@@ -141,7 +141,7 @@ int CalcByTEM(
     }
     byte_size = fread(&Wave::v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
     fclose(fp);
-    if (Def::iReStart == RESTART_NOT || Def::iReStart == RESTART_OUT) {
+    if (Def::iReStart == DC::RESTART_NOT || Def::iReStart == DC::RESTART_OUT) {
       step_initial = 0;
     }
   }

@@ -251,9 +251,9 @@ int ReadcalcmodFile(
     }   
     if(CheckWords(ctmp, "CalcType")==0){
       Def::iCalcType=itmp;
-      if (Def::iCalcType == Lanczos) {
+      if (Def::iCalcType == DC::Lanczos) {
         fprintf(MP::STDOUT, "  LOBPCG is used alternative to Lanczos.\n");
-        Def::iCalcType = CG;
+        Def::iCalcType = DC::CG;
       }
     }
     else if(CheckWords(ctmp, "FlgFiniteTemperature")==0){
@@ -308,34 +308,34 @@ int ReadcalcmodFile(
   fclose(fp);
     
   /* Check values*/
-  if(ValidateValue(Def::iCalcModel, 0, NUM_CALCMODEL-1)){
+  if(ValidateValue(Def::iCalcModel, 0, DC::NUM_CALCMODEL-1)){
     fprintf(MP::STDOUT, "Error in %s\n CalcType: 0: Lanczos Method, 1: Thermal Pure Quantum State Method, 2: Full Diagonalization Method, 3: Calculation Spectrum mode.\n", defname);
     return (-1);
   }
-  if(ValidateValue(Def::iCalcType, 0, NUM_CALCTYPE-1)){
+  if(ValidateValue(Def::iCalcType, 0, DC::NUM_CALCTYPE-1)){
     fprintf(MP::STDOUT, "Error in %s\n CalcType: 0: Lanczos Method, 1: Thermal Pure Quantum State Method, 2: Full Diagonalization Method, 3: Calculation Spectrum mode.\n", defname);
     return (-1);
   }
-  if(ValidateValue(Def::iOutputMode, 0, NUM_OUTPUTMODE-1)){
+  if(ValidateValue(Def::iOutputMode, 0, DC::NUM_OUTPUTMODE-1)){
     fprintf(MP::STDOUT, "Error in %s\n OutputMode: \n 0: calc one body green function and two body green functions,\n 1: calc one body green function and two body green functions and correlatinos for charge and spin.\n", defname);
     return (-1);
   }
   
-  if(ValidateValue(Def::iCalcEigenVec, -1, NUM_CALCEIGENVEC-1)){
+  if(ValidateValue(Def::iCalcEigenVec, -1, DC::NUM_CALCEIGENVEC-1)){
     fprintf(MP::STDOUT, "Error in %s\n CalcEigenVec: \n 0: Lanczos+CG method,\n 1: Lanczos method.\n", defname);
     return (-1);
   }
   
-  if(ValidateValue(Def::iInitialVecType, 0, NUM_SETINITAILVEC-1)){
+  if(ValidateValue(Def::iInitialVecType, 0, DC::NUM_SETINITAILVEC-1)){
     fprintf(MP::STDOUT, "Error in %s\n InitialVecType: \n 0: complex type,\n 1: real type.\n", defname);
     return (-1);
   }
 
-  if(ValidateValue(Def::iOutputHam, 0, NUM_OUTPUTHAM-1)){
+  if(ValidateValue(Def::iOutputHam, 0, DC::NUM_OUTPUTHAM-1)){
     fprintf(MP::STDOUT, "Error in %s\n OutputHam: \n 0: not output Hamiltonian,\n 1: output Hamiltonian.\n", defname);
     return (-1);
   }
-  if(ValidateValue(Def::iInputHam, 0, NUM_INPUTHAM-1)){
+  if(ValidateValue(Def::iInputHam, 0, DC::NUM_INPUTHAM-1)){
     fprintf(MP::STDOUT, "Error in %s\n InputHam: 0: not input Hamiltonian,\n 1: input Hamiltonian.\n", defname);
     return (-1);
   }
@@ -344,7 +344,7 @@ int ReadcalcmodFile(
             "Error in %s\n OutputHam=1 and InputHam=1.\n", defname);
     return (-1);
   }
-  if(ValidateValue(Def::iReStart, 0, NUM_RESTART-1)){
+  if(ValidateValue(Def::iReStart, 0, DC::NUM_RESTART-1)){
     fprintf(MP::STDOUT, "Error in %s Restart: \n 0: not restart (default).\n 1: output a restart vector.\n 2: input a restart vector and output a new restart vector.\n 3: input a restart vector.\n", defname);
     return (-1);
   }
@@ -718,7 +718,7 @@ int ReadDefFileNInt(
       break;
 
     case KWTEOneBody: {
-      if (Def::iCalcType != TimeEvolution) break;
+      if (Def::iCalcType != DC::TimeEvolution) break;
       /* Read TEOnebody.def--------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
@@ -740,7 +740,7 @@ int ReadDefFileNInt(
       break;
     }
     case KWTETwoBody: {
-      if (Def::iCalcType != TimeEvolution) break;
+      if (Def::iCalcType != DC::TimeEvolution) break;
       /* Read TETwobody.def--------------------------------*/
       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
       fgetsMPI(ctmp2, 256, fp);
@@ -811,19 +811,19 @@ int ReadDefFileNInt(
 
   //Sz, Ncond
   switch (Def::iCalcModel) {
-  case Spin:
-  case Hubbard:
-  case Kondo:
-  case SpinlessFermion:
+  case DC::Spin:
+  case DC::Hubbard:
+  case DC::Kondo:
+  case DC::SpinlessFermion:
 
     if (iReadNCond == TRUE) {
-      if (Def::iCalcModel == Spin) {
+      if (Def::iCalcModel == DC::Spin) {
         fprintf(MP::STDOUT, "For Spin, Ncond should not be defined.\n");
         return(-1);
       }
       else {
         if (Def::iFlgSzConserved == TRUE) {
-          if (Def::iCalcModel == SpinlessFermion) {
+          if (Def::iCalcModel == DC::SpinlessFermion) {
             fprintf(MP::STDOUT, "  Warning: For Spinless fermion, 2Sz should not be defined.\n");
             Def::Ne = Def::NCond;
             Def::Nup = Def::NCond;
@@ -837,15 +837,15 @@ int ReadDefFileNInt(
           Def::Ne = Def::Nup + Def::Ndown;
         }
         else {
-          if (Def::iCalcModel == Hubbard) {
+          if (Def::iCalcModel == DC::Hubbard) {
             Def::Ne = Def::NCond;
             if (Def::Ne < 1) {
               fprintf(MP::STDOUT, "Ncond is incorrect.\n");
               return(-1);
             }
-            Def::iCalcModel = HubbardNConserved;
+            Def::iCalcModel = DC::HubbardNConserved;
           }
-          else if (Def::iCalcModel == SpinlessFermion) {
+          else if (Def::iCalcModel == DC::SpinlessFermion) {
             Def::Ne = Def::NCond;
             Def::Nup = Def::NCond;
             Def::Ndown = 0;
@@ -858,7 +858,7 @@ int ReadDefFileNInt(
       }
     }
     else if (iReadNCond == FALSE && Def::iFlgSzConserved == TRUE) {
-      if (Def::iCalcModel != Spin) {
+      if (Def::iCalcModel != DC::Spin) {
         fprintf(MP::STDOUT, " NCond is not defined.\n");
         return(-1);
       }
@@ -869,7 +869,7 @@ int ReadDefFileNInt(
     }
     else {
       if (Def::Nup == 0 && Def::Ndown == 0) {
-        if (Def::iCalcModel == Spin) {
+        if (Def::iCalcModel == DC::Spin) {
           fprintf(MP::STDOUT, " 2Sz is not defined.\n");
           return(-1);
         }
@@ -880,7 +880,7 @@ int ReadDefFileNInt(
       }
     }
 
-    if (Def::iCalcModel == Spin) {
+    if (Def::iCalcModel == DC::Spin) {
       Def::Ne = Def::Nup;
     }
     else {
@@ -894,10 +894,10 @@ int ReadDefFileNInt(
       }
     }
     break;
-  case SpinGC:
-  case KondoGC:
-  case HubbardGC:
-  case SpinlessFermionGC:
+  case DC::SpinGC:
+  case DC::KondoGC:
+  case DC::HubbardGC:
+  case DC::SpinlessFermionGC:
     if (iReadNCond == TRUE || Def::iFlgSzConserved == TRUE) {
       fprintf(MP::STDOUT, "\n  Warning: For GC, both Ncond and 2Sz should not be defined.\n");
       //return(-1);
@@ -1043,7 +1043,7 @@ static int CheckInterAllHermite
       }
       else if (isite1 == itmpsite2 && isite2 == itmpsite1 && isite3 == itmpsite4 &&
         isite4 == itmpsite3) {      //for spin and Kondo
-        if (iCalcModel == Kondo || iCalcModel == KondoGC || iCalcModel == Spin || iCalcModel == SpinGC) {
+        if (iCalcModel == DC::Kondo || iCalcModel == DC::KondoGC || iCalcModel == DC::Spin || iCalcModel == DC::SpinGC) {
           if (isigma1 == itmpsigma2 && isigma2 == itmpsigma1 && isigma3 == itmpsigma4 && isigma4 == itmpsigma3) {
             ddiff_intall = ParaInterAllOffDiagonal[i] - conj(ParaInterAllOffDiagonal[j]);
             if (abs(ddiff_intall) < eps_CheckImag0) {
@@ -1179,11 +1179,11 @@ int GetDiagonalInterAll
     else {
       //Get Off-Diagonal term
       switch (iCalcModel) {
-      case Hubbard:
-      case HubbardNConserved:
-      case Kondo:
-      case KondoGC:
-      case HubbardGC:
+      case DC::Hubbard:
+      case DC::HubbardNConserved:
+      case DC::Kondo:
+      case DC::KondoGC:
+      case DC::HubbardGC:
         if (isigma1 == isigma2 && isigma3 == isigma4) {
           for (tmp_i = 0; tmp_i < 8; tmp_i++) {
             InterAllOffDiagonal[icnt_offdiagonal][tmp_i] = InterAll[i][tmp_i];
@@ -1203,7 +1203,7 @@ int GetDiagonalInterAll
         }
         else {
           // Sz symmetry is assumed
-          if (iCalcModel == Hubbard || iCalcModel == Kondo) {
+          if (iCalcModel == DC::Hubbard || iCalcModel == DC::Kondo) {
             fprintf(MP::STDOUT, 
               "Error: This operator breaks Sz Symmetry (i, spni, j, spnj, k, spnk, l, spnl) = (%d, %d, %d, %d, %d, %d, %d, %d), InterAll_re= %lf, InterAll_im= %lf . \n",
               isite1,
@@ -1227,8 +1227,8 @@ int GetDiagonalInterAll
           }
         }
         break;
-      case Spin:
-      case SpinGC:
+      case DC::Spin:
+      case DC::SpinGC:
         if (isite1 == isite2 && isite3 == isite4) {
           for (tmp_i = 0; tmp_i < 8; tmp_i++) {
             InterAllOffDiagonal[icnt_offdiagonal][tmp_i] = InterAll[i][tmp_i];
@@ -1490,14 +1490,14 @@ int ReadDefFileIdxPara()
             }
           }
 
-          if (Def::iCalcModel == Spin) {
+          if (Def::iCalcModel == DC::Spin) {
             if (isite1 != isite2) {
               iboolLoc = 1;
               fprintf(MP::STDOUT, "Warning: Site component of (i, j) =(%d, %d) is ignored.\n",
                 isite1, isite2);
             }
           }
-          else if (Def::iCalcModel == Kondo) {
+          else if (Def::iCalcModel == DC::Kondo) {
             if (Def::LocSpn[isite1] != ITINERANT || Def::LocSpn[isite2] != ITINERANT) {
               if (isite1 != isite2) {
                 iboolLoc = 1;
@@ -1505,7 +1505,7 @@ int ReadDefFileIdxPara()
               }
             }
           }
-          else if (Def::iCalcModel == SpinlessFermion || Def::iCalcModel == SpinlessFermionGC) {
+          else if (Def::iCalcModel == DC::SpinlessFermion || Def::iCalcModel == DC::SpinlessFermionGC) {
             if (isigma1 != 0 || isigma2 != 0) {
               //Not allowed
               fprintf(stderr,
@@ -1632,7 +1632,7 @@ int ReadDefFileIdxPara()
       break;
     case KWPairHop:
       /*pairhop.def---------------------------------------*/
-      if (Def::iCalcModel == Spin || Def::iCalcModel == SpinGC) {
+      if (Def::iCalcModel == DC::Spin || Def::iCalcModel == DC::SpinGC) {
         fprintf(MP::STDOUT, "PairHop is not active in Spin and SpinGC.\n");
         return(-1);
       }
@@ -1722,7 +1722,7 @@ int ReadDefFileIdxPara()
     case KWPairLift:
       /*pairlift.def--------------------------------------*/
       if (Def::NPairLiftCoupling > 0) {
-        if (Def::iCalcModel != SpinGC) {
+        if (Def::iCalcModel != DC::SpinGC) {
           fprintf(MP::STDOUT, "PairLift is active only in SpinGC.\n");
           return(-1);
         }
@@ -1836,7 +1836,7 @@ int ReadDefFileIdxPara()
             &isite2,
             &isigma2);
 
-          if (Def::iCalcModel == Spin) {
+          if (Def::iCalcModel == DC::Spin) {
             if (isite1 != isite2) {
               fprintf(MP::STDOUT, "Warning: Site component of (i, j) =(%d, %d) is ignored.\n",
                 isite1, isite2);
@@ -1880,7 +1880,7 @@ int ReadDefFileIdxPara()
             &isigma4
           );
 
-          if (Def::iCalcModel == Spin || Def::iCalcModel == SpinGC) {
+          if (Def::iCalcModel == DC::Spin || Def::iCalcModel == DC::SpinGC) {
             if (CheckFormatForSpinInt(isite1, isite2, isite3, isite4) != 0) {
               exitMPI(-1);
               //Def::NCisAjtCkuAlvDC--;
@@ -2122,7 +2122,7 @@ int ReadDefFileIdxPara()
     case KWSingleExcitation:
       /*singleexcitation.def----------------------------------------*/
       if (Def::NNSingleExcitationOperator > 0) {
-        if (Def::iCalcModel == Spin || Def::iCalcModel == SpinGC) {
+        if (Def::iCalcModel == DC::Spin || Def::iCalcModel == DC::SpinGC) {
           fprintf(stderr, "SingleExcitation is not allowed for spin system.\n");
           fclose(fp);
           return ReadDefFileError(defname);
@@ -2594,11 +2594,11 @@ int CheckLocSpin()
 
   int i=0;
   switch(Def::iCalcModel){
-  case Hubbard:
-  case HubbardNConserved:
-  case HubbardGC:
-  case SpinlessFermion:
-  case SpinlessFermionGC:
+  case DC::Hubbard:
+  case DC::HubbardNConserved:
+  case DC::HubbardGC:
+  case DC::SpinlessFermion:
+  case DC::SpinlessFermionGC:
     for(i=0; i<Def::Nsite; i++){
       if(Def::LocSpn[i]!=ITINERANT){
         return FALSE;
@@ -2606,8 +2606,8 @@ int CheckLocSpin()
     }
     break;
 
-  case Kondo:
-  case KondoGC:
+  case DC::Kondo:
+  case DC::KondoGC:
     for(i=0; i<Def::Nsite; i++){
       if(Def::LocSpn[i]>LOCSPIN){
         Def::iFlgGeneralSpin=TRUE;
@@ -2618,8 +2618,8 @@ int CheckLocSpin()
     }
     break;
 
-  case Spin:
-  case SpinGC:
+  case DC::Spin:
+  case DC::SpinGC:
     for(i=0; i<Def::Nsite; i++){
       if(Def::LocSpn[i]>LOCSPIN){
         Def::iFlgGeneralSpin=TRUE;
@@ -2862,19 +2862,19 @@ int CheckInterAllCondition(
     return(-1);
   }
 
-  if(iCalcModel == Spin || iCalcModel ==SpinGC){
+  if(iCalcModel == DC::Spin || iCalcModel == DC::SpinGC){
     if(CheckFormatForSpinInt(isite1, isite2, isite3, isite4)!=0){
       fprintf(stderr, "%s", "Error: Spin index of InterAll is incorrect.\n");
       return(-1);
     }
   }
-  else if(iCalcModel == SpinlessFermion || iCalcModel==SpinlessFermionGC){
+  else if(iCalcModel == DC::SpinlessFermion || iCalcModel== DC::SpinlessFermionGC){
     if(isigma1 !=0 || isigma2 != 0 || isigma3 != 0 || isigma4 !=0){
       fprintf(stderr, "%s", "Error: Spin index of InterAll is incorrect.\n");
       return -1;
     }
   }
-  else if(iCalcModel == Kondo){
+  else if(iCalcModel == DC::Kondo){
     if(CheckFormatForKondoInt(isite1, isite2, isite3, isite4, iLocInfo)!=0){
       return -1;
     }

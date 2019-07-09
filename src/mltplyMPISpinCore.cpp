@@ -1322,8 +1322,6 @@ void X_child_CisAit_spin_MPIdouble(
     trans =0.0;
   }
 
-  //  fprintf(stdout, "Debug: MP::myrank=%d, origin=%d, trans=%lf\n", MP::myrank, origin, trans);
-
   idim_max_buf = SendRecv_i(origin, idim_max);
   SendRecv_iv(origin, idim_max + 1, idim_max_buf + 1, List::c1_org, List::c1buf_org);
   SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);

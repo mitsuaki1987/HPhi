@@ -737,16 +737,16 @@ int expec_energy_flct(
   int istate;
 
   switch (Def::iCalcType) {
-  case TPQCalc:
-  case TimeEvolution:
+  case DC::TPQCalc:
+  case DC::TimeEvolution:
 #ifdef _DEBUG
     fprintf(MP::STDOUT, "%s", "  Start: Calculate Energy.\n");
     TimeKeeperWithStep("%s_TimeKeeper.dat",
       "step %d: Calculate energy begins:      %s", "a", Step::step_i);
 #endif
     break;
-  case FullDiag:
-  case CG:
+  case DC::FullDiag:
+  case DC::CG:
     break;
   default:
     return -1;
@@ -765,7 +765,7 @@ int expec_energy_flct(
   for (istate = 0; istate < nstate; istate++) Phys::energy[istate] = 0.0;
 
   int nCalcFlct;
-  if (Def::iCalcType == TPQCalc) {
+  if (Def::iCalcType == DC::TPQCalc) {
     nCalcFlct = 3201;
   }
   else {//For FullDiag
@@ -774,16 +774,16 @@ int expec_energy_flct(
   StartTimer(nCalcFlct);
 
   switch (Def::iCalcModel) {
-  case HubbardGC:
+  case DC::HubbardGC:
     expec_energy_flct_HubbardGC(nstate, tmp_v0);
     break;
-  case KondoGC:
-  case Hubbard:
-  case Kondo:
+  case DC::KondoGC:
+  case DC::Hubbard:
+  case DC::Kondo:
     expec_energy_flct_Hubbard(nstate, tmp_v0);
     break;
 
-  case SpinGC:
+  case DC::SpinGC:
     if (Def::iFlgGeneralSpin == FALSE) {
       expec_energy_flct_HalfSpinGC(nstate, tmp_v0);
     }
@@ -792,7 +792,7 @@ int expec_energy_flct(
     }
     break;/*case SpinGC*/
     /* SpinGCBoost */
-  case Spin:
+  case DC::Spin:
     /*
     if(Def::iFlgGeneralSpin == FALSE){
       expec_energy_flct_HalfSpin(X);
@@ -826,7 +826,7 @@ shared(tmp_v1,tmp_v0,nstate,i_max)
   }
 
   int nCalcExpec;
-  if (Def::iCalcType == TPQCalc) {
+  if (Def::iCalcType == DC::TPQCalc) {
     nCalcExpec = 3202;
   }
   else {//For FullDiag
@@ -851,8 +851,8 @@ shared(tmp_v1,tmp_v0,nstate,i_max)
   SumMPI_dv(nstate, Phys::var);
 
   switch (Def::iCalcType) {
-  case TPQCalc:
-  case TimeEvolution:
+  case DC::TPQCalc:
+  case DC::TimeEvolution:
 #ifdef _DEBUG
     fprintf(MP::STDOUT, "%s", "  End  : Calculate Energy.\n");
     TimeKeeperWithStep("%s_TimeKeeper.dat", "step %d: Calculate energy finishes:    %s", "a", Step::step_i);

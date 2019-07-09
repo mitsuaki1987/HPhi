@@ -14,6 +14,7 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 /*-------------------------------------------------------------*/
+#include "PairExHubbard.hpp"
 #include "bitcalc.hpp"
 #include "wrapperMPI.hpp"
 #include "mltplyCommon.hpp"
@@ -26,17 +27,14 @@
 #include "common/setmemory.hpp"
 #endif
 
-///
-/// Calculation of pair excited state for Hubbard Grand canonical system
-/// \param X [in,out] define list to get and put information of calculation
-/// \param tmp_v0 [out] Result v0 = H v1
-/// \param tmp_v1 [in] v0 = H v1
-/// \returns TRUE: Normally finished
-/// \returns FALSE: Abnormally finished
-/// \author Kazuyoshi Yoshimi
-/// \version 1.2
-int GetPairExcitedStateHubbardGC(
-  /**< [inout] define list to get and put information of calculation*/
+/**
+@breif Calculation of pair excited state for Hubbard Grand canonical system
+@returns TRUE: Normally finished
+@returns FALSE: Abnormally finished
+@author Kazuyoshi Yoshimi
+@version 1.2
+*/
+int GetExcitedState::Pair::HubbardGC(
   int nstate, 
   std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
@@ -122,18 +120,16 @@ shared(i_max,isite1, tmp_trans,tmp_v0,tmp_v1,nstate)
   }
   return TRUE;
 }
-///
-/// Calculation of pair excited state for Hubbard canonical system
-/// \param X [in,out] define list to get and put information of calculation
-/// \param tmp_v0 [out] Result v0 = H v1
-/// \param tmp_v1 [in] v0 = H v1
-/// \returns TRUE: Normally finished
-/// \returns FALSE: Abnormally finished
-/// \author Kazuyoshi Yoshimi
-/// \version 1.2
-int GetPairExcitedStateHubbard(
-  /**< [inout] define list to get and put information of calculation*/
-  int nstate, std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
+/**
+@breif Calculation of pair excited state for Hubbard canonical system
+@returns TRUE: Normally finished
+@returns FALSE: Abnormally finished
+@author Kazuyoshi Yoshimi
+@version 1.2
+*/
+int GetExcitedState::Pair::Hubbard(
+  int nstate, 
+  std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
   int iEx
 ) {

@@ -71,7 +71,7 @@ int mltply( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp
     }
   }
   else {
-    if (Def::iCalcModel == Spin) {
+    if (Def::iCalcModel == DC::Spin) {
       if (GetSplitBitForGeneralSpin(Def::Nsite, &ihfbit, Def::SiteToBit) != 0) {
         return -1;
       }
@@ -92,24 +92,24 @@ shared(tmp_v0, tmp_v1, List::Diagonal,one,nstate,i_max)
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
   }
   StopTimer(100);
-  if (Def::iCalcType == TimeEvolution) diagonalcalcForTE(Step::step_i, &tmp_v0[0][0], &tmp_v1[0][0]);
+  if (Def::iCalcType == DC::TimeEvolution) diagonalcalcForTE(Step::step_i, &tmp_v0[0][0], &tmp_v1[0][0]);
   
   switch (Def::iCalcModel) {
-  case HubbardGC:
+  case DC::HubbardGC:
     mltplyHubbardGC(nstate, tmp_v0, tmp_v1);
     break;
       
-  case KondoGC:
-  case Hubbard:
-  case Kondo:
+  case DC::KondoGC:
+  case DC::Hubbard:
+  case DC::Kondo:
     mltplyHubbard(nstate, tmp_v0, tmp_v1);
     break;
       
-  case Spin:
+  case DC::Spin:
     mltplySpin(nstate, tmp_v0, tmp_v1);
     break;
       
-  case SpinGC:
+  case DC::SpinGC:
     mltplySpinGC(nstate, tmp_v0, tmp_v1);
     break;
       

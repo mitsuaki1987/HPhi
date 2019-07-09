@@ -60,7 +60,7 @@ void xsetmem::def()
   Def::GeneralTransfer = i_2d_allocate(Def::NTransfer, 4);
   Def::ParaGeneralTransfer = cd_1d_allocate(Def::NTransfer);
 
-  if (Def::iCalcType == TimeEvolution) {
+  if (Def::iCalcType == DC::TimeEvolution) {
     Def::EDGeneralTransfer = i_2d_allocate(Def::NTransfer + Def::NTETransferMax, 4);
     Def::EDParaGeneralTransfer = cd_1d_allocate(Def::NTransfer + Def::NTETransferMax);
   } else {
@@ -103,13 +103,13 @@ void xsetmem::def()
   Boost::arrayJ = cd_3d_allocate(Boost::NumarrayJ, 3, 3);
 
   int NInterAllSet;
-  NInterAllSet = (Def::iCalcType == TimeEvolution) ? Def::NInterAll + Def::NTEInterAllMax : Def::NInterAll;
+  NInterAllSet = (Def::iCalcType == DC::TimeEvolution) ? Def::NInterAll + Def::NTEInterAllMax : Def::NInterAll;
   Def::InterAll_OffDiagonal = i_2d_allocate(NInterAllSet, 8);
   Def::ParaInterAll_OffDiagonal = cd_1d_allocate(NInterAllSet);
   Def::InterAll_Diagonal = i_2d_allocate(NInterAllSet, 4);
   Def::ParaInterAll_Diagonal = d_1d_allocate(NInterAllSet);
 
-  if (Def::iCalcType == TimeEvolution) {
+  if (Def::iCalcType == DC::TimeEvolution) {
     Def::TETime = d_1d_allocate(Def::NTETimeSteps);
     //Time-dependent Transfer
     Def::NTETransfer = i_1d_allocate(Def::NTETimeSteps);
@@ -160,13 +160,13 @@ void xsetmem::large()
 
   List::Diagonal = d_1d_allocate(Check::idim_max + 1);
 
-  if (Def::iCalcType == FullDiag) {
+  if (Def::iCalcType == DC::FullDiag) {
     nstate = Check::idim_max;
   }
-  else if (Def::iCalcType == CG) {
+  else if (Def::iCalcType == DC::CG) {
     nstate = Def::k_exct;
   }
-  else if (Def::iCalcType == TPQCalc) {
+  else if (Def::iCalcType == DC::TPQCalc) {
     nstate = Step::NumAve;
   }
   else {
@@ -180,7 +180,7 @@ void xsetmem::large()
   if (GetlistSize() == TRUE) List::c1buf = li_1d_allocate(MAXidim_max + 1);
   Wave::v1buf = cd_2d_allocate(MAXidim_max + 1, nstate);
 #else
-  if (Def::iCalcType == CG)  Wave::v1buf = cd_2d_allocate(Check::idim_max + 1, nstate);
+  if (Def::iCalcType == DC::CG)  Wave::v1buf = cd_2d_allocate(Check::idim_max + 1, nstate);
 #endif // MPI
 
   Phys::num_down = d_1d_allocate(nstate);
@@ -208,13 +208,13 @@ void xsetmem::large()
 int GetlistSize()
 {
   switch (Def::iCalcModel) {
-  case Spin:
-  case Hubbard:
-  case HubbardNConserved:
-  case Kondo:
-  case KondoGC:
+  case DC::Spin:
+  case DC::Hubbard:
+  case DC::HubbardNConserved:
+  case DC::Kondo:
+  case DC::KondoGC:
     if (Def::iFlgGeneralSpin == FALSE) {
-      if (Def::iCalcModel == Spin && Def::Nsite % 2 == 1) {
+      if (Def::iCalcModel == DC::Spin && Def::Nsite % 2 == 1) {
         Large::SizeOflist_2_1 = Check::sdim * 2 + 2;
       }
       else {

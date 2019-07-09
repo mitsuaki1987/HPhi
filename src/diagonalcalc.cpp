@@ -88,10 +88,10 @@ int SetDiagonalTEInterAll(
 
     switch (Def::iCalcModel) {
 
-    case HubbardGC:
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::HubbardGC:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
       is1_spin = Def::Tpow[2 * isite1 - 2 + isigma1];
       is2_spin = Def::Tpow[2 * isite2 - 2 + isigma2];
       num1 = 0;
@@ -102,8 +102,8 @@ int SetDiagonalTEInterAll(
       num2 += ibit2_spin / is2_spin;
       break;/*case HubbardGC, KondoGC, Hubbard, Kondo:*/
 
-    case SpinGC:
-    case Spin:
+    case DC::SpinGC:
+    case DC::Spin:
       if (Def::iFlgGeneralSpin == FALSE) {
         is1_up = Def::Tpow[isite1 - 1];
         is2_up = Def::Tpow[isite2 - 1];
@@ -136,7 +136,7 @@ shared(tmp_v0, tmp_v1, i_max, dtmp_V)
 
     switch (Def::iCalcModel) {
 
-    case HubbardGC:
+    case DC::HubbardGC:
 
       is1_spin = Def::Tpow[2 * isite1 - 2 + isigma1];
       is2_spin = Def::Tpow[2 * isite2 - 2 + isigma2];
@@ -156,9 +156,9 @@ shared(tmp_v0, tmp_v1,i_max, dtmp_V, is1_spin)
       }
       break;/*case HubbardGC:*/
 
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
 
       is1_spin = Def::Tpow[2 * isite1 - 2 + isigma1];
       is2_spin = Def::Tpow[2 * isite2 - 2 + isigma2];
@@ -178,7 +178,7 @@ shared(tmp_v0, tmp_v1, List::c1,i_max, dtmp_V, is1_spin)
       }
       break;/*case KondoGC, Hubbard, Kondo:*/
 
-    case SpinGC:
+    case DC::SpinGC:
 
       if (Def::iFlgGeneralSpin == FALSE) {
         is1_up = Def::Tpow[isite1 - 1];
@@ -209,7 +209,7 @@ shared(tmp_v0, tmp_v1, i_max, dtmp_V, isite1, isigma1, Def::SiteToBit, Def::Tpow
 
       break;/*case SpinGC:*/
 
-    case Spin:
+    case DC::Spin:
 
       if (Def::iFlgGeneralSpin == FALSE) {
         is1_up = Def::Tpow[isite1 - 1];
@@ -249,7 +249,7 @@ shared(tmp_v0, tmp_v1, List::c1, i_max, dtmp_V, isite1, isigma1, Def::SiteToBit,
   }/*else if (isite2 > Def::Nsite)*/
 
   switch (Def::iCalcModel) {
-  case HubbardGC: //List::c1[j] -> j-1
+  case DC::HubbardGC: //List::c1[j] -> j-1
     is1_spin = Def::Tpow[2 * isite1 - 2 + isigma1];
     is2_spin = Def::Tpow[2 * isite2 - 2 + isigma2];
 #pragma omp parallel for default(none) private(num1, ibit1_spin, num2, ibit2_spin) \
@@ -264,9 +264,9 @@ shared(tmp_v0, tmp_v1, i_max, dtmp_V, is1_spin, is2_spin)
       tmp_v0[j] += dtmp_V * num1*num2*tmp_v1[j];
     }
     break;
-  case KondoGC:
-  case Hubbard:
-  case Kondo:
+  case DC::KondoGC:
+  case DC::Hubbard:
+  case DC::Kondo:
     is1_spin = Def::Tpow[2 * isite1 - 2 + isigma1];
     is2_spin = Def::Tpow[2 * isite2 - 2 + isigma2];
 
@@ -284,7 +284,7 @@ shared(tmp_v0, tmp_v1, List::c1, i_max, dtmp_V, is1_spin, is2_spin)
     }
     break;
 
-  case Spin:
+  case DC::Spin:
     if (Def::iFlgGeneralSpin == FALSE) {
       is1_up = Def::Tpow[isite1 - 1];
       is2_up = Def::Tpow[isite2 - 1];
@@ -309,7 +309,7 @@ shared(tmp_v0, tmp_v1, List::c1, i_max, dtmp_V, isite1, isite2, isigma1, isigma2
     }
     break;
 
-  case SpinGC:
+  case DC::SpinGC:
     if (Def::iFlgGeneralSpin == FALSE) {
       is1_up = Def::Tpow[isite1 - 1];
       is2_up = Def::Tpow[isite2 - 1];
@@ -373,10 +373,10 @@ int SetDiagonalTEChemi(
 
     switch (Def::iCalcModel) {
 
-    case HubbardGC:
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::HubbardGC:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
 
       if (spin == 0) {
         is1 = Def::Tpow[2 * isite1 - 2];
@@ -386,10 +386,10 @@ int SetDiagonalTEChemi(
       }
       ibit1 = (long int)MP::myrank & is1;
       num1 = ibit1 / is1;
-      break;/*case HubbardGC, case KondoGC, Hubbard, Kondo:*/
+      break;/*case HubbardGC, case DC::KondoGC, Hubbard, Kondo:*/
 
-    case SpinGC:
-    case Spin:
+    case DC::SpinGC:
+    case DC::Spin:
 
       if (Def::iFlgGeneralSpin == FALSE) {
         is1_up = Def::Tpow[isite1 - 1];
@@ -418,7 +418,7 @@ shared(tmp_v0, tmp_v1, i_max, dtmp_V)
   }/*if (isite1 >= Def::Nsite*/
 
   switch (Def::iCalcModel) {
-  case HubbardGC:
+  case DC::HubbardGC:
     if (spin == 0) {
       is1 = Def::Tpow[2 * isite1 - 2];
     }
@@ -434,9 +434,9 @@ shared(tmp_v0, tmp_v1, i_max, dtmp_V, is1)
       tmp_v0[j] += dtmp_V * num1*tmp_v1[j];
     }
     break;
-  case KondoGC:
-  case Hubbard:
-  case Kondo:
+  case DC::KondoGC:
+  case DC::Hubbard:
+  case DC::Kondo:
     if (spin == 0) {
       is1 = Def::Tpow[2 * isite1 - 2];
     }
@@ -453,7 +453,7 @@ shared(List::c1, tmp_v0, tmp_v1, i_max, dtmp_V, is1)
     }
     break;
 
-  case SpinGC:
+  case DC::SpinGC:
     if (Def::iFlgGeneralSpin == FALSE) {
       is1_up = Def::Tpow[isite1 - 1];
 #pragma omp parallel for default(none) private(num1) \
@@ -473,7 +473,7 @@ shared(tmp_v0, tmp_v1, i_max, dtmp_V, isite1, isigma1, Def::SiteToBit, Def::Tpow
     }
     break;
 
-  case Spin:
+  case DC::Spin:
     if (Def::iFlgGeneralSpin == FALSE) {
       is1_up = Def::Tpow[isite1 - 1];
 #pragma omp parallel for default(none) private(num1) \
@@ -532,10 +532,10 @@ int SetDiagonalTETransfer
 
     switch (Def::iCalcModel) {
 
-    case HubbardGC:
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::HubbardGC:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
       if (spin == 0) {
         is1 = Def::Tpow[2 * isite1 - 2];
       }
@@ -544,10 +544,10 @@ int SetDiagonalTETransfer
       }
       ibit1 = (long int)MP::myrank & is1;
       num1 = ibit1 / is1;
-      break;/*case HubbardGC, case KondoGC, Hubbard, Kondo:*/
+      break;/*case HubbardGC, case DC::KondoGC, Hubbard, Kondo:*/
 
-    case SpinGC:
-    case Spin:
+    case DC::SpinGC:
+    case DC::Spin:
       if (Def::iFlgGeneralSpin == FALSE) {
         is1_up = Def::Tpow[isite1 - 1];
         num1 = (((long int)MP::myrank& is1_up) / is1_up) ^ (1 - spin);
@@ -574,7 +574,7 @@ shared(tmp_v0, tmp_v1, i_max, dtmp_V)
   }/*if (isite1 >= Def::Nsite*/
   else {//(isite1 < Def::Nsite)
     switch (Def::iCalcModel) {
-    case HubbardGC:
+    case DC::HubbardGC:
       if (spin == 0) {
         is1 = Def::Tpow[2 * isite1 - 2];
       }
@@ -590,9 +590,9 @@ shared(List::c1, tmp_v0, tmp_v1, i_max, dtmp_V, is1)
       }
       break;
 
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
       if (spin == 0) {
         is1 = Def::Tpow[2 * isite1 - 2];
       }
@@ -608,7 +608,7 @@ shared(List::c1, tmp_v0, tmp_v1, i_max, dtmp_V, is1)
       }
       break;
 
-    case SpinGC:
+    case DC::SpinGC:
       if (Def::iFlgGeneralSpin == FALSE) {
         is1_up = Def::Tpow[isite1 - 1];
 #pragma omp parallel for default(none) private(num1, ibit1_up) \
@@ -630,7 +630,7 @@ shared(tmp_v0, tmp_v1, i_max, dtmp_V, isite1, isigma1, Def::SiteToBit, Def::Tpow
       }
       break;
 
-    case Spin:
+    case DC::Spin:
       if (Def::iFlgGeneralSpin == FALSE) {
         is1_up = Def::Tpow[isite1 - 1];
 #pragma omp parallel for default(none) private(num1, ibit1_up) \
@@ -735,10 +735,10 @@ int SetDiagonalCoulombIntra
 
     switch (Def::iCalcModel) {
 
-    case HubbardGC:
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::HubbardGC:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
 
       is1_up = Def::Tpow[2 * isite1 - 2];
       is1_down = Def::Tpow[2 * isite1 - 1];
@@ -752,8 +752,8 @@ shared(List::Diagonal, i_max, dtmp_V)
 
       break; /*case HubbardGC, KondoGC, Hubbard, Kondo:*/
 
-    case Spin:
-    case SpinGC:
+    case DC::Spin:
+    case DC::SpinGC:
       /*
        They do not have the Coulomb term
       */
@@ -771,7 +771,7 @@ shared(List::Diagonal, i_max, dtmp_V)
   }/*if (isite1 >= Def::Nsite*/
   else {
     switch (Def::iCalcModel) {
-    case HubbardGC:
+    case DC::HubbardGC:
       is1_up = Def::Tpow[2 * isite1 - 2];
       is1_down = Def::Tpow[2 * isite1 - 1];
       is = is1_up + is1_down;
@@ -785,9 +785,9 @@ shared(List::Diagonal, List::c1, i_max, is, dtmp_V)
       }
 
       break;
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
       is1_up = Def::Tpow[2 * isite1 - 2];
       is1_down = Def::Tpow[2 * isite1 - 1];
       is = is1_up + is1_down;
@@ -801,8 +801,8 @@ shared(List::Diagonal, List::c1, i_max, is, dtmp_V)
       }
       break;
 
-    case Spin:
-    case SpinGC:
+    case DC::Spin:
+    case DC::SpinGC:
       break;
 
     default:
@@ -844,10 +844,10 @@ int SetDiagonalChemi
 
     switch (Def::iCalcModel) {
 
-    case HubbardGC:
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::HubbardGC:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
 
       if (spin == 0) {
         is1 = Def::Tpow[2 * isite1 - 2];
@@ -861,10 +861,10 @@ int SetDiagonalChemi
 shared(List::Diagonal, i_max, dtmp_V, num1)
       for (j = 1; j <= i_max; j++) List::Diagonal[j] += num1 * dtmp_V;
 
-      break;/*case HubbardGC, case KondoGC, Hubbard, Kondo:*/
+      break;/*case HubbardGC, case DC::KondoGC, Hubbard, Kondo:*/
 
-    case SpinGC:
-    case Spin:
+    case DC::SpinGC:
+    case DC::Spin:
 
       if (Def::iFlgGeneralSpin == FALSE) {
         is1_up = Def::Tpow[isite1 - 1];
@@ -895,7 +895,7 @@ shared(List::Diagonal, i_max, dtmp_V)
   }/*if (isite1 >= Def::Nsite*/
 
   switch (Def::iCalcModel) {
-  case HubbardGC:
+  case DC::HubbardGC:
     if (spin == 0) {
       is1 = Def::Tpow[2 * isite1 - 2];
     }
@@ -913,9 +913,9 @@ shared(List::c1, List::Diagonal, i_max, dtmp_V, is1)
       List::Diagonal[j] += num1 * dtmp_V;
     }
     break;
-  case KondoGC:
-  case Hubbard:
-  case Kondo:
+  case DC::KondoGC:
+  case DC::Hubbard:
+  case DC::Kondo:
     if (spin == 0) {
       is1 = Def::Tpow[2 * isite1 - 2];
     }
@@ -933,7 +933,7 @@ shared(List::c1, List::Diagonal, i_max, dtmp_V, is1)
     }
     break;
 
-  case SpinGC:
+  case DC::SpinGC:
     if (Def::iFlgGeneralSpin == FALSE) {
       is1_up = Def::Tpow[isite1 - 1];
 #pragma omp parallel for default(none) private(num1, ibit1_up) \
@@ -955,7 +955,7 @@ shared(List::Diagonal, i_max, dtmp_V, isite1, isigma1, Def::SiteToBit, Def::Tpow
     }
     break;
 
-  case Spin:
+  case DC::Spin:
     if (Def::iFlgGeneralSpin == FALSE) {
       is1_up = Def::Tpow[isite1 - 1];
 #pragma omp parallel for default(none) private(num1, ibit1_up) \
@@ -1024,10 +1024,10 @@ int SetDiagonalCoulombInter
 
     switch (Def::iCalcModel) {
 
-    case HubbardGC:
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::HubbardGC:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
 
       is1_up = Def::Tpow[2 * isite1 - 2];
       is1_down = Def::Tpow[2 * isite1 - 1];
@@ -1053,8 +1053,8 @@ shared(List::Diagonal, i_max, dtmp_V, num1, num2)
 
       break;/*case HubbardGC, KondoGC, Hubbard, Kondo:*/
 
-    case Spin:
-    case SpinGC:
+    case DC::Spin:
+    case DC::SpinGC:
 #pragma omp parallel for default(none) private(j) \
 shared(List::Diagonal, i_max, dtmp_V)
       for (j = 1; j <= i_max; j++) {
@@ -1074,10 +1074,10 @@ shared(List::Diagonal, i_max, dtmp_V)
   else if (isite2 > Def::Nsite /* => isite1 */) {
 
     switch (Def::iCalcModel) {
-    case HubbardGC:
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::HubbardGC:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
       is1_up = Def::Tpow[2 * isite1 - 2];
       is1_down = Def::Tpow[2 * isite1 - 1];
       is2_up = Def::Tpow[2 * isite2 - 2];
@@ -1089,8 +1089,8 @@ shared(List::Diagonal, i_max, dtmp_V)
       num2 += ibit2_down / is2_down;
       break;
 
-    case Spin:
-    case SpinGC:
+    case DC::Spin:
+    case DC::SpinGC:
       break;
 
     default:
@@ -1100,7 +1100,7 @@ shared(List::Diagonal, i_max, dtmp_V)
 
     switch (Def::iCalcModel) {
 
-    case HubbardGC:
+    case DC::HubbardGC:
 
 #pragma omp parallel for default(none) \
 private(num1, ibit1_up, ibit1_down, j) \
@@ -1117,9 +1117,9 @@ shared(List::Diagonal, i_max, dtmp_V, num2, is1_up, is1_down)
 
       break;/*case HubbardGC*/
 
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
 
 #pragma omp parallel for default(none) \
 private(num1, ibit1_up, ibit1_down, j) \
@@ -1135,14 +1135,14 @@ shared(List::c1, List::Diagonal, i_max, dtmp_V, is1_up, is1_down, num2)
       }
       break;/*case KondoGC, Hubbard, Kondo:*/
 
-    case Spin:
-    case SpinGC:
+    case DC::Spin:
+    case DC::SpinGC:
 #pragma omp parallel for default(none) private(j) \
 shared(List::Diagonal, i_max, dtmp_V)
       for (j = 1; j <= i_max; j++) {
         List::Diagonal[j] += dtmp_V;
       }
-      break;/* case Spin, SpinGC:*/
+      break;/* case DC::Spin, SpinGC:*/
 
     default:
       fprintf(MP::STDOUT, "Error: CalcModel %d is incorrect.\n", Def::iCalcModel);
@@ -1155,7 +1155,7 @@ shared(List::Diagonal, i_max, dtmp_V)
   }/*else if (isite2 > Def::Nsite)*/
   else {
     switch (Def::iCalcModel) {
-    case HubbardGC: //List::c1[j] -> j-1
+    case DC::HubbardGC: //List::c1[j] -> j-1
       is1_up = Def::Tpow[2 * isite1 - 2];
       is1_down = Def::Tpow[2 * isite1 - 1];
       is2_up = Def::Tpow[2 * isite2 - 2];
@@ -1179,9 +1179,9 @@ shared( List::Diagonal, i_max, dtmp_V, is1_up, is1_down, is2_up, is2_down)
         List::Diagonal[j] += num1 * num2*dtmp_V;
       }
       break;
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
       is1_up = Def::Tpow[2 * isite1 - 2];
       is1_down = Def::Tpow[2 * isite1 - 1];
       is2_up = Def::Tpow[2 * isite2 - 2];
@@ -1207,8 +1207,8 @@ shared(List::c1, List::Diagonal, i_max, dtmp_V, is1_up, is1_down, is2_up, is2_do
       }
       break;
 
-    case Spin:
-    case SpinGC:
+    case DC::Spin:
+    case DC::SpinGC:
 #pragma omp parallel for default(none) private(j) \
 shared(List::Diagonal, i_max, dtmp_V)
       for (j = 1; j <= i_max; j++) {
@@ -1265,10 +1265,10 @@ int SetDiagonalHund
 
     switch (Def::iCalcModel) {
 
-    case HubbardGC:
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::HubbardGC:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
 
       is1_up = Def::Tpow[2 * isite1 - 2];
       is1_down = Def::Tpow[2 * isite1 - 1];
@@ -1297,8 +1297,8 @@ shared(List::Diagonal, i_max, dtmp_V, num1_up, num1_down, num2_up, num2_down)
 
       break;/*case HubbardGC, KondoGC, Hubbard, Kondo:*/
 
-    case SpinGC:
-    case Spin:
+    case DC::SpinGC:
+    case DC::Spin:
 
       is1_up = Def::Tpow[isite1 - 1];
       is2_up = Def::Tpow[isite2 - 1];
@@ -1323,7 +1323,7 @@ shared(List::Diagonal, i_max, dtmp_V)
 
     switch (Def::iCalcModel) {
 
-    case HubbardGC:
+    case DC::HubbardGC:
 
       is1_up = Def::Tpow[2 * isite1 - 2];
       is1_down = Def::Tpow[2 * isite1 - 1];
@@ -1354,9 +1354,9 @@ shared( List::Diagonal, i_max, dtmp_V, num2_up, num2_down, is1_up, is1_down)
       }
       break;/*case HubbardGC:*/
 
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
 
       is1_up = Def::Tpow[2 * isite1 - 2];
       is1_down = Def::Tpow[2 * isite1 - 1];
@@ -1387,7 +1387,7 @@ shared(List::c1, List::Diagonal,i_max, dtmp_V, num2_up, num2_down, is1_up, is1_d
       }
       break;/*case KondoGC, Hubbard, Kondo:*/
 
-    case SpinGC:
+    case DC::SpinGC:
       is1_up = Def::Tpow[isite1 - 1];
       is2_up = Def::Tpow[isite2 - 1];
       ibit2_up = (long int)MP::myrank & is2_up;
@@ -1414,7 +1414,7 @@ shared(List::Diagonal, i_max, dtmp_V, is1_up)
       }
       break;/*case SpinGC:*/
 
-    case Spin:
+    case DC::Spin:
       is1_up = Def::Tpow[isite1 - 1];
       is2_up = Def::Tpow[isite2 - 1];
       ibit2_up = (long int)MP::myrank & is2_up;
@@ -1452,7 +1452,7 @@ shared(List::c1, List::Diagonal, i_max, dtmp_V, is1_up)
   }/*else if (isite2 > Def::Nsite)*/
   else {
     switch (Def::iCalcModel) {
-    case HubbardGC: // List::c1[j] -> j-1
+    case DC::HubbardGC: // List::c1[j] -> j-1
       is1_up = Def::Tpow[2 * isite1 - 2];
       is1_down = Def::Tpow[2 * isite1 - 1];
       is2_up = Def::Tpow[2 * isite2 - 2];
@@ -1480,9 +1480,9 @@ shared( List::Diagonal, i_max, dtmp_V, is1_up, is1_down, is2_up, is2_down)
         List::Diagonal[j] += dtmp_V * (num1_up*num2_up + num1_down * num2_down);
       }
       break;
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
       is1_up = Def::Tpow[2 * isite1 - 2];
       is1_down = Def::Tpow[2 * isite1 - 1];
       is2_up = Def::Tpow[2 * isite2 - 2];
@@ -1511,7 +1511,7 @@ shared(List::c1, List::Diagonal, i_max, dtmp_V, is1_up, is1_down, is2_up, is2_do
       }
       break;
 
-    case SpinGC:
+    case DC::SpinGC:
       is1_up = Def::Tpow[isite1 - 1];
       is2_up = Def::Tpow[isite2 - 1];
       is_up = is1_up + is2_up;
@@ -1525,7 +1525,7 @@ shared(List::c1, List::Diagonal, i_max, dtmp_V, is1_up, is2_up, is_up)
       }
       break;
 
-    case Spin:
+    case DC::Spin:
       is1_up = Def::Tpow[isite1 - 1];
       is2_up = Def::Tpow[isite2 - 1];
       is_up = is1_up + is2_up;
@@ -1595,10 +1595,10 @@ int SetDiagonalInterAll
 
     switch (Def::iCalcModel) {
 
-    case HubbardGC:
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::HubbardGC:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
 
       is1_spin = Def::Tpow[2 * isite1 - 2 + isigma1];
       is2_spin = Def::Tpow[2 * isite2 - 2 + isigma2];
@@ -1617,8 +1617,8 @@ shared(List::Diagonal, i_max, dtmp_V, num2, num1)
 
       break;/*case HubbardGC, KondoGC, Hubbard, Kondo:*/
 
-    case SpinGC:
-    case Spin:
+    case DC::SpinGC:
+    case DC::Spin:
 
       if (Def::iFlgGeneralSpin == FALSE) {
         is1_up = Def::Tpow[isite1 - 1];
@@ -1659,7 +1659,7 @@ shared(List::Diagonal, i_max, dtmp_V, num1)
 
     switch (Def::iCalcModel) {
 
-    case HubbardGC:
+    case DC::HubbardGC:
 
       is1_spin = Def::Tpow[2 * isite1 - 2 + isigma1];
       is2_spin = Def::Tpow[2 * isite2 - 2 + isigma2];
@@ -1678,9 +1678,9 @@ shared(List::Diagonal, i_max, dtmp_V, is1_spin, num2)
       }
       break;/*case HubbardGC:*/
 
-    case KondoGC:
-    case Hubbard:
-    case Kondo:
+    case DC::KondoGC:
+    case DC::Hubbard:
+    case DC::Kondo:
 
       is1_spin = Def::Tpow[2 * isite1 - 2 + isigma1];
       is2_spin = Def::Tpow[2 * isite2 - 2 + isigma2];
@@ -1699,7 +1699,7 @@ shared(List::Diagonal, List::c1, i_max, dtmp_V, is1_spin, num2)
       }
       break;/*case KondoGC, Hubbard, Kondo:*/
 
-    case SpinGC:
+    case DC::SpinGC:
 
       if (Def::iFlgGeneralSpin == FALSE) {
         is1_up = Def::Tpow[isite1 - 1];
@@ -1728,7 +1728,7 @@ shared(List::Diagonal, i_max, dtmp_V, isite1, isigma1, Def::SiteToBit, Def::Tpow
 
       break;/*case SpinGC:*/
 
-    case Spin:
+    case DC::Spin:
 
       if (Def::iFlgGeneralSpin == FALSE) {
         is1_up = Def::Tpow[isite1 - 1];
@@ -1768,7 +1768,7 @@ shared(List::Diagonal, List::c1, i_max, dtmp_V, isite1, isigma1, Def::SiteToBit,
   }/*else if (isite2 > Def::Nsite)*/
 
   switch (Def::iCalcModel) {
-  case HubbardGC: //List::c1[j] -> j-1
+  case DC::HubbardGC: //List::c1[j] -> j-1
     is1_spin = Def::Tpow[2 * isite1 - 2 + isigma1];
     is2_spin = Def::Tpow[2 * isite2 - 2 + isigma2];
 #pragma omp parallel for default(none) private(num1, ibit1_spin, num2, ibit2_spin) \
@@ -1783,9 +1783,9 @@ shared(List::Diagonal, i_max, dtmp_V, is1_spin, is2_spin)
       List::Diagonal[j] += num1 * num2 * dtmp_V;
     }
     break;
-  case KondoGC:
-  case Hubbard:
-  case Kondo:
+  case DC::KondoGC:
+  case DC::Hubbard:
+  case DC::Kondo:
     is1_spin = Def::Tpow[2 * isite1 - 2 + isigma1];
     is2_spin = Def::Tpow[2 * isite2 - 2 + isigma2];
 
@@ -1803,7 +1803,7 @@ shared(List::Diagonal, List::c1, i_max, dtmp_V, is1_spin, is2_spin)
     }
     break;
 
-  case Spin:
+  case DC::Spin:
     if (Def::iFlgGeneralSpin == FALSE) {
       is1_up = Def::Tpow[isite1 - 1];
       is2_up = Def::Tpow[isite2 - 1];
@@ -1829,7 +1829,7 @@ shared(List::Diagonal, List::c1, i_max, dtmp_V, isite1, isite2, isigma1, isigma2
     }
     break;
 
-  case SpinGC:
+  case DC::SpinGC:
     if (Def::iFlgGeneralSpin == FALSE) {
       is1_up = Def::Tpow[isite1 - 1];
       is2_up = Def::Tpow[isite2 - 1];

@@ -66,7 +66,7 @@ int check(){
   long int isite=0;
   int tmp_sz=0;
   int iMinup=0;
-  if(Def::iCalcModel ==Spin ||Def::iCalcModel ==SpinGC )
+  if (Def::iCalcModel == DC::Spin || Def::iCalcModel == DC::SpinGC)
   {
     Def::Ne=Def::Nup;
   }
@@ -92,14 +92,14 @@ int check(){
 
   //idim_max
   switch(Def::iCalcModel){
-  case HubbardGC:
+  case DC::HubbardGC:
     //comb_sum = 2^(2*Ns)=4^Ns
     comb_sum = 1;
     for(i=0;i<2*Def::Nsite;i++){
       comb_sum= 2*comb_sum;     
     }
     break;
-  case SpinGC:
+  case DC::SpinGC:
     //comb_sum = 2^(Ns)
     comb_sum = 1;
     if(Def::iFlgGeneralSpin ==FALSE){
@@ -114,13 +114,13 @@ int check(){
     }
     break;
 
-  case Hubbard:
+  case DC::Hubbard:
     comb_up= Binomial(Ns, Def::Nup, comb, Ns);
     comb_down= Binomial(Ns, Def::Ndown, comb, Ns);
     comb_sum=comb_up*comb_down;
     break;
 
-  case HubbardNConserved:
+  case DC::HubbardNConserved:
     comb_sum=0;
     if(Def::Ne > Def::Nsite){
       iMinup = Def::Ne-Def::Nsite;
@@ -134,7 +134,7 @@ int check(){
     }
     break;
     
-  case Kondo:
+  case DC::Kondo:
     Nup     = Def::Nup;
     Ndown   = Def::Ndown;
     NCond   = Def::Nsite-Def::NLocSpn;
@@ -147,7 +147,7 @@ int check(){
       comb_sum  += comb_1*comb_2*comb_3;
     }
     break;
-  case KondoGC:
+  case DC::KondoGC:
     comb_sum = 1;
     NCond   = Def::Nsite-Def::NLocSpn;
     NLocSpn = Def::NLocSpn;
@@ -156,7 +156,7 @@ int check(){
       comb_sum= 2*comb_sum;     
     }
     break;
-  case Spin:
+  case DC::Spin:
 
     if(Def::iFlgGeneralSpin ==FALSE){
       if(Def::Nup+Def::Ndown != Def::Nsite){
@@ -198,37 +198,37 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
 
   Check::idim_max = comb_sum;
   switch(Def::iCalcType) {
-    case CG:
+    case DC::CG:
       switch (Def::iCalcModel) {
-        case Hubbard:
-        case HubbardNConserved:
-        case Kondo:
-        case KondoGC:
-        case Spin:
+        case DC::Hubbard:
+        case DC::HubbardNConserved:
+        case DC::Kondo:
+        case DC::KondoGC:
+        case DC::Spin:
           Check::max_mem = (7 * Def::k_exct + 1.5) * Check::idim_max * 16.0 / (pow(10, 9));
           break;
-        case HubbardGC:
-        case SpinGC:
+        case DC::HubbardGC:
+        case DC::SpinGC:
           Check::max_mem = (7 * Def::k_exct + 1.0) * Check::idim_max * 16.0 / (pow(10, 9));
           break;
       }
       break;
-    case TPQCalc:
+    case DC::TPQCalc:
       switch (Def::iCalcModel) {
-        case Hubbard:
-        case HubbardNConserved:
-        case Kondo:
-        case KondoGC:
-        case Spin:
-          if (Def::iFlgCalcSpec != CALCSPEC_NOT) {
+        case DC::Hubbard:
+        case DC::HubbardNConserved:
+        case DC::Kondo:
+        case DC::KondoGC:
+        case DC::Spin:
+          if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
             Check::max_mem = Step::NumAve * 3 * Check::idim_max * 16.0 / (pow(10, 9));
           } else {
             Check::max_mem = 4.5 * Check::idim_max * 16.0 / (pow(10, 9));
           }
           break;
-        case HubbardGC:
-        case SpinGC:
-          if (Def::iFlgCalcSpec != CALCSPEC_NOT) {
+        case DC::HubbardGC:
+        case DC::SpinGC:
+          if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
             Check::max_mem = Step::NumAve * 3 * Check::idim_max * 16.0 / (pow(10, 9));
           } else {
             Check::max_mem = 3.5 * Check::idim_max * 16.0 / (pow(10, 9));
@@ -236,10 +236,10 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
           break;
       }
       break;
-    case FullDiag:
+    case DC::FullDiag:
       Check::max_mem = Check::idim_max * 8.0 * Check::idim_max * 8.0 / (pow(10, 9));
       break;
-    case TimeEvolution:
+    case DC::TimeEvolution:
       Check::max_mem = (4 + 2 + 1) * Check::idim_max * 16.0 / (pow(10, 9));
       break;
     default:
@@ -272,18 +272,18 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
   tmp_sdim=1;
 
   switch(Def::iCalcModel){
-  case HubbardGC:
-  case KondoGC:
-  case HubbardNConserved:
-  case Hubbard:
-  case Kondo:
+  case DC::HubbardGC:
+  case DC::KondoGC:
+  case DC::HubbardNConserved:
+  case DC::Hubbard:
+  case DC::Kondo:
     while(tmp <= Def::Nsite){
       tmp_sdim=tmp_sdim*2;
       tmp+=1;
     }
     break;
-  case Spin:
-  case SpinGC:
+  case DC::Spin:
+  case DC::SpinGC:
     if(Def::iFlgGeneralSpin==FALSE){ 
       while(tmp <= Def::Nsite/2){
         tmp_sdim=tmp_sdim*2;
@@ -307,16 +307,16 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
   }
 
   switch(Def::iCalcModel){
-  case HubbardGC:
-  case KondoGC:
-  case HubbardNConserved:
-  case Hubbard:
-  case Kondo:
+  case DC::HubbardGC:
+  case DC::KondoGC:
+  case DC::HubbardNConserved:
+  case DC::Hubbard:
+  case DC::Kondo:
     //fprintf(MP::STDOUT, "sdim=%ld =2^%d\n",Check::sdim,Def::Nsite);
     fprintf(fp,"sdim=%ld =2^%d\n",Check::sdim,Def::Nsite);
     break;
-  case Spin:
-  case SpinGC:
+  case DC::Spin:
+  case DC::SpinGC:
     if(Def::iFlgGeneralSpin==FALSE){
       //fprintf(MP::STDOUT, "sdim=%ld =2^%d\n",Check::sdim,Def::Nsite/2);
       fprintf(fp,"sdim=%ld =2^%d\n",Check::sdim,Def::Nsite/2);
@@ -331,24 +331,24 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
   u_tmp=1;
   Def::Tpow[0]=u_tmp;
   switch(Def::iCalcModel){
-  case HubbardGC:
-  case KondoGC:
+  case DC::HubbardGC:
+  case DC::KondoGC:
     for(i=1;i<=2*Def::Nsite;i++){
       u_tmp=u_tmp*2;
       Def::Tpow[i]=u_tmp;
       fprintf(fp,"%ld %ld \n",i,u_tmp);
     }
     break;
-  case HubbardNConserved:
-  case Hubbard:
-  case Kondo:
+  case DC::HubbardNConserved:
+  case DC::Hubbard:
+  case DC::Kondo:
     for(i=1;i<=2*Def::Nsite-1;i++){
       u_tmp=u_tmp*2;
       Def::Tpow[i]=u_tmp;
       fprintf(fp,"%ld %ld \n",i,u_tmp);
     }
     break;
- case SpinGC:
+ case DC::SpinGC:
    if(Def::iFlgGeneralSpin==FALSE){
      for(i=1;i<=Def::Nsite;i++){
        u_tmp=u_tmp*2;
@@ -366,7 +366,7 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
      }
    }
    break;
- case Spin:
+ case DC::Spin:
    if(Def::iFlgGeneralSpin==FALSE){
      for(i=1;i<=Def::Nsite-1;i++){
        u_tmp=u_tmp*2;

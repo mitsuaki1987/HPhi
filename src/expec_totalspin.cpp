@@ -628,20 +628,20 @@ int expec_totalspin
 
   Large::mode = M_TOTALS;
   switch (Def::iCalcModel) {
-  case Spin:
+  case DC::Spin:
     totalspin_Spin(nstate, vec);
     for (istate = 0; istate < nstate; istate++)
       Phys::Sz[istate] = Def::Total2SzMPI / 2.;
     break;
-  case SpinGC:
+  case DC::SpinGC:
     totalspin_SpinGC(nstate, vec);
     break;
-  case Hubbard:
-  case Kondo:
+  case DC::Hubbard:
+  case DC::Kondo:
     totalspin_Hubbard(nstate, vec);
     break;
-  case HubbardGC:
-  case KondoGC:
+  case DC::HubbardGC:
+  case DC::KondoGC:
     totalspin_HubbardGC(nstate, vec);
     break;
   default:

@@ -13,6 +13,7 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+#include "SingleExHubbard.hpp"
 #include "bitcalc.hpp"
 #include "wrapperMPI.hpp"
 #include "common/setmemory.hpp"
@@ -33,7 +34,7 @@
 @author Kazuyoshi Yoshimi
 @version 1.2
 */
-int GetSingleExcitedStateHubbard(
+int GetExcitedState::Single::Hubbard(
   //!<define list to get and put information of calculation
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
@@ -104,7 +105,7 @@ List::c2_1,List::c2_2,is1_spin,MP::myrank, Large::irght, Large::ilft, Large::ihf
 @author Kazuyoshi Yoshimi
 @version 1.2
 */
-int GetSingleExcitedStateHubbardGC(
+int GetExcitedState::Single::HubbardGC(
   //!<define list to get and put information of calculation
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1

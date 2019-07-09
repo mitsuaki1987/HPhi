@@ -187,7 +187,7 @@ static void Initialize_wave(
   /**@brief
   (A) For restart: Read saved eigenvector files (as binary files) from each processor
   */
-  if (Def::iReStart == RESTART_INOUT || Def::iReStart == RESTART_IN) {
+  if (Def::iReStart == DC::RESTART_INOUT || Def::iReStart == DC::RESTART_IN) {
     //StartTimer(3600);
     //TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector starts: %s\n", "a", rand_i, step_i);
     fprintf(MP::STDOUT, "%s", "  Start:  Input vector.\n");
@@ -227,7 +227,7 @@ static void Initialize_wave(
       return;
     }/*if (ierr == 0)*/
 
-  }/*Def::iReStart == RESTART_INOUT || Def::iReStart == RESTART_IN*/
+  }/*Def::iReStart == DC::RESTART_INOUT || Def::iReStart == DC::RESTART_IN*/
 
   /**@brief
   (B) For scratch (including the case that restart files are not found):
@@ -615,7 +615,7 @@ shared(i_max,wxp,hwxp,dnorm,ii, Def::k_exct)
   /**@brief
   <li>Output resulting vectors for restart</li>
   */
-  if (Def::iReStart == RESTART_OUT || Def::iReStart == RESTART_INOUT){
+  if (Def::iReStart == DC::RESTART_OUT || Def::iReStart == DC::RESTART_INOUT){
       Output_restart(wxp[1]);
       if(iconv != 0) {
           sprintf(sdt, "%s", "Lanczos Eigenvalue is not converged in this process.");
@@ -662,16 +662,16 @@ int CalcByLOBPCG::main(
 
     // this part will be modified
     switch (Def::iCalcModel) {
-    case HubbardGC:
-    case SpinGC:
-    case KondoGC:
-    case SpinlessFermionGC:
+    case DC::HubbardGC:
+    case DC::SpinGC:
+    case DC::KondoGC:
+    case DC::SpinlessFermionGC:
       initial_mode = 1; // 1 -> random initial vector
       break;
-    case Hubbard:
-    case Kondo:
-    case Spin:
-    case SpinlessFermion:
+    case DC::Hubbard:
+    case DC::Kondo:
+    case DC::Spin:
+    case DC::SpinlessFermion:
 
       if (Def::iFlgGeneralSpin == TRUE) {
         initial_mode = 1;

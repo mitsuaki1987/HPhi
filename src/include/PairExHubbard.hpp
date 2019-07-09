@@ -13,18 +13,14 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-#pragma once
+#include <complex>
 
-int GetPairExcitedStateHubbardGC(
- 
- int nstate, std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
- std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
-  int iEx
-);
+namespace GetExcitedState {
+  namespace Pair {
+    int HubbardGC(int nstate, std::complex<double>** tmp_v0,
+      std::complex<double>** tmp_v1, int iEx);
 
-int GetPairExcitedStateHubbard(
-        
-        int nstate, std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
-        std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
-  int iEx
-);
+    int Hubbard(int nstate, std::complex<double>** tmp_v0,
+      std::complex<double>** tmp_v1, int iEx);
+  }
+}

@@ -195,8 +195,8 @@ int CalcSpectrumByBiCG(
   <li>Set initial result vector(+shadow result vector)
   Read residual vectors if restart</li>
   */
-  if (Def::iFlgCalcSpec == RECALC_FROM_TMComponents_VEC ||
-      Def::iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC) {
+  if (Def::iFlgCalcSpec == DC::RECALC_FROM_TMComponents_VEC ||
+      Def::iFlgCalcSpec == DC::RECALC_INOUT_TMComponents_VEC) {
     fprintf(MP::STDOUT, "  Start: Input vectors for recalculation.\n");
     TimeKeeper("%s_TimeKeeper.dat", "Input vectors for recalculation starts: %s", "a");
 
@@ -240,9 +240,9 @@ int CalcSpectrumByBiCG(
   */
   iter_old = 0;
   fp = NULL;
-  if (Def::iFlgCalcSpec == RECALC_FROM_TMComponents ||
-      Def::iFlgCalcSpec == RECALC_FROM_TMComponents_VEC ||
-      Def::iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC) {
+  if (Def::iFlgCalcSpec == DC::RECALC_FROM_TMComponents ||
+      Def::iFlgCalcSpec == DC::RECALC_FROM_TMComponents_VEC ||
+      Def::iFlgCalcSpec == DC::RECALC_INOUT_TMComponents_VEC) {
     sprintf(sdt, "%s_TMComponents.dat", Def::CDataFileHead);
     if (childfopenALL(sdt, "rb", &fp) != 0) {
       fprintf(MP::STDOUT, "INFO: File for the restart is not found.\n");
@@ -269,7 +269,7 @@ int CalcSpectrumByBiCG(
   }
 
   if (fp != NULL) {
-    if (Def::iFlgCalcSpec > RECALC_FROM_TMComponents)
+    if (Def::iFlgCalcSpec == DC::RECALC_FROM_TMComponents)
       Def::Lanczos_max = 0;
     fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
     sscanf(ctmp, "%lf %lf\n", &dtmp[0], &dtmp[1]);
@@ -406,7 +406,7 @@ int CalcSpectrumByBiCG(
   /**
   <li>Save @f$\alpha, \beta[iter]@f$, projected residual</li>
   */
-  if (Def::iFlgCalcSpec != RECALC_FROM_TMComponents) {
+  if (Def::iFlgCalcSpec != DC::RECALC_FROM_TMComponents) {
     sprintf(sdt, "%s_TMComponents.dat", Def::CDataFileHead);
     childfopenMPI(sdt, "w", &fp);
     fprintf(fp, "%d \n", iter_old);
@@ -426,8 +426,8 @@ int CalcSpectrumByBiCG(
   <li>output vectors for recalculation</li>
   </ul>
   */
-  if (Def::iFlgCalcSpec == RECALC_OUTPUT_TMComponents_VEC ||
-      Def::iFlgCalcSpec == RECALC_INOUT_TMComponents_VEC) {
+  if (Def::iFlgCalcSpec == DC::RECALC_OUTPUT_TMComponents_VEC ||
+      Def::iFlgCalcSpec == DC::RECALC_INOUT_TMComponents_VEC) {
     fprintf(MP::STDOUT, "    Start: Output vectors for recalculation.\n");
     TimeKeeper("%s_TimeKeeper.dat", "Output vectors for recalculation starts: %s", "a");
     sprintf(sdt, "%s_recalcvec_rank_%d.dat", Def::CDataFileHead, MP::myrank);

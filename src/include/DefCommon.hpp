@@ -14,59 +14,76 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef HPHI_DEFCOMMON_H
-#define HPHI_DEFCOMMON_H
+namespace DC {
+  /*!< CalcType */
 
-/*!< CalcType */
-#define NUM_CALCTYPE 5
-#define Lanczos 0 /*!< CalcType is Exact Diagonalization method.*/
-#define TPQCalc 1 /*!< CalcType is TPQ calculation.*/
-#define FullDiag 2 /*!< CalcType is Full Diagonalization method.*/
-#define CG 3 /*!< CalcType is CG method */
-#define TimeEvolution 4 /*!< CalcType is Time Evolution method*/
+  enum {
+    Lanczos = 0, /*!< CalcType is Exact Diagonalization method.*/
+    TPQCalc, /*!< CalcType is TPQ calculation.*/
+    FullDiag, /*!< CalcType is Full Diagonalization method.*/
+    CG, /*!< CalcType is CG method */
+    TimeEvolution, /*!< CalcType is Time Evolution method*/
+    NUM_CALCTYPE
+  };
 
 /*!< CalcModel */
-#define NUM_CALCMODEL 6 /*!< Number of model types defined by CalcModel in calcmodfile. Note: HubbardNConserved is not explicitly defined in calcmod file and thus not counted. SpinlessFermion and SpinlessFermionGC are not yet supported*/
-#define Hubbard 0 /*!< CalcModel is Hubbard model.*/
-#define Spin 1 /*!< CalcModel is Spin system.*/
-#define Kondo 2 /*!< CalcModel is Kondo model.*/
-#define HubbardGC 3 /*!< CalcModel is GrandCanonical Hubbard model.*/
-#define SpinGC 4 /*!< CalcModel is GrandCanonical Spin system.*/
-#define KondoGC 5 /*!< CalcModel is GrandCanonical Kondo model.*/
-#define HubbardNConserved 6 /*!< CalcModel is Hubbard model under particle number conserved. This symmetry is automatically introduced by not defining 2Sz in a modpara file.*/
-#define SpinlessFermion 7 /*!< CalcModel is GrandCanonical Spinless fermion model.*/
-#define SpinlessFermionGC 8 /*!< CalcModel is GrandCanonical Spinless fermionGC model.*/
+  enum {
+    Hubbard = 0, /*!< CalcModel is Hubbard model.*/
+    Spin, /*!< CalcModel is Spin system.*/
+    Kondo, /*!< CalcModel is Kondo model.*/
+    HubbardGC, /*!< CalcModel is GrandCanonical Hubbard model.*/
+    SpinGC, /*!< CalcModel is GrandCanonical Spin system.*/
+    KondoGC, /*!< CalcModel is GrandCanonical Kondo model.*/
+    HubbardNConserved, /*!< CalcModel is Hubbard model under particle number conserved.
+                       This symmetry is automatically introduced by not defining
+                       2Sz in a modpara file.*/
+    SpinlessFermion, /*!< CalcModel is GrandCanonical Spinless fermion model.*/
+    SpinlessFermionGC, /*!< CalcModel is GrandCanonical Spinless fermionGC model.*/
+    NUM_CALCMODEL/*!< Number of model types defined by CalcModel in calcmodfile. 
+      Note: HubbardNConserved is not explicitly defined in calcmod file and thus not counted. SpinlessFermion and SpinlessFermionGC are not yet supported*/
+  };
 
 /*!< OutputMode */
-#define NUM_OUTPUTMODE 2 /*!< Number of output mode.*/
-#define RAWMODE  0 /*!< calc one body green function and two body green functions.*/
-#define CORRMODE 1 /*!< calc one body green function and two body green functions and correlatinos for charge and spin.*/
-#define NUM_OUTPUTHAM 2 /*!< Number of output Hamiltonian mode */
+  enum {
+    RAWMODE = 0, /*!< calc one body green function and two body green functions.*/
+    CORRMODE,/*!< calc one body green function and two body green functions
+              and correlatinos for charge and spin.*/
+    NUM_OUTPUTHAM, /*!< Number of output Hamiltonian mode */
+    NUM_OUTPUTMODE /*!< Number of output mode.*/
+  };
 
 /*!< InputMode */
-#define NUM_INPUTHAM 2 /*!< Number of input Hamiltonian mode */
+  enum {
+    NUM_INPUTHAM = 2 /*!< Number of input Hamiltonian mode */
+  };
 
 /*!< CalcEigenVector */
-#define NUM_SETINITAILVEC 2 /*!< Number of setting type of initial vectors.*/
-#define NUM_CALCEIGENVEC 2 /*!< Number of calculating eigenvector mode.*/
-#define CALCVEC_LANCZOSCG  0 /*!< Lanczos + CG method*/
-#define CALCVEC_LANCZOS 1 /*!< Lanczos method*/
-#define CALCVEC_NOT -1 /*!< eigenvector is not calculated*/
-
+  enum {
+    CALCVEC_NOT = -1, /*!< eigenvector is not calculated*/
+    CALCVEC_LANCZOSCG, /*!< Lanczos + CG method*/
+    CALCVEC_LANCZOS, /*!< Lanczos method*/
+    NUM_CALCEIGENVEC /*!< Number of calculating eigenvector mode.*/
+  };
+  enum {
+    NUM_SETINITAILVEC = 2 /*!< Number of setting type of initial vectors.*/
+  };
 /*!< CalcSpectrum */
-#define CALCSPEC_NOT 0
-#define RECALC_NOT 1
-#define RECALC_FROM_TMComponents 2
-#define RECALC_OUTPUT_TMComponents_VEC 3
-#define RECALC_FROM_TMComponents_VEC 4
-#define RECALC_INOUT_TMComponents_VEC 5
-#define CALCSPEC_SCRATCH 6
+  enum {
+    CALCSPEC_NOT,
+    RECALC_NOT,
+    RECALC_FROM_TMComponents,
+    RECALC_OUTPUT_TMComponents_VEC,
+    RECALC_FROM_TMComponents_VEC,
+    RECALC_INOUT_TMComponents_VEC,
+    CALCSPEC_SCRATCH
+  };
 
 /*!< ReStartVector */
-#define NUM_RESTART 4
-#define RESTART_NOT 0
-#define RESTART_OUT 1
-#define RESTART_INOUT 2
-#define RESTART_IN 3
-
-#endif /* HPHI_DEFCOMMON_H */
+  enum {
+    RESTART_NOT = 0,
+    RESTART_OUT,
+    RESTART_INOUT,
+    RESTART_IN,
+    NUM_RESTART 
+  };
+}
