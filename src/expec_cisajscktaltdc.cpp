@@ -147,7 +147,6 @@ void expec::cisajscktalt::HubbardGC(
   long int org_sigma1, org_sigma2, org_sigma3, org_sigma4;
   long int Asum, Bsum, Adiff, Bdiff;
   long int tmp_off = 0;
-  long int tmp_off_2 = 0;
   std::complex<double> tmp_V = 1.0;
   long int i_max;
 

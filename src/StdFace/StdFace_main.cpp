@@ -379,8 +379,8 @@ namespace StdI {
 @brief Set Largevalue (StdI::LargeValue) for TPQ.
        Sum absolute-value of all one- and two- body terms.
 */
-static void StdFace::LargeValue() {
-  int ktrans, kintr;
+void StdFace::LargeValue() {
+  unsigned int ktrans, kintr;
   double LargeValue0;
 
   LargeValue0 = 0.0;
@@ -919,7 +919,7 @@ static void VectorPotential() {
 */
 static void PrintPump() {
   FILE *fp;
-  int it, isite, ipump, jpump, npump0;
+  unsigned int it, isite, ipump, jpump, npump0;
 
   if (StdI::PumpBody == 1) {
 
@@ -1196,7 +1196,7 @@ static void PrintGutzwiller()
 All variables refered in this function is modified.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-static void StdFace::ResetVals() {
+void StdFace::ResetVals() {
   int i, j;
   double NaN_d;
   /*
@@ -1563,7 +1563,7 @@ static void PrintLocSpin() {
 */
 static void PrintTrans(){
   FILE *fp;
-  int jtrans, ktrans, ntrans0;
+  unsigned int jtrans, ktrans, ntrans0;
 
   for (jtrans = 0; jtrans < StdI::trans.size(); jtrans++){
     for (ktrans = jtrans + 1; ktrans < StdI::trans.size(); ktrans++){
@@ -2187,7 +2187,7 @@ static void CheckModPara()
 static void PrintInteractions()
 {
   FILE *fp;
-  int nintr0, kintr, jintr;
+  unsigned int nintr0, kintr, jintr;
   /*
    Coulomb INTRA
   */
@@ -2595,7 +2595,6 @@ void StdFace::main(
 )
 {
   FILE *fp;
-  int ktrans, kintr;
   char ctmpline[256];
   char *keyword, *value;
 

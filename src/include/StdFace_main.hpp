@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace StdFace {
   void main(char* fname);
-  static void LargeValue();
-  static void ResetVals();
+  void ResetVals();
+#if defined(_HPhi)
+  void LargeValue();
+#endif
 }

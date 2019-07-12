@@ -2573,9 +2573,6 @@ int CheckFormatForKondoInt
 void SetConvergenceFactor()
 {
   //In future, convergence facator can be set by a def file.
-  int neps = -8;
-  int nepsCG =-8;
-  int nEnergy = -12;
   Def::eps_Lanczos     = pow(10,-Def::LanczosEps);
 }
 /** 

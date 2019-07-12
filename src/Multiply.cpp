@@ -40,10 +40,7 @@
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
-int Multiply
-(
-  
-)
+int Multiply()
 {
   long int i, i_max;
   double Ns;
@@ -60,8 +57,8 @@ shared(Wave::v0, Wave::v1,Step::NumAve,i_max, Ns, Step::LargeValue)
     }
   }
   NormMPI_dv(i_max, Step::NumAve, Wave::v0, Step::global_norm);
-#pragma omp parallel for default(none) private(i_max,i,rand_i) \
-shared(Wave::v0,Step::NumAve,Step::global_norm)
+#pragma omp parallel for default(none) private(i,rand_i) \
+shared(i_max,Wave::v0,Step::NumAve,Step::global_norm)
   for (i = 1; i <= i_max; i++) 
     for (rand_i = 0; rand_i < Step::NumAve; rand_i++)
       Wave::v0[i][rand_i] = Wave::v0[i][rand_i] / Step::global_norm[rand_i];

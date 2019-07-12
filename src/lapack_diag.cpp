@@ -26,26 +26,22 @@
 #include <cstring>
 
 /** 
- * 
  * @brief performing full diagonalization using lapack
- * @param[in,out] X 
- * 
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @return 
  */
-int lapack_diag(
-//!<[inout]
-) {
-
-  FILE *fp;
+int lapack_diag()
+{
+  FILE* fp;
   char sdt[D_FileNameMax] = "";
   long int i, j, i_max, xMsize;
 #ifdef _SCALAPACK
   int rank, size, nprocs, nprow, npcol, myrow, mycol, ictxt;
-  int i_negone=-1, i_zero=0, iam;
+  int i_negone = -1, i_zero = 0, iam;
   long int mb, nb, mp, nq;
-  int dims[2]={0,0};
+  int dims[2] = { 0,0 };
+  char order = 'R';
 #endif
 
   i_max = Check::idim_max;
@@ -58,43 +54,37 @@ int lapack_diag(
   xMsize = i_max;
   if (Def::iNGPU == 0) {
 #ifdef _SCALAPACK
-    if(MP::nproc >1) {
+    if (MP::nproc > 1) {
       fprintf(MP::STDOUT, "Using SCALAPACK\n\n");
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       MPI_Comm_size(MPI_COMM_WORLD, &size);
-      MPI_Dims_create(size,2,dims);
-      nprow=dims[0]; npcol=dims[1];
+      MPI_Dims_create(size, 2, dims);
+      nprow = dims[0]; npcol = dims[1];
 
       blacs_pinfo_(&iam, &nprocs);
       blacs_get_(&i_negone, &i_zero, &ictxt);
-      blacs_gridinit_(&ictxt, "R", &nprow, &npcol);
+      blacs_gridinit_(&ictxt, &order, &nprow, &npcol);
       blacs_gridinfo_(&ictxt, &nprow, &npcol, &myrow, &mycol);
-      
+
       mb = GetBlockSize(xMsize, size);
 
       mp = numroc_(&xMsize, &mb, &myrow, &i_zero, &nprow);
       nq = numroc_(&xMsize, &mb, &mycol, &i_zero, &npcol);
-      Z_vec = malloc(mp*nq*sizeof(std::complex<double>));
-      //printf("xMsize %d\n", xMsize);
-      /*if(rank == 0){
-        for(i=0; i<xMsize; i++){
-          for(j=0; j<xMsize; j++){
-            printf("Ham %f %f ", real(Ham[i][j]), imag(Ham[i][j]));
-          }
-        }
-      }*/
-      diag_scalapack_cmp(xMsize, Ham, v0, Z_vec, descZ_vec);
-      //printf("Z %f %f\n", real(Z_vec[0]), imag(Z_vec[1]));
-    } else {
-      ZHEEVall(xMsize, Ham, v0, v1);
+      Z_vec = (std::complex<double>*)malloc(mp * nq * sizeof(std::complex<double>));
+  
+      diag_scalapack_cmp(xMsize, Wave::v0, Phys::energy, Z_vec, descZ_vec);
+    }
+    else {
+      ZHEEVall(xMsize, Wave::v0, Phys::energy, Wave::v1);
     }
 #else
     ZHEEVall(xMsize, Wave::v0, Phys::energy, Wave::v1);
 #endif
-  } else {
+  }
+  else {
 #ifdef _MAGMA
-    if(MP::myrank==0){
-      if(diag_magma_cmp(xMsize, Ham, v0, v1, Def::iNGPU) != 0) {
+    if (MP::myrank == 0) {
+      if (diag_magma_cmp(xMsize, Wave::v0, v0, v1, Def::iNGPU) != 0) {
         return -1;
       }
     }

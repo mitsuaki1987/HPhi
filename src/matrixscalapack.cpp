@@ -38,13 +38,12 @@ int use_scalapack = 0;
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @author Yusuke Konishi (Academeia Co., Ltd.)
  */
-long int GetBlockSize(long int Msize, long int MP::nproc) {
+long int GetBlockSize(long int Msize, long int nproc) {
   long int block_size = 16;
-  if(Msize*Msize/MP::nproc > block_size*block_size)
+  if (Msize * Msize / nproc > block_size * block_size)
     return block_size;
   return 1;
 }
-
 /**
  * @brief get processor array index from global array index
  * @param[in] i global array index
@@ -124,25 +123,26 @@ long int GetMatRawInRank(long int lj, long int rank, long int npcol, long int nb
 }
 
 /**
- * @brief get indices of local matrix from indices (need to free memory after this function used)
- * @param[in] i index of local matrix
- * @param[in] j index of local matrix
- * @param[in] nprow processor array dimension for row
- * @param[in] npcol processor array dimension for column
- * @param[in] nb block size
+ * @brief get indices of local matrix from indices 
+ (need to free memory after this function used)
  * @return indices array of local matrix
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @author Yusuke Konishi (Academeia Co., Ltd.)
  */
-long int *GetMatElementInRank(long int i, long int j, long int nprow, long int npcol, long int nb){
-  long int *ij;
-  ij = malloc(2*sizeof(int));
+long int* GetMatElementInRank(
+  long int i, /**<[in] index of local matrix*/
+  long int j, /**<[in] index of local matrix*/
+  long int nprow, /**<[in] processor array dimension for row*/
+  long int npcol, /**<[in] processor array dimension for column*/
+  long int nb/**<[in] block size*/
+) {
+  long int* ij;
+  ij = (long int*)malloc(2 * sizeof(long int));
   ij[0] = GetLocalIndex(i, nprow, nb);
   ij[1] = GetLocalIndex(j, npcol, nb);
   return ij;
 }
-
 /**
  * @brief divide matrix
  * @param[in] m index of column of matrix
@@ -154,109 +154,119 @@ long int *GetMatElementInRank(long int i, long int j, long int nprow, long int n
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @author Yusuke Konishi (Academeia Co., Ltd.)
  */
-void DivMat(long int m, long int n, std::complex<double> Aorgmn, std::complex<double> *A, int *desca){
-  long int mp = m+1, np = n+1;
+void DivMat(
+  long int m,
+  long int n,
+  std::complex<double> Aorgmn,
+  std::complex<double>* A,
+  int* desca
+) {
+  long int mp = m + 1, np = n + 1;
   pzelset_(A, &mp, &np, desca, &Aorgmn);
 }
-
 /**
  * @brief get eigenvector from distributed matrix
- * @param[in] i index of eigenvector
- * @param[in] m size of eigenvector
- * @param[in] Z distribution matrix of eigenvector
- * @param[in] descZ descriptor for Z
- * @param[in, out] vec eigenvector
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @author Yusuke Konishi (Academeia Co., Ltd.)
  */
-void GetEigenVector(long int i, long int m, std::complex<double> *Z, int *descZ, std::complex<double> *vec) {
+void GetEigenVector(
+  long int i,/**<[in] index of eigenvector*/
+  long int m,/**<[in] size of eigenvector*/
+  std::complex<double>* Z,/**<[in] distribution matrix of eigenvector*/
+  int* descZ,/**<[in] descriptor for Z*/
+  std::complex<double>* vec/**<[in, out] eigenvector*/
+) {
   std::complex<double> alpha;
   long int j, ip, jp;
   int rank;
+  char scope = 'A', top = ' ';
+
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  ip = i+1;
-  for(j=0; j<m; j++){
-    jp = j+1;
-    pzelget_("A", " ", &alpha, Z, &jp, &ip, descZ);
-    if(rank==0) {
+  ip = i + 1;
+  for (j = 0; j < m; j++) {
+    jp = j + 1;
+    pzelget_(&scope, &top, &alpha, Z, &jp, &ip, descZ);
+    if (rank == 0) {
       vec[j] = alpha;
     }
   }
 }
-
 /**
  * @brief diagonalization using scalapack
- * @param[in] xNsize size of matrix
- * @param[in] A input matrix
- * @param[in, out] r eigenvalue
- * @param[in, out] Z distribution matrix of eigenvector
- * @param[in, out] descZ descriptor for Z
  * @return this returns 0 when it finished normally
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @author Yusuke Konishi (Academeia Co., Ltd.)
  */
-int diag_scalapack_cmp(long int xNsize, std::complex<double> **A, 
-                       std::complex<double> *r, std::complex<double> *Z, int *descZ) {
-  const int i_one=1, i_zero=0;
-  const long int i_negone=-1;
-  const double zero=0.0, one=1.0;
+int diag_scalapack_cmp(
+  long int xNsize, /**<[in] size of matrix*/
+  std::complex<double>** A,/**<[in] input matrix*/
+  double* r, /**<[in, out] eigenvalue*/
+  std::complex<double>* Z,/**<[in, out] distribution matrix of eigenvector*/
+  int* descZ/**<[in, out] descriptor for Z*/
+) {
+  const int i_one = 1, i_zero = 0;
+  const long int i_negone = -1;
+  const double zero = 0.0, one = 1.0;
   long int m, n, mb, nb;
   int nprow, npcol;
   int myrow, mycol, info, lld;
   long int mp, nq;
   int ictxt;
-  std::complex<double> *A_distr, *work, *rwork;
-  double *W;
+  std::complex<double>* A_distr, * work, * rwork;
+  double* W;
   int descA_distr[9];
   int rank, size, iam, nprocs;
   long int lwork, lrwork;
-  int dims[2]={0,0};
+  int dims[2] = { 0,0 };
   long int i, j, ip, jp;
-  m=n=xNsize;
+  char jobz = 'V', uplo = 'U', order = 'R';
+
+  m = n = xNsize;
 
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
-  MPI_Dims_create(size,2,dims);
-  nprow=dims[0]; npcol=dims[1];
- 
-  blacs_pinfo_(&iam, &nprocs); 
-  blacs_get_((int *)&i_negone, &i_zero, &ictxt);
-  blacs_gridinit_(&ictxt, "R", &nprow, &npcol);
+  MPI_Dims_create(size, 2, dims);
+  nprow = dims[0]; npcol = dims[1];
+
+  blacs_pinfo_(&iam, &nprocs);
+  blacs_get_((int*)& i_negone, &i_zero, &ictxt);
+  blacs_gridinit_(&ictxt, &order, &nprow, &npcol);
   blacs_gridinfo_(&ictxt, &nprow, &npcol, &myrow, &mycol);
- 
+
   mb = GetBlockSize(m, size);
   nb = GetBlockSize(n, size);
 
   mp = numroc_(&m, &mb, &myrow, &i_zero, &nprow);
   nq = numroc_(&n, &nb, &mycol, &i_zero, &npcol);
-  W = malloc(n*sizeof(double));
-  A_distr = malloc(mp*nq*sizeof(std::complex<double>));
+  W = (double*)malloc(n * sizeof(double));
+  A_distr = (std::complex<double>*)malloc(mp * nq * sizeof(std::complex<double>));
 
-  lld = (mp>0) ? mp : 1;
+  lld = (mp > 0) ? mp : 1;
   descinit_(descA_distr, &m, &n, &mb, &nb, &i_zero, &i_zero, &ictxt, &lld, &info);
   descinit_(descZ, &m, &n, &mb, &nb, &i_zero, &i_zero, &ictxt, &lld, &info);
 
-  for(i=0; i<m; i++){
-    for(j=0; j<n; j++){
+  for (i = 0; i < m; i++) {
+    for (j = 0; j < n; j++) {
       DivMat(i, j, A[i][j], A_distr, descA_distr);
     }
   }
 
   std::complex<double> wkopt, rwkopt;
-  pzheev_("V", "U", &n, A_distr, &i_one, &i_one, descA_distr, W, Z, &i_one, &i_one, descZ, &wkopt, &i_negone, &rwkopt, &i_negone, &info);
+  pzheev_(&jobz, &uplo, &n, A_distr, &i_one, &i_one, descA_distr, W, Z,
+    &i_one, &i_one, descZ, &wkopt, &i_negone, &rwkopt, &i_negone, &info);
 
-  lwork = (long int)wkopt;
-  lrwork = (long int)rwkopt;
-  work = malloc(lwork*sizeof(std::complex<double>));
-  rwork = malloc(lrwork*sizeof(std::complex<double>));
+  lwork = (long int)wkopt.real();
+  lrwork = (long int)rwkopt.real();
+  work = (std::complex<double>*)malloc(lwork * sizeof(std::complex<double>));
+  rwork = (std::complex<double>*)malloc(lrwork * sizeof(std::complex<double>));
 
+  pzheev_(&jobz, &uplo, &n, A_distr, &i_one, &i_one, descA_distr, W, Z,
+    &i_one, &i_one, descZ, work, &lwork, rwork, &lrwork, &info);
 
-  pzheev_("V", "U", &n, A_distr, &i_one, &i_one, descA_distr, W, Z, &i_one, &i_one, descZ, work, &lwork, rwork, &lrwork, &info);
-
-  if(rank == 0){
-    for(i=0; i<n; i++){
+  if (rank == 0) {
+    for (i = 0; i < n; i++) {
       r[i] = W[i];
     }
   }

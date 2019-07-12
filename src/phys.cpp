@@ -39,7 +39,6 @@
  * 
  * @brief A main function to calculate physical quantities by full diagonalization method.
  * @param[in,out] X CalcStruct list for getting and pushing calculation information 
- * @param neig number of eigenvalues
  * @version 0.2
  * @details add output process of calculation results for general spin
  * @version 0.1
@@ -47,54 +46,39 @@
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
 void phys( //!<[inout]
-          long int neig //!<[in]
+  long int neig //!<[in] number of eigenvalues
 ) {
   long int i;
   double tmp_N;
 #ifdef _SCALAPACK
-  std::complex<double> *vec_tmp;
+  std::complex<double>* vec_tmp;
   int ictxt, ierr, rank;
   long int j, i_max;
 
   i_max = Check::idim_max;
 
-  if(use_scalapack){
-  fprintf(MP::STDOUT, "In scalapack fulldiag, total spin is not calculated !\n");
-  vec_tmp = malloc(i_max*sizeof(std::complex<double>));
-  }
-  for (i = 0; i < neig; i++) {
-    for (j = 0; j < i_max; j++) {
-      Wave::v0[j + 1] = 0.0;
-    }
-    if (use_scalapack) {
+  if (use_scalapack) {
+    fprintf(MP::STDOUT, "In scalapack fulldiag, total spin is not calculated !\n");
+    vec_tmp = (std::complex<double>*)malloc(i_max * sizeof(std::complex<double>));
+
+    for (i = 0; i < neig; i++) {
+      for (j = 0; j < i_max; j++) {
+        Wave::v0[j + 1][i] = 0.0;
+      }
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       GetEigenVector(i, i_max, Z_vec, descZ_vec, vec_tmp);
       if (rank == 0) {
         for (j = 0; j < i_max; j++) {
-          Wave::v0[j + 1] = vec_tmp[j];
+          Wave::v0[j + 1][i] = vec_tmp[j];
         }
       }
       else {
         for (j = 0; j < i_max; j++) {
-          Wave::v0[j + 1] = 0.0;
+          Wave::v0[j + 1][i] = 0.0;
         }
       }
-    }
-    else {
-      if (Def::iCalcType == DC::FullDiag) {
-        if (MP::myrank == 0) {
-          for (j = 0; j < i_max; j++) {
-            Wave::v0[j + 1] = Wave::v1[i][j];
-          }
-        }
-      }
-      else {
-        for (j = 0; j < i_max; j++) {
-          Wave::v0[j + 1] = Wave::v1[i][j];
-        }
-      }
-    }
-  }/*for (i = 0; i < neig; i++)*/
+    }/*for (i = 0; i < neig; i++)*/
+  }/*if (use_scalapack)*/
 #endif
 
   if (expec::energy_flct::main(neig, Wave::v0, Wave::v1) != 0) {
@@ -109,30 +93,13 @@ void phys( //!<[inout]
     fprintf(stderr, "Error: calc TwoBodyG.\n");
     exitMPI(-1);
   }
-    
-#ifdef _SCALAPACK
-  if (use_scalapack) {
-    if (Def::iCalcType == DC::FullDiag) {
-      Phys::s2 = 0.0;
-      Phys::Sz = 0.0;
-    }
-  }
-  else {
-    if (Def::iCalcType == DC::FullDiag) {
-      if (expec_totalspin(Wave::v1) != 0) {
-        fprintf(stderr, "Error: calc TotalSpin.\n");
-        exitMPI(-1);
-      }
-    }
-  }
-#else
+
   if (Def::iCalcType == DC::FullDiag) {
     if (expec_totalspin(neig, Wave::v1) != 0) {
       fprintf(stderr, "Error: calc TotalSpin.\n");
       exitMPI(-1);
     }
   }
-#endif
 
   for (i = 0; i < neig; i++) {
     if (Def::iCalcModel == DC::Spin || Def::iCalcModel == DC::SpinGC) {
@@ -144,12 +111,12 @@ void phys( //!<[inout]
     if (Def::iCalcType == DC::FullDiag) {
 #ifdef _SCALAPACK
       if (use_scalapack) {
-        fprintf(MP::STDOUT, "i=%5ld Energy=%10lf N=%10lf Sz=%10lf Doublon=%10lf \n", i, Phys::energy, tmp_N,
-          Phys::Sz, Phys::doublon);
+        fprintf(MP::STDOUT, "i=%5ld Energy=%10lf N=%10lf Sz=%10lf Doublon=%10lf \n", i, Phys::energy[i], tmp_N,
+          Phys::Sz[i], Phys::doublon[i]);
       }
       else {
-        fprintf(MP::STDOUT, "i=%5ld Energy=%10lf N=%10lf Sz=%10lf S2=%10lf Doublon=%10lf \n", i, Phys::energy, tmp_N,
-          Phys::Sz, Phys::s2, Phys::doublon);
+        fprintf(MP::STDOUT, "i=%5ld Energy=%10lf N=%10lf Sz=%10lf S2=%10lf Doublon=%10lf \n", i, Phys::energy[i], tmp_N,
+          Phys::Sz[i], Phys::s2[i], Phys::doublon[i]);
       }
 #else
       fprintf(MP::STDOUT, "i=%5ld Energy=%10lf N=%10lf Sz=%10lf S2=%10lf Doublon=%10lf \n",
@@ -161,6 +128,6 @@ void phys( //!<[inout]
         i, Phys::energy[i], tmp_N, Phys::Sz[i], Phys::doublon[i]);
   }
 #ifdef _SCALAPACK
-  if(use_scalapack) free(vec_tmp);
+  if (use_scalapack) free(vec_tmp);
 #endif  
 }

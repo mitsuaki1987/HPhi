@@ -60,7 +60,7 @@ namespace StdFace {
     int isiteUC, int jsiteUC,
     int* isite, int* jsite, std::complex<double>* Cphase, double* dR);
   void PrintXSF();
-  static void FoldSite(int iCellV[3], int nBox[3], int iCellV_fold[3]);
+  void FoldSite(int iCellV[3], int nBox[3], int iCellV_fold[3]);
 
   void Tetragonal();
   void Chain();

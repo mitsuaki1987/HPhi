@@ -564,7 +564,7 @@ void StdFace::RequiredVal_i(
 original supercell.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-static void StdFace::FoldSite(
+void StdFace::FoldSite(
   int iCellV[3],//!<[in] The fractional coordinate of a site
   int nBox[3], //!<[out] the index of supercell
   int iCellV_fold[3]/**<[out] The fractional coordinate of a site 

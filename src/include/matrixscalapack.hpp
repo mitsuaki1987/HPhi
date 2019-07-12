@@ -44,7 +44,7 @@ void pzheev_(char *jobz, char *uplo, const long int *n, std::complex<double> *a,
              std::complex<double> *work, const long int *lwork, std::complex<double> *rwork, 
              const long int *lrwork, int *info );
 
-long int GetBlockSize(long int Msize, long int MP::nproc);
+long int GetBlockSize(long int Msize, long int nproc);
 long int GetPArrayIndex(long int i, long int np, long int nb);
 long int GetLocalIndex(long int i, long int np, long int nb);
 long int GetGlobalIndex(long int il, long int p, long int np, long int nb);
@@ -54,7 +54,7 @@ long int *GetMatElementInRank(long int i, long int j, long int nprow, long int n
 void DivMat(long int m, long int n, std::complex<double> Aorgmn, std::complex<double> *A, int *desca);
 void GetEigenVector(long int i, long int m, std::complex<double> *Z, int *descZ, std::complex<double> *vec);
 int diag_scalapack_cmp(long int xNsize, std::complex<double> **A,
-                       std::complex<double> *r, std::complex<double> *Z, int *descZ);
+                       double *r, std::complex<double> *Z, int *descZ);
 
 extern int use_scalapack;
 #endif
