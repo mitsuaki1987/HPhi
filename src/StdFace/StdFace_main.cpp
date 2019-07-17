@@ -49,21 +49,26 @@ namespace StdI {
   /*
    Initial (undefined)
   */
-  int NaN_i = 2147483647;/**<@brief It is used for initializing input parameter.
+  const int NaN_i = 2147483647;/**<@brief It is used for initializing input parameter.
             This means that a parameter wich is not specified in input file.
             Set in StdFace::ResetVals().*/
-  double pi = acos(-1.0);/**<@brief @f$\pi=3.14...@f$*/
+  const double pi = acos(-1.0);/**<@brief @f$\pi=3.14...@f$*/
+  const double NaN_d = 0.0 / 0.0;
   /*
   Parameters for LATTICE
   */
-  char lattice[256];/**<@brief Name of lattice. Input parameter.*/
-  double a = 0.0 / 0.0; /**<@brief The lattice constant. Input parameter.*/
-  double length[3];/**<@brief Anisotropic lattice constant,
+  char lattice[256] = "****\0";/**<@brief Name of lattice. Input parameter.*/
+  double a = NaN_d; /**<@brief The lattice constant. Input parameter.*/
+  double length[3] = { NaN_d ,NaN_d ,NaN_d };
+  /**<@brief Anisotropic lattice constant,
                    input parameter wlength, llength, hlength.*/
-  int W;/**<@brief Number of sites along the 1st axis, input parameter.*/
+  int W = NaN_i;/**<@brief Number of sites along the 1st axis, input parameter.*/
   int L;/**<@brief Number of sites along the 2nd axis, input parameter.*/
   int Height;/**<@brief Number of sites along the 3rd axis, input parameter.*/
-  double direct[3][3];/**<@brief The unit direct lattice vector.
+  double direct[3][3] = {{ NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d }};
+  /**<@brief The unit direct lattice vector.
                       Set in StdFace::InitSite().*/
   int box[3][3];/**<@brief The shape of the super-cell. Input parameter
                 a0W, a0L, a0H, etc. or defined from StdI::W, etc. in
@@ -81,101 +86,140 @@ namespace StdI {
                /*
                Parameters for MODEL
                */
-  char model[256];/**<@brief Name of model, input parameter*/
-  double mu = 0.0 / 0.0;/**<@brief Chemical potential, input parameter*/
-  std::complex<double> t = 0.0 / 0.0;/**<@brief Nearest-neighbor hopping, input parameter*/
-  std::complex<double> tp = 0.0 / 0.0;/**<@brief 2nd-nearest hopping, input parameter*/
-  std::complex<double> t0 = 0.0 / 0.0;/**<@brief Anisotropic hopping (1st), input parameter*/
-  std::complex<double> t0p = 0.0 / 0.0;/**<@brief Anisotropic hopping (2nd), input parameter*/
-  std::complex<double> t0pp = 0.0 / 0.0;/**<@brief Anisotropic hopping (3rd), input parameter*/
-  std::complex<double> t1 = 0.0 / 0.0;/**<@brief Anisotropic hopping (1st), input parameter*/
-  std::complex<double> t1p = 0.0 / 0.0;/**<@brief Anisotropic hopping (2nd), input parameter*/
-  std::complex<double> t1pp;/**<@brief Anisotropic hopping (3rd), input parameter*/
-  std::complex<double> t2 = 0.0 / 0.0;/**<@brief Anisotropic hopping (1st), input parameter*/
-  std::complex<double> t2p = 0.0 / 0.0;/**<@brief Anisotropic hopping (2nd), input parameter*/
-  std::complex<double> t2pp = 0.0 / 0.0;/**<@brief Anisotropic hopping (3rd), input parameter*/
-  std::complex<double> tpp = 0.0 / 0.0;/**<@brief 3rd-nearest hopping, input parameter*/
-  double U = 0.0 / 0.0;/**<@brief On-site Coulomb potential, input parameter*/
-  double V = 0.0 / 0.0;/**<@brief Off-site Coulomb potential (1st), input parameter*/
-  double Vp = 0.0 / 0.0;/**<@brief Off-site Coulomb potential (2nd), input parameter*/
-  double V0 = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
-  double V0p = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
-  double V0pp = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
-  double V1 = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
-  double V1p = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
-  double V1pp = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
-  double V2 = 0.0 / 0.0;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
+  char model[256] = "****\0";/**<@brief Name of model, input parameter*/
+  double mu = NaN_d;/**<@brief Chemical potential, input parameter*/
+  std::complex<double> t = NaN_d;/**<@brief Nearest-neighbor hopping, input parameter*/
+  std::complex<double> tp = NaN_d;/**<@brief 2nd-nearest hopping, input parameter*/
+  std::complex<double> t0 = NaN_d;/**<@brief Anisotropic hopping (1st), input parameter*/
+  std::complex<double> t0p = NaN_d;/**<@brief Anisotropic hopping (2nd), input parameter*/
+  std::complex<double> t0pp = NaN_d;/**<@brief Anisotropic hopping (3rd), input parameter*/
+  std::complex<double> t1 = NaN_d;/**<@brief Anisotropic hopping (1st), input parameter*/
+  std::complex<double> t1p = NaN_d;/**<@brief Anisotropic hopping (2nd), input parameter*/
+  std::complex<double> t1pp = NaN_d;/**<@brief Anisotropic hopping (3rd), input parameter*/
+  std::complex<double> t2 = NaN_d;/**<@brief Anisotropic hopping (1st), input parameter*/
+  std::complex<double> t2p = NaN_d;/**<@brief Anisotropic hopping (2nd), input parameter*/
+  std::complex<double> t2pp = NaN_d;/**<@brief Anisotropic hopping (3rd), input parameter*/
+  std::complex<double> tpp = NaN_d;/**<@brief 3rd-nearest hopping, input parameter*/
+  double U = NaN_d;/**<@brief On-site Coulomb potential, input parameter*/
+  double V = NaN_d;/**<@brief Off-site Coulomb potential (1st), input parameter*/
+  double Vp = NaN_d;/**<@brief Off-site Coulomb potential (2nd), input parameter*/
+  double V0 = NaN_d;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
+  double V0p = NaN_d;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
+  double V0pp = NaN_d;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
+  double V1 = NaN_d;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
+  double V1p = NaN_d;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
+  double V1pp = NaN_d;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
+  double V2 = NaN_d;/**<@brief Anisotropic Coulomb potential (1st), input parameter*/
   double V2p;/**<@brief Anisotropic Coulomb potential (2nd), input parameter*/
   double V2pp;/**<@brief Anisotropic Coulomb potential (3rd), input parameter*/
-  double Vpp = 0.0 / 0.0;/**<@brief Off-site Coulomb potential (3rd), input parameter*/
+  double Vpp = NaN_d;/**<@brief Off-site Coulomb potential (3rd), input parameter*/
   /**/
-  double JAll = 0.0 / 0.0;/**<@brief Isotropic, diagonal spin coupling (1st Near.),
+  double JAll = NaN_d;/**<@brief Isotropic, diagonal spin coupling (1st Near.),
               input parameter J.*/
-  double JpAll = 0.0 / 0.0;/**<@brief Isotropic, diagonal spin coupling (2nd Near),
+  double JpAll = NaN_d;/**<@brief Isotropic, diagonal spin coupling (2nd Near),
                input parameter Jp.*/
-  double J0All = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
+  double J0All = NaN_d;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
                input parameter J0.*/
-  double J0pAll = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (2nd Near),
+  double J0pAll = NaN_d;/**<@brief Anisotropic, diagonal spin coupling (2nd Near),
                input parameter J0'.*/
-  double J0ppAll = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
+  double J0ppAll = NaN_d;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
                input parameter J0''.*/
-  double J1All = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
+  double J1All = NaN_d;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
                input parameter J1.*/
-  double J1pAll = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (2nd Near),
+  double J1pAll = NaN_d;/**<@brief Anisotropic, diagonal spin coupling (2nd Near),
                input parameter J1'.*/
-  double J1ppAll = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
+  double J1ppAll = NaN_d;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
                input parameter J1''.*/
-  double J2All = 0.0 / 0.0;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
+  double J2All = NaN_d;/**<@brief Anisotropic, diagonal spin coupling (1st Near),
                input parameter J2.*/
-  double J2pAll;/**<@brief Anisotropic, diagonal spin coupling (2nd Near),
+  double J2pAll = NaN_d;/**<@brief Anisotropic, diagonal spin coupling (2nd Near),
                input parameter J2'.*/
-  double J2ppAll;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
+  double J2ppAll = NaN_d;/**<@brief Anisotropic, diagonal spin coupling (3rd Near),
                input parameter J2''.*/
-  double JppAll;/**<@brief Isotropic, diagonal spin coupling (3rd Near),
+  double JppAll = NaN_d;/**<@brief Isotropic, diagonal spin coupling (3rd Near),
                input parameter J''.*/
-  double J[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  double J[3][3] = { { NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d } };
+  /**<@brief Isotropic, diagonal/off-diagonal spin coupling
                  (1st Near.), input parameter Jx, Jy, Jz, Jxy, etc.*/
-  double Jp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  double Jp[3][3] = { { NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d } };
+  /**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (2nd Near.), input parameter J'x, J'y, J'z, J'xy, etc.*/
-  double J0[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  double J0[3][3] = { { NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d } };
+  /**<@brief Isotropic, diagonal/off-diagonal spin coupling
                  (1st Near.), input parameter J0x, J0y, J0z, J0xy, etc.
                  or set in StdFace::InputSpinNN().*/
-  double J0p[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  double J0p[3][3] = { { NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d } };
+  /**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (2nd Near.), input parameter J0'x, J0'y, J0'z, J0'xy, etc.
                    or set in StdFace::InputSpin().*/
-  double J0pp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  double J0pp[3][3] = { { NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d } };
+  /**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (3rd Near.), input parameter J0''x, J0''y, J0''z, J0''xy, etc.
                    or set in StdFace::InputSpin().*/
-  double J1[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  double J1[3][3] = { { NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d } };
+  /**<@brief Isotropic, diagonal/off-diagonal spin coupling
                   (1st Near.), input parameter J1x, J1y, J1z, J1xy, etc.
                   or set in StdFace::InputSpinNN().*/
-  double J1p[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  double J1p[3][3] = { { NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d } };
+  /**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (2nd Near.), input parameter J1'x, J1'y, J1'z, J1'xy, etc.
                    or set in StdFace::InputSpin().*/
-  double J1pp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  double J1pp[3][3] = { { NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d } };
+  /**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (3rd Near.), input parameter J1''x, J1''y, J1''z, J1''xy, etc.
                    or set in StdFace::InputSpin().*/
-  double J2[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  double J2[3][3] = { { NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d } };
+  /**<@brief Isotropic, diagonal/off-diagonal spin coupling
                   (1st Near.), input parameter J2x, J2y, J2z, J2xy, etc.
                   or set in StdFace::InputSpinNN().*/
-  double J2p[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  double J2p[3][3] = { { NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d } };
+  /**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (2nd Near.), input parameter J2'x, J2'y, J2'z, J2'xy, etc.
                    or set in StdFace::InputSpin().*/
-  double J2pp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  double J2pp[3][3] = { { NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d } };
+  /**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (3rd Near.), input parameter J2''x, J2''y, J2''z, J2''xy, etc.
                    or set in StdFace::InputSpin().*/
-  double Jpp[3][3];/**<@brief Isotropic, diagonal/off-diagonal spin coupling
+  double Jpp[3][3] = { { NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d } };
+  /**<@brief Isotropic, diagonal/off-diagonal spin coupling
                    (3rd Near.), input parameter J''x, J''y, J''z, J''xy, etc.*/
-  double D[3][3];/**<@brief Coefficient for @f${\hat S}_{i z} {\hat S}_{i z}@f$
+  double D[3][3] = { { NaN_d ,NaN_d ,NaN_d },
+                         { NaN_d, NaN_d, NaN_d },
+                         { NaN_d, NaN_d, NaN_d } };
+  /**<@brief Coefficient for @f${\hat S}_{i z} {\hat S}_{i z}@f$
                  input parameter D. Only D[2][2] is used.*/
-  double h;/**<@brief Longitudinal magnetic field, input parameter.*/
-  double Gamma = NAN;/**<@brief Transvars magnetic field, input parameter.*/
-  double K;/**<@brief 4-spin term. Not used.*/
+  double h = NaN_d;/**<@brief Longitudinal magnetic field, input parameter.*/
+  double Gamma = NaN_d;/**<@brief Transvars magnetic field, input parameter.*/
+  double K = NaN_d;/**<@brief 4-spin term. Not used.*/
   /*
    Phase for the boundary
   */
-  double pi180;/**<@brief @f$\pi/180@f$, set in StdFace::ResetVals().*/
-  double phase[3];/**<@brief Boundary phase, input parameter phase0, etc.*/
+  const double pi180 = StdI::pi / 180.0;/**<@brief @f$\pi/180@f$, set in StdFace::ResetVals().*/
+  double phase[3] = { NaN_d, NaN_d, NaN_d };/**<@brief Boundary phase, input parameter phase0, etc.*/
   std::complex<double> ExpPhase[3];/**<@brief @f$\exp(i \pi {\rm phase}/180)@f$.*/
   int AntiPeriod[3];/**<@brief If corresponding StdI::phase = 180,
                     it becomes 1.*/
@@ -248,9 +292,9 @@ namespace StdI {
           Setted in StdFace::main() after all keywords are read.*/
   int nelec;/**<@brief Number of electrons, input from file.*/
   int S2;/**<@brief Total spin |S| of a local spin, input from file.*/
-  char outputmode[256];/**<@brief Select amount of correlation function,
+  char outputmode[256] = "****\0";/**<@brief Select amount of correlation function,
                        input from file.*/
-  char CDataFileHead[256];/**<@brief Header of the output files.
+  char CDataFileHead[256] = "****\0";/**<@brief Header of the output files.
                           Input from file*/
   int Sz2;/**<@brief Total Sz, input from file.*/
   int ioutputmode;/**<@brief Switch associated to StdI::outputmode*/
@@ -271,10 +315,10 @@ namespace StdI {
   /*
   HPhi modpara
   */
-  char method[256];/**<@brief The name of method, input from file.*/
-  char Restart[256];/**<@brief The name of restart mode, input from file.*/
-  char InitialVecType[256];/**<@brief The name of initialguess-type, input from file.*/
-  char EigenVecIO[256];/**<@brief The name of I/O mode for eigenvector, input from file*/
+  char method[256] = "****\0";/**<@brief The name of method, input from file.*/
+  char Restart[256] = "****\0";/**<@brief The name of restart mode, input from file.*/
+  char InitialVecType[256] = "****\0";/**<@brief The name of initialguess-type, input from file.*/
+  char EigenVecIO[256] = "****\0";/**<@brief The name of I/O mode for eigenvector, input from file*/
   int FlgTemp;/**<@brief */
   int Lanczos_max;/**<@brief The maxixmum number of iterations, input from file*/
   int initial_iv; /**<@brief the number for generating random number, input from file.*/
@@ -296,8 +340,8 @@ namespace StdI {
   /*
   Spectrum
   */
-  char CalcSpec[256];/**<@brief The name of mode for spectrum, input from file.*/
-  char SpectrumType[256];/**<@brief The type of mode for spectrum, input from file.*/
+  char CalcSpec[256] = "****\0";/**<@brief The name of mode for spectrum, input from file.*/
+  char SpectrumType[256] = "****\0";/**<@brief The type of mode for spectrum, input from file.*/
   int Nomega;/**<@brief Number of frequencies, input from file.*/
   double OmegaMax;/**<@brief Maximum of frequency for spectrum, input from file.*/
   double OmegaMin;/**<@brief Minimum of frequency for spectrum, input from file.*/
@@ -314,7 +358,7 @@ namespace StdI {
   double freq;/**<@brief Frequency of laser*/
   double Uquench;/**<@brief Quenched on-site potential*/
   double VecPot[3];/**<@brief Vector potential*/
-  char PumpType[256];/**<@brief The type of pump*/
+  char PumpType[256] = "****\0";/**<@brief The type of pump*/
   int PumpBody;/**<@brief one- or two-body pumping, defined from
                    StdI::PumpType*/
   int* npump;/**<@brief [StdI::nt] Number of transfer, counted in each lattice file.*/
@@ -328,7 +372,7 @@ namespace StdI {
   int ExpandCoef;/**<@brief The number of Hamiltonian-vector operation for the time-evolution*/
 #elif defined(_mVMC)
   /*mVMC modpara*/
-  char CParaFileHead[256];/**<@brief Header of the optimized wavefunction,
+  char CParaFileHead[256] = "****\0";/**<@brief Header of the optimized wavefunction,
                           input from file*/
   int NVMCCalMode;/**<@brief Optimization(=0) or compute correlation
                   function(=1), input from file.*/
@@ -1202,9 +1246,6 @@ void StdFace::ResetVals() {
   /*
   NaN is used for not inputed variable
   */
-  NaN_d = 0.0 / 0.0;
-  StdI::NaN_i = 2147483647;
-  StdI::pi = acos(-1.0);
   /**/
   StdI::a = NaN_d;
   for (i = 0; i < 3; i++) StdI::length[i] = NaN_d;
@@ -1283,10 +1324,6 @@ void StdFace::ResetVals() {
 
   StdI::nelec = StdI::NaN_i;
   StdI::Sz2 = StdI::NaN_i;
-  strcpy(StdI::model, "****\0");
-  strcpy(StdI::lattice, "****\0");
-  strcpy(StdI::outputmode, "****\0");
-  strcpy(StdI::CDataFileHead, "****\0");
   StdI::cutoff_t = NaN_d;
   StdI::cutoff_u = NaN_d;
   StdI::cutoff_j = NaN_d;

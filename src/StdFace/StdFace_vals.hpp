@@ -26,8 +26,8 @@ namespace StdI {
   /*
    Initial (undefined)
   */
-  extern int NaN_i;
-  extern double pi;
+  extern const int NaN_i;
+  extern const double pi;
   /*
   Parameters for LATTICE
   */
@@ -106,7 +106,7 @@ namespace StdI {
   /*
    Phase for the boundary
   */
-  extern double pi180;/**<@brief @f$\pi/180@f$, set in StdFace_ResetVals().*/
+  extern const double pi180;/**<@brief @f$\pi/180@f$, set in StdFace_ResetVals().*/
   extern double phase[3];/**<@brief Boundary phase, input parameter phase0, etc.*/
   extern std::complex<double> ExpPhase[3];/**<@brief @f$\exp(i \pi {\rm phase}/180)@f$.*/
   extern int AntiPeriod[3];
