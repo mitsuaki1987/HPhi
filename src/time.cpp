@@ -29,6 +29,7 @@
 #ifdef __MPI
 #include <mpi.h>
 #endif
+#include <cstdlib>
 
  //For Timer
 double* Timer; /**> The procedure execution time.*/

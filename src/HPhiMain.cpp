@@ -152,7 +152,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/myscript.sh DESTINATION bin
 #include "check.hpp"
 #include "CalcByTEM.hpp"
 #include "readdef.hpp"
-#include "StdFace_main.hpp"
+#include "StdFace/StdFace_main.hpp"
 #include "wrapperMPI.hpp"
 #include "splash.hpp"
 #include "CalcTime.hpp"
