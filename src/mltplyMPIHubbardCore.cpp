@@ -215,7 +215,8 @@ int GetSgnInterAll(
     if (tmp_ispin2 > tmp_ispin1) diffA = tmp_ispin2 - tmp_ispin1 * 2;
     else diffA = tmp_ispin1-tmp_ispin2*2;
 
-    tmp_sgn=X_GC_CisAjt(orgbit, tmp_ispin1, tmp_ispin2, tmp_ispin1+tmp_ispin2, diffA, &tmp_off);
+    tmp_sgn= mltply::HubbardGC::X_CisAjt(orgbit, tmp_ispin1, tmp_ispin2,
+      tmp_ispin1+tmp_ispin2, diffA, &tmp_off);
     if(tmp_sgn ==0){
       *offbit =0;
       *Fsgn = 0;
@@ -237,7 +238,8 @@ int GetSgnInterAll(
   else{
     if(tmp_ispin2 > tmp_ispin1) diffA = tmp_ispin2 - tmp_ispin1*2;
     else diffA = tmp_ispin1-tmp_ispin2*2;
-    tmp_sgn *=X_GC_CisAjt(tmp_off, tmp_ispin1, tmp_ispin2, tmp_ispin1+tmp_ispin2, diffA, offbit);
+    tmp_sgn *= mltply::HubbardGC::X_CisAjt(tmp_off, tmp_ispin1, tmp_ispin2, 
+      tmp_ispin1+tmp_ispin2, diffA, offbit);
     
     if(tmp_sgn ==0){
       *offbit =0;
@@ -254,14 +256,14 @@ int GetSgnInterAll(
 @brief Compute @f$c_{is}^\dagger c_{is} c_{jt}^\dagger c_{jt}@f$
 term of grandcanonical Hubbard system
 */
-void X_GC_child_CisAisCjtAjt_Hubbard_MPI(
+void mltply::HubbardGC::X_CisAisCjtAjt_MPI(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  //!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
   int iCheck;
@@ -290,12 +292,12 @@ shared(org_isite1,org_ispin1,org_isite3,org_ispin3,nstate,one,tmp_v0,tmp_v1,tmp_
       }
     }/*for (j = 1; j <= i_max; j++)*/
   }
-}/*std::complex<double> X_GC_child_CisAisCjtAjt_Hubbard_MPI*/
+}/*std::complex<double> mltply::HubbardGC::X_CisAisCjtAjt_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{jt} c_{ku}^\dagger c_{ku}@f$
 term of grandcanonical Hubbard system
 */
-void X_GC_child_CisAjtCkuAku_Hubbard_MPI(
+void mltply::HubbardGC::X_CisAjtCkuAku_MPI(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   int org_isite2,//!<[in] Site 2
@@ -303,8 +305,8 @@ void X_GC_child_CisAjtCkuAku_Hubbard_MPI(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  //!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
   long int i_max = Check::idim_max;
@@ -361,12 +363,14 @@ shared(i_max,Asum,Adiff,isite1,isite2, tmp_V,tmp_v0, tmp_v1,nstate,Large::mode)
     {
 #pragma omp for
       for (j = 1; j <= i_max; j++) 
-        GC_CisAjt(j, nstate, tmp_v0, tmp_v1, isite2, isite1, Asum, Adiff, tmp_V, &tmp_off);
+        mltply::HubbardGC::CisAjt(j, nstate, tmp_v0, tmp_v1, isite2, isite1, Asum, Adiff, 
+          tmp_V, &tmp_off);
 
       if (Large::mode != M_CORR) {
 #pragma omp for
         for (j = 1; j <= i_max; j++) 
-          GC_CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, tmp_V, &tmp_off);
+          mltply::HubbardGC::CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, 
+            tmp_V, &tmp_off);
       }/*if (Large::mode != M_CORR)*/
     }/*End of paralle region*/
     return;
@@ -412,12 +416,12 @@ org_isite2,org_isite1,idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_is
       }
     }/*End of parallel region*/
   }/*MP::myrank != origin*/
-}/*std::complex<double> X_GC_child_CisAjtCkuAku_Hubbard_MPI*/
+}/*std::complex<double> mltply::HubbardGC::X_CisAjtCkuAku_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{is} c_{jt}^\dagger c_{ku}@f$
 term of grandcanonical Hubbard system
 */
-void X_GC_child_CisAisCjtAku_Hubbard_MPI(
+void mltply::HubbardGC::X_CisAisCjtAku_MPI(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   int org_isite3,//!<[in] Site 3
@@ -425,19 +429,19 @@ void X_GC_child_CisAisCjtAku_Hubbard_MPI(
   int org_isite4,//!<[in] Site 4
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  //!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  X_GC_child_CisAjtCkuAku_Hubbard_MPI(
+  mltply::HubbardGC::X_CisAjtCkuAku_MPI(
     org_isite4, org_ispin4, org_isite3, org_ispin3,
     org_isite1, org_ispin1, conj(tmp_V), nstate, tmp_v0, tmp_v1);
-}/*std::complex<double> X_GC_child_CisAisCjtAku_Hubbard_MPI*/
+}/*std::complex<double> mltply::HubbardGC::X_CisAisCjtAku_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{jt} c_{ku}^\dagger c_{lv}@f$
 term of grandcanonical Hubbard system
 */
-void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
+void mltply::HubbardGC::X_CisAjtCkuAlv_MPI(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   int org_isite2,//!<[in] Site 2
@@ -447,8 +451,8 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
   int org_isite4,//!<[in] Site 4
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  //!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
+  int nstate,
+  std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
   long int i_max = Check::idim_max;
@@ -500,9 +504,9 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
   if (MP::myrank == origin) {
     if (isite1 == isite4 && isite2 == isite3) { // CisAjvCjvAis =Cis(1-njv)Ais=nis-nisnjv
             //calc nis
-      X_GC_child_CisAis_Hubbard_MPI(org_isite1, org_ispin1, tmp_V, nstate, tmp_v0, tmp_v1);
+      mltply::HubbardGC::X_CisAis_MPI(org_isite1, org_ispin1, tmp_V, nstate, tmp_v0, tmp_v1);
       //calc -nisniv
-      X_GC_child_CisAisCjtAjt_Hubbard_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1);
+      mltply::HubbardGC::X_CisAisCjtAjt_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1);
     }/*if (isite1 == isite4 && isite2 == isite3)*/
     else if (isite2 == isite3) { // CisAjvCjvAku= Cis(1-njv)Aku=-CisAkunjv+CisAku: j is in PE
             //calc CisAku
@@ -512,27 +516,29 @@ void X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
 #pragma omp parallel for default(none) private(j, tmp_off) \
 shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
       for (j = 1; j <= i_max; j++) 
-        GC_CisAjt(j - 1, nstate, tmp_v0, tmp_v1, isite1, isite4, (isite1 + isite4), Adiff, tmp_V, &tmp_off);
+        mltply::HubbardGC::CisAjt(j - 1, nstate, tmp_v0, tmp_v1, 
+          isite1, isite4, (isite1 + isite4), Adiff, tmp_V, &tmp_off);
       
       //calc -CisAku njv
-      X_GC_child_CisAjtCkuAku_Hubbard_MPI(org_isite1, org_ispin1, org_isite4, org_ispin4, 
+      mltply::HubbardGC::X_CisAjtCkuAku_MPI(org_isite1, org_ispin1, org_isite4, org_ispin4, 
                                           org_isite2, org_ispin2, -tmp_V, nstate, tmp_v0, tmp_v1);
       if (Large::mode != M_CORR) { //for hermite
 #pragma omp parallel for default(none) private(j, tmp_off) \
 shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
         for (j = 1; j <= i_max; j++) 
-          GC_CisAjt(j - 1, nstate, tmp_v0, tmp_v1, isite4, isite1, (isite1 + isite4), Adiff, tmp_V, &tmp_off);
+          mltply::HubbardGC::CisAjt(j - 1, nstate, tmp_v0, tmp_v1, 
+            isite4, isite1, (isite1 + isite4), Adiff, tmp_V, &tmp_off);
         
         //calc -njvCkuAis
-        X_GC_child_CisAisCjtAku_Hubbard_MPI(org_isite2, org_ispin2, org_isite4, org_ispin4,
+        mltply::HubbardGC::X_CisAisCjtAku_MPI(org_isite2, org_ispin2, org_isite4, org_ispin4,
                                             org_isite1, org_ispin1, -tmp_V, nstate, tmp_v0, tmp_v1);
       }/*if (Large::mode != M_CORR)*/
     }/*if (isite2 == isite3)*/
     else {// CisAjtCkuAis = -CisAisCkuAjt: i is in PE
-      X_GC_child_CisAisCjtAku_Hubbard_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3,
+      mltply::HubbardGC::X_CisAisCjtAku_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3,
                                           org_isite2, org_ispin2, -tmp_V, nstate, tmp_v0, tmp_v1);
       if (Large::mode != M_CORR) { //for hermite
-        X_GC_child_CisAisCjtAku_Hubbard_MPI(org_isite1, org_ispin1, org_isite2, org_ispin2,
+        mltply::HubbardGC::X_CisAisCjtAku_MPI(org_isite1, org_ispin1, org_isite2, org_ispin2,
                                             org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1);
       }/*if (Large::mode != M_CORR)*/
     }/*if (isite2 != isite3)*/
@@ -551,13 +557,16 @@ shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
       else Bdiff = isite3 - isite4 * 2;
 
       if (iFlgHermite == FALSE) {
-        Fsgn = X_GC_CisAjt((long int) MP::myrank, isite2, isite1, (isite1 + isite2), Adiff, &tmp_off2);
-        Fsgn *= X_GC_CisAjt(tmp_off2, isite4, isite3, (isite3 + isite4), Bdiff, &tmp_off);
+        Fsgn = mltply::HubbardGC::X_CisAjt((long int) MP::myrank, 
+          isite2, isite1, (isite1 + isite2), Adiff, &tmp_off2);
+        Fsgn *= mltply::HubbardGC::X_CisAjt(tmp_off2, isite4, isite3, (isite3 + isite4), Bdiff, &tmp_off);
         tmp_V *= Fsgn;
       }/*if (iFlgHermite == FALSE)*/
       else {
-        Fsgn = X_GC_CisAjt((long int) MP::myrank, isite3, isite4, (isite3 + isite4), Bdiff, &tmp_off2);
-        Fsgn *= X_GC_CisAjt(tmp_off2, isite1, isite2, (isite1 + isite2), Adiff, &tmp_off);
+        Fsgn = mltply::HubbardGC::X_CisAjt((long int) MP::myrank,
+          isite3, isite4, (isite3 + isite4), Bdiff, &tmp_off2);
+        Fsgn *= mltply::HubbardGC::X_CisAjt(tmp_off2, isite1, isite2, 
+          (isite1 + isite2), Adiff, &tmp_off);
         tmp_V *= Fsgn;
       }/*if (iFlgHermite == TRUE)*/
 
@@ -575,17 +584,17 @@ shared(idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,org_rankbi
       }/*for (j = 1; j <= idim_max_buf; j++)*/
     }
   }/*MP::myrank != origin*/
-}/*std::complex<double> X_GC_child_CisAjtCkuAlv_Hubbard_MPI*/
+}/*std::complex<double> mltply::HubbardGC::X_CisAjtCkuAlv_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{is}@f$
 term of grandcanonical Hubbard system
 */
-void X_GC_child_CisAis_Hubbard_MPI(
+void mltply::HubbardGC::X_CisAis_MPI(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  //!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
+  int nstate,
+  std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
   long int i_max = Check::idim_max;
@@ -607,12 +616,12 @@ shared(tmp_v0, tmp_v1,nstate,one, i_max, tmp_V, isite1)
       }/*if (CheckBit_Ajt(isite1, j - 1, &tmp_off) == TRUE)*/
     }/*for (j = 1; j <= i_max; j++)*/
   }/*if (org_isite1 + 1 <= Def::Nsite)*/
-}/*std::complex<double> X_GC_child_CisAis_Hubbard_MPI*/
+}/*std::complex<double> mltply::HubbardGC::X_CisAis_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{jt}@f$
 term of grandcanonical Hubbard system
 */
-void X_GC_child_CisAjt_Hubbard_MPI(
+void mltply::HubbardGC::X_CisAjt_MPI(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   int org_isite2,//!<[in] Site 2
@@ -624,21 +633,21 @@ void X_GC_child_CisAjt_Hubbard_MPI(
 ) {
 
   if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite) {
-    X_GC_child_general_hopp_MPIdouble(org_isite1, org_ispin1, org_isite2, org_ispin2, tmp_trans, nstate, tmp_v0, tmp_v1);
+    mltply::HubbardGC::X_general_hopp_MPIdouble(org_isite1, org_ispin1, org_isite2, org_ispin2, tmp_trans, nstate, tmp_v0, tmp_v1);
   }
   else if (org_isite1 + 1 > Def::Nsite || org_isite2 + 1 > Def::Nsite) {
-    X_GC_child_general_hopp_MPIsingle(org_isite1, org_ispin1, org_isite2, org_ispin2, tmp_trans, nstate, tmp_v0, tmp_v1);
+    mltply::HubbardGC::X_general_hopp_MPIsingle(org_isite1, org_ispin1, org_isite2, org_ispin2, tmp_trans, nstate, tmp_v0, tmp_v1);
   }
   else {
     //error message will be added.
     exitMPI(-1);
   }
-}/*std::complex<double> X_GC_child_CisAjt_Hubbard_MPI*/
+}/*std::complex<double> mltply::HubbardGC::X_CisAjt_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{is} c_{jt}^\dagger c_{jt}@f$
 term of canonical Hubbard system
 */
-void X_child_CisAisCjtAjt_Hubbard_MPI(
+void mltply::Hubbard::X_CisAisCjtAjt_MPI(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   int org_isite3,//!<[in] Site 3
@@ -672,12 +681,12 @@ shared(tmp_v0,tmp_v1,List::c1,org_isite1,org_ispin1,org_isite3,org_ispin3,nstate
       }
     }/*for (j = 1; j <= i_max; j++)*/
   }/*if (org_isite1 + 1 > Def::Nsite || org_isite3 + 1 > Def::Nsite)*/
-}/*std::complex<double> X_child_CisAisCjtAjt_Hubbard_MPI*/
+}/*std::complex<double> mltply::Hubbard::X_CisAisCjtAjt_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{jt} c_{ku}^\dagger c_{lv}@f$
 term of canonical Hubbard system
 */
-void X_child_CisAjtCkuAlv_Hubbard_MPI(
+void mltply::Hubbard::X_CisAjtCkuAlv_MPI(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   int org_isite2,//!<[in] Site 2
@@ -737,9 +746,9 @@ void X_child_CisAjtCkuAlv_Hubbard_MPI(
   if (MP::myrank == origin) {
     if (isite1 == isite4 && isite2 == isite3) { // CisAjvCjvAis =Cis(1-njv)Ais=nis-nisnjv
             //calc nis
-      X_child_CisAis_Hubbard_MPI(org_isite1, org_ispin1, tmp_V, nstate, tmp_v0, tmp_v1);
+      mltply::Hubbard::X_CisAis_MPI(org_isite1, org_ispin1, tmp_V, nstate, tmp_v0, tmp_v1);
       //calc -nisniv
-      X_child_CisAisCjtAjt_Hubbard_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1);
+      mltply::Hubbard::X_CisAisCjtAjt_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1);
     }/* if (isite1 == isite4 && isite2 == isite3)*/
     else if (isite2 == isite3) { // CisAjvCjvAku= Cis(1-njv)Aku=-CisAkunjv+CisAku: j is in PE
       if (isite4 > isite1) Adiff = isite4 - isite1 * 2;
@@ -749,29 +758,31 @@ void X_child_CisAjtCkuAlv_Hubbard_MPI(
 #pragma omp parallel for default(none) private(j, tmp_off) \
 shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, nstate, tmp_v0, List::c1)
       for (j = 1; j <= i_max; j++)
-        CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite4, (isite1 + isite4), Adiff, tmp_V);
+        mltply::Hubbard::CisAjt(j, nstate, tmp_v0, tmp_v1,
+          isite1, isite4, (isite1 + isite4), Adiff, tmp_V);
       
       //calc -CisAku njv
-      X_child_CisAjtCkuAku_Hubbard_MPI(org_isite1, org_ispin1, org_isite4, org_ispin4,
+      mltply::Hubbard::X_CisAjtCkuAku_MPI(org_isite1, org_ispin1, org_isite4, org_ispin4,
                                        org_isite2, org_ispin2, -tmp_V, nstate, tmp_v0, tmp_v1);
 
       if (Large::mode != M_CORR) {  //for hermite
 #pragma omp parallel for default(none) private(j, tmp_off) \
 shared(i_max, tmp_V, isite1, isite4, Adiff,tmp_v1, tmp_v0,nstate)
         for (j = 1; j <= i_max; j++) 
-          CisAjt(j, nstate, tmp_v0, tmp_v1, isite4, isite1, (isite1 + isite4), Adiff, tmp_V);
+          mltply::Hubbard::CisAjt(j, nstate, tmp_v0, tmp_v1,
+            isite4, isite1, (isite1 + isite4), Adiff, tmp_V);
                 
         //calc -njvCkuAis
-        X_child_CisAisCjtAku_Hubbard_MPI(org_isite2, org_ispin2, org_isite4, org_ispin4, 
+        mltply::Hubbard::X_CisAisCjtAku_MPI(org_isite2, org_ispin2, org_isite4, org_ispin4, 
                                          org_isite1, org_ispin1, -tmp_V, nstate, tmp_v0, tmp_v1);
       }/*if (Large::mode != M_CORR)*/
     }/*if (isite2 == isite3)*/
     else {// CisAjtCkuAis = -CisAisCkuAjt: i is in PE
-      X_child_CisAisCjtAku_Hubbard_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3, 
+      mltply::Hubbard::X_CisAisCjtAku_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3, 
                                        org_isite2, org_ispin2, -tmp_V, nstate, tmp_v0, tmp_v1);
 
       if (Large::mode != M_CORR) //for hermite: CisAkuCjtAis=-CisAisCjtAku
-        X_child_CisAisCjtAku_Hubbard_MPI(org_isite1, org_ispin1, org_isite2, org_ispin2,
+        mltply::Hubbard::X_CisAisCjtAku_MPI(org_isite1, org_ispin1, org_isite2, org_ispin2,
                                          org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1);    
     }/*if (isite2 != isite3)*/
     return;
@@ -790,13 +801,13 @@ shared(i_max, tmp_V, isite1, isite4, Adiff,tmp_v1, tmp_v0,nstate)
       else Bdiff = isite3 - isite4 * 2;
 
       if (iFlgHermite == FALSE) {
-        Fsgn = X_GC_CisAjt((long int) MP::myrank, isite2, isite1, (isite1 + isite2), Adiff, &tmp_off2);
-        Fsgn *= X_GC_CisAjt(tmp_off2, isite4, isite3, (isite3 + isite4), Bdiff, &tmp_off);
+        Fsgn = mltply::HubbardGC::X_CisAjt((long int) MP::myrank, isite2, isite1, (isite1 + isite2), Adiff, &tmp_off2);
+        Fsgn *= mltply::HubbardGC::X_CisAjt(tmp_off2, isite4, isite3, (isite3 + isite4), Bdiff, &tmp_off);
         tmp_V *= Fsgn;
       }/*if (iFlgHermite == FALSE)*/
       else {
-        Fsgn = X_GC_CisAjt((long int) MP::myrank, isite3, isite4, (isite3 + isite4), Bdiff, &tmp_off2);
-        Fsgn *= X_GC_CisAjt(tmp_off2, isite1, isite2, (isite1 + isite2), Adiff, &tmp_off);
+        Fsgn = mltply::HubbardGC::X_CisAjt((long int) MP::myrank, isite3, isite4, (isite3 + isite4), Bdiff, &tmp_off2);
+        Fsgn *= mltply::HubbardGC::X_CisAjt(tmp_off2, isite1, isite2, (isite1 + isite2), Adiff, &tmp_off);
         tmp_V *= Fsgn;
       }/*if (iFlgHermite == TRUE)*/
 #pragma omp parallel default(none) private(j,ioff) \
@@ -837,12 +848,12 @@ Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::c1buf, List::c2_1, List::c2_2, La
       }/*End of parallel region*/
     }
   }/*if (MP::myrank != origin)*/
-}/*std::complex<double> X_child_CisAjtCkuAlv_Hubbard_MPI*/
+}/*std::complex<double> mltply::Hubbard::X_CisAjtCkuAlv_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{jt} c_{ku}^\dagger c_{ku}@f$
 term of canonical Hubbard system
 */
-void X_child_CisAjtCkuAku_Hubbard_MPI(
+void mltply::Hubbard::X_CisAjtCkuAku_MPI(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   int org_isite2,//!<[in] Site 2
@@ -905,12 +916,14 @@ shared(i_max, Asum, Adiff, isite1, isite2, tmp_V, Large::mode, tmp_v0, tmp_v1,ns
     {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, tmp_V);
+        mltply::Hubbard::CisAjt(j, nstate, tmp_v0, tmp_v1, 
+          isite1, isite2, Asum, Adiff, tmp_V);
 
       if (Large::mode != M_CORR) {
 #pragma omp for
         for (j = 1; j <= i_max; j++)
-          CisAjt(j, nstate, tmp_v0, tmp_v1, isite2, isite1, Asum, Adiff, tmp_V);
+          mltply::Hubbard::CisAjt(j, nstate, tmp_v0, tmp_v1, 
+            isite2, isite1, Asum, Adiff, tmp_V);
       }/*if (Large::mode != M_CORR)*/
     }/*End of parallel region*/
     return;
@@ -966,12 +979,12 @@ org_isite1,org_isite2,Def::Nsite,Large::irght, Large::ilft, Large::ihfbit,Def::O
       }
     }/*End of parallel region*/
   }/*if (MP::myrank != origin)*/
-}/*std::complex<double> X_child_CisAjtCkuAku_Hubbard_MPI*/
+}/*std::complex<double> mltply::Hubbard::X_CisAjtCkuAku_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{is} c_{jt}^\dagger c_{ku}@f$
 term of canonical Hubbard system
 */
-void X_child_CisAisCjtAku_Hubbard_MPI(
+void mltply::Hubbard::X_CisAisCjtAku_MPI(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   int org_isite3,//!<[in] Site 3
@@ -983,12 +996,12 @@ void X_child_CisAisCjtAku_Hubbard_MPI(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  X_child_CisAjtCkuAku_Hubbard_MPI(
+  mltply::Hubbard::X_CisAjtCkuAku_MPI(
     org_isite4, org_ispin4, org_isite3, org_ispin3,
     org_isite1, org_ispin1, conj(tmp_V), nstate, tmp_v0, tmp_v1);
-}/*std::complex<double> X_child_CisAisCjtAku_Hubbard_MPI*/
+}/*std::complex<double> mltply::Hubbard::X_CisAisCjtAku_MPI*/
 
-void X_child_CisAis_Hubbard_MPI(
+void mltply::Hubbard::X_CisAis_MPI(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   std::complex<double> tmp_V,//!<[in] Coupling constant
@@ -1012,12 +1025,12 @@ void X_child_CisAis_Hubbard_MPI(
 #pragma omp parallel for default(none) private(j, tmp_off) \
 shared(tmp_v0, tmp_v1, List::c1,nstate,one, i_max, tmp_V, isite1)
     for (j = 1; j <= i_max; j++) {
-      if (X_CisAis(List::c1[j], isite1) != 0) {
+      if (mltply::Hubbard::X_CisAis(List::c1[j], isite1) != 0) {
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
       }/*if (X_CisAis(List::c1[j], isite1) != 0)*/
     }/*for (j = 1; j <= i_max; j++)*/
   }/*if (org_isite1 + 1 <= Def::Nsite)*/
-}/*std::complex<double> X_child_CisAis_Hubbard_MPI*/
+}/*std::complex<double> mltply::Hubbard::X_CisAis_MPI*/
 /**
 @brief Single creation/annihilation operator
  in the inter process region for HubbardGC.
@@ -1025,7 +1038,7 @@ shared(tmp_v0, tmp_v1, List::c1,nstate,one, i_max, tmp_V, isite1)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 @author Youhei Yamaji (The University of Tokyo)
 */
-void X_GC_Cis_MPI(
+void mltply::HubbardGC::X_Cis_MPI(
   int org_isite,//!<[in] Site i
   int org_ispin,//!<[in] Spin s
   std::complex<double> tmp_trans,//!<[in] Coupling constant//!<[in]
@@ -1065,7 +1078,7 @@ void X_GC_Cis_MPI(
   else return;
 
   zaxpy_long(idim_max_buf*nstate, trans, &Wave::v1buf[1][0], &tmp_v0[1][0]);
-}/*std::complex<double> X_GC_Cis_MPI*/
+}/*std::complex<double> mltply::HubbardGC::X_Cis_MPI*/
 /**
 @brief Single creation/annihilation operator
   in the inter process region for HubbardGC.
@@ -1073,7 +1086,7 @@ void X_GC_Cis_MPI(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 @author Youhei Yamaji (The University of Tokyo)
 */
-void X_GC_Ajt_MPI(
+void mltply::HubbardGC::X_Ajt_MPI(
   int org_isite,//!<[in] Site j
   int org_ispin,//!<[in] Spin t
   std::complex<double> tmp_trans,//!<[in] Coupling constant//!<[in]
@@ -1109,12 +1122,12 @@ void X_GC_Ajt_MPI(
   else return;
 
   zaxpy_long(idim_max_buf*nstate, trans, &Wave::v1buf[1][0], &tmp_v0[1][0]);
-}/*std::complex<double> X_GC_Ajt_MPI*/
+}/*std::complex<double> mltply::HubbardGC::X_Ajt_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger@f$
 term of canonical Hubbard system
 */
-void X_Cis_MPI(
+void mltply::Hubbard::X_Cis_MPI(
   int org_isite,//!<[in] Site i
   int org_ispin,//!<[in] Spin s
   std::complex<double> tmp_trans,//!<[in] Coupling constant
@@ -1165,12 +1178,12 @@ Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::c1buf_org)
       _irght, _ilft, _ihfbit, &ioff);
     zaxpy_(&nstate, &trans, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
   }/*for (j = 1; j <= idim_max_buf; j++)*/
-}/*std::complex<double> X_GC_Cis_MPI*/
+}/*std::complex<double> mltply::HubbardGC::X_Cis_MPI*/
 /**
 @brief Compute @f$c_{jt}@f$
 term of canonical Hubbard system
 */
-void X_Ajt_MPI(
+void mltply::Hubbard::X_Ajt_MPI(
   int org_isite,//!<[in] Site j
   int org_ispin,//!<[in] Spin t
   std::complex<double> tmp_trans,//!<[in] Coupling constant
@@ -1219,4 +1232,4 @@ Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::c1buf_org)
       _irght, _ilft, _ihfbit, &ioff);
     zaxpy_(&nstate, &trans, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
   }
-}/*std::complex<double> X_Ajt_MPI*/
+}/*std::complex<double> mltply::Hubbard::X_Ajt_MPI*/

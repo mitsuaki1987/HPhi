@@ -321,8 +321,8 @@ int CalcSpectrumByBiCG(
     */
     zclear(Check::idim_max, &v12[1][0]);
     zclear(Check::idim_max, &v14[1][0]);
-    mltply(1, v12, v2);
-    mltply(1, v14, v4);
+    mltply::main(1, v12, v2);
+    mltply::main(1, v14, v4);
     
     for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
       zclear(Check::idim_max, &vL[1][0]);

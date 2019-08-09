@@ -43,15 +43,15 @@
  * @note If @f$ \verb|mode| @f$ in BindStruct X is @f$ \verb|M_CORR| @f$, the wave function is not updated. The expected values are only calculated.\n
  * Otherwise, the wavefunction @f$ v_0 @f$ is updated as @f$ v_0 += H v_1@f$.
  *
- * @param X [in] Struct for getting the information of the operators.
- * @param tmp_v0 [in, out]
- * @param tmp_v1 [in]
- *
  * @return
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
-int mltply( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1) {
+int mltply::main(
+  int nstate, /**<[in]*/
+  std::complex<double> **tmp_v0, /**<[in, out]*/
+  std::complex<double> **tmp_v1 /**<[in]*/
+) {
   int one = 1;
   long int j=0;
   long int irght=0;
@@ -96,21 +96,21 @@ shared(tmp_v0, tmp_v1, List::Diagonal,one,nstate,i_max)
   
   switch (Def::iCalcModel) {
   case DC::HubbardGC:
-    mltplyHubbardGC(nstate, tmp_v0, tmp_v1);
+    mltply::HubbardGC::main(nstate, tmp_v0, tmp_v1);
     break;
       
   case DC::KondoGC:
   case DC::Hubbard:
   case DC::Kondo:
-    mltplyHubbard(nstate, tmp_v0, tmp_v1);
+    mltply::Hubbard::main(nstate, tmp_v0, tmp_v1);
     break;
       
   case DC::Spin:
-    mltplySpin(nstate, tmp_v0, tmp_v1);
+    mltply::Spin::main(nstate, tmp_v0, tmp_v1);
     break;
       
   case DC::SpinGC:
-    mltplySpinGC(nstate, tmp_v0, tmp_v1);
+    mltply::SpinGC::main(nstate, tmp_v0, tmp_v1);
     break;
       
   default:

@@ -36,31 +36,31 @@
   <tr>
     <td>@f$c_{i s}^\dagger@f$</td>
     <td>::Cis, ::X_Cis</td>
-    <td>::Cis_MPI, ::X_Cis_MPI</td>
+    <td>::Cis_MPI, ::mltply::Hubbard::X_Cis_MPI</td>
     <td>::GC_Cis, ::X_GC_Cis</td>
-    <td>::GC_Cis_MPI, ::X_GC_Cis_MPI</td>
+    <td>::GC_Cis_MPI, ::mltply::HubbardGC::X_Cis_MPI</td>
   </tr>
   <tr>
     <td>@f$c_{j t}@f$</td>
     <td>::Ajt, ::X_Ajt</td>
-    <td>::Ajt_MPI, ::X_Ajt_MPI</td>
+    <td>::Ajt_MPI, ::mltply::Hubbard::X_Ajt_MPI</td>
     <td>::GC_Ajt, ::X_GC_Ajt</td>
-    <td>::GC_Ajt_MPI, ::X_GC_Ajt_MPI</td>
+    <td>::GC_Ajt_MPI, ::mltply::HubbardGC::X_Ajt_MPI</td>
   </tr>
   <tr>
     <td>@f$c_{i s}^\dagger c_{i s}@f$</td>
     <td>::CisAis, ::X_CisAis</td>
-    <td>::child_CisAis_Hubbard_MPI, ::X_child_CisAis_Hubbard_MPI</td>
+    <td>::child_CisAis_Hubbard_MPI, ::mltply::Hubbard::X_CisAis_MPI</td>
     <td>::GC_CisAis, ::X_CisAis</td>
-    <td>::GC_child_CisAis_Hubbard_MPI, ::X_GC_child_CisAis_Hubbard_MPI</td>
+    <td>::GC_child_CisAis_Hubbard_MPI, ::mltply::HubbardGC::X_CisAis_MPI</td>
   </tr>
   <tr>
     <td>@f$c_{i s}^\dagger c_{j t}@f$</td>
     <td>::CisAjt, ::X_CisAjt</td>
     <td>::child_CisAjt_MPIsingle, ::child_CisAjt_MPIdouble, 
-    ::X_child_CisAjt_MPIsingle, ::X_child_CisAjt_MPIdouble</td>
+    ::X_child_CisAjt_MPIsingle, ::mltply::Hubbard::X_CisAjt_MPIdouble</td>
     <td>::GC_CisAjt, ::X_GC_CisAjt</td>
-    <td>::GC_child_CisAjt_Hubbard_MPI, ::X_GC_child_CisAjt_Hubbard_MPI</td>
+    <td>::GC_child_CisAjt_Hubbard_MPI, ::mltply::HubbardGC::X_CisAjt_MPI</td>
   </tr>
   <tr>
     <td>@f$c_{i s}^\dagger c_{i s} c_{i s}^\dagger c_{i s}@f$</td>
@@ -72,30 +72,30 @@
   <tr>
     <td>@f$c_{i s}^\dagger c_{i s} c_{j t}^\dagger c_{j t}@f$</td>
     <td>::child_CisAisCjtAjt_element</td>
-    <td>::X_child_CisAisCjtAjt_Hubbard_MPI</td>
+    <td>::mltply::Hubbard::X_CisAisCjtAjt_MPI</td>
     <td>::GC_child_CisAisCjtAjt_element</td>
-    <td>::X_GC_child_CisAisCjtAjt_Hubbard_MPI</td>
+    <td>::mltply::HubbardGC::X_CisAisCjtAjt_MPI</td>
   </tr>
   <tr>
     <td>@f$c_{i s}^\dagger c_{i s} c_{j t}^\dagger c_{k u}@f$</td>
     <td>::child_CisAisCjtAku_element</td>
-    <td>::X_child_CisAisCjtAku_Hubbard_MPI</td>
+    <td>::mltply::Hubbard::X_CisAisCjtAku_MPI</td>
     <td>::GC_child_CisAisCjtAku_element</td>
-    <td>::X_GC_child_CisAisCjtAku_Hubbard_MPI</td>
+    <td>::mltply::HubbardGC::X_CisAisCjtAku_MPI</td>
   </tr>
   <tr>
     <td>@f$c_{i s}^\dagger c_{j t} c_{k u}^\dagger c_{k u}@f$</td>
     <td>::child_CisAjtCkuAku_element</td>
-    <td>::X_child_CisAjtCkuAku_Hubbard_MPI</td>
+    <td>::mltply::Hubbard::X_CisAjtCkuAku_MPI</td>
     <td>::GC_child_CisAjtCkuAku_element</td>
-    <td>::X_GC_child_CisAjtCkuAku_Hubbard_MPI</td>
+    <td>::mltply::HubbardGC::X_CisAjtCkuAku_MPI</td>
   </tr>
   <tr>
     <td>@f$c_{i s}^\dagger c_{j t} c_{k u}^\dagger c_{l v}@f$</td>
     <td>::child_CisAjtCkuAlv_element</td>
-    <td>::X_child_CisAjtCkuAlv_Hubbard_MPI</td>
+    <td>::mltply::Hubbard::X_CisAjtCkuAlv_MPI</td>
     <td>::GC_child_CisAjtCkuAlv_element</td>
-    <td>::X_GC_child_CisAjtCkuAlv_Hubbard_MPI</td>
+    <td>::mltply::HubbardGC::X_CisAjtCkuAlv_MPI</td>
   </tr>
 </table>
 Other
@@ -127,10 +127,10 @@ Other
   <tr>
     <td>General hop</td>
     <td>::child_general_hopp_GetInfo</td>
-    <td>::child_general_hopp, ::child_general_hopp_MPIsingle, 
-    ::child_general_hopp_MPIdouble</td>
-    <td>::GC_child_general_hopp, ::GC_child_general_hopp_MPIsingle, 
-    ::GC_child_general_hopp_MPIdouble</td>
+    <td>::child_general_hopp, ::mltply::Hubbard::general_hopp_MPIsingle, 
+    ::mltply::Hubbard::general_hopp_MPIdouble</td>
+    <td>::GC_child_general_hopp, ::mltply::HubbardGC::general_hopp_MPIsingle, 
+    ::mltply::HubbardGC::general_hopp_MPIdouble</td>
   </tr>
 </table>
 */
@@ -148,8 +148,7 @@ Other
 @return errorcode. 0 for normal, other error
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int mltplyHubbard(
-  //!<[inout]
+int mltply::Hubbard::main(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ){
@@ -175,17 +174,17 @@ int mltplyHubbard(
     if (Def::EDGeneralTransfer[i][0] + 1 > Def::Nsite &&
         Def::EDGeneralTransfer[i][2] + 1 > Def::Nsite) {
       StartTimer(311);
-      child_general_hopp_MPIdouble(i, nstate, tmp_v0, tmp_v1);
+      mltply::Hubbard::general_hopp_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(311);
     }
     else if (Def::EDGeneralTransfer[i][2] + 1 > Def::Nsite) {
       StartTimer(312);
-      child_general_hopp_MPIsingle(i, nstate, tmp_v0, tmp_v1);
+      mltply::Hubbard::general_hopp_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(312);
     }
     else if (Def::EDGeneralTransfer[i][0] + 1 > Def::Nsite) {
       StartTimer(312);
-      child_general_hopp_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
+      mltply::Hubbard::general_hopp_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
       StopTimer(312);
     }
     else {
@@ -199,7 +198,7 @@ int mltplyHubbard(
         child_general_hopp_GetInfo(isite1, isite2, sigma1, sigma2);
         tmp_trans = -Def::EDParaGeneralTransfer[idx];
         Large::tmp_trans = tmp_trans;
-        child_general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
+        mltply::Hubbard::general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
       }
       StopTimer(313);
     }
@@ -229,21 +228,21 @@ int mltplyHubbard(
       ibitsite3 = Def::OrgTpow[2 * isite3 - 2 + sigma3];
       ibitsite4 = Def::OrgTpow[2 * isite4 - 2 + sigma4];
       if (ibitsite1 == ibitsite2 && ibitsite3 == ibitsite4) {
-        X_child_CisAisCjtAjt_Hubbard_MPI(isite1 - 1, sigma1,
+        mltply::Hubbard::X_CisAisCjtAjt_MPI(isite1 - 1, sigma1,
           isite3 - 1, sigma3,
           tmp_V, nstate, tmp_v0, tmp_v1);
       }
       else if (ibitsite1 == ibitsite2 && ibitsite3 != ibitsite4) {
-        X_child_CisAisCjtAku_Hubbard_MPI(isite1 - 1, sigma1,
+        mltply::Hubbard::X_CisAisCjtAku_MPI(isite1 - 1, sigma1,
           isite3 - 1, sigma3, isite4 - 1, sigma4,
           tmp_V, nstate, tmp_v0, tmp_v1);
       }
       else if (ibitsite1 != ibitsite2 && ibitsite3 == ibitsite4) {
-        X_child_CisAjtCkuAku_Hubbard_MPI(isite1 - 1, sigma1, isite2 - 1, sigma2,
+        mltply::Hubbard::X_CisAjtCkuAku_MPI(isite1 - 1, sigma1, isite2 - 1, sigma2,
           isite3 - 1, sigma3, tmp_V, nstate, tmp_v0, tmp_v1);
       }
       else if (ibitsite1 != ibitsite2 && ibitsite3 != ibitsite4) {
-        X_child_CisAjtCkuAlv_Hubbard_MPI(isite1 - 1, sigma1, isite2 - 1, sigma2,
+        mltply::Hubbard::X_CisAjtCkuAlv_MPI(isite1 - 1, sigma1, isite2 - 1, sigma2,
           isite3 - 1, sigma3, isite4 - 1, sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
       }
       StopTimer(321);
@@ -265,7 +264,7 @@ int mltplyHubbard(
         child_general_int_GetInfo(isite1, isite2, isite3, isite4, 
           sigma1, sigma2, sigma3, sigma4, tmp_V);
 
-        child_general_int(nstate, tmp_v0, tmp_v1);
+        mltply::Hubbard::general_int(nstate, tmp_v0, tmp_v1);
       }/*for (ihermite = 0; ihermite < 2; ihermite++)*/
       StopTimer(322);
     }
@@ -283,7 +282,7 @@ int mltplyHubbard(
       || Def::PairHopping[i][1] + 1 > Def::Nsite)
     {
       StartTimer(331);
-      X_child_CisAjtCkuAlv_Hubbard_MPI(
+      mltply::Hubbard::X_CisAjtCkuAlv_MPI(
         Def::PairHopping[i][0], sigma1, Def::PairHopping[i][1], sigma1, 
         Def::PairHopping[i][0], sigma2, Def::PairHopping[i][1], sigma2, 
         Def::ParaPairHopping[i], nstate, tmp_v0, tmp_v1);
@@ -294,7 +293,7 @@ int mltplyHubbard(
       for (ihermite = 0; ihermite<2; ihermite++) {
         idx = i + ihermite;
         child_pairhopp_GetInfo(idx);
-        child_pairhopp(nstate, tmp_v0, tmp_v1);
+        mltply::Hubbard::pairhopp(nstate, tmp_v0, tmp_v1);
       }/*for (ihermite = 0; ihermite<2; ihermite++)*/
       StopTimer(332);
     }
@@ -311,7 +310,7 @@ int mltplyHubbard(
         Def::ExchangeCoupling[i][1] + 1 > Def::Nsite) 
     {
       StartTimer(341);
-      X_child_CisAjtCkuAlv_Hubbard_MPI(
+      mltply::Hubbard::X_CisAjtCkuAlv_MPI(
         Def::ExchangeCoupling[i][0], sigma1, Def::ExchangeCoupling[i][1], sigma1,
         Def::ExchangeCoupling[i][1], sigma2, Def::ExchangeCoupling[i][0], sigma2,
         Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
@@ -320,7 +319,7 @@ int mltplyHubbard(
     else {
       StartTimer(342);
       child_exchange_GetInfo(i);
-      child_exchange(nstate, tmp_v0, tmp_v1);
+      mltply::Hubbard::exchange(nstate, tmp_v0, tmp_v1);
       StopTimer(342);
     }
   }/*for (i = 0; i < Def::NExchangeCoupling; i ++)*/
@@ -335,7 +334,7 @@ int mltplyHubbard(
 @f${\bf v}_0 = {\hat H}{\bf v}_1@f$
 @return errorcode. 0 for normal, other error
 */
-int mltplyHubbardGC(
+int mltply::HubbardGC::main(
   int nstate,/**<[in] Number of states*/
   std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
@@ -362,17 +361,17 @@ int mltplyHubbardGC(
     if (Def::EDGeneralTransfer[i][0] + 1 > Def::Nsite &&
         Def::EDGeneralTransfer[i][2] + 1 > Def::Nsite) {
       StartTimer(211);
-      GC_child_general_hopp_MPIdouble(i, nstate, tmp_v0, tmp_v1);
+      mltply::HubbardGC::general_hopp_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(211);
     }
     else if (Def::EDGeneralTransfer[i][2] + 1 > Def::Nsite){
       StartTimer(212);
-      GC_child_general_hopp_MPIsingle(i, nstate, tmp_v0, tmp_v1);
+      mltply::HubbardGC::general_hopp_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(212);
     }
     else if (Def::EDGeneralTransfer[i][0] + 1 > Def::Nsite) {
       StartTimer(212);
-      GC_child_general_hopp_MPIsingle(i+1, nstate, tmp_v0, tmp_v1);
+      mltply::HubbardGC::general_hopp_MPIsingle(i+1, nstate, tmp_v0, tmp_v1);
       StopTimer(212);
     }
     else {
@@ -385,7 +384,7 @@ int mltplyHubbardGC(
         sigma2 = Def::EDGeneralTransfer[idx][3];
         child_general_hopp_GetInfo(isite1, isite2, sigma1, sigma2);
         tmp_trans = -Def::EDParaGeneralTransfer[idx];
-        GC_child_general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
+        mltply::HubbardGC::general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
       }
       StopTimer(213);
     }
@@ -415,16 +414,16 @@ int mltplyHubbardGC(
       ibitsite3 = Def::OrgTpow[2 * isite3 - 2 + sigma3];
       ibitsite4 = Def::OrgTpow[2 * isite4 - 2 + sigma4];
       if (ibitsite1 == ibitsite2 && ibitsite3 == ibitsite4) 
-        X_GC_child_CisAisCjtAjt_Hubbard_MPI(
+        mltply::HubbardGC::X_CisAisCjtAjt_MPI(
           isite1 - 1, sigma1, isite3 - 1, sigma3, tmp_V, nstate, tmp_v0, tmp_v1);
       else if (ibitsite1 == ibitsite2 && ibitsite3 != ibitsite4) 
-        X_GC_child_CisAisCjtAku_Hubbard_MPI(
+        mltply::HubbardGC::X_CisAisCjtAku_MPI(
           isite1 - 1, sigma1, isite3 - 1, sigma3, isite4 - 1, sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
       else if (ibitsite1 != ibitsite2 && ibitsite3 == ibitsite4) 
-        X_GC_child_CisAjtCkuAku_Hubbard_MPI(
+        mltply::HubbardGC::X_CisAjtCkuAku_MPI(
           isite1 - 1, sigma1, isite2 - 1, sigma2, isite3 - 1, sigma3, tmp_V, nstate, tmp_v0, tmp_v1);
       else if (ibitsite1 != ibitsite2 && ibitsite3 != ibitsite4) 
-        X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
+        mltply::HubbardGC::X_CisAjtCkuAlv_MPI(
           isite1 - 1, sigma1, isite2 - 1, sigma2, isite3 - 1, sigma3, isite4 - 1, sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
       StopTimer(221);
     }//InterPE
@@ -444,7 +443,7 @@ int mltplyHubbardGC(
           
         child_general_int_GetInfo(isite1, isite2, isite3, isite4, 
                                         sigma1, sigma2, sigma3, sigma4, tmp_V); 
-        GC_child_general_int(nstate, tmp_v0, tmp_v1);
+        mltply::HubbardGC::general_int(nstate, tmp_v0, tmp_v1);
       }/*for(ihermite=0; ihermite<2; ihermite++)*/
       StopTimer(222);
     }
@@ -461,7 +460,7 @@ int mltplyHubbardGC(
       || Def::PairHopping[i][1] + 1 > Def::Nsite) 
     {
       StartTimer(231);
-      X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
+      mltply::HubbardGC::X_CisAjtCkuAlv_MPI(
         Def::PairHopping[i][0], sigma1, Def::PairHopping[i][1], sigma1,
         Def::PairHopping[i][0], sigma2, Def::PairHopping[i][1], sigma2,
         Def::ParaPairHopping[i], nstate, tmp_v0, tmp_v1);
@@ -472,7 +471,7 @@ int mltplyHubbardGC(
       for (ihermite = 0; ihermite<2; ihermite++) {
         idx = i + ihermite;
         child_pairhopp_GetInfo(idx);
-        GC_child_pairhopp(nstate, tmp_v0, tmp_v1);
+        mltply::HubbardGC::pairhopp(nstate, tmp_v0, tmp_v1);
       }/*for (ihermite = 0; ihermite<2; ihermite++)*/
       StopTimer(232);
     }
@@ -489,7 +488,7 @@ int mltplyHubbardGC(
       || Def::ExchangeCoupling[i][1] + 1 > Def::Nsite) 
     {
       StartTimer(241);
-      X_GC_child_CisAjtCkuAlv_Hubbard_MPI(
+      mltply::HubbardGC::X_CisAjtCkuAlv_MPI(
         Def::ExchangeCoupling[i][0], sigma1, Def::ExchangeCoupling[i][1], sigma1,
         Def::ExchangeCoupling[i][1], sigma2, Def::ExchangeCoupling[i][0], sigma2,
         Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
@@ -498,7 +497,7 @@ int mltplyHubbardGC(
     else {
       StartTimer(242);
       child_exchange_GetInfo(i);
-      GC_child_exchange(nstate, tmp_v0, tmp_v1);
+      mltply::HubbardGC::exchange(nstate, tmp_v0, tmp_v1);
       StopTimer(242);
     }
   }/*for (i = 0; i < Def::NExchangeCoupling; i++)*/
@@ -517,7 +516,7 @@ int mltplyHubbardGC(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void child_pairhopp(
+void mltply::Hubbard::pairhopp(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
@@ -528,7 +527,7 @@ void child_pairhopp(
 #pragma omp parallel for default(none) private(j, off) \
 shared(tmp_v0, tmp_v1,nstate,i_max)
   for (j = 1; j <= i_max; j++) 
-    child_pairhopp_element(j, nstate, tmp_v0, tmp_v1, &off);
+    mltply::Hubbard::pairhopp_element(j, nstate, tmp_v0, tmp_v1, &off);
   return;
 }/*std::complex<double> child_pairhopp*/
 /**
@@ -536,7 +535,7 @@ shared(tmp_v0, tmp_v1,nstate,i_max)
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void child_exchange(
+void mltply::Hubbard::exchange(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
@@ -547,7 +546,7 @@ void child_exchange(
 #pragma omp parallel for default(none) private(j, off) \
 shared(tmp_v0, tmp_v1,nstate,i_max)
   for (j = 1; j <= i_max; j++) 
-    child_exchange_element(j, nstate, tmp_v0, tmp_v1, &off);
+    mltply::Hubbard::exchange_element(j, nstate, tmp_v0, tmp_v1, &off);
   return;
 }/*std::complex<double> child_exchange*/
 /**
@@ -555,7 +554,7 @@ shared(tmp_v0, tmp_v1,nstate,i_max)
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void child_general_hopp(
+void mltply::Hubbard::general_hopp(
   int nstate,
   std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1,//!<[in] Input producted vector
@@ -580,7 +579,7 @@ shared(tmp_v0, tmp_v1,nstate,i_max,Asum,Adiff,isite1,isite2,trans)
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void GC_child_general_hopp(
+void mltply::HubbardGC::general_hopp(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1,//!<[in] Input producted vector
   //!<[inout]
@@ -599,13 +598,13 @@ void GC_child_general_hopp(
 #pragma omp parallel for default(none) private(j) \
 shared(tmp_v0, tmp_v1,nstate,i_max,isite1, trans)
     for (j = 1; j <= i_max; j++)
-      GC_CisAis(j, nstate, tmp_v0, tmp_v1, isite1, trans);
+      mltply::HubbardGC::CisAis(j, nstate, tmp_v0, tmp_v1, isite1, trans);
   }/*if (isite1 == isite2)*/
   else {
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(tmp_v0,tmp_v1,nstate,i_max,Asum,Adiff,isite1,isite2,trans)
     for (j = 1; j <= i_max; j++) 
-      GC_CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, trans, &tmp_off);
+      mltply::HubbardGC::CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, trans, &tmp_off);
   }
   return;
 }/*std::complex<double> GC_child_general_hopp*/
@@ -614,7 +613,7 @@ shared(tmp_v0,tmp_v1,nstate,i_max,Asum,Adiff,isite1,isite2,trans)
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void child_general_int(
+void mltply::Hubbard::general_int(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
@@ -646,23 +645,23 @@ shared(i_max, isite1, isite2, isite3, isite4, Asum, Bsum, Adiff, Bdiff, tmp_V) \
     if (isite1 == isite2 && isite3 == isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        child_CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, tmp_v0, tmp_v1);
+        mltply::Hubbard::CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, tmp_v0, tmp_v1);
     }/*if (isite1 == isite2 && isite3 == isite4)*/
     else if (isite1 == isite2 && isite3 != isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        child_CisAisCjtAku_element(
+        mltply::Hubbard::CisAisCjtAku_element(
           j, isite1, isite3, isite4, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 == isite2 && isite3 != isite4)*/
     else if (isite1 != isite2 && isite3 == isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        child_CisAjtCkuAku_element(j, isite1, isite2, isite3, Asum, Adiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
+        mltply::Hubbard::CisAjtCkuAku_element(j, isite1, isite2, isite3, Asum, Adiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 != isite2 && isite3 == isite4)*/
     else if (isite1 != isite2 && isite3 != isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        child_CisAjtCkuAlv_element(
+        mltply::Hubbard::CisAjtCkuAlv_element(
           j, isite1, isite2, isite3, isite4, Asum, Adiff, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off_2);
     }/*if (isite1 != isite2 && isite3 != isite4)*/
   }/*End of parallel region*/
@@ -673,7 +672,7 @@ shared(i_max, isite1, isite2, isite3, isite4, Asum, Bsum, Adiff, Bdiff, tmp_V) \
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void GC_child_general_int(
+void mltply::HubbardGC::general_int(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
@@ -703,23 +702,25 @@ shared(tmp_v0, tmp_v1,nstate)
     if (isite1 == isite2 && isite3 == isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        GC_child_CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, tmp_v0, tmp_v1);
+        mltply::HubbardGC::CisAisCisAis_element(j, isite1, isite3, tmp_V, 
+          nstate, tmp_v0, tmp_v1);
     }/*if (isite1 == isite2 && isite3 == isite4)*/
     else if (isite1 == isite2 && isite3 != isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        GC_child_CisAisCjtAku_element(j, isite1, isite3, isite4, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
+        mltply::HubbardGC::CisAisCjtAku_element(j, isite1, isite3, isite4, Bsum, Bdiff, tmp_V,
+          nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 == isite2 && isite3 != isite4)*/
     else if (isite1 != isite2 && isite3 == isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        GC_child_CisAjtCkuAku_element(
+        mltply::HubbardGC::CisAjtCkuAku_element(
           j, isite1, isite2, isite3, Asum, Adiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 != isite2 && isite3 == isite4)*/
     else if (isite1 != isite2 && isite3 != isite4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        GC_child_CisAjtCkuAlv_element(
+        mltply::HubbardGC::CisAjtCkuAlv_element(
           j, isite1, isite2, isite3, isite4, Asum, Adiff, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 != isite2 && isite3 != isite4)*/
   }/*End of parallel region*/
@@ -730,7 +731,7 @@ shared(tmp_v0, tmp_v1,nstate)
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void GC_child_pairhopp(
+void mltply::HubbardGC::pairhopp(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
@@ -741,7 +742,7 @@ void GC_child_pairhopp(
 #pragma omp parallel for default(none) private(j,off) \
 shared(tmp_v0, tmp_v1,nstate,i_max)
   for (j = 1; j <= i_max; j++) 
-    GC_child_pairhopp_element(j, nstate, tmp_v0, tmp_v1, &off);
+    mltply::HubbardGC::pairhopp_element(j, nstate, tmp_v0, tmp_v1, &off);
 
   return;
 }/*std::complex<double> GC_child_pairhopp*/
@@ -750,7 +751,7 @@ shared(tmp_v0, tmp_v1,nstate,i_max)
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void GC_child_exchange(
+void mltply::HubbardGC::exchange(
   int nstate, std::complex<double> **tmp_v0,
   std::complex<double> **tmp_v1
 ) {
@@ -761,7 +762,7 @@ void GC_child_exchange(
 #pragma omp parallel for default(none) private(j, off) \
 shared(tmp_v0, tmp_v1,nstate,i_max)
   for (j = 1; j <= i_max; j++) 
-    GC_child_exchange_element(j, nstate, tmp_v0, tmp_v1, &off);
+    mltply::HubbardGC::exchange_element(j, nstate, tmp_v0, tmp_v1, &off);
   return;
 }/*std::complex<double> GC_child_exchange*/
 /******************************************************************************/

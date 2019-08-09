@@ -13,382 +13,135 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-
-//Define Mode for mltply
-// complex version
-
-#pragma once
 #include <complex>
 
-void X_GC_child_CisAisCjuAjv_GeneralSpin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_isite3,
- int org_ispin3,
- int org_ispin4,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAitCjuAju_GeneralSpin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- int org_isite3,
- int org_ispin3,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- int org_isite3,
- int org_ispin3,
- int org_ispin4,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-//general spin - single 
-void X_GC_child_CisAisCjuAjv_GeneralSpin_MPIsingle
-(
- int org_isite1,
- int org_ispin1,
- int org_isite3,
- int org_ispin3,
- int org_ispin4,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAitCjuAju_GeneralSpin_MPIsingle
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- int org_isite3,
- int org_ispin3,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAitCjuAjv_GeneralSpin_MPIsingle
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- int org_isite3,
- int org_ispin3,
- int org_ispin4,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAit_GeneralSpin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- std::complex<double> tmp_trans,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAis_GeneralSpin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_AisCis_GeneralSpin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAisCjuAju_GeneralSpin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_isite3,
- int org_ispin3,
- std::complex<double> tmp_trans,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAisCjuAju_GeneralSpin_MPIsingle
-(
- int org_isite1,
- int org_ispin1,
- int org_isite3,
- int org_ispin3,
- std::complex<double> tmp_trans,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_child_CisAit_GeneralSpin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- std::complex<double> tmp_trans,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1,
- long int idim_max
- );
-
-
-void X_GC_child_CisAitCiuAiv_spin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- int org_isite3,
- int org_ispin3,
- int org_ispin4,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAisCjuAjv_spin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_isite3,
- int org_ispin3,
- int org_ispin4,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAitCjuAju_spin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- int org_isite3,
- int org_ispin3,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAisCjuAju_spin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_isite3,
- int org_ispin3,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAitCiuAiv_spin_MPIsingle
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- int org_isite3,
- int org_ispin3,
- int org_ispin4,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAisCjuAjv_spin_MPIsingle
-(
- int org_isite1,
- int org_ispin1,
- int org_isite3,
- int org_ispin3,
- int org_ispin4,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAitCjuAju_spin_MPIsingle
-(
- int org_isite1,
- int org_ispin2,
- int org_isite3,
- int org_ispin3,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAisCjuAju_spin_MPIsingle
-(
- int org_isite1,
- int org_ispin1,
- int org_isite3,
- int org_ispin3,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAisCjuAju_spin_MPIsingle
-(
- int org_isite1,
- int org_ispin1,
- int org_isite3,
- int org_ispin3,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAit_spin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- std::complex<double> tmp_trans,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_CisAis_spin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- std::complex<double> tmp_trans,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_GC_child_AisCis_spin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- std::complex<double> tmp_trans,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_child_CisAit_spin_MPIdouble
-(
- int org_isite1,
- int org_ispin2,
- std::complex<double> tmp_trans,
- int nstate, 
- std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/, 
- std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
- long int idim_max
- );
-
-void X_child_CisAisCjuAju_GeneralSpin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_isite3,
- int org_ispin3,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_child_CisAitCjuAjv_GeneralSpin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- int org_isite3,
- int org_ispin3,
- int org_ispin4,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-//general spin - single 
-void X_child_CisAisCjuAju_GeneralSpin_MPIsingle
-(
- int org_isite1,
- int org_ispin1,
- int org_isite3,
- int org_ispin3,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_child_CisAitCjuAjv_GeneralSpin_MPIsingle
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- int org_isite3,
- int org_ispin3,
- int org_ispin4,
- std::complex<double> tmp_J,
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void GC_child_CisAisCjuAjv_spin_MPIdouble
-(
- long int i_int /**< [in] Interaction ID*/,
- int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
- std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
- );
-
-void GC_child_CisAitCjuAju_spin_MPIdouble
-(
- long int i_int /**< [in] Interaction ID*/,
- int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
- std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
- );
-
-void GC_child_CisAitCiuAiv_spin_MPIdouble
-(
- long int i_int /**< [in] Interaction ID*/,
- int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
- std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
- );
-
-void GC_child_CisAisCjuAjv_spin_MPIsingle
-(
- long int i_int /**< [in] Interaction ID*/,
- int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
- std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
- );
-
-void GC_child_CisAitCjuAju_spin_MPIsingle
-(
- long int i_int /**< [in] Interaction ID*/,
- int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
- std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
- );
-
-void GC_child_CisAitCiuAiv_spin_MPIsingle
-(
- long int i_int /**< [in] Interaction ID*/,
- int nstate, std::complex<double> **tmp_v0 /**< [out] Result v0 = H v1*/,
- std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/
- );
+namespace mltply {
+  namespace Spin {
+    namespace Half {
+      void X_CisAit_MPIdouble(int org_isite1, int org_ispin2,
+        std::complex<double> tmp_trans, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+        long int idim_max);
+    }
+    namespace General {
+      void X_CisAit_MPIdouble(int org_isite1, int org_ispin1, int org_ispin2,
+        std::complex<double> tmp_trans, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+        long int idim_max);
+      void X_CisAisCjuAju_MPIdouble(
+        int org_isite1, int org_ispin1, int org_isite3, int org_ispin3,
+        std::complex<double> tmp_J, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAitCjuAjv_MPIdouble(int org_isite1, int org_ispin1,
+        int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4,
+        std::complex<double> tmp_J, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAisCjuAju_MPIsingle(
+        int org_isite1, int org_ispin1, int org_isite3, int org_ispin3,
+        std::complex<double> tmp_J, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAitCjuAjv_MPIsingle(int org_isite1, int org_ispin1,
+        int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4,
+        std::complex<double> tmp_J, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+    }
+  }
+  namespace SpinGC {
+    namespace Half {
+      void X_CisAitCiuAiv_MPIdouble(int org_isite1, int org_ispin1,
+        int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4,
+        std::complex<double> tmp_J, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAisCjuAjv_MPIdouble(int org_isite1, int org_ispin1,
+        int org_isite3, int org_ispin3, int org_ispin4,
+        std::complex<double> tmp_J, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAitCjuAju_MPIdouble(int org_isite1, int org_ispin1,
+        int org_ispin2, int org_isite3, int org_ispin3,
+        std::complex<double> tmp_J, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAisCjuAju_MPIdouble(int org_isite1, int org_ispin1,
+        int org_isite3, int org_ispin3, std::complex<double> tmp_J, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAitCiuAiv_MPIsingle(int org_isite1, int org_ispin1,
+        int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4,
+        std::complex<double> tmp_J, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAisCjuAjv_MPIsingle(int org_isite1, int org_ispin1,
+        int org_isite3, int org_ispin3, int org_ispin4,
+        std::complex<double> tmp_J, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAitCjuAju_MPIsingle(int org_isite1, int org_ispin2,
+        int org_isite3, int org_ispin3, std::complex<double> tmp_J, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAisCjuAju_MPIsingle(int org_isite1, int org_ispin1,
+        int org_isite3, int org_ispin3, std::complex<double> tmp_J, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAisCjuAju_MPIsingle(int org_isite1, int org_ispin1,
+        int org_isite3, int org_ispin3, std::complex<double> tmp_J, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAit_MPIdouble(int org_isite1, int org_ispin1, int org_ispin2,
+        std::complex<double> tmp_trans, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAis_MPIdouble(int org_isite1, int org_ispin1,
+        std::complex<double> tmp_trans, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_AisCis_MPIdouble(int org_isite1, int org_ispin1,
+        std::complex<double> tmp_trans, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void CisAisCjuAjv_MPIdouble(long int i_int, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void CisAitCjuAju_MPIdouble(long int i_int, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void CisAitCiuAiv_MPIdouble(long int i_int, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAisCjuAjv_MPIsingle(long int i_int, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAitCjuAju_MPIsingle(long int i_int, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAitCiuAiv_MPIsingle(long int i_int, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+    }
+    namespace General {
+      void X_CisAisCjuAjv_MPIdouble(int org_isite1, int org_ispin1,
+        int org_isite3, int org_ispin3, int org_ispin4,
+        std::complex<double> tmp_J, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAitCjuAju_MPIdouble(int org_isite1, int org_ispin1,
+        int org_ispin2, int org_isite3, int org_ispin3,
+        std::complex<double> tmp_J, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAitCjuAjv_MPIdouble(int org_isite1, int org_ispin1,
+        int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4,
+        std::complex<double> tmp_J, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAisCjuAjv_MPIsingle(int org_isite1, int org_ispin1,
+        int org_isite3, int org_ispin3, int org_ispin4,
+        std::complex<double> tmp_J, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAitCjuAju_MPIsingle(int org_isite1, int org_ispin1,
+        int org_ispin2, int org_isite3, int org_ispin3,
+        std::complex<double> tmp_J, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAitCjuAjv_MPIsingle(int org_isite1, int org_ispin1,
+        int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4,
+        std::complex<double> tmp_J, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAit_MPIdouble(int org_isite1, int org_ispin1, int org_ispin2,
+        std::complex<double> tmp_trans, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAis_MPIdouble(int org_isite1, int org_ispin1,
+        std::complex<double> tmp_J, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_AisCis_MPIdouble(int org_isite1, int org_ispin1,
+        std::complex<double> tmp_J, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAisCjuAju_MPIdouble(int org_isite1, int org_ispin1,
+        int org_isite3, int org_ispin3, std::complex<double> tmp_trans, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_CisAisCjuAju_MPIsingle(int org_isite1, int org_ispin1,
+        int org_isite3, int org_ispin3, std::complex<double> tmp_trans, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+    }
+  }
+}

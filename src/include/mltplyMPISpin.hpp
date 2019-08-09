@@ -20,104 +20,58 @@
 #pragma once
 #include <complex>
 
-void child_general_int_spin_MPIdouble
-(
- long int i_int,
- 
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
+namespace mltply {
+  namespace Spin {
+    namespace Half {
+      void general_int_MPIsingle(long int i_int, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void general_int_MPIdouble(long int i_int, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_general_int_MPIsingle(
+        int org_isite1, int org_ispin1, int org_ispin2, int org_isite3,
+        int org_ispin3, int org_ispin4,
+        std::complex<double> tmp_J, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_general_int_MPIdouble(
+        int org_isite1, int org_ispin1, int org_ispin2, int org_isite3,
+        int org_ispin3, int org_ispin4,
+        std::complex<double> tmp_J, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void X_general_int_TotalS_MPIdouble(
+        int org_isite1, int org_isite3, int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+    }
+    namespace General {
+      void general_int_MPIdouble(
+        long int i_int, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void general_int_MPIsingle(
+        long int i_int, int nstate, 
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+    }
+  }
+  namespace SpinGC {
+    namespace Half {
+      void general_int_MPIdouble(
+        long int i_int, int nstate,
+        std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1);
 
-void X_child_general_int_spin_MPIdouble
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- int org_isite3,
- int org_ispin3,
- int org_ispin4,
- std::complex<double> tmp_J,
- 
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
+      void general_int_MPIsingle(
+        long int i_int, int nstate,
+        std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1);
+    }
+    namespace General {
+      void general_int_MPIdouble(
+        long int i_int, int nstate,
+        std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1);
 
-
-void X_child_general_int_spin_TotalS_MPIdouble
-(
- int org_isite1,
- int org_isite3,
- 
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void child_general_int_spin_MPIsingle
-(
- long int i_int,
- 
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void X_child_general_int_spin_MPIsingle
-(
- int org_isite1,
- int org_ispin1,
- int org_ispin2,
- int org_isite3,
- int org_ispin3,
- int org_ispin4,
- std::complex<double> tmp_J,
- 
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void GC_child_general_int_spin_MPIdouble
-(
- long int i_int,
- 
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void GC_child_general_int_spin_MPIsingle
-(
- long int i_int,
- 
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void GC_child_general_int_GeneralSpin_MPIdouble
-(
- long int i_int,
- 
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void GC_child_general_int_GeneralSpin_MPIsingle
-(
- long int i_int,
- 
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void child_general_int_GeneralSpin_MPIdouble
-(
- long int i_int,
- 
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
-
-void child_general_int_GeneralSpin_MPIsingle
-(
- long int i_int,
- 
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1
- );
+      void general_int_MPIsingle(
+        long int i_int, int nstate, 
+        std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1);
+    }
+  }
+}

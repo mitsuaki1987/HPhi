@@ -60,14 +60,14 @@ int GetExcitedState::Pair::HalfSpinGC(
       if (org_isite1 > Def::Nsite) {
         if (org_sigma1 == org_sigma2) {  // longitudinal magnetic field
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
-            X_GC_child_AisCis_spin_MPIdouble(org_isite1 - 1, org_sigma1, -tmp_trans, nstate, tmp_v0, tmp_v1);
+            mltply::SpinGC::Half::X_AisCis_MPIdouble(org_isite1 - 1, org_sigma1, -tmp_trans, nstate, tmp_v0, tmp_v1);
           }
           else {
-            X_GC_child_CisAis_spin_MPIdouble(org_isite1 - 1, org_sigma1, tmp_trans, nstate, tmp_v0, tmp_v1);
+            mltply::SpinGC::Half::X_CisAis_MPIdouble(org_isite1 - 1, org_sigma1, tmp_trans, nstate, tmp_v0, tmp_v1);
           }
         }
         else {  // transverse magnetic field
-          X_GC_child_CisAit_spin_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, tmp_trans, nstate, tmp_v0, tmp_v1);
+          mltply::SpinGC::Half::X_CisAit_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, tmp_trans, nstate, tmp_v0, tmp_v1);
         }
       }
       else {
@@ -78,7 +78,8 @@ int GetExcitedState::Pair::HalfSpinGC(
 #pragma omp parallel for default(none) private(j, tmp_sgn,dmv) \
 shared(one,nstate,tmp_v0, tmp_v1,i_max, isite1, org_sigma1, tmp_trans)
             for (j = 1; j <= i_max; j++) {
-              dmv = (1.0 - X_SpinGC_CisAis(j, isite1, org_sigma1))* (-tmp_trans);
+              dmv = (1.0 - mltply::SpinGC::Half::X_CisAis(j, isite1, org_sigma1))
+                * (-tmp_trans);
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
             }
           }
@@ -87,7 +88,8 @@ shared(one,nstate,tmp_v0, tmp_v1,i_max, isite1, org_sigma1, tmp_trans)
 #pragma omp parallel for default(none) private(j, tmp_sgn,dmv)             \
 shared(tmp_v0, tmp_v1,one,nstate,i_max, isite1, org_sigma1, tmp_trans)
             for (j = 1; j <= i_max; j++) {
-              dmv = (std::complex<double>)X_SpinGC_CisAis(j, isite1, org_sigma1)* tmp_trans;
+              dmv = (std::complex<double>)mltply::SpinGC::Half::X_CisAis(j, isite1, org_sigma1)
+                * tmp_trans;
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
             }
           }
@@ -98,7 +100,7 @@ shared(tmp_v0, tmp_v1,one,nstate,i_max, isite1, org_sigma1, tmp_trans)
 #pragma omp parallel for default(none) private(j, tmp_sgn, tmp_off,dmv)    \
 shared(tmp_v0, tmp_v1,one,nstate,i_max, isite1, org_sigma2, tmp_trans)
           for (j = 1; j <= i_max; j++) {
-            tmp_sgn = X_SpinGC_CisAit(j, isite1, org_sigma2, &tmp_off);
+            tmp_sgn = mltply::SpinGC::Half::X_CisAit(j, isite1, org_sigma2, &tmp_off);
             if (tmp_sgn != 0) {
               dmv = (std::complex<double>)tmp_sgn * tmp_trans;
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[tmp_off + 1], &one);
@@ -147,15 +149,15 @@ int GetExcitedState::Pair::GeneralSpinGC(
         if (org_sigma1 == org_sigma2) {
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
             // longitudinal magnetic field
-            X_GC_child_AisCis_GeneralSpin_MPIdouble(org_isite1 - 1, org_sigma1, -tmp_trans, nstate, tmp_v0, tmp_v1);
+            mltply::SpinGC::General::X_AisCis_MPIdouble(org_isite1 - 1, org_sigma1, -tmp_trans, nstate, tmp_v0, tmp_v1);
           }
           else {
-            X_GC_child_CisAis_GeneralSpin_MPIdouble(org_isite1 - 1, org_sigma1, tmp_trans, nstate, tmp_v0, tmp_v1);
+            mltply::SpinGC::General::X_CisAis_MPIdouble(org_isite1 - 1, org_sigma1, tmp_trans, nstate, tmp_v0, tmp_v1);
           }
         }
         else {
           // transverse magnetic field
-          X_GC_child_CisAit_GeneralSpin_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, tmp_trans, nstate, tmp_v0, tmp_v1);
+          mltply::SpinGC::General::X_CisAit_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, tmp_trans, nstate, tmp_v0, tmp_v1);
         }
       }
       else {//org_isite1 <= Def::Nsite
@@ -263,7 +265,7 @@ int GetExcitedState::Pair::HalfSpin(
       if (org_isite1 == org_isite2) {
         if (org_isite1 > Def::Nsite) {
           is1_up = Def::Tpow[org_isite1 - 1];
-          ibit1 = X_SpinGC_CisAis((long int) MP::myrank + 1, is1_up, org_sigma1);
+          ibit1 = mltply::SpinGC::Half::X_CisAis((long int) MP::myrank + 1, is1_up, org_sigma1);
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
             if (ibit1 == 0) {
               dmv = -tmp_trans;
@@ -290,7 +292,7 @@ shared(tmp_v0, tmp_v1,one,nstate,i_max, tmp_trans)
 #pragma omp parallel for default(none) private(j,dmv) \
 shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma1,tmp_trans)
             for (j = 1; j <= i_max; j++) {
-              dmv = (1.0 - X_Spin_CisAis(j, isite1, org_sigma1)) * (-tmp_trans);
+              dmv = (1.0 - mltply::Spin::Half::X_CisAis(j, isite1, org_sigma1)) * (-tmp_trans);
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
             }
           }
@@ -298,7 +300,8 @@ shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma1,tmp_trans)
 #pragma omp parallel for default(none) private(j,dmv) \
 shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma1,tmp_trans)
             for (j = 1; j <= i_max; j++) {
-              dmv = (std::complex<double>)X_Spin_CisAis(j, isite1, org_sigma1) * tmp_trans;
+              dmv = (std::complex<double>)mltply::Spin::Half::X_CisAis(j, isite1, org_sigma1) 
+                * tmp_trans;
               zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[j], &one);
             }
           }
@@ -311,7 +314,7 @@ shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma1,tmp_trans)
     }
     else { //org_sigma1 != org_sigma2             // for the canonical case
       if (org_isite1 > Def::Nsite) {//For MPI
-        X_child_CisAit_spin_MPIdouble(org_isite1 - 1, org_sigma2, tmp_trans, 
+        mltply::Spin::Half::X_CisAit_MPIdouble(org_isite1 - 1, org_sigma2, tmp_trans, 
           nstate, tmp_v0, tmp_v1, i_max);
       }
       else {
@@ -319,7 +322,7 @@ shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma1,tmp_trans)
 #pragma omp parallel for default(none) private(j,tmp_off,num1,dmv) \
 shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma2,tmp_trans)
         for (j = 1; j <= i_max; j++) {
-          num1 = X_Spin_CisAit(j, isite1, org_sigma2, &tmp_off);
+          num1 = mltply::Spin::Half::X_CisAit(j, isite1, org_sigma2, &tmp_off);
           if (num1 != 0) {
             dmv = tmp_trans*(double)num1;
             zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[tmp_off], &one);
@@ -386,7 +389,7 @@ shared(tmp_v0, tmp_v1,one,nstate,i_max, tmp_trans)
           }
         }//org_sigma1=org_sigma2
         else {//org_sigma1 != org_sigma2
-          X_child_CisAit_GeneralSpin_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, 
+          mltply::Spin::General::X_CisAit_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, 
             tmp_trans, nstate, tmp_v0, tmp_v1, i_max);
         }
       }

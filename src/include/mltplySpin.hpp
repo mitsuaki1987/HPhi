@@ -17,29 +17,42 @@
 #ifndef HPHI_MLTPLYSPIN_H
 #define HPHI_MLTPLYSPIN_H
 
+namespace mltply {
+  namespace Spin{
+    int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+    namespace Half {
+      int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void general_int(int nstate, std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1);
+      void exchange(
+        int nstate, std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1);
+    }
+    namespace General {
+      int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+    }
+  }
+  namespace SpinGC {
+    int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+    namespace Half {
+      int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void general_int(
+        int nstate, std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1);
 
-int mltplySpin( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-int mltplyHalfSpin( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-int mltplyGeneralSpin( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-int mltplySpinGC( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-int mltplyHalfSpinGC( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-int mltplyGeneralSpinGC( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-int mltplySpinGCBoost( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
-void GC_child_general_int_spin(
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1 );
+      void exchange(
+        int nstate, std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1);
 
-void child_general_int_spin(int nstate, std::complex<double>** tmp_v0,
- std::complex<double> **tmp_v1 );
-void GC_child_exchange_spin(
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1);
-
-void child_exchange_spin(
- int nstate, std::complex<double> **tmp_v0,
- std::complex<double> **tmp_v1 );
-
-void GC_child_pairlift_spin(int nstate, std::complex<double>** tmp_v0,
- std::complex<double> **tmp_v1 );
-
+      void pairlift(int nstate, std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1);
+    }
+    namespace General {
+      int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+    }
+  }
+  namespace SpinGCBoost {
+    int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+  }
+}
 #endif

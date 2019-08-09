@@ -636,7 +636,7 @@ shared(tmp_v1,tmp_v0,nstate,i_max)
     nCalcExpec = 5302;
   }
   StartTimer(nCalcExpec);
-  mltply(nstate, tmp_v0, tmp_v1); // v0+=H*v1
+  mltply::main(nstate, tmp_v0, tmp_v1); // v0+=H*v1
   StopTimer(nCalcExpec);
   /* switch -> SpinGCBoost */
 

@@ -88,7 +88,6 @@ int child_pairlift_spin_GetInfo(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int child_general_int_spin_GetInfo(
-  //!<[inout]
   long int isite1,//!<[in] Site 1
   long int isite2,//!<[in] Site 2
   long int sigma1,//!<[in] Sigma 1, final state of site 1
@@ -134,7 +133,7 @@ int child_general_int_spin_GetInfo(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int X_Spin_CisAit(
+int mltply::Spin::Half::X_CisAit(
   long int j,//!<[in] Index of initial wavefunction
   //!<[inout]
   long int is1_spin,//!<[in] Bit mask for computing spin state
@@ -144,7 +143,7 @@ int X_Spin_CisAit(
   long int list_1_j;
   long int off;
   list_1_j = List::c1_org[j];
-  if (X_SpinGC_CisAit(list_1_j + 1, is1_spin, sigma2, &off) != 0) {
+  if (mltply::SpinGC::Half::X_CisAit(list_1_j + 1, is1_spin, sigma2, &off) != 0) {
     GetOffComp(List::c2_1, List::c2_2, off, Large::irght, Large::ilft, Large::ihfbit, tmp_off);
     return 1;
   }
@@ -159,7 +158,7 @@ int X_Spin_CisAit(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int X_Spin_CisAis(
+int mltply::Spin::Half::X_CisAis(
   long int j,//!<[in] Index of wavefunction
   long int is1_spin,//!<[in] Bit mask
   long int sigma1//!<[in] Target spin state
@@ -175,7 +174,7 @@ int X_Spin_CisAis(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int X_SpinGC_CisAis(
+int mltply::SpinGC::Half::X_CisAis(
   long int j,//!<[in] Index of wavefunction
   long int is1_spin,//!<[in] Bit mask
   long int sigma1//!<[in] Target spin state
@@ -194,7 +193,7 @@ int X_SpinGC_CisAis(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int X_SpinGC_CisAit(
+int mltply::SpinGC::Half::X_CisAit(
   long int j,//!<[in] Index of wavefunction
   long int is1_spin,//!<[in] Bit mask for computing spin state
   long int sigma2,//!<[in] Spin state at site 2
@@ -229,7 +228,7 @@ int X_SpinGC_CisAit(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int X_child_exchange_spin_element(
+int mltply::Spin::Half::X_exchange_element(
   long int j,//!<[in] Index of initial wavefunction
   //!<[inout]
   long int isA_up,//!<[in] Bit mask for spin 1
@@ -262,7 +261,7 @@ int X_child_exchange_spin_element(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void child_exchange_spin_element(
+void mltply::Spin::Half::exchange_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[out] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
@@ -295,7 +294,7 @@ void child_exchange_spin_element(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void GC_child_exchange_spin_element(
+void mltply::SpinGC::Half::exchange_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[out] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
@@ -325,7 +324,7 @@ void GC_child_exchange_spin_element(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void GC_child_pairlift_spin_element(
+void mltply::SpinGC::Half::pairlift_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[out] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
@@ -353,7 +352,7 @@ canonical spsin system
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void child_CisAisCisAis_spin_element(
+void mltply::Spin::Half::CisAisCisAis_element(
   long int j,//!<[in] Index of initial wavefunction
   long int isA_up,//!<[in] Bit mask for spin 1
   long int isB_up,//!<[in] Bit mask for spin 2
@@ -367,8 +366,8 @@ void child_CisAisCisAis_spin_element(
   std::complex<double> dmv;
   int one = 1;
 
-  tmp_sgn = X_Spin_CisAis(j, isB_up, org_sigma4);
-  tmp_sgn *= X_Spin_CisAis(j, isA_up, org_sigma2);
+  tmp_sgn = mltply::Spin::Half::X_CisAis(j, isB_up, org_sigma4);
+  tmp_sgn *= mltply::Spin::Half::X_CisAis(j, isA_up, org_sigma2);
   dmv = (std::complex<double>)tmp_sgn * tmp_V;
   zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
 }/*std::complex<double> child_CisAisCisAis_spin_element*/
@@ -382,7 +381,7 @@ grandcanonical spsin system
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void GC_child_CisAisCisAis_spin_element(
+void mltply::SpinGC::Half::CisAisCisAis_element(
   long int j,//!<[in] Index of initial wavefunction
   long int isA_up,//!<[in] Bit mask for spin 1
   long int isB_up,//!<[in] Bit mask for spin 2
@@ -396,8 +395,8 @@ void GC_child_CisAisCisAis_spin_element(
   std::complex<double> dmv = 0;
   int one = 1;
 
-  tmp_sgn = X_SpinGC_CisAis(j, isB_up, org_sigma4);
-  tmp_sgn *= X_SpinGC_CisAis(j, isA_up, org_sigma2);
+  tmp_sgn = mltply::SpinGC::Half::X_CisAis(j, isB_up, org_sigma4);
+  tmp_sgn *= mltply::SpinGC::Half::X_CisAis(j, isA_up, org_sigma2);
   if (tmp_sgn != 0) {
     dmv = (std::complex<double>)tmp_sgn * tmp_V;
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
@@ -409,7 +408,7 @@ grandcanonical spsin system
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void GC_child_CisAisCitAiu_spin_element(
+void mltply::SpinGC::Half::CisAisCitAiu_element(
   long int j,//!<[in] Index of initial wavefunction
   long int org_sigma2,//!<[in] Target for spin 1
   long int org_sigma4,//!<[in] Target for spin 2
@@ -423,9 +422,9 @@ void GC_child_CisAisCitAiu_spin_element(
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = X_SpinGC_CisAit(j, isB_up, org_sigma4, tmp_off);
+  tmp_sgn = mltply::SpinGC::Half::X_CisAit(j, isB_up, org_sigma4, tmp_off);
   if (tmp_sgn != 0) {
-    tmp_sgn *= X_SpinGC_CisAis((*tmp_off + 1), isA_up, org_sigma2);
+    tmp_sgn *= mltply::SpinGC::Half::X_CisAis((*tmp_off + 1), isA_up, org_sigma2);
     if (tmp_sgn != 0) {
       dmv = (std::complex<double>)tmp_sgn * tmp_V;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
@@ -438,7 +437,7 @@ grandcanonical spsin system
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void GC_child_CisAitCiuAiu_spin_element(
+void mltply::SpinGC::Half::CisAitCiuAiu_element(
   long int j,//!<[in] Index of initial wavefunction
   long int org_sigma2,//!<[in] Target for spin 1
   long int org_sigma4,//!<[in] Target for spin 2
@@ -452,9 +451,9 @@ void GC_child_CisAitCiuAiu_spin_element(
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = X_SpinGC_CisAis(j, isB_up, org_sigma4);
+  tmp_sgn = mltply::SpinGC::Half::X_CisAis(j, isB_up, org_sigma4);
   if (tmp_sgn != 0) {
-    tmp_sgn *= X_SpinGC_CisAit(j, isA_up, org_sigma2, tmp_off);
+    tmp_sgn *= mltply::SpinGC::Half::X_CisAit(j, isA_up, org_sigma2, tmp_off);
     if (tmp_sgn != 0) {
       dmv = (std::complex<double>)tmp_sgn * tmp_V;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
@@ -467,7 +466,7 @@ grandcanonical spsin system
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void GC_child_CisAitCiuAiv_spin_element(
+void mltply::SpinGC::Half::CisAitCiuAiv_element(
   long int j,//!<[in] Index of initial wavefunction
   long int org_sigma2,//!<[in] Target for spin 1
   long int org_sigma4,//!<[in] Target for spin 2
@@ -482,9 +481,9 @@ void GC_child_CisAitCiuAiv_spin_element(
   long int tmp_off_1;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = X_SpinGC_CisAit(j, isB_up, org_sigma4, &tmp_off_1);
+  tmp_sgn = mltply::SpinGC::Half::X_CisAit(j, isB_up, org_sigma4, &tmp_off_1);
   if (tmp_sgn != 0) {
-    tmp_sgn *= X_SpinGC_CisAit((tmp_off_1 + 1), isA_up, org_sigma2, tmp_off_2);
+    tmp_sgn *= mltply::SpinGC::Half::X_CisAit((tmp_off_1 + 1), isA_up, org_sigma2, tmp_off_2);
     if (tmp_sgn != 0) {
       dmv = (std::complex<double>)tmp_sgn * tmp_V;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off_2 + 1][0], &one);

@@ -62,7 +62,7 @@ int GetExcitedState::Single::Hubbard(
     is1_spin = Def::Tpow[2 * org_isite + ispin];
     if (itype == 1) {
       if (org_isite >= Def::Nsite) {
-        X_Cis_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, idim_max, 
+        mltply::Hubbard::X_Cis_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, idim_max, 
           Def::Tpow, 
           Large::irght, Large::ilft, Large::ihfbit);
       }
@@ -71,7 +71,8 @@ int GetExcitedState::Single::Hubbard(
 shared(Large::irght, Large::ilft, Large::ihfbit,nstate,tmp_v0, tmp_v1, List::c1_org,one, \
 idim_max, tmpphi, org_isite, ispin, List::c2_1, List::c2_2, is1_spin)
         for (j = 1; j <= idim_max; j++) {//idim_max -> original dimension
-          isgn = X_Cis(j, is1_spin, &tmp_off, List::c1_org, List::c2_1, List::c2_2,
+          isgn = mltply::Hubbard::X_Cis(j, is1_spin, &tmp_off, 
+            List::c1_org, List::c2_1, List::c2_2,
             Large::irght, Large::ilft, Large::ihfbit);
           dmv = (std::complex<double>)isgn * tmpphi;
           zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[tmp_off], &one);
@@ -80,7 +81,7 @@ idim_max, tmpphi, org_isite, ispin, List::c2_1, List::c2_2, is1_spin)
     }
     else if (itype == 0) {
       if (org_isite >= Def::Nsite) {
-        X_Ajt_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, 
+        mltply::Hubbard::X_Ajt_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, 
           idim_max, Def::Tpow, Large::irght, Large::ilft, Large::ihfbit);
       }
       else {
@@ -88,7 +89,7 @@ idim_max, tmpphi, org_isite, ispin, List::c2_1, List::c2_2, is1_spin)
 shared(tmp_v0,tmp_v1,List::c1_org,List::c1,one,nstate,idim_max,tmpphi,org_isite,ispin, \
 List::c2_1,List::c2_2,is1_spin,MP::myrank, Large::irght, Large::ilft, Large::ihfbit)
         for (j = 1; j <= idim_max; j++) {//idim_max -> original dimension
-          isgn = X_Ajt(j, is1_spin, &tmp_off, List::c1_org, List::c2_1, List::c2_2,
+          isgn = mltply::Hubbard::X_Ajt(j, is1_spin, &tmp_off, List::c1_org, List::c2_1, List::c2_2,
             Large::irght, Large::ilft, Large::ihfbit);
           dmv = (std::complex<double>)isgn * tmpphi;
           zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[tmp_off], &one);
@@ -133,7 +134,7 @@ int GetExcitedState::Single::HubbardGC(
     tmpphi = Def::ParaSingleExcitationOperator[iEx][i];
     if (itype == 1) {
       if (org_isite >= Def::Nsite) {
-        X_GC_Cis_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, 
+        mltply::HubbardGC::X_Cis_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, 
           idim_max, Def::Tpow);
       }
       else {
@@ -141,13 +142,13 @@ int GetExcitedState::Single::HubbardGC(
 shared(tmp_v0,tmp_v1,nstate,idim_max, tmpphi, org_isite, ispin,Def::Tpow)
         for (j = 1; j <= idim_max; j++) {
           is1_spin = Def::Tpow[2 * org_isite + ispin];
-          GC_Cis(j, nstate, tmp_v0, tmp_v1, is1_spin, tmpphi, &tmp_off);
+          mltply::HubbardGC::Cis(j, nstate, tmp_v0, tmp_v1, is1_spin, tmpphi, &tmp_off);
         }/*for (j = 1; j <= idim_max; j++)*/
       }
     }
     else if (itype == 0) {
       if (org_isite >= Def::Nsite) {
-        X_GC_Ajt_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, 
+        mltply::HubbardGC::X_Ajt_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, 
           idim_max, Def::Tpow);
       }
       else {
@@ -155,7 +156,7 @@ shared(tmp_v0,tmp_v1,nstate,idim_max, tmpphi, org_isite, ispin,Def::Tpow)
 shared(tmp_v0,tmp_v1,nstate, idim_max, tmpphi, org_isite, ispin,Def::Tpow)
         for (j = 1; j <= idim_max; j++) {
           is1_spin = Def::Tpow[2 * org_isite + ispin];
-          GC_Ajt(j, nstate, tmp_v0, tmp_v1, is1_spin, tmpphi, &tmp_off);
+          mltply::HubbardGC::Ajt(j, nstate, tmp_v0, tmp_v1, is1_spin, tmpphi, &tmp_off);
         }/*for (j = 1; j <= idim_max; j++)*/
       }
     }

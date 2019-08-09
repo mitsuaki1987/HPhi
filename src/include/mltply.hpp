@@ -16,4 +16,6 @@
 
 #include <complex>
 
-int mltply( int nstate, std::complex<double> **tmp_v0,std::complex<double> **tmp_v1);
+namespace mltply {
+  int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+}

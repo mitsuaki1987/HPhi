@@ -57,7 +57,7 @@ void CalcSpectrumByFullDiag(
   zclear((Check::idim_max + 1)*(Check::idim_max + 1), &Wave::v0[0][0]);
   zclear((Check::idim_max + 1)*(Check::idim_max + 1), &Wave::v1[0][0]);
   for (idim = 1; idim <= Check::idim_max; idim++) Wave::v1[idim][idim] = 1.0;
-  mltply(Check::idim_max, Wave::v0, Wave::v1);
+  mltply::main(Check::idim_max, Wave::v0, Wave::v1);
   StopTimer(6301);
   /**
   <li>::Wave::v0 becomes eigenvalues in lapack_diag(), and

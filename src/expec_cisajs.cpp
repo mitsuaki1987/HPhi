@@ -83,24 +83,24 @@ void expec::cisajs::HubbardGC(
         }
       }
       else {
-        X_GC_child_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::HubbardGC::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
           -tmp_OneGreen, nstate, Xvec, vec);
       }
     }
     else if (org_isite2 > Def::Nsite || org_isite1 > Def::Nsite) {
       if (org_isite1 < org_isite2) {
-        X_GC_child_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::HubbardGC::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
           -tmp_OneGreen, nstate, Xvec, vec);
       }
       else {
-        X_GC_child_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1, 
+        mltply::HubbardGC::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1, 
           -tmp_OneGreen, nstate, Xvec, vec);
         complex_conj = 1;
       }
     }
     else {
       child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
-      GC_child_general_hopp(nstate, Xvec, vec, tmp_OneGreen);
+      mltply::HubbardGC::general_hopp(nstate, Xvec, vec, tmp_OneGreen);
     }
 
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
@@ -163,17 +163,17 @@ void expec::cisajs::Hubbard(
         }
       }
       else {
-        X_child_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2, 
+        mltply::Hubbard::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2, 
           -tmp_OneGreen, nstate, Xvec, vec);
       }
     }
     else if (org_isite2 > Def::Nsite || org_isite1 > Def::Nsite) {
       if (org_isite1 < org_isite2) {
-        X_child_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
           -tmp_OneGreen, nstate, Xvec, vec);
       }
       else {
-        X_child_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1, 
+        mltply::Hubbard::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1, 
           -tmp_OneGreen, nstate, Xvec, vec);
         complex_conj = 1;
       }
@@ -193,7 +193,7 @@ shared(List::c1, vec,Xvec,nstate,one,tmp_OneGreen, i_max, is)
         }
       }
       else {
-        child_general_hopp(nstate, Xvec, vec, tmp_OneGreen);
+        mltply::Hubbard::general_hopp(nstate, Xvec, vec, tmp_OneGreen);
       }
     }
     MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
@@ -234,7 +234,7 @@ void expec::cisajs::SpinHalf(
       if (org_isite1 == org_isite2) {
         if (org_isite1 > Def::Nsite) {
           is1_up = Def::Tpow[org_isite1 - 1];
-          ibit1 = X_SpinGC_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
+          ibit1 = mltply::SpinGC::Half::X_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
           if (ibit1 != 0) {
             zaxpy_long(i_max*nstate, 1.0, &vec[1][0], &Xvec[1][0]);
           }
@@ -244,7 +244,7 @@ void expec::cisajs::SpinHalf(
 #pragma omp parallel for default(none) private(j,dmv) \
 shared(i_max, isite1, org_sigma1, vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
-            dmv = X_Spin_CisAis(j, isite1, org_sigma1);
+            dmv = mltply::Spin::Half::X_CisAis(j, isite1, org_sigma1);
             zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
           }
         }
@@ -331,10 +331,10 @@ void expec::cisajs::SpinGCHalf(
     if (org_isite1 == org_isite2) {
       if (org_isite1 > Def::Nsite) {
         if (org_sigma1 == org_sigma2) {  // longitudinal magnetic field
-          X_GC_child_CisAis_spin_MPIdouble(org_isite1 - 1, org_sigma1, 1.0, nstate, Xvec, vec);
+          mltply::SpinGC::Half::X_CisAis_MPIdouble(org_isite1 - 1, org_sigma1, 1.0, nstate, Xvec, vec);
         }
         else {  // transverse magnetic field
-          X_GC_child_CisAit_spin_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, 1.0, nstate, Xvec, vec);
+          mltply::SpinGC::Half::X_CisAit_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, 1.0, nstate, Xvec, vec);
         }
       }
       else {
@@ -345,7 +345,7 @@ void expec::cisajs::SpinGCHalf(
 #pragma omp parallel for default(none) private(j, tmp_sgn,dmv) \
 shared(i_max, isite1, org_sigma1,vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
-            dmv = X_SpinGC_CisAis(j, isite1, org_sigma1);
+            dmv = mltply::SpinGC::Half::X_CisAis(j, isite1, org_sigma1);
             zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
           }
         }
@@ -354,7 +354,7 @@ shared(i_max, isite1, org_sigma1,vec,Xvec,nstate,one)
 #pragma omp parallel for default(none) private(j, tmp_sgn, tmp_off,dmv) \
 shared(i_max, isite1, org_sigma2, vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
-            tmp_sgn = X_SpinGC_CisAit(j, isite1, org_sigma2, &tmp_off);
+            tmp_sgn = mltply::SpinGC::Half::X_CisAit(j, isite1, org_sigma2, &tmp_off);
             if (tmp_sgn != 0) {
               dmv = (std::complex<double>)tmp_sgn;
               zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[tmp_off + 1][0], &one);
@@ -394,12 +394,12 @@ void expec::cisajs::SpinGCGeneral(
       if (org_isite1 > Def::Nsite) {
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
-          X_GC_child_CisAis_GeneralSpin_MPIdouble(org_isite1 - 1, org_sigma1,
+          mltply::SpinGC::General::X_CisAis_MPIdouble(org_isite1 - 1, org_sigma1,
             1.0, nstate, Xvec, vec);
         }
         else {
           // transverse magnetic field
-          X_GC_child_CisAit_GeneralSpin_MPIdouble(
+          mltply::SpinGC::General::X_CisAit_MPIdouble(
             org_isite1 - 1, org_sigma1, org_sigma2, 1.0, nstate, Xvec, vec);
         }
       }
