@@ -14,9 +14,6 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef HPHI_MLTPLYHUBBARD_H
-#define HPHI_MLTPLYHUBBARD_H
-
 namespace mltply{
   namespace Hubbard {
     int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
@@ -35,5 +32,3 @@ namespace mltply{
     void pairhopp(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
   }
 }
-
-#endif

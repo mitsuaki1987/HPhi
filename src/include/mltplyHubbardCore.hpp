@@ -14,10 +14,14 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef HPHI_MLTPLYHUBBARDCORE_H
-#define HPHI_MLTPLYHUBBARDCORE_H
-
 namespace mltply {
+
+  void child_general_hopp_GetInfo(long int isite1, long int isite2, long int sigma1, long int sigma2);
+  void child_general_int_GetInfo(long int isite1, long int isite2, long int isite3, long int isite4,
+    long int sigma1, long int sigma2, long int sigma3, long int sigma4, std::complex<double> tmp_V);
+  void child_pairhopp_GetInfo(int iPairHopp);
+  void child_exchange_GetInfo(int iExchange);
+
   namespace Hubbard {
     void pairhopp_element(long int j, int nstate, std::complex<double>** tmp_v0,
       std::complex<double>** tmp_v1, long int* tmp_off);
@@ -101,11 +105,3 @@ namespace mltply {
       long int sum_spin, long int diff_spin, long int* tmp_off);
   }
 }
-
-void child_general_hopp_GetInfo(long int isite1, long int isite2, long int sigma1, long int sigma2);
-void child_general_int_GetInfo( long int isite1, long int isite2, long int isite3, long int isite4,
- long int sigma1, long int sigma2, long int sigma3, long int sigma4, std::complex<double> tmp_V );
-void child_pairhopp_GetInfo(int iPairHopp);
-void child_exchange_GetInfo(int iExchange);
-
-#endif

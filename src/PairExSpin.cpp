@@ -33,7 +33,7 @@
 @author Kazuyoshi Yoshimi
 @version 1.2
 */
-int GetExcitedState::Pair::HalfSpinGC(
+int GetExcitedState::Pair::SpinGC::Half(
   int nstate,
   std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
@@ -123,7 +123,7 @@ shared(tmp_v0, tmp_v1,one,nstate,i_max, isite1, org_sigma2, tmp_trans)
 @author Kazuyoshi Yoshimi
 @version 1.2
 */
-int GetExcitedState::Pair::GeneralSpinGC(
+int GetExcitedState::Pair::SpinGC::General(
   int nstate,
   std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
@@ -213,7 +213,7 @@ Def::SiteToBit, Def::Tpow)
 /// \returns FALSE: Abnormally finished
 /// \author Kazuyoshi Yoshimi
 /// \version 1.2
-int GetExcitedState::Pair::SpinGC(
+int GetExcitedState::Pair::SpinGC::main(
   /**< [in,out] define list to get and put information of calculation*/
   int nstate, std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
@@ -222,10 +222,10 @@ int GetExcitedState::Pair::SpinGC(
 
   int iret = 0;
   if (Def::iFlgGeneralSpin == FALSE) {
-    iret = GetExcitedState::Pair::HalfSpinGC(nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetExcitedState::Pair::SpinGC::Half(nstate, tmp_v0, tmp_v1, iEx);
   }
   else {
-    iret = GetExcitedState::Pair::GeneralSpinGC(nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetExcitedState::Pair::SpinGC::General(nstate, tmp_v0, tmp_v1, iEx);
   }
   return iret;
 }
@@ -236,7 +236,7 @@ returns FALSE: Abnormally finished
 author Kazuyoshi Yoshimi
 version 1.2
 */
-int GetExcitedState::Pair::HalfSpin(
+int GetExcitedState::Pair::Spin::Half(
   int nstate, 
   std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
@@ -340,7 +340,7 @@ shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma2,tmp_trans)
 @author Kazuyoshi Yoshimi
 @version 1.2
 */
-int GetExcitedState::Pair::GeneralSpin(
+int GetExcitedState::Pair::Spin::General(
   int nstate,
   std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
@@ -441,14 +441,11 @@ org_sigma1, org_sigma2, tmp_trans, MP::myrank, Def::SiteToBit, Def::Tpow)
   return TRUE;
 }
 /// Calculation of pair excited state for Spin canonical system
-/// \param X [in,out] define list to get and put information of calculation
-/// \param tmp_v0 [out] Result v0 = H v1
-/// \param tmp_v1 [in] v0 = H v1
 /// \returns TRUE: Normally finished
 /// \returns FALSE: Abnormally finished
 /// \author Kazuyoshi Yoshimi
 /// \version 1.2
-int GetExcitedState::Pair::Spin(
+int GetExcitedState::Pair::Spin::main(
   int nstate,
   std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
@@ -456,10 +453,10 @@ int GetExcitedState::Pair::Spin(
 ) {
   int iret = 0;
   if (Def::iFlgGeneralSpin == FALSE) {
-    iret = GetExcitedState::Pair::HalfSpin(nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetExcitedState::Pair::Spin::Half(nstate, tmp_v0, tmp_v1, iEx);
   }
   else {
-    iret = GetExcitedState::Pair::GeneralSpin(nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetExcitedState::Pair::Spin::General(nstate, tmp_v0, tmp_v1, iEx);
   }
   return iret;
 }
