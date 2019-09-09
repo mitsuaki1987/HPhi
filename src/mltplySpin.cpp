@@ -46,27 +46,27 @@ Hub routines
     <td>General int.</td>
     <td>::child_general_int_spin_GetInfo</td>
     <td>::child_general_int_spin, ::child_general_int_spin_MPIsingle
-    ::mltply::Spin::Half::X_general_int_MPIsingle, ::child_general_int_spin_MPIdouble,
-    ::mltply::Spin::Half::X_general_int_MPIdouble</td>
-    <td>::GC_child_general_int_spin, ::mltply::SpinGC::Half::general_int_MPIsingle,
-    ::mltply::SpinGC::Half::general_int_MPIdouble</td>
+    ::mltply::Spin::C::Half::X_general_int_MPIsingle, ::child_general_int_spin_MPIdouble,
+    ::mltply::Spin::C::Half::X_general_int_MPIdouble</td>
+    <td>::GC_child_general_int_spin, ::mltply::Spin::GC::Half::general_int_MPIsingle,
+    ::mltply::Spin::GC::Half::general_int_MPIdouble</td>
   </tr>
   <tr>
     <td>General int for 1/2 spin</td>
     <td>::child_general_int_spin_GetInfo</td>
     <td>::child_general_int_spin, ::child_general_int_spin_MPIsingle
-    ::mltply::Spin::Half::X_general_int_MPIsingle, ::child_general_int_spin_MPIdouble,
-    ::mltply::Spin::Half::X_general_int_MPIdouble</td>
-    <td>::GC_child_general_int_spin, ::mltply::SpinGC::Half::general_int_MPIsingle,
-    ::mltply::SpinGC::Half::general_int_MPIdouble</td>
+    ::mltply::Spin::C::Half::X_general_int_MPIsingle, ::child_general_int_spin_MPIdouble,
+    ::mltply::Spin::C::Half::X_general_int_MPIdouble</td>
+    <td>::GC_child_general_int_spin, ::mltply::Spin::GC::Half::general_int_MPIsingle,
+    ::mltply::Spin::GC::Half::general_int_MPIdouble</td>
   </tr>
   <tr>
     <td>General int for general spin</td>
     <td></td>
     <td>::child_general_int_GeneralSpin_MPIsingle,
     ::child_general_int_GeneralSpin_MPIdouble</td>
-    <td>::mltply::SpinGC::General::general_int_MPIsingle,
-    ::mltply::SpinGC::General::general_int_MPIdouble</td>
+    <td>::mltply::Spin::GC::General::general_int_MPIsingle,
+    ::mltply::Spin::GC::General::general_int_MPIdouble</td>
   </tr>
 </table>
 
@@ -104,18 +104,18 @@ General on-site term
     <td>::X_Spin_CisAis</td>
     <td>::X_child_CisAis_spin_MPIdouble</td>
     <td>::X_SpinGC_CisAis</td>
-    <td>::mltply::SpinGC::Half::X_CisAis_MPIdouble</td>
+    <td>::mltply::Spin::GC::Half::X_CisAis_MPIdouble</td>
     <td>::X_child_CisAis_GeneralSpin_MPIdouble</td>
-    <td>::mltply::SpinGC::General::X_CisAis_MPIdouble</td>
+    <td>::mltply::Spin::GC::General::X_CisAis_MPIdouble</td>
   </tr>
   <tr>
     <td>@f$c_{i s}^\dagger c_{i t}@f$</td>
     <td>::X_Spin_CisAit</td>
-    <td>::mltply::Spin::Half::X_CisAit_MPIdouble</td>
+    <td>::mltply::Spin::C::Half::X_CisAit_MPIdouble</td>
     <td>::X_SpinGC_CisAit</td>
-    <td>::mltply::SpinGC::Half::X_CisAit_MPIdouble</td>
-    <td>::mltply::Spin::General::X_CisAit_MPIdouble</td>
-    <td>::mltply::SpinGC::General::X_CisAit_MPIdouble</td>
+    <td>::mltply::Spin::GC::Half::X_CisAit_MPIdouble</td>
+    <td>::mltply::Spin::C::General::X_CisAit_MPIdouble</td>
+    <td>::mltply::Spin::GC::General::X_CisAit_MPIdouble</td>
   </tr>
   <tr>
     <td>@f$c_{i s}^\dagger c_{i s} c_{i s}^\dagger c_{i s}@f$</td>
@@ -149,8 +149,8 @@ General on-site term
     <td></td>
     <td></td>
     <td>::GC_child_CisAitCiuAiv_spin_element</td>
-    <td>::mltply::SpinGC::Half::X_CisAitCiuAiv_MPIsingle, ::mltply::SpinGC::Half::X_CisAitCiuAiv_MPIsingle,
-    ::mltply::SpinGC::Half::CisAitCiuAiv_MPIdouble, ::mltply::SpinGC::Half::X_CisAitCiuAiv_MPIdouble</td>
+    <td>::mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle, ::mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle,
+    ::mltply::Spin::GC::Half::CisAitCiuAiv_MPIdouble, ::mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIdouble</td>
     <td></td>
     <td></td>
   </tr>
@@ -171,15 +171,15 @@ General on-site term
 @return error code
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int mltply::Spin::main(
+int mltply::Spin::C::main(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
   int iret=0;
   if (Def::iFlgGeneralSpin == FALSE)
-    iret = mltply::Spin::Half::main(nstate, tmp_v0, tmp_v1);
+    iret = mltply::Spin::C::Half::main(nstate, tmp_v0, tmp_v1);
   else
-    iret = mltply::Spin::General::main(nstate, tmp_v0, tmp_v1);
+    iret = mltply::Spin::C::General::main(nstate, tmp_v0, tmp_v1);
   return iret;
 }/*int mltplySpin*/
 /**
@@ -187,7 +187,7 @@ int mltply::Spin::main(
 @return error code
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int mltply::Spin::Half::main(
+int mltply::Spin::C::Half::main(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
@@ -211,17 +211,17 @@ int mltply::Spin::Half::main(
     if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite &&
         Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
       StartTimer(411);
-      mltply::Spin::Half::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::C::Half::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(411);
     }
     else if (Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
       StartTimer(412);
-      mltply::Spin::Half::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::C::Half::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(412);
     }
     else if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite) {
       StartTimer(413);
-      mltply::Spin::Half::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::C::Half::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
       StopTimer(413);
     }
     else {
@@ -235,8 +235,8 @@ int mltply::Spin::Half::main(
         sigma3 = Def::InterAll_OffDiagonal[idx][5];
         sigma4 = Def::InterAll_OffDiagonal[idx][7];
         tmp_V = Def::ParaInterAll_OffDiagonal[idx];
-        child_general_int_spin_GetInfo(isite1, isite2, sigma1, sigma2, sigma3, sigma4, tmp_V);
-        mltply::Spin::Half::general_int(nstate, tmp_v0, tmp_v1);
+        mltply::Spin::general_int_GetInfo(isite1, isite2, sigma1, sigma2, sigma3, sigma4, tmp_V);
+        mltply::Spin::C::Half::general_int(nstate, tmp_v0, tmp_v1);
       }/*for (ihermite = 0; ihermite<2; ihermite++)*/
       StopTimer(414);
     }
@@ -251,7 +251,7 @@ int mltply::Spin::Half::main(
     if (Def::ExchangeCoupling[i][0] + 1 > Def::Nsite &&
         Def::ExchangeCoupling[i][1] + 1 > Def::Nsite) {
       StartTimer(421);
-      mltply::Spin::Half::X_general_int_MPIdouble(
+      mltply::Spin::C::Half::X_general_int_MPIdouble(
         Def::ExchangeCoupling[i][0], sigma1, sigma2, 
         Def::ExchangeCoupling[i][1], sigma2, sigma1, 
         Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
@@ -259,7 +259,7 @@ int mltply::Spin::Half::main(
     }
     else if (Def::ExchangeCoupling[i][1] + 1 > Def::Nsite) {
       StartTimer(422);
-      mltply::Spin::Half::X_general_int_MPIsingle(
+      mltply::Spin::C::Half::X_general_int_MPIsingle(
         Def::ExchangeCoupling[i][0], sigma1, sigma2, 
         Def::ExchangeCoupling[i][1], sigma2, sigma1,
         Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
@@ -267,7 +267,7 @@ int mltply::Spin::Half::main(
     }
     else if (Def::ExchangeCoupling[i][0] + 1 > Def::Nsite) {
       StartTimer(423);
-      mltply::Spin::Half::X_general_int_MPIsingle(
+      mltply::Spin::C::Half::X_general_int_MPIsingle(
         Def::ExchangeCoupling[i][1], sigma2, sigma1, 
         Def::ExchangeCoupling[i][0], sigma1, sigma2, 
         Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
@@ -275,8 +275,8 @@ int mltply::Spin::Half::main(
     }
     else {
       StartTimer(424);
-      child_exchange_spin_GetInfo(i);
-      mltply::Spin::Half::exchange(nstate, tmp_v0, tmp_v1);
+      mltply::Spin::exchange_GetInfo(i);
+      mltply::Spin::C::Half::exchange(nstate, tmp_v0, tmp_v1);
       StopTimer(424);
     }
   }/*for (i = 0; i < Def::NExchangeCoupling; i += 2)*/
@@ -290,7 +290,7 @@ int mltply::Spin::Half::main(
 @return error code
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int mltply::Spin::General::main(
+int mltply::Spin::C::General::main(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ){
@@ -325,17 +325,17 @@ int mltply::Spin::General::main(
     if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite &&
         Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
       StartTimer(411);
-      mltply::Spin::General::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::C::General::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(411);
     }
     else if (Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
       StartTimer(412);
-      mltply::Spin::General::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::C::General::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(412);
     }
     else if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite) {
       StartTimer(412);
-      mltply::Spin::General::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::C::General::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
       StopTimer(412);
     }
     else {
@@ -375,16 +375,16 @@ List::c1,one,nstate, Def::SiteToBit, Def::Tpow)
 @return error code
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int mltply::SpinGC::main(
+int mltply::Spin::GC::main(
   //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
   int iret=0;
   if (Def::iFlgGeneralSpin == FALSE) 
-    iret = mltply::SpinGC::Half::main(nstate, tmp_v0, tmp_v1);
+    iret = mltply::Spin::GC::Half::main(nstate, tmp_v0, tmp_v1);
   else 
-    iret = mltply::SpinGC::General::main(nstate, tmp_v0, tmp_v1);
+    iret = mltply::Spin::GC::General::main(nstate, tmp_v0, tmp_v1);
 
   if(iret != 0) return iret;
   
@@ -395,7 +395,7 @@ int mltply::SpinGC::main(
 @return error code
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int mltply::SpinGC::Half::main(
+int mltply::Spin::GC::Half::main(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
@@ -428,7 +428,7 @@ int mltply::SpinGC::Half::main(
       }
       else{
         StartTimer(511);
-        mltply::SpinGC::Half::X_CisAit_MPIdouble(
+        mltply::Spin::GC::Half::X_CisAit_MPIdouble(
           Def::EDGeneralTransfer[i][0], Def::EDGeneralTransfer[i][1], 
           Def::EDGeneralTransfer[i][3], -Def::EDParaGeneralTransfer[i], 
           nstate, tmp_v0, tmp_v1);
@@ -444,7 +444,7 @@ int mltply::SpinGC::Half::main(
         sigma1 = Def::EDGeneralTransfer[idx][1];
         sigma2 = Def::EDGeneralTransfer[idx][3];
         tmp_trans = -Def::EDParaGeneralTransfer[idx];
-        mltply::general_hopp_GetInfo(isite1, isite2, sigma1, sigma2);
+        mltply::Hubbard::general_hopp_GetInfo(isite1, isite2, sigma1, sigma2);
        
         if(sigma1==sigma2){
           fprintf(stderr, "Transverse_OffDiagonal component is illegal.\n");
@@ -456,7 +456,7 @@ int mltply::SpinGC::Half::main(
 #pragma omp parallel for default(none) private(j, tmp_sgn, off) \
 shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
           for (j = 1; j <= i_max; j++) {
-            tmp_sgn = mltply::SpinGC::Half::X_CisAit(j, is1_spin, sigma2, &off);
+            tmp_sgn = mltply::Spin::GC::Half::X_CisAit(j, is1_spin, sigma2, &off);
             if(tmp_sgn !=0){
               zaxpy_(&nstate, &tmp_trans, &tmp_v1[j][0], &one, &tmp_v0[off + 1][0], &one);
             }/*if(tmp_sgn !=0)*/
@@ -475,17 +475,17 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
     if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite &&
         Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
       StartTimer(521);
-      mltply::SpinGC::Half::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::GC::Half::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(521);
     }
     else if (Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
       StartTimer(522);
-      mltply::SpinGC::Half::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::GC::Half::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(522);
     }
     else if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite) {
       StartTimer(522);
-      mltply::SpinGC::Half::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::GC::Half::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
       StopTimer(522);
     }
     else {
@@ -499,8 +499,8 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
         sigma3 = Def::InterAll_OffDiagonal[idx][5];
         sigma4 = Def::InterAll_OffDiagonal[idx][7];
         tmp_V = Def::ParaInterAll_OffDiagonal[idx];
-        child_general_int_spin_GetInfo(isite1, isite2, sigma1, sigma2, sigma3, sigma4, tmp_V);
-        mltply::SpinGC::Half::general_int(nstate, tmp_v0, tmp_v1);
+        mltply::Spin::general_int_GetInfo(isite1, isite2, sigma1, sigma2, sigma3, sigma4, tmp_V);
+        mltply::Spin::GC::Half::general_int(nstate, tmp_v0, tmp_v1);
       }
       StopTimer(523);
     }
@@ -515,7 +515,7 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
     if (Def::ExchangeCoupling[i][0] + 1 > Def::Nsite &&
         Def::ExchangeCoupling[i][1] + 1 > Def::Nsite){
       StartTimer(531);
-      mltply::SpinGC::Half::X_CisAitCiuAiv_MPIdouble(
+      mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIdouble(
         Def::ExchangeCoupling[i][0], sigma1, sigma2, 
         Def::ExchangeCoupling[i][1], sigma2, sigma1, 
         Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
@@ -523,7 +523,7 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
     }
     else if (Def::ExchangeCoupling[i][1] + 1 > Def::Nsite) {
       StartTimer(532);
-      mltply::SpinGC::Half::X_CisAitCiuAiv_MPIsingle(
+      mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(
         Def::ExchangeCoupling[i][0], sigma1, sigma2,
         Def::ExchangeCoupling[i][1], sigma2, sigma1,
         Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
@@ -531,7 +531,7 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
     }
     else if (Def::ExchangeCoupling[i][0] + 1 > Def::Nsite) {
       StartTimer(532);
-      mltply::SpinGC::Half::X_CisAitCiuAiv_MPIsingle(
+      mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(
         Def::ExchangeCoupling[i][1], sigma2, sigma1,
         Def::ExchangeCoupling[i][0], sigma1, sigma2,
         Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
@@ -539,8 +539,8 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
     }
     else {
       StartTimer(533);
-      child_exchange_spin_GetInfo(i);
-      mltply::SpinGC::Half::exchange(nstate, tmp_v0, tmp_v1);
+      mltply::Spin::exchange_GetInfo(i);
+      mltply::Spin::GC::Half::exchange(nstate, tmp_v0, tmp_v1);
       StopTimer(533);
     }
   }/* for (i = 0; i < Def::NExchangeCoupling; i ++) */
@@ -554,7 +554,7 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
     if (Def::PairLiftCoupling[i][0] + 1 > Def::Nsite &&
         Def::PairLiftCoupling[i][1] + 1 > Def::Nsite) {
       StartTimer(541);
-      mltply::SpinGC::Half::X_CisAitCiuAiv_MPIdouble(
+      mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIdouble(
         Def::PairLiftCoupling[i][0], sigma1, sigma2, 
         Def::PairLiftCoupling[i][1], sigma1, sigma2,
         Def::ParaPairLiftCoupling[i], nstate, tmp_v0, tmp_v1);
@@ -562,7 +562,7 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
     }
     else if (Def::PairLiftCoupling[i][1] + 1 > Def::Nsite) {
       StartTimer(542);
-      mltply::SpinGC::Half::X_CisAitCiuAiv_MPIsingle(
+      mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(
         Def::PairLiftCoupling[i][0], sigma1, sigma2, 
         Def::PairLiftCoupling[i][1], sigma1, sigma2, 
         Def::ParaPairLiftCoupling[i], nstate, tmp_v0, tmp_v1);
@@ -570,7 +570,7 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
     }
     else if (Def::PairLiftCoupling[i][0] + 1 > Def::Nsite) {
       StartTimer(542);
-      mltply::SpinGC::Half::X_CisAitCiuAiv_MPIsingle(
+      mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(
         Def::PairLiftCoupling[i][1], sigma1, sigma2,
         Def::PairLiftCoupling[i][0], sigma1, sigma2,
         Def::ParaPairLiftCoupling[i], nstate, tmp_v0, tmp_v1);
@@ -578,8 +578,8 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
     }
     else {
       StartTimer(543);
-      child_pairlift_spin_GetInfo(i);
-      mltply::SpinGC::Half::pairlift(nstate, tmp_v0, tmp_v1);
+      mltply::Spin::pairlift_GetInfo(i);
+      mltply::Spin::GC::Half::pairlift(nstate, tmp_v0, tmp_v1);
       StopTimer(543);
     }
   }/*for (i = 0; i < Def::NPairLiftCoupling; i += 2)*/
@@ -593,7 +593,7 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
 @return error code
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int mltply::SpinGC::General::main(
+int mltply::Spin::GC::General::main(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
@@ -629,7 +629,7 @@ int mltply::SpinGC::General::main(
     if (isite1 == isite2) {
       if (sigma1 != sigma2) {
         if (isite1 > Def::Nsite) {
-          mltply::SpinGC::General::X_CisAit_MPIdouble(
+          mltply::Spin::GC::General::X_CisAit_MPIdouble(
             isite1 - 1, sigma1, sigma2, tmp_trans, nstate, tmp_v0, tmp_v1);
         }/*if (isite1 > Def::Nsite)*/
         else {
@@ -673,17 +673,17 @@ tmp_v1,one,nstate, Def::SiteToBit, Def::Tpow)
     if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite &&
         Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
       StartTimer(521);
-      mltply::SpinGC::General::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::GC::General::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(521);
     }
     else if (Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
       StartTimer(522);
-      mltply::SpinGC::General::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::GC::General::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(522);
     }
     else if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite) {
       StartTimer(522);
-      mltply::SpinGC::General::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::GC::General::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
       StopTimer(522);
     }
     else {
@@ -771,7 +771,7 @@ tmp_v0, tmp_v1,one,nstate, Def::SiteToBit, Def::Tpow)
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::Spin::Half::exchange(
+void mltply::Spin::C::Half::exchange(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
@@ -782,14 +782,14 @@ void mltply::Spin::Half::exchange(
 #pragma omp parallel for default(none) private(j, off) \
 shared(i_max, tmp_v0, tmp_v1,nstate)
   for (j = 1; j <= i_max; j++) 
-    mltply::Spin::Half::exchange_element(j, nstate, tmp_v0, tmp_v1, &off);
+    mltply::Spin::C::Half::exchange_element(j, nstate, tmp_v0, tmp_v1, &off);
 }/*std::complex<double> child_exchange_spin*/
 /**
 @brief Compute exchange term of spin Hamiltonian (grandcanonical)
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::SpinGC::Half::exchange(
+void mltply::Spin::GC::Half::exchange(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
@@ -800,14 +800,14 @@ void mltply::SpinGC::Half::exchange(
 #pragma omp parallel for default(none) private(j, off) \
 shared(i_max,tmp_v0, tmp_v1,nstate)
   for (j = 1; j <= i_max; j++)
-    mltply::SpinGC::Half::exchange_element(j, nstate, tmp_v0, tmp_v1, &off);
+    mltply::Spin::GC::Half::exchange_element(j, nstate, tmp_v0, tmp_v1, &off);
 }/*std::complex<double> GC_child_exchange_spin*/
 /**
 @brief Compute pair-lift term of spin Hamiltonian (grandcanonical)
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::SpinGC::Half::pairlift(
+void mltply::Spin::GC::Half::pairlift(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
@@ -818,14 +818,14 @@ void mltply::SpinGC::Half::pairlift(
 #pragma omp parallel for default(none) private(j, off) \
 shared(i_max, tmp_v0, tmp_v1,nstate)
   for (j = 1; j <= i_max; j++) 
-    mltply::SpinGC::Half::pairlift_element(j, nstate, tmp_v0, tmp_v1, &off);
+    mltply::Spin::GC::Half::pairlift_element(j, nstate, tmp_v0, tmp_v1, &off);
 }/*std::complex<double> GC_child_pairlift_spin*/
 /**
 @brief Compute Inter-All term of spin Hamiltonian (canonical)
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::Spin::Half::general_int(
+void mltply::Spin::C::Half::general_int(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
@@ -847,7 +847,7 @@ void mltply::Spin::Half::general_int(
 #pragma omp parallel for default(none) private(j, tmp_sgn, dmv,tmp_off) \
 shared(i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V,tmp_v1, tmp_v0,one,nstate)
   for (j = 1; j <= i_max; j++) {
-    tmp_sgn = mltply::Spin::Half::X_exchange_element(j, 
+    tmp_sgn = mltply::Spin::C::Half::X_exchange_element(j, 
       isA_up, isB_up, org_sigma2, org_sigma4, &tmp_off);
     if (tmp_sgn != 0) {
       dmv = (std::complex<double>)tmp_sgn * tmp_V;
@@ -860,7 +860,7 @@ shared(i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V,tmp_v1, tmp_v0,one,nstate
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::SpinGC::Half::general_int(
+void mltply::Spin::GC::Half::general_int(
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
@@ -888,25 +888,25 @@ shared(tmp_v0,tmp_v1,nstate,i_max,isA_up,isB_up,org_sigma1,org_sigma2,org_sigma3
     if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        mltply::SpinGC::Half::CisAisCisAis_element(
+        mltply::Spin::GC::Half::CisAisCisAis_element(
           j, isA_up, isB_up, org_sigma2, org_sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
     }
     else if (org_sigma1 == org_sigma2 && org_sigma3 != org_sigma4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        mltply::SpinGC::Half::CisAisCitAiu_element(
+        mltply::Spin::GC::Half::CisAisCitAiu_element(
           j, org_sigma2, org_sigma4, isA_up, isB_up, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }
     else if (org_sigma1 != org_sigma2 && org_sigma3 == org_sigma4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        mltply::SpinGC::Half::CisAitCiuAiu_element(
+        mltply::Spin::GC::Half::CisAitCiuAiu_element(
           j, org_sigma2, org_sigma4, isA_up, isB_up, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }
     else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
 #pragma omp for
       for (j = 1; j <= i_max; j++)
-        mltply::SpinGC::Half::CisAitCiuAiv_element(
+        mltply::Spin::GC::Half::CisAitCiuAiv_element(
           j, org_sigma2, org_sigma4, isA_up, isB_up, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }
   }/*End of parallel region*/

@@ -210,7 +210,7 @@ static void Initialize_wave(
         //fprintf(MP::STDOUT, "Debug: i_max=%ld, step_i=%d\n", i_max, step_i);
         if (i_max != Check::idim_max) {
           fprintf(stderr, "Error: Invalid restart file.\n");
-          exitMPI(-1);
+          wrapperMPI::Exit(-1);
         }
         byte_size = fread(vin, sizeof(std::complex<double>), Check::idim_max + 1, fp);
         for (idim = 1; idim <= i_max; idim++) wave[idim][ie] = vin[idim];
@@ -239,7 +239,7 @@ static void Initialize_wave(
 
     for (ie = 0; ie < Def::k_exct; ie++) {
 
-      sum_i_max = SumMPI_li(Check::idim_max);
+      sum_i_max = wrapperMPI::Sum_li(Check::idim_max);
       Large::iv = (sum_i_max / 2 + Def::initial_iv + ie) % sum_i_max + 1;
       iv = Large::iv;
       fprintf(MP::STDOUT, "  initial_mode=%d normal: iv = %ld i_max=%ld k_exct =%d\n\n", 
@@ -250,7 +250,7 @@ static void Initialize_wave(
       sum_i_max = 0;
       for (iproc = 0; iproc < MP::nproc; iproc++) {
 
-        i_max_tmp = BcastMPI_li(iproc, i_max);
+        i_max_tmp = wrapperMPI::Bcast_li(iproc, i_max);
         if (sum_i_max <= iv && iv < sum_i_max + i_max_tmp) {
 
           if (MP::myrank == iproc) {
@@ -303,7 +303,7 @@ shared(wave, iv, MP::nthreads, MP::myrank, i_max,Def::k_exct,Def::iInitialVecTyp
     }/*#pragma omp parallel*/
 
     dnorm = d_1d_allocate(Def::k_exct);
-    NormMPI_dv(i_max, Def::k_exct, wave, dnorm);
+    wrapperMPI::Norm_dv(i_max, Def::k_exct, wave, dnorm);
 #pragma omp parallel for default(none) private(idim,ie) \
 shared(i_max,wave,dnorm,Def::k_exct)
     for (idim = 1; idim <= i_max; idim++) 
@@ -331,7 +331,7 @@ void CalcByLOBPCG::Output_restart(
   vout = cd_1d_allocate(Check::idim_max + 1);
   for (ie = 0; ie < Def::k_exct; ie++) {
     sprintf(sdt, "tmpvec_set%d_rank_%d.dat", ie, MP::myrank);
-    if (childfopenALL(sdt, "wb", &fp) != 0) exitMPI(-1);
+    if (childfopenALL(sdt, "wb", &fp) != 0) wrapperMPI::Exit(-1);
     byte_size = fwrite(&Large::itr, sizeof(Large::itr), 1, fp);
     byte_size = fwrite(&Check::idim_max, sizeof(Check::idim_max), 1, fp);
     for (idim = 1; idim <= Check::idim_max; idim++) vout[idim] = wave[idim][ie];
@@ -408,7 +408,7 @@ int CalcByLOBPCG::LOBPCG_Main()
       eig[ie] += real(conj(wxp[1][idim][ie]) * hwxp[1][idim][ie]);
     }
   }
-  SumMPI_dv(Def::k_exct, eig);
+  wrapperMPI::Sum_dv(Def::k_exct, eig);
 
   sprintf(sdt_2, "%s_Lanczos_Step.dat", Def::CDataFileHead);
   childfopenMPI(sdt_2, "w", &fp);
@@ -445,7 +445,7 @@ shared(i_max,wxp,hwxp,eig,Def::k_exct)
         wxp[0][idim][ie] = hwxp[1][idim][ie] - eig[ie] * wxp[1][idim][ie];
       }
     }        
-    NormMPI_dv(i_max, Def::k_exct, wxp[0], dnorm);
+    wrapperMPI::Norm_dv(i_max, Def::k_exct, wxp[0], dnorm);
 
     dnormmax = 0.0;
     for (ie = 0; ie < Def::k_exct; ie++) 
@@ -469,7 +469,7 @@ shared(wxp,List::Diagonal,preshift,i_max,eps_LOBPCG,Def::k_exct)
       /**@brief
         <li>Normalize residual vector: @f${\bf w}={\bf w}/|w|@f$
       */
-      NormMPI_dv(i_max, Def::k_exct, wxp[0], dnorm);
+      wrapperMPI::Norm_dv(i_max, Def::k_exct, wxp[0], dnorm);
 #pragma omp parallel for default(none) private(idim,ie) \
 shared(i_max,wxp,dnorm,Def::k_exct)
       for (idim = 1; idim <= i_max; idim++)
@@ -518,8 +518,8 @@ shared(i_max,wxp,dnorm,Def::k_exct)
           &wxp[ii][1][0], &nstate, &hwxp[jj][1][0], &nstate, &zero, &hsub[jj][0][ii][0], &nsub);
       }
     }
-    SumMPI_cv(nsub*nsub, &ovlp[0][0][0][0]);
-    SumMPI_cv(nsub*nsub, &hsub[0][0][0][0]);
+    wrapperMPI::Sum_cv(nsub*nsub, &ovlp[0][0][0][0]);
+    wrapperMPI::Sum_cv(nsub*nsub, &hsub[0][0][0][0]);
 
     for (ie = 0; ie < Def::k_exct; ie++)
       eig[ie] = real(hsub[1][ie][1][ie]);
@@ -582,7 +582,7 @@ shared(i_max,wxp,dnorm,Def::k_exct)
     <li>Normalize @f${\bf w}@f$ and @f${\bf W}@f$</li>
     */
     for (ii = 1; ii < 3; ii++) {
-      NormMPI_dv(i_max, Def::k_exct, wxp[ii], dnorm);
+      wrapperMPI::Norm_dv(i_max, Def::k_exct, wxp[ii], dnorm);
 #pragma omp parallel for default(none) private(idim,ie) \
 shared(i_max,wxp,hwxp,dnorm,ii, Def::k_exct)
       for (idim = 1; idim <= i_max; idim++) {
@@ -687,7 +687,7 @@ int CalcByLOBPCG::main(
       break;
     default:
       //fclose(fp);
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
 
     int iret = LOBPCG_Main();
@@ -712,13 +712,13 @@ int CalcByLOBPCG::main(
       childfopenALL(sdt, "rb", &fp);
       if (fp == NULL) {
         fprintf(stderr, "Error: Inputvector file is not found.\n");
-        exitMPI(-1);
+        wrapperMPI::Exit(-1);
       }
       byte_size = fread(&Step::step_i, sizeof(int), 1, fp);
       byte_size = fread(&i_max, sizeof(long int), 1, fp);
       if (i_max != Check::idim_max) {
         fprintf(stderr, "Error: Invalid Inputvector file.\n");
-        exitMPI(-1);
+        wrapperMPI::Exit(-1);
       }
       byte_size = fread(vin, sizeof(std::complex<double>), Check::idim_max + 1, fp);
 #pragma omp parallel for default(none) shared(Wave::v1,vin, i_max, ie), private(idim)
@@ -749,7 +749,7 @@ int CalcByLOBPCG::main(
   }
 
   if (childfopenMPI(sdt, "w", &fp) != 0) {
-    exitMPI(-1);
+    wrapperMPI::Exit(-1);
   }
   for (ie = 0; ie < Def::k_exct; ie++) {
     //phys(ie);
@@ -777,7 +777,7 @@ int CalcByLOBPCG::main(
         vin[idim] = Wave::v1[idim][ie];
       
       sprintf(sdt, "%s_eigenvec_%ld_rank_%d.dat", Def::CDataFileHead, ie, MP::myrank);
-      if (childfopenALL(sdt, "wb", &fp) != 0) exitMPI(-1);
+      if (childfopenALL(sdt, "wb", &fp) != 0) wrapperMPI::Exit(-1);
       byte_size = fwrite(&Large::itr, sizeof(Large::itr), 1, fp);
       byte_size = fwrite(&Check::idim_max, sizeof(Check::idim_max), 1, fp);
       byte_size = fwrite(vin, sizeof(std::complex<double>), Check::idim_max + 1, fp);

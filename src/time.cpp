@@ -282,7 +282,7 @@ void OutputTimer() {
        case DC::TPQCalc:
         StartTimer(3000);
         if (CalcByTPQ(NumAve, X.Bind.Def.Param.ExpecInterval, &X) != TRUE) {
-          FinalizeMPI();
+          wrapperMPI::Finalize();
           StopTimer(3000);
           return 0;
         }

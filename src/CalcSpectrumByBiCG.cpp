@@ -108,7 +108,7 @@ void SeedSwitch(
 
   if (std::abs(pi[iter][iz_seed0]) < 1.0e-50) {
     printf("Error : pi at seed is 0.");
-    exitMPI(-1);
+    wrapperMPI::Exit(-1);
   }
 
   if (iz_seed0 != *iz_seed) {
@@ -216,7 +216,7 @@ int CalcSpectrumByBiCG(
       if (i_max != Check::idim_max) {
         fprintf(stderr, "Error: The size of the input vector is incorrect.\n");
         printf("%s %ld %ld %d\n", sdt, i_max, Check::idim_max, iter_old);
-        exitMPI(-1);
+        wrapperMPI::Exit(-1);
       }
       byte_size = fread(&v2[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
       byte_size = fread(&v3[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
@@ -249,7 +249,7 @@ int CalcSpectrumByBiCG(
       fprintf(MP::STDOUT, "      Start from SCRATCH.\n");
     }
     else {
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
       sscanf(ctmp, "%d", &iter_old);
     }
   }
@@ -271,12 +271,12 @@ int CalcSpectrumByBiCG(
   if (fp != NULL) {
     if (Def::iFlgCalcSpec == DC::RECALC_FROM_TMComponents)
       Def::Lanczos_max = 0;
-    fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
+    wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
     sscanf(ctmp, "%lf %lf\n", &dtmp[0], &dtmp[1]);
     z_seed = std::complex<double>(dtmp[0], dtmp[1]);
 
     iter = 1;
-    while (fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp) != NULL) {
+    while (wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp) != NULL) {
       sscanf(ctmp, "%lf %lf %lf %lf\n",
         &dtmp[0], &dtmp[1], &dtmp[2], &dtmp[3]);
       alpha[iter] = std::complex<double>(dtmp[0], dtmp[1]);
@@ -293,13 +293,13 @@ int CalcSpectrumByBiCG(
         z_seed, pBiCG, res_proj, pi, dcSpectrum);
     }/*for (iter = 1; iter <= iter_old; iter++)*/
 
-    rho = VecProdMPI(Check::idim_max, &v5[0][0], &v3[0][0]);
+    rho = wrapperMPI::VecProd(Check::idim_max, &v5[0][0], &v3[0][0]);
 
     SeedSwitch(iter, Nomega, NdcSpectrum, lz_conv, &iz_seed,
       &z_seed, &rho, dcomega, Check::idim_max, v2, v3, v4, v5,
       pi, alpha, beta, res_proj);
 
-    resnorm = NormMPI_dc(Check::idim_max, &v2[0][0]);
+    resnorm = wrapperMPI::Norm_dc(Check::idim_max, &v2[0][0]);
 
     for (iomega = 0; iomega < Nomega; iomega++)
       if (std::abs(resnorm / pi[iter][iomega]) < Def::eps_Lanczos)
@@ -327,13 +327,13 @@ int CalcSpectrumByBiCG(
     for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
       zclear(Check::idim_max, &vL[1][0]);
       GetExcitedState(1, vL, v1Org, idcSpectrum + 1);
-      res_proj[iter][idcSpectrum] = VecProdMPI(Check::idim_max, &vL[0][0], &v2[0][0]);
+      res_proj[iter][idcSpectrum] = wrapperMPI::VecProd(Check::idim_max, &vL[0][0], &v2[0][0]);
     }
     /**
     <li>Update projected result vector dcSpectrum.</li>
     */
     rho_old = rho;
-    rho = VecProdMPI(Check::idim_max, &v4[0][0], &v2[0][0]);
+    rho = wrapperMPI::VecProd(Check::idim_max, &v4[0][0], &v2[0][0]);
     if (iter == 1)
       beta[iter] = std::complex<double>(0.0, 0.0);
     else
@@ -343,16 +343,16 @@ int CalcSpectrumByBiCG(
       v12[idim][0] = z_seed * v2[idim][0] - v12[idim][0];
       v14[idim][0] = std::conj(z_seed) * v4[idim][0] - v14[idim][0];
     }
-    alpha_denom = VecProdMPI(Check::idim_max, &v4[0][0], &v12[0][0]) 
+    alpha_denom = wrapperMPI::VecProd(Check::idim_max, &v4[0][0], &v12[0][0]) 
       - beta[iter] * rho / alpha[iter - 1];
 
     if (std::abs(alpha_denom) < 1.0e-50) {
       printf("Error : The denominator of alpha is zero.\n");
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
     else if (std::abs(rho) < 1.0e-50) {
       printf("Error : rho is zero.\n");
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }    
     alpha[iter] = rho / alpha_denom;
     /*
@@ -384,7 +384,7 @@ int CalcSpectrumByBiCG(
     /*
     Convergence check
     */
-    resnorm = std::sqrt(NormMPI_dc(Check::idim_max, &v2[0][0]));
+    resnorm = std::sqrt(wrapperMPI::Norm_dc(Check::idim_max, &v2[0][0]));
     
     for (iomega = 0; iomega < Nomega; iomega++) 
       if (std::abs(resnorm / pi[iter][iomega]) < Def::eps_Lanczos)
@@ -432,7 +432,7 @@ int CalcSpectrumByBiCG(
     TimeKeeper("%s_TimeKeeper.dat", "Output vectors for recalculation starts: %s", "a");
     sprintf(sdt, "%s_recalcvec_rank_%d.dat", Def::CDataFileHead, MP::myrank);
     if (childfopenALL(sdt, "wb", &fp) != 0) {
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
     byte_size = fwrite(&iter, sizeof(iter), 1, fp);
     byte_size = fwrite(&Check::idim_max, sizeof(Check::idim_max), 1, fp);

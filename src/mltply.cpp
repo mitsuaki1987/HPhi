@@ -96,21 +96,21 @@ shared(tmp_v0, tmp_v1, List::Diagonal,one,nstate,i_max)
   
   switch (Def::iCalcModel) {
   case DC::HubbardGC:
-    mltply::HubbardGC::main(nstate, tmp_v0, tmp_v1);
+    mltply::Hubbard::GC::main(nstate, tmp_v0, tmp_v1);
     break;
       
   case DC::KondoGC:
   case DC::Hubbard:
   case DC::Kondo:
-    mltply::Hubbard::main(nstate, tmp_v0, tmp_v1);
+    mltply::Hubbard::C::main(nstate, tmp_v0, tmp_v1);
     break;
       
   case DC::Spin:
-    mltply::Spin::main(nstate, tmp_v0, tmp_v1);
+    mltply::Spin::C::main(nstate, tmp_v0, tmp_v1);
     break;
       
   case DC::SpinGC:
-    mltply::SpinGC::main(nstate, tmp_v0, tmp_v1);
+    mltply::Spin::GC::main(nstate, tmp_v0, tmp_v1);
     break;
       
   default:

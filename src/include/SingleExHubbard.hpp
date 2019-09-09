@@ -18,9 +18,11 @@
 
 namespace GetExcitedState {
   namespace Single {
-    int Hubbard(int nstate,
-      std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, int iEx);
-    int HubbardGC(int nstate,
-      std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, int iEx);
+    namespace Hubbard {
+      int C(int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, int iEx);
+      int GC(int nstate,
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, int iEx);
+    }
   }
 }

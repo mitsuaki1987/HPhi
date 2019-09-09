@@ -114,8 +114,8 @@ void totalspin_Hubbard(
       }
     }
   }
-  SumMPI_dv(nstate, Phys::s2);
-  SumMPI_dv(nstate, Phys::Sz);
+  wrapperMPI::Sum_dv(nstate, Phys::s2);
+  wrapperMPI::Sum_dv(nstate, Phys::Sz);
 }
 /**
  * @brief function of calculating totalspin for Hubbard model in grand canonical ensemble
@@ -192,8 +192,8 @@ void totalspin_HubbardGC(
       }
     }
   }
-  SumMPI_dv(nstate, Phys::s2);
-  SumMPI_dv(nstate, Phys::Sz);
+  wrapperMPI::Sum_dv(nstate, Phys::s2);
+  wrapperMPI::Sum_dv(nstate, Phys::Sz);
 }
 /**
  * @brief function of calculating totalspin for spin model
@@ -242,9 +242,9 @@ void totalspin_Spin(
           is1_up = Def::Tpow[isite1 - 1];
           is2_up = Def::Tpow[isite2 - 1];
           is_up = is1_up + is2_up;
-          num1_up = mltply::SpinGC::Half::X_CisAis((long int) MP::myrank + 1, is1_up, 1);
+          num1_up = mltply::Spin::GC::Half::X_CisAis((long int) MP::myrank + 1, is1_up, 1);
           num1_down = 1 - num1_up;
-          num2_up = mltply::SpinGC::Half::X_CisAis((long int) MP::myrank + 1, is2_up, 1);
+          num2_up = mltply::Spin::GC::Half::X_CisAis((long int) MP::myrank + 1, is2_up, 1);
           num2_down = 1 - num2_up;
           spn_z = (num1_up - num1_down) * (num2_up - num2_down);
 
@@ -276,7 +276,7 @@ void totalspin_Spin(
 
           is1_up = Def::Tpow[tmp_isite1 - 1];
           is2_up = Def::Tpow[tmp_isite2 - 1];
-          num2_up = mltply::SpinGC::Half::X_CisAis((long int) MP::myrank + 1, is2_up, 1);
+          num2_up = mltply::Spin::GC::Half::X_CisAis((long int) MP::myrank + 1, is2_up, 1);
           num2_down = 1 - num2_up;
 
           //diagonal
@@ -389,8 +389,8 @@ void totalspin_Spin(
       }
     }
   }
-  SumMPI_dv(nstate, Phys::s2);
-  SumMPI_dv(nstate, Phys::Sz);
+  wrapperMPI::Sum_dv(nstate, Phys::s2);
+  wrapperMPI::Sum_dv(nstate, Phys::Sz);
 }
 /**
  * @brief function of calculating totalspin for spin model in grand canonical ensemble
@@ -455,9 +455,9 @@ void totalspin_SpinGC(
         if (isite1 > Def::Nsite && isite2 > Def::Nsite) {
           is1_up = Def::Tpow[isite1 - 1];
           is2_up = Def::Tpow[isite2 - 1];
-          num1_up = mltply::SpinGC::Half::X_CisAis((long int)MP::myrank + 1, is1_up, 1);
+          num1_up = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is1_up, 1);
           num1_down = 1 - num1_up;
-          num2_up = mltply::SpinGC::Half::X_CisAis((long int)MP::myrank + 1, is2_up, 1);
+          num2_up = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is2_up, 1);
           num2_down = 1 - num2_up;
           spn_z2 = (num1_up - num1_down)*(num2_up - num2_down) / 4.0;
           for (j = 1; j <= i_max; j++) {
@@ -471,7 +471,7 @@ void totalspin_SpinGC(
             }
           }//isite1 = isite2
           else {//off diagonal
-            //debug spn += mltply::SpinGC::Half::X_CisAitCiuAiv_MPIdouble(
+            //debug spn += mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIdouble(
             //debug   isite1 - 1, 0, 1, isite2 - 1, 1, 0, 1.0, nstate, vec, vec) / 2.0;
           }
         }
@@ -486,7 +486,7 @@ void totalspin_SpinGC(
           }
           is1_up = Def::Tpow[tmp_isite1 - 1];
           is2_up = Def::Tpow[tmp_isite2 - 1];
-          num2_up = mltply::SpinGC::Half::X_CisAis((long int)MP::myrank + 1, is2_up, 1);
+          num2_up = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is2_up, 1);
           num2_down = 1 - num2_up;
           //diagonal
           for (j = 1; j <= i_max; j++) {
@@ -499,10 +499,10 @@ void totalspin_SpinGC(
               Phys::s2[istate] += real(conj(vec[j][istate])*vec[j][istate] * spn_z2) / 4.0;
           }
           if (isite1 < isite2) {
-            //debug spn += mltply::SpinGC::Half::X_CisAitCiuAiv_MPIsingle(isite1 - 1, 0, 1, isite2 - 1, 1, 0, 1.0, nstate, vec, vec) / 2.0;
+            //debug spn += mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(isite1 - 1, 0, 1, isite2 - 1, 1, 0, 1.0, nstate, vec, vec) / 2.0;
           }
           else {
-            //debug spn += conj(mltply::SpinGC::Half::X_CisAitCiuAiv_MPIsingle(isite2 - 1, 1, 0, isite1 - 1, 0, 1, 1.0, nstate, vec, vec)) / 2.0;
+            //debug spn += conj(mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(isite2 - 1, 1, 0, isite1 - 1, 0, 1, 1.0, nstate, vec, vec)) / 2.0;
           }
         }
         else {
@@ -604,8 +604,8 @@ void totalspin_SpinGC(
       }//isite2
     }//isite1
   }
-  SumMPI_dv(nstate, Phys::s2);
-  SumMPI_dv(nstate, Phys::Sz);
+  wrapperMPI::Sum_dv(nstate, Phys::s2);
+  wrapperMPI::Sum_dv(nstate, Phys::Sz);
 }
 /**
  * @brief Parent function of calculation of total spin

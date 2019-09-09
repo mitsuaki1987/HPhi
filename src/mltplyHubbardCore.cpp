@@ -31,7 +31,7 @@
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::general_hopp_GetInfo(
+void mltply::Hubbard::general_hopp_GetInfo(
   long int isite1,//!<[in] Site index
   long int isite2,//!<[in] Site index
   long int sigma1,//!<[in] Spin index
@@ -70,7 +70,7 @@ void mltply::general_hopp_GetInfo(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::general_int_GetInfo(
+void mltply::Hubbard::general_int_GetInfo(
   long int isite1,//!<[in] Site index
   long int isite2,//!<[in] Site index
   long int isite3,//!<[in] Site index
@@ -158,7 +158,7 @@ void mltply::general_int_GetInfo(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::pairhopp_GetInfo(
+void mltply::Hubbard::pairhopp_GetInfo(
   int iPairHopp//!<[in] Index of pairhopp interaction
 ) {
   int isite1 = Def::PairHopping[iPairHopp][0] + 1;
@@ -182,7 +182,7 @@ void mltply::pairhopp_GetInfo(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::exchange_GetInfo(
+void mltply::Hubbard::exchange_GetInfo(
   int iExchange//!<[in] Index of exchange interaction
 ) {
   int isite1 = Def::ExchangeCoupling[iExchange][0] + 1;
@@ -214,7 +214,7 @@ void mltply::exchange_GetInfo(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
-void mltply::HubbardGC::CisAis(
+void mltply::Hubbard::GC::CisAis(
   long int j,//!<[in] Index of element of wavefunction
   int nstate, 
   std::complex<double> **tmp_v0,//!<[inout] Result vector
@@ -236,7 +236,7 @@ void mltply::HubbardGC::CisAis(
 @brief Operation of @f$t c_{i\sigma} c_{i\sigma}^\dagger@f$ (Grandcanonical)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::HubbardGC::AisCis(
+void mltply::Hubbard::GC::AisCis(
   long int j,//!<[in] Index of element of wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1,//!<[in] Input producted vector
@@ -259,7 +259,7 @@ void mltply::HubbardGC::AisCis(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int mltply::Hubbard::X_CisAis(
+int mltply::Hubbard::C::X_CisAis(
   long int list_1_j,
   long int is1_spin
 ) {
@@ -274,7 +274,7 @@ int mltply::Hubbard::X_CisAis(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::Hubbard::CisAjt(
+void mltply::Hubbard::C::CisAjt(
   long int j,//!<[in] Index of wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f$v_0 = H v_1@f$
   std::complex<double> **tmp_v1,//!<[in] Vector to be producted
@@ -313,7 +313,7 @@ void mltply::Hubbard::CisAjt(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::HubbardGC::CisAjt(
+void mltply::Hubbard::GC::CisAjt(
   long int j,//!<[in] Index of wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[in] @f$v_0 = H v_1@f$
   std::complex<double> **tmp_v1,//!<[in]Vector to be producted
@@ -354,7 +354,7 @@ void mltply::HubbardGC::CisAjt(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int mltply::Hubbard::X_CisAjt(
+int mltply::Hubbard::C::X_CisAjt(
   long int list_1_j,//!<[in] Similer to ::List::c1 ?
   //!<[in]
   long int is1_spin,//!<[in] Mask for occupation of (is)
@@ -366,7 +366,7 @@ int mltply::Hubbard::X_CisAjt(
   long int off;
   int sgn = 1;
 
-  sgn = mltply::HubbardGC::X_CisAjt(list_1_j, is1_spin, is2_spin, sum_spin, diff_spin, tmp_off);
+  sgn = mltply::Hubbard::GC::X_CisAjt(list_1_j, is1_spin, is2_spin, sum_spin, diff_spin, tmp_off);
   if (sgn != 0) {
     if(GetOffComp(List::c2_1, List::c2_2, *tmp_off, Large::irght, Large::ilft, Large::ihfbit, &off)!=TRUE){
       *tmp_off = 0;
@@ -386,7 +386,7 @@ int mltply::Hubbard::X_CisAjt(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-int mltply::HubbardGC::X_CisAjt(
+int mltply::Hubbard::GC::X_CisAjt(
   long int list_1_j,//!<[in] ::List::c1 ?
   long int is1_spin,//!<[in] Mask for occupation of (is)
   long int is2_spin,//!<[in] Mask for occupation of (jt)
@@ -425,7 +425,7 @@ int mltply::HubbardGC::X_CisAjt(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::Hubbard::exchange_element(
+void mltply::Hubbard::C::exchange_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] @f$v_0 = H v_1@f$
   std::complex<double> **tmp_v1,//!<[in] Vector to be producted
@@ -477,7 +477,7 @@ void mltply::Hubbard::exchange_element(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::Hubbard::pairhopp_element(
+void mltply::Hubbard::C::pairhopp_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
@@ -519,7 +519,7 @@ void mltply::Hubbard::pairhopp_element(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::HubbardGC::exchange_element(
+void mltply::Hubbard::GC::exchange_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate,
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
@@ -568,7 +568,7 @@ void mltply::HubbardGC::exchange_element(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::HubbardGC::pairhopp_element(
+void mltply::Hubbard::GC::pairhopp_element(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
@@ -611,7 +611,7 @@ term of canonical Hubbard system
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::Hubbard::CisAisCisAis_element(
+void mltply::Hubbard::C::CisAisCisAis_element(
   long int j,//!<[in] Index of initial wavefunction
   long int isite1,//!<[in] Site 1
   long int isite3,//!<[in] Site 3
@@ -634,7 +634,7 @@ term of canonical Hubbard system
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::Hubbard::CisAisCjtAku_element(
+void mltply::Hubbard::C::CisAisCjtAku_element(
   long int j,//!<[in] Index of initial wavefunction
   long int isite1,//!<[in] Site 1
   long int isite3,//!<[in] Site 3
@@ -666,7 +666,7 @@ term of canonical Hubbard system
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::Hubbard::CisAjtCkuAku_element(
+void mltply::Hubbard::C::CisAjtCkuAku_element(
   long int j,//!<[in] Index of initial wavefunction
   long int isite1,//!<[in] Site 1
   long int isite2,//!<[in] Site 2
@@ -698,7 +698,7 @@ term of canonical Hubbard system
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::Hubbard::CisAjtCkuAlv_element(
+void mltply::Hubbard::C::CisAjtCkuAlv_element(
   long int j,//!<[in] Index of initial wavefunction
   long int isite1,//!<[in] Site 1
   long int isite2,//!<[in] Site 2
@@ -719,7 +719,7 @@ void mltply::Hubbard::CisAjtCkuAlv_element(
   int one = 1;
 
   std::complex<double> dmv;
-  tmp_sgn = mltply::HubbardGC::X_CisAjt(List::c1[j], isite3, isite4, Bsum, Bdiff, &tmp_off_1);
+  tmp_sgn = mltply::Hubbard::GC::X_CisAjt(List::c1[j], isite3, isite4, Bsum, Bdiff, &tmp_off_1);
 
   if (tmp_sgn != 0) {
     tmp_sgn *= X_CisAjt(tmp_off_1, isite1, isite2, Asum, Adiff, tmp_off_2);
@@ -736,7 +736,7 @@ term of grandcanonical Hubbard system
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::HubbardGC::CisAisCisAis_element(
+void mltply::Hubbard::GC::CisAisCisAis_element(
   long int j,//!<[in] Index of initial wavefunction
   long int isite1,//!<[in] Site 1
   long int isite3,//!<[in] Site 3
@@ -748,8 +748,8 @@ void mltply::HubbardGC::CisAisCisAis_element(
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = mltply::Hubbard::X_CisAis(j - 1, isite3);
-  tmp_sgn *= mltply::Hubbard::X_CisAis(j - 1, isite1);
+  tmp_sgn = mltply::Hubbard::C::X_CisAis(j - 1, isite3);
+  tmp_sgn *= mltply::Hubbard::C::X_CisAis(j - 1, isite1);
   if (tmp_sgn != 0) {
     dmv = tmp_V * (std::complex<double>)tmp_sgn;
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
@@ -761,7 +761,7 @@ term of grandcanonical Hubbard system
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::HubbardGC::CisAisCjtAku_element(
+void mltply::Hubbard::GC::CisAisCjtAku_element(
   long int j,//!<[in] Index of initial wavefunction
   long int isite1,//!<[in] Site 1
   long int isite3,//!<[in] Site 3
@@ -777,9 +777,9 @@ void mltply::HubbardGC::CisAisCjtAku_element(
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = mltply::HubbardGC::X_CisAjt((j - 1), isite3, isite4, Bsum, Bdiff, tmp_off);
+  tmp_sgn = mltply::Hubbard::GC::X_CisAjt((j - 1), isite3, isite4, Bsum, Bdiff, tmp_off);
   if (tmp_sgn != 0) {
-    tmp_sgn *= mltply::Hubbard::X_CisAis(*tmp_off, isite1);
+    tmp_sgn *= mltply::Hubbard::C::X_CisAis(*tmp_off, isite1);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
@@ -792,7 +792,7 @@ term of grandcanonical Hubbard system
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::HubbardGC::CisAjtCkuAku_element(
+void mltply::Hubbard::GC::CisAjtCkuAku_element(
   long int j,//!<[in] Index of initial wavefunction
   long int isite1,//!<[in] Site 1
   long int isite2,//!<[in] Site 2
@@ -807,9 +807,9 @@ void mltply::HubbardGC::CisAjtCkuAku_element(
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = mltply::Hubbard::X_CisAis(j - 1, isite3);
+  tmp_sgn = mltply::Hubbard::C::X_CisAis(j - 1, isite3);
   if (tmp_sgn != 0) {
-    tmp_sgn *= mltply::HubbardGC::X_CisAjt(j - 1, isite1, isite2, Asum, Adiff, tmp_off);
+    tmp_sgn *= mltply::Hubbard::GC::X_CisAjt(j - 1, isite1, isite2, Asum, Adiff, tmp_off);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
@@ -822,7 +822,7 @@ term of grandcanonical Hubbard system
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void mltply::HubbardGC::CisAjtCkuAlv_element(
+void mltply::Hubbard::GC::CisAjtCkuAlv_element(
   long int j,//!<[in] Index of initial wavefunction
   long int isite1,//!<[in] Site 1
   long int isite2,//!<[in] Site 2
@@ -842,9 +842,9 @@ void mltply::HubbardGC::CisAjtCkuAlv_element(
   std::complex<double> dmv;
   int one = 1;
 
-  tmp_sgn = mltply::HubbardGC::X_CisAjt(j - 1, isite3, isite4, Bsum, Bdiff, &tmp_off_1);
+  tmp_sgn = mltply::Hubbard::GC::X_CisAjt(j - 1, isite3, isite4, Bsum, Bdiff, &tmp_off_1);
   if (tmp_sgn != 0) {
-    tmp_sgn *= mltply::HubbardGC::X_CisAjt(tmp_off_1, isite1, isite2, Asum, Adiff, tmp_off_2);
+    tmp_sgn *= mltply::Hubbard::GC::X_CisAjt(tmp_off_1, isite1, isite2, Asum, Adiff, tmp_off_2);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off_2 + 1][0], &one);
@@ -859,7 +859,7 @@ term of grandcanonical Hubbard system
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 @author Youhei Yamaji (The University of Tokyo)
 */
-void mltply::HubbardGC::Cis(
+void mltply::Hubbard::GC::Cis(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
@@ -906,7 +906,7 @@ term of grandcanonical Hubbard system
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 @author Youhei Yamaji (The University of Tokyo)
 */
-void mltply::HubbardGC::Ajt(
+void mltply::Hubbard::GC::Ajt(
   long int j,//!<[in] Index of initial wavefunction
   int nstate, std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
@@ -953,7 +953,7 @@ term of canonical Hubbard system
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 @author Youhei Yamaji (The University of Tokyo)
 */
-int mltply::Hubbard::X_Cis(
+int mltply::Hubbard::C::X_Cis(
   long int j,//!<[in] Index of initial wavefunction
   long int is1_spin,//!<[in] Bit mask
   long int *tmp_off,//!<[out] Index of final wavefunction
@@ -1007,7 +1007,7 @@ term of canonical Hubbard system
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 @author Youhei Yamaji (The University of Tokyo)
 */
-int mltply::Hubbard::X_Ajt(
+int mltply::Hubbard::C::X_Ajt(
   long int j,//!<[in] Index of initial wavefunction
   long int is1_spin,//!<[in] Bit mask
   long int *tmp_off,//!<[out] Index of final wavefunction

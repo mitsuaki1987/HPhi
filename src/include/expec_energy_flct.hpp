@@ -18,10 +18,16 @@
 
 namespace expec {
   namespace energy_flct {
-    void HubbardGC(int nstate, std::complex<double>** tmp_v0);
-    void Hubbard(int nstate, std::complex<double>** tmp_v0);
-    void HalfSpinGC(int nstate, std::complex<double>** tmp_v0);
-    void GeneralSpinGC(int nstate, std::complex<double>** tmp_v0);
+    namespace Hubbard{
+      void GC(int nstate, std::complex<double>** tmp_v0);
+      void C(int nstate, std::complex<double>** tmp_v0);
+    }
+    namespace Spin {
+      namespace GC {
+        void Half(int nstate, std::complex<double>** tmp_v0);
+        void General(int nstate, std::complex<double>** tmp_v0);
+      }
+    }
     int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
   }
 }

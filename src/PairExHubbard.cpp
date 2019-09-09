@@ -34,7 +34,7 @@
 @author Kazuyoshi Yoshimi
 @version 1.2
 */
-int GetExcitedState::Pair::HubbardGC(
+int GetExcitedState::Pair::Hubbard::GC(
   int nstate, 
   std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
@@ -86,17 +86,17 @@ int GetExcitedState::Pair::HubbardGC(
         }
       }
       else {
-        mltply::HubbardGC::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::GC::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
           -tmp_trans, nstate, tmp_v0, tmp_v1);
       }
     }
     else if (org_isite2 > Def::Nsite || org_isite1 > Def::Nsite) {
       if (org_isite1 < org_isite2) {
-        mltply::HubbardGC::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::GC::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
           -tmp_trans, nstate, tmp_v0, tmp_v1);
       }
       else {
-        mltply::HubbardGC::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1,
+        mltply::Hubbard::GC::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1,
           -conj(tmp_trans), nstate, tmp_v0, tmp_v1);
       }
     }
@@ -107,12 +107,12 @@ int GetExcitedState::Pair::HubbardGC(
 #pragma omp parallel for default(none) private(j) \
 shared(i_max,isite1, tmp_trans,tmp_v0,tmp_v1,nstate)
         for (j = 1; j <= i_max; j++) {
-          mltply::HubbardGC::AisCis(j, nstate, tmp_v0, tmp_v1, isite1, -tmp_trans);
+          mltply::Hubbard::GC::AisCis(j, nstate, tmp_v0, tmp_v1, isite1, -tmp_trans);
         }
       }
       else {
-        mltply::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
-        mltply::HubbardGC::general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
+        mltply::Hubbard::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
+        mltply::Hubbard::GC::general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
       }
     }
   }
@@ -125,7 +125,7 @@ shared(i_max,isite1, tmp_trans,tmp_v0,tmp_v1,nstate)
 @author Kazuyoshi Yoshimi
 @version 1.2
 */
-int GetExcitedState::Pair::Hubbard(
+int GetExcitedState::Pair::Hubbard::C(
   int nstate, 
   std::complex<double> **tmp_v0, /**< [out] Result v0 = H v1*/
   std::complex<double> **tmp_v1, /**< [in] v0 = H v1*/
@@ -162,7 +162,7 @@ int GetExcitedState::Pair::Hubbard(
     tmp_trans = Def::ParaPairExcitationOperator[iEx][i];
     ibitsite1 = Def::OrgTpow[2 * org_isite1 - 2 + org_sigma1];
     ibitsite2 = Def::OrgTpow[2 * org_isite2 - 2 + org_sigma2];
-    mltply::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
+    mltply::Hubbard::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
     Asum = Large::isA_spin;
     Adiff = Large::A_spin;
 
@@ -171,18 +171,18 @@ int GetExcitedState::Pair::Hubbard(
       if (org_isite1 > Def::Nsite &&
         org_isite2 > Def::Nsite)
       {
-        mltply::Hubbard::X_CisAjt_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::C::X_CisAjt_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
           -tmp_trans, nstate, tmp_v0, tmp_v1);
       }
       else if (org_isite2 > Def::Nsite
         || org_isite1 > Def::Nsite)
       {
         if (org_isite1 < org_isite2) {
-          mltply::Hubbard::X_CisAjt_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+          mltply::Hubbard::C::X_CisAjt_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
             -tmp_trans, nstate, tmp_v0, tmp_v1);
         }
         else {
-          mltply::Hubbard::X_CisAjt_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1,
+          mltply::Hubbard::C::X_CisAjt_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1,
             -conj(tmp_trans), nstate, tmp_v0, tmp_v1);
         }
       }
@@ -191,7 +191,7 @@ int GetExcitedState::Pair::Hubbard(
 shared(tmp_v0,tmp_v1,one,nstate,i_max,tmp_trans,Asum,Adiff, \
 ibitsite1,ibitsite2,List::c1_org,MP::myrank)
         for (j = 1; j <= i_max; j++) {
-          tmp_sgn = mltply::Hubbard::X_CisAjt(List::c1_org[j], 
+          tmp_sgn = mltply::Hubbard::C::X_CisAjt(List::c1_org[j], 
             ibitsite1, ibitsite2, Asum, Adiff, &tmp_off);
           dmv = tmp_trans * (std::complex<double>)tmp_sgn;
           zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[tmp_off], &one);
@@ -221,22 +221,22 @@ shared(tmp_v0, tmp_v1,one,dmv,nstate,i_max, tmp_trans)
           }
         }
         else {
-          mltply::Hubbard::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+          mltply::Hubbard::C::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
             -tmp_trans, nstate, tmp_v0, tmp_v1);
         }
       }
       else if (org_isite2 > Def::Nsite || org_isite1 > Def::Nsite) {
         if (org_isite1 < org_isite2) {
-          mltply::Hubbard::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+          mltply::Hubbard::C::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
             -tmp_trans, nstate, tmp_v0, tmp_v1);
         }
         else {
-          mltply::Hubbard::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1,
+          mltply::Hubbard::C::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1,
             -conj(tmp_trans), nstate, tmp_v0, tmp_v1);
         }
       }
       else {
-        mltply::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
+        mltply::Hubbard::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
         if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {
           is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
@@ -261,7 +261,7 @@ shared(List::c1,nstate,tmp_v0,tmp_v1,one,i_max,is,tmp_trans)
           }
         }
         else {
-          mltply::Hubbard::general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
+          mltply::Hubbard::C::general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
         }
       }
     }

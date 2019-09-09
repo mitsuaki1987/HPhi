@@ -832,12 +832,12 @@ int Read_sz
     break;
   }
   if(childfopenMPI(sdt,"r", &fp)!=0){
-    exitMPI(-1);
+    wrapperMPI::Exit(-1);
   }  
 
   if(fp == NULL){
     if(childfopenMPI("Err_sz.dat","a",&fp_err)!=0){
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
     fprintf(fp_err, "%s", "No file. Please set READ=0.\n");
     fprintf(stderr, "%s", "No file. Please set READ=0.\n");
@@ -845,7 +845,7 @@ int Read_sz
     fprintf(stderr, " %s does not exist. \n", sdt);
     fclose(fp_err);
   }else{
-    while(NULL != fgetsMPI(buf,sizeof(buf),fp)){  
+    while(NULL != wrapperMPI::Fgets(buf,sizeof(buf),fp)){  
       dam=atol(buf);  
       List::c1[icnt]=dam;
             
@@ -1001,7 +1001,7 @@ int sz
     case DC::Spin:
       if (Def::iFlgGeneralSpin == FALSE) {
         if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit) != 0) {
-          exitMPI(-1);
+          wrapperMPI::Exit(-1);
         }
         Large::irght = irght;
         Large::ilft = ilft;
@@ -1022,7 +1022,7 @@ int sz
 
     if (Def::READ == 1) {
       if (Read_sz(irght, ilft, ihfbit, &i_max) != 0) {
-        exitMPI(-1);
+        wrapperMPI::Exit(-1);
       }
     }
     else {
@@ -1553,7 +1553,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb, ilftdim,
 
         break;
       default:
-        exitMPI(-1);
+        wrapperMPI::Exit(-1);
       }
       i_max = icnt;
       //fprintf(MP::STDOUT, "Debug: Xicnt=%ld \n",icnt);
@@ -1574,11 +1574,11 @@ shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb, ilftdim,
       fprintf(stderr, "imax = %ld, Check.idim_max=%ld \n", i_max, Check::idim_max);
       strcpy(sdt_err, "Err_sz.dat");
       if (childfopenMPI(sdt_err, "a", &fp_err) != 0) {
-        exitMPI(-1);
+        wrapperMPI::Exit(-1);
       }
       fprintf(fp_err, "%s", "Caution!!  Error in sz !!!! idim_max is not correct \n");
       fclose(fp_err);
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
 
     free_li_2d_allocate(comb);

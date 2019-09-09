@@ -38,16 +38,16 @@ int inputHam(){
   }
 
   //skip: header
-  fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
+  wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
   //skip: read imax, imax, ihermite
-  fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
+  wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
   sscanf(ctmp, "%ld %ld %ld\n", &itmp, &itmp, &ihermite);
   if(itmp != imax){
     fprintf(MP::STDOUT, "Error: The dimension of input Hamiltonian is wrong: input=%ld, idim=%ld.\n", itmp, imax);
     return -1;
   }
   for(i=1; i<= ihermite; i++){
-    fgetsMPI(ctmp2, sizeof(ctmp2) / sizeof(char), fp);
+    wrapperMPI::Fgets(ctmp2, sizeof(ctmp2) / sizeof(char), fp);
     sscanf(ctmp2, "%ld %ld %lf %lf\n",
            &ham_i, &ham_j, &dHam_re, &dHam_im);
     Wave::v0[ham_i][ham_j]=std::complex<double>(dHam_re, dHam_im);

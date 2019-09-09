@@ -91,10 +91,10 @@
 - Variable declared with @c const must not be included in @c firstprivate of OpenMP scoping.
   Use @c shared.
 - For MPI parallelization, use the following functions for I/O and abortation:
-  - fgetsMPI() instead of @c fgets
+  - wrapperMPI::Fgets() instead of @c fgets
   - @c fprintf(::MP::STDOUT,... instead of @c printf(...
-  - fopenMPI() instead of @c fopen
-  - exitMPI() instead of @c exit
+  - wrapperMPI::Fopen() instead of @c fopen
+  - wrapperMPI::Exit() instead of @c exit
 - When you add new features into HPhi, please run <tt>make test</tt>,
   and check whether other features still work fine.
   Also, try <tt>make test MPIRUN="mpiexec -np 4"</tt> to check MPI feature.
@@ -193,7 +193,7 @@ int main(int argc, char* argv[]){
     MP::STDOUT = stdout;
     splash();
   }
-  else InitializeMPI(argc, argv);
+  else wrapperMPI::Initialize(argc, argv);
 
   //Timer
   InitTimer();
@@ -205,7 +205,7 @@ int main(int argc, char* argv[]){
     if (stat("./output/", &tmpst) != 0) {
       if (mkdir("./output/", 0777) != 0) {
         fprintf(MP::STDOUT, "%s", "Error: Fail to make output folder in current directory. \n");
-        exitMPI(-1);
+        wrapperMPI::Exit(-1);
       }
     }
   }/*if (MP::myrank == 0)*/
@@ -224,13 +224,13 @@ int main(int argc, char* argv[]){
   xsetmem::HEAD();
   if(ReadDefFileNInt(cFileListName)!=0){
     fprintf(MP::STDOUT, "%s", "Error: Definition files(*.def) are incomplete.\n");
-    exitMPI(-1);
+    wrapperMPI::Exit(-1);
   }
 
   if (Def::nvec < Def::k_exct){
     fprintf(MP::STDOUT, "%s", "Error: nvec should be smaller than exct are incorrect.\n");
     fprintf(MP::STDOUT, "Error: nvec = %d, exct=%d.\n", Def::nvec, Def::k_exct);
-    exitMPI(-1);
+    wrapperMPI::Exit(-1);
   }
   fprintf(MP::STDOUT, "%s", "\n######  Definition files are correct.  ######\n\n");
   
@@ -243,7 +243,7 @@ int main(int argc, char* argv[]){
   if (ReadDefFileIdxPara() != 0) {
     fprintf(MP::STDOUT,
             "Error: Indices and Parameters of Definition files(*.def) are incomplete.\n");
-    exitMPI(-1);
+    wrapperMPI::Exit(-1);
   }
   TimeKeeper("%s_TimeKeeper.dat", "Read File finishes: %s", "a");
   fprintf(MP::STDOUT, "%s", "\n######  Indices and Parameters of Definition files(*.def) are complete.  ######\n\n");
@@ -253,14 +253,14 @@ int main(int argc, char* argv[]){
 
   /*---------------------------*/
   if (HPhiTrans() != 0) {
-    exitMPI(-1);
+    wrapperMPI::Exit(-1);
   }
 
   //Start Calculation
   if (Def::iFlgCalcSpec == DC::CALCSPEC_NOT || Def::iFlgCalcSpec == DC::CALCSPEC_SCRATCH) {
     
     if (check() == MPIFALSE) {
-     exitMPI(-1);
+     wrapperMPI::Exit(-1);
     }
     
     /*LARGE VECTORS ARE ALLOCATED*/
@@ -268,13 +268,13 @@ int main(int argc, char* argv[]){
     
     StartTimer(1000);
     if(sz(List::c1, List::c2_1, List::c2_2)!=0){
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
 
     StopTimer(1000);
     if(Def::WRITE==1){
       output_list();
-      exitMPI(-2);
+      wrapperMPI::Exit(-2);
     }
     StartTimer(2000);
     diagonalcalc();
@@ -283,7 +283,7 @@ int main(int argc, char* argv[]){
     switch (Def::iCalcType) {
     case DC::CG:
       if (CalcByLOBPCG::main() != TRUE) {
-          exitMPI(-3);
+          wrapperMPI::Exit(-3);
       }
       break;
 
@@ -291,10 +291,10 @@ int main(int argc, char* argv[]){
       StartTimer(5000);
       if (Def::iFlgScaLAPACK == 0 && MP::nproc != 1) {
         fprintf(MP::STDOUT, "Error: Full Diagonalization by LAPACK is only allowed for one process.\n");
-        FinalizeMPI();
+        wrapperMPI::Finalize();
       }
       if (CalcByFullDiag::main() != TRUE) {
-        FinalizeMPI();
+        wrapperMPI::Finalize();
       }
       StopTimer(5000);
       break;
@@ -303,20 +303,20 @@ int main(int argc, char* argv[]){
       StartTimer(3000);
       if (CalcByTPQ(Step::NumAve, Param::ExpecInterval) != TRUE) {
         StopTimer(3000);
-        exitMPI(-3);
+        wrapperMPI::Exit(-3);
       }
       StopTimer(3000);
       break;
 
     case DC::TimeEvolution:
       if (CalcByTEM(Param::ExpecInterval) != 0) {
-        exitMPI(-3);
+        wrapperMPI::Exit(-3);
       }
       break;
 
     default:
       StopTimer(0);
-      exitMPI(-3);
+      wrapperMPI::Exit(-3);
     }
   }
 
@@ -328,6 +328,6 @@ int main(int argc, char* argv[]){
   
   StopTimer(0);
   OutputTimer();
-  FinalizeMPI();
+  wrapperMPI::Finalize();
   return 0;
 }

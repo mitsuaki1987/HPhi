@@ -18,32 +18,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /**@file
 @brief Global variables related to MPI and OpenMP
 */
-#ifndef HPHI_WRAPPER_H
-#define HPHI_WRAPPER_H
+#include <cstdio>
 #include <complex>
 
-void InitializeMPI(int argc, char *argv[]);
-void FinalizeMPI();
-void exitMPI(int errorcode);
-FILE* fopenMPI(const char* FileName, const char* mode);
-char* fgetsMPI(char* InputString, int maxcount,FILE* fp);
-void BarrierMPI();
-long int MaxMPI_li(long int idim);
-double MaxMPI_d(double dvalue);
-std::complex<double> SumMPI_dc(std::complex<double> norm);
-double SumMPI_d(double norm);
-void SumMPI_dv(int nnorm, double *norm);
-void SumMPI_cv(int nnorm, std::complex<double> *norm);
-long int SumMPI_li(long int idim);
-int SumMPI_i(int idim);
-long int BcastMPI_li(int root, long int idim);
-double NormMPI_dc(long int idim, std::complex<double> *_v1);
-void NormMPI_dv(long int ndim, int nstate, std::complex<double> **_v1, double *dnorm);
-std::complex<double> VecProdMPI(long int ndim, std::complex<double> *v1, std::complex<double> *v2);
-void MultiVecProdMPI(long int ndim, int nstate, std::complex<double> **v1, std::complex<double> **v2, std::complex<double> *prod);
-void SendRecv_cv(int origin, long int nMsgS, long int nMsgR,
-  std::complex<double> *vecs, std::complex<double> *vecr);
-void SendRecv_iv(int origin, long int nMsgS, long int nMsgR,
-  long int *vecs, long int *vecr);
-long int SendRecv_i(int origin, long int isend);
-#endif
+namespace wrapperMPI {
+  void Initialize(int argc, char* argv[]);
+  void Finalize();
+  void Exit(int errorcode);
+  FILE* Fopen(const char* FileName, const char* mode);
+  char* Fgets(char* InputString, int maxcount, FILE* fp);
+  void Barrier();
+  long int Max_li(long int idim);
+  double Max_d(double dvalue);
+  std::complex<double> Sum_dc(std::complex<double> norm);
+  double Sum_d(double norm);
+  void Sum_dv(int nnorm, double* norm);
+  void Sum_cv(int nnorm, std::complex<double>* norm);
+  long int Sum_li(long int idim);
+  int Sum_i(int idim);
+  long int Bcast_li(int root, long int idim);
+  double Norm_dc(long int idim, std::complex<double>* _v1);
+  void Norm_dv(long int ndim, int nstate, std::complex<double>** _v1, double* dnorm);
+  std::complex<double> VecProd(long int ndim, std::complex<double>* v1, std::complex<double>* v2);
+  void MultiVecProd(long int ndim, int nstate, std::complex<double>** v1, std::complex<double>** v2, std::complex<double>* prod);
+  void SendRecv_cv(int origin, long int nMsgS, long int nMsgR,
+    std::complex<double>* vecs, std::complex<double>* vecr);
+  void SendRecv_iv(int origin, long int nMsgS, long int nMsgR,
+    long int* vecs, long int* vecr);
+  long int SendRecv_i(int origin, long int isend);
+}

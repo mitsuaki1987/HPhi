@@ -249,9 +249,9 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
 
   //fprintf(MP::STDOUT, "  MAX DIMENSION idim_max=%ld \n",Check::idim_max);
   //fprintf(MP::STDOUT, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",Check::max_mem);
-  long int li_dim_max=MaxMPI_li(Check::idim_max);
+  long int li_dim_max=wrapperMPI::Max_li(Check::idim_max);
   fprintf(MP::STDOUT, "  MAX DIMENSION idim_max=%ld \n",li_dim_max);
-  double dmax_mem=MaxMPI_d(Check::max_mem);
+  double dmax_mem=wrapperMPI::Max_d(Check::max_mem);
   fprintf(MP::STDOUT, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",dmax_mem);
   if(childfopenMPI("CHECK_Memory.dat","w", &fp)!=0){
     free_li_2d_allocate(comb);

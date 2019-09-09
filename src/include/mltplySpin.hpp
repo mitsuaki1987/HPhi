@@ -19,40 +19,43 @@
 
 namespace mltply {
   namespace Spin{
-    int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-    namespace Half {
+    namespace C{
       int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-      void general_int(int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1);
-      void exchange(
-        int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1);
+      namespace Half {
+        int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        void general_int(int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1);
+        void exchange(
+          int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1);
+      }
+      namespace General {
+        int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      }
     }
-    namespace General {
+    namespace GC {
       int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-    }
-  }
-  namespace SpinGC {
-    int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-    namespace Half {
-      int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-      void general_int(
-        int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1);
+      namespace Half {
+        int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        void general_int(
+          int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1);
 
-      void exchange(
-        int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1);
+        void exchange(
+          int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1);
 
-      void pairlift(int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1);
+        void pairlift(int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1);
+      }
+      namespace General {
+        int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      }
     }
-    namespace General {
+    namespace GCBoost {
       int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
     }
-  }
-  namespace SpinGCBoost {
-    int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+
   }
 }
 #endif

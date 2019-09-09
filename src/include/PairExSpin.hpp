@@ -18,20 +18,22 @@
 namespace GetExcitedState {
   namespace Pair {
     namespace Spin {
-      int main(int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1, int iEx);
-      int Half(int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1, int iEx);
-      int General(int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1, int iEx);
-    }
-    namespace SpinGC {
-      int main(int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1, int iEx);
-      int Half(int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1, int iEx);
-      int General(int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1, int iEx);
+      namespace C {
+        int main(int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1, int iEx);
+        int Half(int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1, int iEx);
+        int General(int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1, int iEx);
+      }
+      namespace GC {
+        int main(int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1, int iEx);
+        int Half(int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1, int iEx);
+        int General(int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1, int iEx);
+      }
     }
   }
 }

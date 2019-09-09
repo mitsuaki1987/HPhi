@@ -71,18 +71,18 @@ int SetOmega()
         fprintf(MP::STDOUT, "Error: xx_Lanczos_Step.dat does not exist.\n");
         return FALSE;
       }
-      fgetsMPI(ctmp, 256, fp); //1st line is skipped
-      fgetsMPI(ctmp, 256, fp); //2nd line is skipped
-      while (fgetsMPI(ctmp, 256, fp) != NULL) {
+      wrapperMPI::Fgets(ctmp, 256, fp); //1st line is skipped
+      wrapperMPI::Fgets(ctmp, 256, fp); //2nd line is skipped
+      while (wrapperMPI::Fgets(ctmp, 256, fp) != NULL) {
         iline_count++;
       }
       iline_countMax = iline_count;
       iline_count = 2;
       rewind(fp);
-      fgetsMPI(ctmp, 256, fp); //1st line is skipped
-      fgetsMPI(ctmp, 256, fp); //2nd line is skipped
+      wrapperMPI::Fgets(ctmp, 256, fp); //1st line is skipped
+      wrapperMPI::Fgets(ctmp, 256, fp); //2nd line is skipped
 
-      while (fgetsMPI(ctmp, 256, fp) != NULL) {
+      while (wrapperMPI::Fgets(ctmp, 256, fp) != NULL) {
         sscanf(ctmp, "stp=%d %lf %lf %lf %lf %lf\n",
           &istp,
           &E1,
@@ -107,8 +107,8 @@ int SetOmega()
         fprintf(MP::STDOUT, "Error: xx_energy.dat does not exist.\n");
         return FALSE;
       }/*if (fp == NULL)*/
-      fgetsMPI(ctmp, 256, fp); //1st line is skipped
-      fgetsMPI(ctmp, 256, fp); //1st line is skipped
+      wrapperMPI::Fgets(ctmp, 256, fp); //1st line is skipped
+      wrapperMPI::Fgets(ctmp, 256, fp); //1st line is skipped
       sscanf(ctmp, "  Energy  %lf \n", &E1);
       Emax = Step::LargeValue;
     }/**/
@@ -138,7 +138,7 @@ int MakeExcitedList(
   *iFlgListModifed = FALSE;
   //To Get Original space
   if (check() == MPIFALSE) {
-    FinalizeMPI();
+    wrapperMPI::Finalize();
     return -1;
   }
 
@@ -185,7 +185,7 @@ int MakeExcitedList(
       List::c1_org = li_1d_allocate(Check::idim_max + 1);
 #ifdef __MPI
       long int MAXidim_max;
-      MAXidim_max = MaxMPI_li(Check::idim_max);
+      MAXidim_max = wrapperMPI::Max_li(Check::idim_max);
       List::c1buf_org = li_1d_allocate(MAXidim_max + 1);
 #endif // MPI
       List::c2_1_org = li_1d_allocate(Large::SizeOflist_2_1);
@@ -301,7 +301,7 @@ int MakeExcitedList(
     Def::Nsite = Def::NsiteMPI;
 
     if (check() == MPIFALSE) {
-      FinalizeMPI();
+      wrapperMPI::Finalize();
       return FALSE;
     }
   }
@@ -313,8 +313,8 @@ int MakeExcitedList(
   }
 #ifdef __MPI
   long int MAXidim_max, MAXidim_maxOrg;
-  MAXidim_max = MaxMPI_li(Check::idim_max);
-  MAXidim_maxOrg = MaxMPI_li(Check::idim_maxOrg);
+  MAXidim_max = wrapperMPI::Max_li(Check::idim_max);
+  MAXidim_maxOrg = wrapperMPI::Max_li(Check::idim_maxOrg);
   if (MAXidim_max < MAXidim_maxOrg) {
     free_cd_2d_allocate(Wave::v1buf);
     Wave::v1buf = cd_2d_allocate(MAXidim_maxOrg + 1, 1);
@@ -359,7 +359,7 @@ void OutputSpectrum(
 
   //output spectrum
   sprintf(sdt, "%s_DynamicalGreen.dat", Def::CDataFileHead);
-  if (childfopenMPI(sdt, "w", &fp) != 0) exitMPI(-1);
+  if (childfopenMPI(sdt, "w", &fp) != 0) wrapperMPI::Exit(-1);
 
   for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
     for (iomega = 0; iomega < Nomega; iomega++) {
@@ -468,7 +468,7 @@ void CalcSpectrum()
   //set omega
   if (SetOmega() != TRUE) {
     fprintf(stderr, "Error: Fail to set Omega.\n");
-    exitMPI(-1);
+    wrapperMPI::Exit(-1);
   }
   else {
     if (Def::iFlgSpecOmegaOrg == FALSE) {
@@ -495,7 +495,7 @@ void CalcSpectrum()
   if (Def::NNSingleExcitationOperator == 0) {
     if (Def::NNPairExcitationOperator == 0) {
       fprintf(stderr, "Error: Any excitation operators are not defined.\n");
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
     else {
       NdcSpectrum = Def::NNPairExcitationOperator - 1;
@@ -506,13 +506,13 @@ void CalcSpectrum()
   }
   else {
     fprintf(stderr, "Error: Both single and pair excitation operators exist.\n");
-    exitMPI(-1);
+    wrapperMPI::Exit(-1);
   }
   dcSpectrum = cd_2d_allocate(Nomega, NdcSpectrum);
 
   //Make New Lists
   if (MakeExcitedList(&iFlagListModified) == FALSE) {
-    exitMPI(-1);
+    wrapperMPI::Exit(-1);
   }
   Def::iFlagListModified = iFlagListModified;
 
@@ -534,7 +534,7 @@ void CalcSpectrum()
 
     if (fp == NULL) {
       fprintf(stderr, "Error: A file of Inputvector does not exist.\n");
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
 
     byte_size = fread(&i_stp, sizeof(i_stp), 1, fp);
@@ -543,7 +543,7 @@ void CalcSpectrum()
     if (i_max != Check::idim_maxOrg) {
       fprintf(stderr, "Error: MP::myrank=%d, i_max=%ld\n", MP::myrank, i_max);
       fprintf(stderr, "Error: A file of Input vector is incorrect.\n");
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
     byte_size = fread(&v1Org[0][0], sizeof(std::complex<double>), i_max + 1, fp);
     fclose(fp);

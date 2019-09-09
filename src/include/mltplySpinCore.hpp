@@ -19,47 +19,48 @@
 
 namespace mltply {
   namespace Spin {
-    namespace Half {
-      void exchange_element(long int j, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int* tmp_off);
-      int X_exchange_element(long int j, long int isA_up, long int isB_up, long int sigmaA, long int sigmaB, long int* tmp_off);
-      void CisAisCisAis_element(long int j, long int isA_up, long int isB_up, long int org_sigma2, long int org_sigma4, std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-      int X_CisAit(long int j, long int is1_spin, long int sigma2, long int* tmp_off);
-      int X_CisAis(long int j, long int is1_spin, long int sigma1);
+    int general_int_GetInfo(
+      long int isite1, long int isite2, long int sigma1, long int sigma2, long int sigma3,
+      long int sigma4, std::complex<double> tmp_V);
+    int exchange_GetInfo(int iExchange);
+    int pairlift_GetInfo(int iPairLift);
+    namespace C {
+      namespace Half {
+        void exchange_element(long int j, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int* tmp_off);
+        int X_exchange_element(long int j, long int isA_up, long int isB_up, long int sigmaA, long int sigmaB, long int* tmp_off);
+        void CisAisCisAis_element(long int j, long int isA_up, long int isB_up, long int org_sigma2, long int org_sigma4, std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        int X_CisAit(long int j, long int is1_spin, long int sigma2, long int* tmp_off);
+        int X_CisAis(long int j, long int is1_spin, long int sigma1);
+      }
     }
-  }
-  namespace SpinGC {
-    namespace Half {
-      void pairlift_element(long int j, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int* tmp_off);
-      void exchange_element(long int j, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int* tmp_off);
-      void CisAisCisAis_element(
-        long int j, long int isA_up, long int isB_up, long int org_sigma2, long int org_sigma4,
-        std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1);
-      void CisAisCitAiu_element(
-        long int j, long int org_sigma2, long int org_sigma4, long int isA_up, long int isB_up,
-        std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1, long int* tmp_off);
-      void CisAitCiuAiu_element(
-        long int j, long int org_sigma2, long int org_sigma4, long int isA_up, long int isB_up,
-        std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1, long int* tmp_off);
-      void CisAitCiuAiv_element(
-        long int j, long int org_sigma2, long int org_sigma4, long int isA_up, long int isB_up,
-        std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1, long int* tmp_off_2);
-      int X_CisAit(long int j, long int is1_spin, long int sigma2, long int* tmp_off);
-      int X_CisAis(long int j, long int is1_spin, long int sigma1);
-    }
-    namespace General {
+    namespace GC {
+      namespace Half {
+        void pairlift_element(long int j, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int* tmp_off);
+        void exchange_element(long int j, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int* tmp_off);
+        void CisAisCisAis_element(
+          long int j, long int isA_up, long int isB_up, long int org_sigma2, long int org_sigma4,
+          std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1);
+        void CisAisCitAiu_element(
+          long int j, long int org_sigma2, long int org_sigma4, long int isA_up, long int isB_up,
+          std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1, long int* tmp_off);
+        void CisAitCiuAiu_element(
+          long int j, long int org_sigma2, long int org_sigma4, long int isA_up, long int isB_up,
+          std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1, long int* tmp_off);
+        void CisAitCiuAiv_element(
+          long int j, long int org_sigma2, long int org_sigma4, long int isA_up, long int isB_up,
+          std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1, long int* tmp_off_2);
+        int X_CisAit(long int j, long int is1_spin, long int sigma2, long int* tmp_off);
+        int X_CisAis(long int j, long int is1_spin, long int sigma1);
+      }
+      namespace General {
 
+      }
     }
   }
 }
-
-int child_general_int_spin_GetInfo( 
-  long int isite1, long int isite2, long int sigma1, long int sigma2, long int sigma3, 
-  long int sigma4, std::complex<double> tmp_V);
-int child_exchange_spin_GetInfo(int iExchange);
-int child_pairlift_spin_GetInfo(int iPairLift);
 
 #endif

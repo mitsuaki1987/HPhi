@@ -28,13 +28,13 @@
   When both site1 and site2 are in the inter process region.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void mltply::Spin::Half::general_int_MPIdouble(
+void mltply::Spin::C::Half::general_int_MPIdouble(
   long int i_int,//!<[in] Interaction ID
   int nstate,
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
-  mltply::Spin::Half::X_general_int_MPIdouble(
+  mltply::Spin::C::Half::X_general_int_MPIdouble(
     (int)Def::InterAll_OffDiagonal[i_int][0], (int)Def::InterAll_OffDiagonal[i_int][1],
     (int)Def::InterAll_OffDiagonal[i_int][3], (int)Def::InterAll_OffDiagonal[i_int][4],
     (int)Def::InterAll_OffDiagonal[i_int][5], (int)Def::InterAll_OffDiagonal[i_int][7],
@@ -45,7 +45,7 @@ void mltply::Spin::Half::general_int_MPIdouble(
  When both site1 and site2 are in the inter process region.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void mltply::Spin::Half::X_general_int_MPIdouble(
+void mltply::Spin::C::Half::X_general_int_MPIdouble(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   int org_ispin2,//!<[in] Spin 2
@@ -80,9 +80,9 @@ void mltply::Spin::Half::X_general_int_MPIdouble(
   }
   else return;
 
-  idim_max_buf = SendRecv_i(origin, Check::idim_max);
-  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
-  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
+  wrapperMPI::SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
 #pragma omp parallel for default(none) private(j, ioff) \
 shared(idim_max_buf,Jint,Large::irght, Large::ilft, Large::ihfbit, \
@@ -98,7 +98,7 @@ List::c2_1,List::c2_2,List::c1buf,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
   When both site1 and site2 are in the inter process region.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void mltply::Spin::Half::X_general_int_TotalS_MPIdouble(
+void mltply::Spin::C::Half::X_general_int_TotalS_MPIdouble(
   int org_isite1,//!<[in] site 1
   int org_isite3,//!<[in] site 3
   int nstate, 
@@ -119,9 +119,9 @@ void mltply::Spin::Half::X_general_int_TotalS_MPIdouble(
   ibit_tmp = (num1_up) ^ (num2_up);
   if (ibit_tmp == 0) return;
 
-  idim_max_buf = SendRecv_i(origin, Check::idim_max);
-  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
-  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
+  wrapperMPI::SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
 #pragma omp parallel for default(none)  private(j, dmv, ioff) \
 shared(idim_max_buf, Large::irght, Large::ilft, Large::ihfbit, \
@@ -138,13 +138,13 @@ List::c2_1, List::c2_2, List::c1buf, Wave::v1buf, tmp_v1, tmp_v0,nstate,one)
   When only site2 is in the inter process region.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void mltply::Spin::Half::general_int_MPIsingle(
+void mltply::Spin::C::Half::general_int_MPIsingle(
   long int i_int,//!<[in] Interaction ID
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
 
-  mltply::Spin::Half::X_general_int_MPIsingle(
+  mltply::Spin::C::Half::X_general_int_MPIsingle(
     (int)Def::InterAll_OffDiagonal[i_int][0], (int)Def::InterAll_OffDiagonal[i_int][1], 
     (int)Def::InterAll_OffDiagonal[i_int][3], (int)Def::InterAll_OffDiagonal[i_int][4],
     (int)Def::InterAll_OffDiagonal[i_int][5], (int)Def::InterAll_OffDiagonal[i_int][7],
@@ -154,7 +154,7 @@ void mltply::Spin::Half::general_int_MPIsingle(
 @brief General interaction term of canonical spin system.
 site 3 is in the inter process region
 */
-void mltply::Spin::Half::X_general_int_MPIsingle(
+void mltply::Spin::C::Half::X_general_int_MPIsingle(
   int org_isite1,//!<[in] Site 1
   int org_ispin1,//!<[in] Spin 1
   int org_ispin2,//!<[in] Spin 2
@@ -190,9 +190,9 @@ void mltply::Spin::Half::X_general_int_MPIsingle(
   }
   else return;
 
-  idim_max_buf = SendRecv_i(origin, Check::idim_max);
-  SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
-  SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
+  wrapperMPI::SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
   /*
   Index in the intra PE
   */
@@ -219,7 +219,7 @@ List::c2_1, List::c2_2, List::c1buf, Wave::v1buf, tmp_v1, tmp_v0,nstate,one)
  When both site1 and site2 are in the inter process region.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void mltply::SpinGC::Half::general_int_MPIdouble(
+void mltply::Spin::GC::Half::general_int_MPIdouble(
   long int i_int,//!<[in] Interaction ID
   int nstate,
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
@@ -227,14 +227,14 @@ void mltply::SpinGC::Half::general_int_MPIdouble(
 ){
   if (Def::InterAll_OffDiagonal[i_int][1] == Def::InterAll_OffDiagonal[i_int][3] &&
       Def::InterAll_OffDiagonal[i_int][5] != Def::InterAll_OffDiagonal[i_int][7]) {
-    mltply::SpinGC::Half::CisAisCjuAjv_MPIdouble(i_int, nstate, tmp_v0, tmp_v1);
+    mltply::Spin::GC::Half::CisAisCjuAjv_MPIdouble(i_int, nstate, tmp_v0, tmp_v1);
   }
   else if (Def::InterAll_OffDiagonal[i_int][1] != Def::InterAll_OffDiagonal[i_int][3] &&
            Def::InterAll_OffDiagonal[i_int][5] == Def::InterAll_OffDiagonal[i_int][7]) {
-    mltply::SpinGC::Half::CisAitCjuAju_MPIdouble(i_int, nstate, tmp_v0, tmp_v1);
+    mltply::Spin::GC::Half::CisAitCjuAju_MPIdouble(i_int, nstate, tmp_v0, tmp_v1);
   }
   else {
-    mltply::SpinGC::Half::CisAitCiuAiv_MPIdouble(i_int, nstate, tmp_v0, tmp_v1);
+    mltply::Spin::GC::Half::CisAitCiuAiv_MPIdouble(i_int, nstate, tmp_v0, tmp_v1);
   }
 }/*void GC_child_general_int_spin_MPIdouble*/
 /**
@@ -242,7 +242,7 @@ void mltply::SpinGC::Half::general_int_MPIdouble(
  When both site1 and site2 are in the inter process region.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void mltply::SpinGC::Half::general_int_MPIsingle(
+void mltply::Spin::GC::Half::general_int_MPIsingle(
   long int i_int,//!<[in] Interaction ID
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
@@ -250,14 +250,14 @@ void mltply::SpinGC::Half::general_int_MPIsingle(
 ){
   if (Def::InterAll_OffDiagonal[i_int][1] == Def::InterAll_OffDiagonal[i_int][3] &&
       Def::InterAll_OffDiagonal[i_int][5] != Def::InterAll_OffDiagonal[i_int][7]) {
-    mltply::SpinGC::Half::X_CisAisCjuAjv_MPIsingle(i_int, nstate, tmp_v0, tmp_v1);
+    mltply::Spin::GC::Half::X_CisAisCjuAjv_MPIsingle(i_int, nstate, tmp_v0, tmp_v1);
   }
   else if (Def::InterAll_OffDiagonal[i_int][1] != Def::InterAll_OffDiagonal[i_int][3] &&
            Def::InterAll_OffDiagonal[i_int][5] == Def::InterAll_OffDiagonal[i_int][7]) {
-    mltply::SpinGC::Half::X_CisAitCjuAju_MPIsingle(i_int, nstate, tmp_v0, tmp_v1);
+    mltply::Spin::GC::Half::X_CisAitCjuAju_MPIsingle(i_int, nstate, tmp_v0, tmp_v1);
   }
   else {
-    mltply::SpinGC::Half::X_CisAitCiuAiv_MPIsingle(i_int, nstate, tmp_v0, tmp_v1);
+    mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(i_int, nstate, tmp_v0, tmp_v1);
   }
 }/*void GC_child_general_int_spin_MPIsingle*/
 /**
@@ -265,27 +265,27 @@ void mltply::SpinGC::Half::general_int_MPIsingle(
  When both site1 and site2 are in the inter process region.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void mltply::SpinGC::General::general_int_MPIdouble(
+void mltply::Spin::GC::General::general_int_MPIdouble(
   long int i_int,//!<[in] Interaction ID
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   if (Def::InterAll_OffDiagonal[i_int][1] == Def::InterAll_OffDiagonal[i_int][3] &&
       Def::InterAll_OffDiagonal[i_int][5] != Def::InterAll_OffDiagonal[i_int][7]) {
-    mltply::SpinGC::General::X_CisAisCjuAjv_MPIdouble(
+    mltply::Spin::GC::General::X_CisAisCjuAjv_MPIdouble(
       Def::InterAll_OffDiagonal[i_int][0], Def::InterAll_OffDiagonal[i_int][1],
       Def::InterAll_OffDiagonal[i_int][4], Def::InterAll_OffDiagonal[i_int][5],
       Def::InterAll_OffDiagonal[i_int][7], Def::ParaInterAll_OffDiagonal[i_int], nstate, tmp_v0, tmp_v1);
   }
   else if (Def::InterAll_OffDiagonal[i_int][1] != Def::InterAll_OffDiagonal[i_int][3] &&
            Def::InterAll_OffDiagonal[i_int][5] == Def::InterAll_OffDiagonal[i_int][7]) {
-    mltply::SpinGC::General::X_CisAitCjuAju_MPIdouble(
+    mltply::Spin::GC::General::X_CisAitCjuAju_MPIdouble(
       Def::InterAll_OffDiagonal[i_int][0], Def::InterAll_OffDiagonal[i_int][1],
       Def::InterAll_OffDiagonal[i_int][3], Def::InterAll_OffDiagonal[i_int][4],
       Def::InterAll_OffDiagonal[i_int][5], Def::ParaInterAll_OffDiagonal[i_int], nstate, tmp_v0, tmp_v1);
   }
   else {
-    mltply::SpinGC::General::X_CisAitCjuAjv_MPIdouble(
+    mltply::Spin::GC::General::X_CisAitCjuAjv_MPIdouble(
       Def::InterAll_OffDiagonal[i_int][0], Def::InterAll_OffDiagonal[i_int][1], 
       Def::InterAll_OffDiagonal[i_int][3], Def::InterAll_OffDiagonal[i_int][4],
       Def::InterAll_OffDiagonal[i_int][5], Def::InterAll_OffDiagonal[i_int][7],
@@ -297,7 +297,7 @@ void mltply::SpinGC::General::general_int_MPIdouble(
  When both site1 and site2 are in the inter process region.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void mltply::SpinGC::General::general_int_MPIsingle(
+void mltply::Spin::GC::General::general_int_MPIsingle(
   long int i_int,//!<[in] Interaction ID
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
@@ -306,20 +306,20 @@ void mltply::SpinGC::General::general_int_MPIsingle(
 
   if (Def::InterAll_OffDiagonal[i_int][1] == Def::InterAll_OffDiagonal[i_int][3] &&
       Def::InterAll_OffDiagonal[i_int][5] != Def::InterAll_OffDiagonal[i_int][7]) {
-    mltply::SpinGC::General::X_CisAisCjuAjv_MPIsingle(
+    mltply::Spin::GC::General::X_CisAisCjuAjv_MPIsingle(
       Def::InterAll_OffDiagonal[i_int][0], Def::InterAll_OffDiagonal[i_int][1],
       Def::InterAll_OffDiagonal[i_int][4], Def::InterAll_OffDiagonal[i_int][5],
       Def::InterAll_OffDiagonal[i_int][7], Def::ParaInterAll_OffDiagonal[i_int], nstate, tmp_v0, tmp_v1);
   }
   else if (Def::InterAll_OffDiagonal[i_int][1] != Def::InterAll_OffDiagonal[i_int][3] &&
            Def::InterAll_OffDiagonal[i_int][5] == Def::InterAll_OffDiagonal[i_int][7]) {
-    mltply::SpinGC::General::X_CisAitCjuAju_MPIsingle(
+    mltply::Spin::GC::General::X_CisAitCjuAju_MPIsingle(
       Def::InterAll_OffDiagonal[i_int][0], Def::InterAll_OffDiagonal[i_int][1], 
       Def::InterAll_OffDiagonal[i_int][3], Def::InterAll_OffDiagonal[i_int][4],
       Def::InterAll_OffDiagonal[i_int][5], Def::ParaInterAll_OffDiagonal[i_int], nstate, tmp_v0, tmp_v1);
     }
   else {
-    mltply::SpinGC::General::X_CisAitCjuAjv_MPIsingle(
+    mltply::Spin::GC::General::X_CisAitCjuAjv_MPIsingle(
       Def::InterAll_OffDiagonal[i_int][0], Def::InterAll_OffDiagonal[i_int][1], 
       Def::InterAll_OffDiagonal[i_int][3], Def::InterAll_OffDiagonal[i_int][4],
       Def::InterAll_OffDiagonal[i_int][5], Def::InterAll_OffDiagonal[i_int][7],
@@ -332,12 +332,12 @@ void mltply::SpinGC::General::general_int_MPIsingle(
  When both site1 and site2 are in the inter process region.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void mltply::Spin::General::general_int_MPIdouble(
+void mltply::Spin::C::General::general_int_MPIdouble(
   long int i_int,//!<[in] Interaction ID
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
-    mltply::Spin::General::X_CisAitCjuAjv_MPIdouble(
+    mltply::Spin::C::General::X_CisAitCjuAjv_MPIdouble(
       Def::InterAll_OffDiagonal[i_int][0], Def::InterAll_OffDiagonal[i_int][1], 
       Def::InterAll_OffDiagonal[i_int][3], Def::InterAll_OffDiagonal[i_int][4],
       Def::InterAll_OffDiagonal[i_int][5], Def::InterAll_OffDiagonal[i_int][7],
@@ -349,14 +349,14 @@ void mltply::Spin::General::general_int_MPIdouble(
  When both site1 and site2 are in the inter process region.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void mltply::Spin::General::general_int_MPIsingle(
+void mltply::Spin::C::General::general_int_MPIsingle(
   long int i_int,//!<[in] Interaction ID
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
 
-  mltply::Spin::General::X_CisAitCjuAjv_MPIsingle(
+  mltply::Spin::C::General::X_CisAitCjuAjv_MPIsingle(
     Def::InterAll_OffDiagonal[i_int][0], Def::InterAll_OffDiagonal[i_int][1],
     Def::InterAll_OffDiagonal[i_int][3], Def::InterAll_OffDiagonal[i_int][4],
     Def::InterAll_OffDiagonal[i_int][5], Def::InterAll_OffDiagonal[i_int][7],

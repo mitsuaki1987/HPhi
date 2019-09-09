@@ -83,21 +83,21 @@ void phys( //!<[inout]
 
   if (expec::energy_flct::main(neig, Wave::v0, Wave::v1) != 0) {
     fprintf(stderr, "Error: calc expec_energy.\n");
-    exitMPI(-1);
+    wrapperMPI::Exit(-1);
   }
   if (expec::cisajs::main(neig, Wave::v0, Wave::v1) != 0) {
     fprintf(stderr, "Error: calc OneBodyG.\n");
-    exitMPI(-1);
+    wrapperMPI::Exit(-1);
   }
   if (expec::cisajscktalt::main(neig, Wave::v0, Wave::v1) != 0) {
     fprintf(stderr, "Error: calc TwoBodyG.\n");
-    exitMPI(-1);
+    wrapperMPI::Exit(-1);
   }
 
   if (Def::iCalcType == DC::FullDiag) {
     if (expec_totalspin(neig, Wave::v1) != 0) {
       fprintf(stderr, "Error: calc TotalSpin.\n");
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
   }
 

@@ -102,7 +102,7 @@ shared(Wave::v0,Wave::v1,MP::nthreads,MP::myrank,rand_i,MP::STDOUT,i_max,Def::in
 shared(Wave::v1, i_max, rand_i) reduction(+:dnorm)
       for (i = 1; i <= i_max; i++)
         dnorm += real(conj(Wave::v1[i][rand_i])*Wave::v1[i][rand_i]);
-    dnorm = SumMPI_d(dnorm);
+    dnorm = wrapperMPI::Sum_d(dnorm);
     dnorm = sqrt(dnorm);
     Step::global_1st_norm[rand_i] = dnorm;
 #pragma omp parallel for default(none) private(i) shared(Wave::v1,rand_i,i_max, dnorm)
@@ -146,7 +146,7 @@ shared(Wave::v0, Wave::v1,rand_i, i_max, Ns, Step::LargeValue, MP::myrank)
 #pragma omp parallel for default(none) private(i) shared(Wave::v0,rand_i,i_max) reduction(+:dnorm)
     for (i = 1; i <= i_max; i++)
       dnorm += real(conj(Wave::v0[i][rand_i])*Wave::v0[i][rand_i]);
-    dnorm = SumMPI_d(dnorm);
+    dnorm = wrapperMPI::Sum_d(dnorm);
     dnorm = sqrt(dnorm);
     Step::global_norm[rand_i] = dnorm;
 #pragma omp parallel for default(none) private(i) shared(Wave::v0,rand_i,i_max, dnorm)

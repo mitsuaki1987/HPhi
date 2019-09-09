@@ -18,12 +18,26 @@
 namespace expec {
   namespace cisajscktalt {
     int main(int nstate, std::complex<double>** Xvec, std::complex<double>** vec);
-    void HubbardGC(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
-    void Hubbard(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
-    void SpinHalf(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
-    void SpinGeneral(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
-    void SpinGCHalf(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
-    void SpinGCGeneral(int nstate, std::complex<double>** Xvec, std::complex<double>** vec, std::complex<double>** prod);
+    namespace Hubbard {
+      void GC(int nstate, std::complex<double>** Xvec, 
+        std::complex<double>** vec, std::complex<double>** prod);
+      void C(int nstate, std::complex<double>** Xvec, 
+        std::complex<double>** vec, std::complex<double>** prod);
+    }
+    namespace Spin {
+      namespace C{
+        void Half(int nstate, std::complex<double>** Xvec,
+          std::complex<double>** vec, std::complex<double>** prod);
+        void General(int nstate, std::complex<double>** Xvec,
+          std::complex<double>** vec, std::complex<double>** prod);
+      }
+      namespace GC {
+        void Half(int nstate, std::complex<double>** Xvec, 
+          std::complex<double>** vec, std::complex<double>** prod);
+        void General(int nstate, std::complex<double>** Xvec,
+          std::complex<double>** vec, std::complex<double>** prod);
+      }
+    }
   }
 }
 //TODO void expec_cisajscktaltdc_alldiag_spin(std::complex<double>* vec);

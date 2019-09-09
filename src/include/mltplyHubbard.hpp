@@ -16,19 +16,21 @@
 
 namespace mltply{
   namespace Hubbard {
-    int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-    void general_int(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-    void general_hopp(int nstate, std::complex<double>** tmp_v0, 
-      std::complex<double>** tmp_v1, std::complex<double> trans);
-    void exchange(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-    void pairhopp(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-  }
-  namespace HubbardGC {
-    int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-    void general_hopp(int nstate, std::complex<double>** tmp_v0,
-      std::complex<double>** tmp_v1, std::complex<double> trans);
-    void general_int(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-    void exchange(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-    void pairhopp(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+    namespace C{
+      int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void general_int(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void general_hopp(int nstate, std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1, std::complex<double> trans);
+      void exchange(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void pairhopp(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+    }
+    namespace GC {
+      int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void general_hopp(int nstate, std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1, std::complex<double> trans);
+      void general_int(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void exchange(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      void pairhopp(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+    }
   }
 }

@@ -41,13 +41,13 @@ Number of threads (::MP::nthreads), and pointer to the standard output
 (::MP::STDOUT) are specified here.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void InitializeMPI(int argc, char *argv[]){
+void wrapperMPI::Initialize(int argc, char *argv[]){
 #ifdef __MPI
   int ierr;
   ierr = MPI_Init(&argc, &argv);
   ierr = MPI_Comm_size(MPI_COMM_WORLD, &MP::nproc);
   ierr = MPI_Comm_rank(MPI_COMM_WORLD, &MP::myrank);
-  if(ierr != 0) exitMPI(ierr);
+  if(ierr != 0) wrapperMPI::Exit(ierr);
 #else
   MP::nproc = 1;
   MP::myrank = 0;
@@ -66,12 +66,12 @@ void InitializeMPI(int argc, char *argv[]){
   fprintf(MP::STDOUT, "\n\n#####  Parallelization Info.  #####\n\n");
   fprintf(MP::STDOUT, "  OpenMP threads : %d\n", MP::nthreads);
   fprintf(MP::STDOUT, "  MPI PEs : %d \n\n", MP::nproc);
-}/*void InitializeMPI(int argc, char *argv[])*/
+}/*void wrapperMPI::Initialize(int argc, char *argv[])*/
 /**
 @brief MPI Finitialization wrapper
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void FinalizeMPI(){
+void wrapperMPI::Finalize(){
 #ifdef __MPI
   int ierr;
   ierr = MPI_Finalize();
@@ -83,7 +83,7 @@ void FinalizeMPI(){
 @brief MPI Abortation wrapper
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void exitMPI(
+void wrapperMPI::Exit(
   int errorcode//!<[in] Error-code to be returned as that of this program
 )
 {
@@ -96,13 +96,13 @@ void exitMPI(
   if (ierr != 0) fprintf(stderr, "\n  MPI_Finalize() = %d\n\n", ierr);
 #endif
   exit(errorcode);
-}/*void exitMPI*/
+}/*void wrapperMPI::Exit*/
 /**
 @brief MPI file I/O (open) wrapper.
 Only the root node (::MP::myrank = 0) should be open/read/write (small) parameter files.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-FILE* fopenMPI(
+FILE* wrapperMPI::Fopen(
   const char* FileName,//!<[in] Input/output file
   const char* mode//!<[in] "w", "r", etc.
 ){
@@ -112,14 +112,14 @@ FILE* fopenMPI(
   else fp = fopen("/dev/null", "w");
 
   return fp;
-}/*FILE* fopenMPI*/
+}/*FILE* wrapperMPI::Fopen*/
 /**
 @brief MPI file I/O (get a line, fgets) wrapper.
 Only the root node (::MP::myrank = 0) reads and broadcast string.
 @return The same as that of fgets
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-char* fgetsMPI(
+char* wrapperMPI::Fgets(
   char* InputString,//!<[out] read line.
   int maxcount,//!<[in] Length of string
   FILE* fp//!<[in] file pointer
@@ -152,90 +152,90 @@ char* fgetsMPI(
   }
 
   return ctmp;
-}/*char* fgetsMPI*/
+}/*char* wrapperMPI::Fgets*/
 /**
 @brief MPI barrier wrapper.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void BarrierMPI(){
+void wrapperMPI::Barrier(){
 #ifdef __MPI
   MPI_Barrier(MPI_COMM_WORLD);
 #endif
-}/*void BarrierMPI()*/
+}/*void wrapperMPI::Barrier()*/
 /**
 @brief MPI wrapper function to obtain maximum unsigned
 long integer across processes.
 @return Maximum value across processes.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-long int MaxMPI_li(
+long int wrapperMPI::Max_li(
   long int idim//!<[in] Value to be maximized
 ){
 #ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &idim, 1,
     MPI_LONG, MPI_MAX, MPI_COMM_WORLD);
-  if(ierr != 0) exitMPI(-1);
+  if(ierr != 0) wrapperMPI::Exit(-1);
 #endif
   return(idim);
-}/*long int MaxMPI_li*/
+}/*long int wrapperMPI::Max_li*/
 /**
 @brief MPI wrapper function to obtain maximum Double
 across processes.
 @return Maximum value across processes.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-double MaxMPI_d(
+double wrapperMPI::Max_d(
   double dvalue//!<[in] Value to be maximized
 ){
 #ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &dvalue, 1,
     MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
-  if(ierr != 0) exitMPI(-1);
+  if(ierr != 0) wrapperMPI::Exit(-1);
 #endif
   return(dvalue);
-}/*double MaxMPI_d*/
+}/*double wrapperMPI::Max_d*/
 /**
 @brief MPI wrapper function to obtain sum of Double
 complex across processes.
 @return Sumed value across processes.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-std::complex<double> SumMPI_dc(
+std::complex<double> wrapperMPI::Sum_dc(
   std::complex<double> norm//!<[in] Value to be summed
 ){
 #ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &norm, 1,
     MPI_DOUBLE_COMPLEX, MPI_SUM, MPI_COMM_WORLD);
-  if(ierr != 0) exitMPI(-1);
+  if(ierr != 0) wrapperMPI::Exit(-1);
 #endif
   return(norm);
-}/*std::complex<double> SumMPI_dc*/
+}/*std::complex<double> wrapperMPI::Sum_dc*/
 /**
 @brief MPI wrapper function to obtain sum of Double
 across processes.
 @return Sumed value across processes.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-double SumMPI_d(
+double wrapperMPI::Sum_d(
   double norm//!<[in] Value to be summed
 ){
 #ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &norm, 1,
     MPI_DOUBLE_PRECISION, MPI_SUM, MPI_COMM_WORLD);
-  if(ierr != 0) exitMPI(-1);
+  if(ierr != 0) wrapperMPI::Exit(-1);
 #endif
   return(norm);
-}/*double SumMPI_d*/
+}/*double wrapperMPI::Sum_d*/
 /**
 @brief MPI wrapper function to obtain sum of Double array
 across processes.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void SumMPI_dv(
+void wrapperMPI::Sum_dv(
   int nnorm,
   double *norm//!<[in] Value to be summed
 ) {
@@ -243,15 +243,15 @@ void SumMPI_dv(
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, norm, nnorm,
     MPI_DOUBLE_PRECISION, MPI_SUM, MPI_COMM_WORLD);
-  if (ierr != 0) exitMPI(-1);
+  if (ierr != 0) wrapperMPI::Exit(-1);
 #endif
-}/*void SumMPI_dv*/
+}/*void wrapperMPI::Sum_dv*/
 /**
 @brief MPI wrapper function to obtain sum of Double array
 across processes.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void SumMPI_cv(
+void wrapperMPI::Sum_cv(
   int nnorm,
   std::complex<double> *norm//!<[in] Value to be summed
 ) {
@@ -259,50 +259,50 @@ void SumMPI_cv(
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, norm, nnorm,
     MPI_DOUBLE_COMPLEX, MPI_SUM, MPI_COMM_WORLD);
-  if (ierr != 0) exitMPI(-1);
+  if (ierr != 0) wrapperMPI::Exit(-1);
 #endif
-}/*void SumMPI_cv*/
+}/*void wrapperMPI::Sum_cv*/
 /**
 @brief MPI wrapper function to obtain sum of unsigned
 long integer across processes.
 @return Sumed value across processes.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-long int SumMPI_li(
+long int wrapperMPI::Sum_li(
   long int idim//!<[in] Value to be summed
 ){
 #ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &idim, 1,
     MPI_LONG, MPI_SUM, MPI_COMM_WORLD);
-  if(ierr != 0) exitMPI(-1);
+  if(ierr != 0) wrapperMPI::Exit(-1);
 #endif
   return(idim);
-}/*long int SumMPI_li*/
+}/*long int wrapperMPI::Sum_li*/
 /**
 @brief MPI wrapper function to obtain sum of
 integer across processes.
 @return Sumed value across processes.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-int SumMPI_i(
+int wrapperMPI::Sum_i(
   int idim//!<[in] Value to be summed
 ) {
 #ifdef __MPI
   int ierr;
   ierr = MPI_Allreduce(MPI_IN_PLACE, &idim, 1,
                        MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-  if(ierr != 0) exitMPI(-1);
+  if(ierr != 0) wrapperMPI::Exit(-1);
 #endif
   return(idim);
-}/*int SumMPI_i*/
+}/*int wrapperMPI::Sum_i*/
 /**
 @brief MPI wrapper function to broadcast long
 integer across processes.
 @return Broadcasted value across processes.
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-long int BcastMPI_li(
+long int wrapperMPI::Bcast_li(
   int root,//!<[in] The source process of the broadcast
   long int idim//!<[in] Value to be broadcasted
 ) {
@@ -312,13 +312,13 @@ long int BcastMPI_li(
     MPI_Bcast(&idim0, 1, MPI_LONG, root, MPI_COMM_WORLD);
 #endif
   return(idim0);
-}/*long int BcastMPI_li*/
+}/*long int wrapperMPI::Bcast_li*/
 /**
 @brief Compute norm of process-distributed vector
 @f$|{\bf v}_1|^2@f$
 @return Norm @f$|{\bf v}_1|^2@f$
 */
-double NormMPI_dc(
+double wrapperMPI::Norm_dc(
   long int idim,//!<[in] Local dimension of vector
   std::complex<double> *_v1//!<[in] [idim] vector to be producted
 ){
@@ -332,16 +332,16 @@ shared(_v1, idim) reduction(+:dnorm)
       dnorm += real(conj(_v1[i])*_v1[i]);
  
 #ifdef __MPI
-  dnorm = SumMPI_d(dnorm);
+  dnorm = wrapperMPI::Sum_d(dnorm);
 #endif
   return dnorm;
-}/*double NormMPI_dc*/
+}/*double wrapperMPI::Norm_dc*/
 /**
 @brief Compute norm of process-distributed vector
 @f$|{\bf v}_1|^2@f$
 @return Norm @f$|{\bf v}_1|^2@f$
 */
-void NormMPI_dv(
+void wrapperMPI::Norm_dv(
   long int ndim,//!<[in] Local dimension of vector
   int nstate,
   std::complex<double> **_v1,//!<[in] [idim] vector to be producted
@@ -356,7 +356,7 @@ void NormMPI_dv(
       dnorm[istate] += real(conj(_v1[idim][istate])*_v1[idim][istate]);
     }
   }
-  SumMPI_dv(nstate, dnorm);
+  wrapperMPI::Sum_dv(nstate, dnorm);
   for (istate = 0; istate < nstate; istate++) dnorm[istate] = sqrt(dnorm[istate]);
 }/*double NormMPI_cv*/
 /**
@@ -364,7 +364,7 @@ void NormMPI_dv(
 @f${\bf v}_1^* \cdot {\bf v}_2@f$
 @return Conjugate scaler product @f${\bf v}_1^* \cdot {\bf v}_2@f$
 */
-std::complex<double> VecProdMPI(
+std::complex<double> wrapperMPI::VecProd(
   long int ndim,//!<[in] Local dimension of vector
   std::complex<double> *v1,//!<[in] [ndim] vector to be producted
   std::complex<double> *v2//!<[in] [ndim] vector to be producted
@@ -390,15 +390,15 @@ std::complex<double> VecProdMPI(
     prod += prod_thr[mythread];
   free_cd_1d_allocate(prod_thr);
 
-  prod = SumMPI_dc(prod);
+  prod = wrapperMPI::Sum_dc(prod);
 
   return(prod);
-}/*std::complex<double> VecProdMPI*/
+}/*std::complex<double> wrapperMPI::VecProd*/
 /**
 @brief Compute conjugate scaler product of process-distributed vector
 @f${\bf v}_1^* \cdot {\bf v}_2@f$
 */
-void MultiVecProdMPI(
+void wrapperMPI::MultiVecProd(
   long int ndim,//!<[in] Local dimension of vector
   int nstate,
   std::complex<double> **v1,//!<[in] [ndim] vector to be producted
@@ -414,14 +414,14 @@ void MultiVecProdMPI(
       prod[istate] += conj(v1[idim][istate])*v2[idim][istate];
     }
   }
-  SumMPI_cv(nstate, prod);
-}/*void MultiVecProdMPI*/
+  wrapperMPI::Sum_cv(nstate, prod);
+}/*void wrapperMPI::MultiVecProd*/
 /**
 @brief Wrapper of MPI_Sendrecv for std::complex<double> number.
 When we pass a message longer than 2^31-1 
 (max of int: 2147483647), we need to divide it.
 */
-void SendRecv_cv(
+void wrapperMPI::SendRecv_cv(
   int origin,
   long int nMsgS,
   long int nMsgR,
@@ -450,19 +450,19 @@ void SendRecv_cv(
     ierr = MPI_Sendrecv(&vecs[sMsgS], nMsgS2, MPI_DOUBLE_COMPLEX, origin, 0,
                         &vecr[sMsgR], nMsgR2, MPI_DOUBLE_COMPLEX, origin, 0,
                         MPI_COMM_WORLD, &statusMPI);
-    if (ierr != 0) exitMPI(-1);
+    if (ierr != 0) wrapperMPI::Exit(-1);
 
     sMsgS += nMsgS2;
     sMsgR += nMsgR2;
   }
 #endif
-}/*void SendRecv_cv*/
+}/*void wrapperMPI::SendRecv_cv*/
 /**
 @brief Wrapper of MPI_Sendrecv for long integer number.
 When we pass a message longer than 2^31-1
 (max of int: 2147483647), we need to divide it.
 */
-void SendRecv_iv(
+void wrapperMPI::SendRecv_iv(
   int origin,
   long int nMsgS,
   long int nMsgR,
@@ -491,17 +491,17 @@ void SendRecv_iv(
     ierr = MPI_Sendrecv(&vecs[sMsgS], nMsgS2, MPI_LONG, origin, 0,
                         &vecr[sMsgR], nMsgR2, MPI_LONG, origin, 0,
                         MPI_COMM_WORLD, &statusMPI);
-    if (ierr != 0) exitMPI(-1);
+    if (ierr != 0) wrapperMPI::Exit(-1);
 
     sMsgS += nMsgS2;
     sMsgR += nMsgR2;
   }
 #endif
-}/*void SendRecv_iv*/
+}/*void wrapperMPI::SendRecv_iv*/
 /**
 @brief Wrapper of MPI_Sendrecv for long integer number.
 */
-long int SendRecv_i(
+long int wrapperMPI::SendRecv_i(
   int origin,
   long int isend
 ) {
@@ -512,9 +512,9 @@ long int SendRecv_i(
   ierr = MPI_Sendrecv(&isend, 1, MPI_LONG, origin, 0,
                       &ircv,  1, MPI_LONG, origin, 0,
                       MPI_COMM_WORLD, &statusMPI);
-  if (ierr != 0) exitMPI(ierr);
+  if (ierr != 0) wrapperMPI::Exit(ierr);
   return ircv;
 #else
   return isend;
 #endif
-}/*void SendRecv_i*/
+}/*void wrapperMPI::SendRecv_i*/

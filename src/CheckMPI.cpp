@@ -310,7 +310,7 @@ int CheckMPI()
     if (NDimInterPE < MP::nproc) {
       fprintf(stderr, "\n Error ! in ReadDefFileIdxPara.\n");
       fprintf(stderr, "Too many MPI processes ! It should be <= %d. \n\n", NDimInterPE);
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }/*if (NDimInterPE < MP::nproc)*/
   }/*if (Boost::flgBoost == 1)*/
 
@@ -394,15 +394,15 @@ void CheckMPI_Summary()
 
       if (MP::myrank == iproc) idimMPI = Check::idim_max;
       else idimMPI = 0;
-      fprintf(MP::STDOUT, " %15ld", SumMPI_li(idimMPI));
+      fprintf(MP::STDOUT, " %15ld", wrapperMPI::Sum_li(idimMPI));
 
       if (MP::myrank == iproc) Nelec = Def::Nup;
       else Nelec = 0;
-      fprintf(MP::STDOUT, "  %4d", SumMPI_i(Nelec));
+      fprintf(MP::STDOUT, "  %4d", wrapperMPI::Sum_i(Nelec));
 
       if (MP::myrank == iproc) Nelec = Def::Ndown;
       else Nelec = 0;
-      fprintf(MP::STDOUT, "  %5d", SumMPI_i(Nelec));
+      fprintf(MP::STDOUT, "  %5d", wrapperMPI::Sum_i(Nelec));
 
       if (MP::myrank == iproc) {
         Nelec = Def::Ne; //Def::Nup
@@ -410,11 +410,11 @@ void CheckMPI_Summary()
       }
       else Nelec = 0;
 
-      fprintf(MP::STDOUT, "  %5d", SumMPI_i(Nelec));
+      fprintf(MP::STDOUT, "  %5d", wrapperMPI::Sum_i(Nelec));
 
       if (MP::myrank == iproc) Nelec = Def::Total2Sz;
       else Nelec = 0;
-      fprintf(MP::STDOUT, "  %8d   ", SumMPI_i(Nelec));
+      fprintf(MP::STDOUT, "  %8d   ", wrapperMPI::Sum_i(Nelec));
       /**@brief
        Print the configuration in the inter process region of each PE
        as a binary (excepting general spin) format.
@@ -464,11 +464,11 @@ void CheckMPI_Summary()
       fprintf(MP::STDOUT, "\n");
     }/*for (iproc = 0; iproc < MP::nproc; iproc++)*/
 
-    Check::idim_maxMPI = SumMPI_li(Check::idim_max);
+    Check::idim_maxMPI = wrapperMPI::Sum_li(Check::idim_max);
     fprintf(MP::STDOUT, "\n   Total dimension : %ld\n\n", Check::idim_maxMPI);
     if (Check::idim_maxMPI < 1) {
       fprintf(MP::STDOUT, "ERROR! Total dimension < 1\n");
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
   }
   else {

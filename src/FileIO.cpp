@@ -34,7 +34,7 @@ int childfopenMPI(
   char ctmpPath[D_FileNameMax]="";
   strcat(ctmpPath, "./output/");
   strcat(ctmpPath, _cPathChild);
-  *_fp = fopenMPI(ctmpPath, _cmode);
+  *_fp = wrapperMPI::Fopen(ctmpPath, _cmode);
   
   if(*_fp == NULL){
     fprintf(MP::STDOUT, "FileOpenError: %s.\n", ctmpPath);

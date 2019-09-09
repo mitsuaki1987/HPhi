@@ -17,10 +17,11 @@
 
 namespace GetExcitedState {
   namespace Pair {
-    int HubbardGC(int nstate, std::complex<double>** tmp_v0,
-      std::complex<double>** tmp_v1, int iEx);
-
-    int Hubbard(int nstate, std::complex<double>** tmp_v0,
-      std::complex<double>** tmp_v1, int iEx);
+    namespace Hubbard {
+      int GC(int nstate, std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1, int iEx);
+      int C(int nstate, std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1, int iEx);
+    }
   }
 }

@@ -101,7 +101,7 @@ int CalcByTPQ(
     byte_size = fread(&i_max, sizeof(long int), 1, fp);
     if (i_max != Check::idim_max) {
       fprintf(stderr, "Error: A file of Inputvector is incorrect.\n");
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
     byte_size = fread(Wave::v0, sizeof(std::complex<double>), (Check::idim_max + 1)*NumAve, fp);
     TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector finishes: %s\n", "a", 0, Step::step_i);
@@ -280,7 +280,7 @@ int CalcByTPQ(
     fprintf(MP::STDOUT, "%s", "  Start:  Output vector.\n");
     sprintf(sdt, "tmpvec_set%d_rank_%d.dat", 0, MP::myrank);
     if (childfopenALL(sdt, "wb", &fp) != 0) {
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
     fwrite(&Step::step_i, sizeof(Step::step_i), 1, fp);
     fwrite(&Check::idim_max, sizeof(Check::idim_max), 1, fp);

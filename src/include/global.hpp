@@ -310,11 +310,11 @@ extern int descZ_vec[9]; /*descriptor for Z_vec*/
  Variables for the MPI parallelism
 */
 namespace MP {
-  extern int nproc;//!< Number of processors, defined in InitializeMPI()
-  extern int myrank;//!< Process ID, defined in InitializeMPI()
-  extern int nthreads;//!< Number of Threads, defined in InitializeMPI()
+  extern int nproc;//!< Number of processors, defined in wrapperMPI::Initialize()
+  extern int myrank;//!< Process ID, defined in wrapperMPI::Initialize()
+  extern int nthreads;//!< Number of Threads, defined in wrapperMPI::Initialize()
   extern FILE* STDOUT;/**<@brief File pointer to the standard output
-                  defined in InitializeMPI()*/
+                  defined in wrapperMPI::Initialize()*/
 }
 
 #endif /* HPHI_GLOBAL_H */

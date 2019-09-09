@@ -45,7 +45,7 @@
 /**
  * @brief function of calculation for one body green's function for Hubbard GC model.
  */
-void expec::cisajs::HubbardGC(
+void expec::cisajs::Hubbard::GC(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -83,27 +83,27 @@ void expec::cisajs::HubbardGC(
         }
       }
       else {
-        mltply::HubbardGC::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::GC::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
           -tmp_OneGreen, nstate, Xvec, vec);
       }
     }
     else if (org_isite2 > Def::Nsite || org_isite1 > Def::Nsite) {
       if (org_isite1 < org_isite2) {
-        mltply::HubbardGC::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::GC::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
           -tmp_OneGreen, nstate, Xvec, vec);
       }
       else {
-        mltply::HubbardGC::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1, 
+        mltply::Hubbard::GC::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1, 
           -tmp_OneGreen, nstate, Xvec, vec);
         complex_conj = 1;
       }
     }
     else {
-      mltply::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
-      mltply::HubbardGC::general_hopp(nstate, Xvec, vec, tmp_OneGreen);
+      mltply::Hubbard::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
+      mltply::Hubbard::GC::general_hopp(nstate, Xvec, vec, tmp_OneGreen);
     }
 
-    MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
+    wrapperMPI::MultiVecProd(i_max, nstate, vec, Xvec, prod[i]);
     if (complex_conj == 1) 
       for (istate = 0; istate < nstate; istate++) prod[i][istate] = conj(prod[i][istate]);
   }
@@ -113,7 +113,7 @@ void expec::cisajs::HubbardGC(
  * @retval 0 normally finished.
  * @retval -1 abnormally finished.
  */
-void expec::cisajs::Hubbard(
+void expec::cisajs::Hubbard::C(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -163,23 +163,23 @@ void expec::cisajs::Hubbard(
         }
       }
       else {
-        mltply::Hubbard::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2, 
+        mltply::Hubbard::C::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2, 
           -tmp_OneGreen, nstate, Xvec, vec);
       }
     }
     else if (org_isite2 > Def::Nsite || org_isite1 > Def::Nsite) {
       if (org_isite1 < org_isite2) {
-        mltply::Hubbard::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::C::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
           -tmp_OneGreen, nstate, Xvec, vec);
       }
       else {
-        mltply::Hubbard::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1, 
+        mltply::Hubbard::C::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1, 
           -tmp_OneGreen, nstate, Xvec, vec);
         complex_conj = 1;
       }
     }
     else {
-      mltply::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
+      mltply::Hubbard::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {
         is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
 
@@ -193,10 +193,10 @@ shared(List::c1, vec,Xvec,nstate,one,tmp_OneGreen, i_max, is)
         }
       }
       else {
-        mltply::Hubbard::general_hopp(nstate, Xvec, vec, tmp_OneGreen);
+        mltply::Hubbard::C::general_hopp(nstate, Xvec, vec, tmp_OneGreen);
       }
     }
-    MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
+    wrapperMPI::MultiVecProd(i_max, nstate, vec, Xvec, prod[i]);
     if (complex_conj == 1)
       for (istate = 0; istate < nstate; istate++) prod[i][istate] = conj(prod[i][istate]);
   }
@@ -206,7 +206,7 @@ shared(List::c1, vec,Xvec,nstate,one,tmp_OneGreen, i_max, is)
  * @retval 0 normally finished.
  * @retval -1 abnormally finished.
  */
-void expec::cisajs::SpinHalf(
+void expec::cisajs::Spin::C::Half(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -234,7 +234,7 @@ void expec::cisajs::SpinHalf(
       if (org_isite1 == org_isite2) {
         if (org_isite1 > Def::Nsite) {
           is1_up = Def::Tpow[org_isite1 - 1];
-          ibit1 = mltply::SpinGC::Half::X_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
+          ibit1 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
           if (ibit1 != 0) {
             zaxpy_long(i_max*nstate, 1.0, &vec[1][0], &Xvec[1][0]);
           }
@@ -244,19 +244,19 @@ void expec::cisajs::SpinHalf(
 #pragma omp parallel for default(none) private(j,dmv) \
 shared(i_max, isite1, org_sigma1, vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
-            dmv = mltply::Spin::Half::X_CisAis(j, isite1, org_sigma1);
+            dmv = mltply::Spin::C::Half::X_CisAis(j, isite1, org_sigma1);
             zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
           }
         }
       }
     }
-    MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
+    wrapperMPI::MultiVecProd(i_max, nstate, vec, Xvec, prod[i]);
   }
 }
 /**
  * @brief function of calculation for one body green's function for General-Spin model.
  */
-void expec::cisajs::SpinGeneral(
+void expec::cisajs::Spin::C::General(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -299,13 +299,13 @@ shared(i_max, org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow, vec,Xvec, List:
         }
       }
     }
-    MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
+    wrapperMPI::MultiVecProd(i_max, nstate, vec, Xvec, prod[i]);
   }
 }
 /**
  * @brief function of calculation for one body green's function for Half-SpinGC model.
  */
-void expec::cisajs::SpinGCHalf(
+void expec::cisajs::Spin::GC::Half(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -331,10 +331,10 @@ void expec::cisajs::SpinGCHalf(
     if (org_isite1 == org_isite2) {
       if (org_isite1 > Def::Nsite) {
         if (org_sigma1 == org_sigma2) {  // longitudinal magnetic field
-          mltply::SpinGC::Half::X_CisAis_MPIdouble(org_isite1 - 1, org_sigma1, 1.0, nstate, Xvec, vec);
+          mltply::Spin::GC::Half::X_CisAis_MPIdouble(org_isite1 - 1, org_sigma1, 1.0, nstate, Xvec, vec);
         }
         else {  // transverse magnetic field
-          mltply::SpinGC::Half::X_CisAit_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, 1.0, nstate, Xvec, vec);
+          mltply::Spin::GC::Half::X_CisAit_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, 1.0, nstate, Xvec, vec);
         }
       }
       else {
@@ -345,7 +345,7 @@ void expec::cisajs::SpinGCHalf(
 #pragma omp parallel for default(none) private(j, tmp_sgn,dmv) \
 shared(i_max, isite1, org_sigma1,vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
-            dmv = mltply::SpinGC::Half::X_CisAis(j, isite1, org_sigma1);
+            dmv = mltply::Spin::GC::Half::X_CisAis(j, isite1, org_sigma1);
             zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
           }
         }
@@ -354,7 +354,7 @@ shared(i_max, isite1, org_sigma1,vec,Xvec,nstate,one)
 #pragma omp parallel for default(none) private(j, tmp_sgn, tmp_off,dmv) \
 shared(i_max, isite1, org_sigma2, vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
-            tmp_sgn = mltply::SpinGC::Half::X_CisAit(j, isite1, org_sigma2, &tmp_off);
+            tmp_sgn = mltply::Spin::GC::Half::X_CisAit(j, isite1, org_sigma2, &tmp_off);
             if (tmp_sgn != 0) {
               dmv = (std::complex<double>)tmp_sgn;
               zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[tmp_off + 1][0], &one);
@@ -363,13 +363,13 @@ shared(i_max, isite1, org_sigma2, vec,Xvec,nstate,one)
         }
       }
     }
-    MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
+    wrapperMPI::MultiVecProd(i_max, nstate, vec, Xvec, prod[i]);
   }
 }
 /**
  * @brief function of calculation for one body green's function for General SpinGC model.
  */
-void expec::cisajs::SpinGCGeneral(
+void expec::cisajs::Spin::GC::General(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec,
@@ -394,12 +394,12 @@ void expec::cisajs::SpinGCGeneral(
       if (org_isite1 > Def::Nsite) {
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
-          mltply::SpinGC::General::X_CisAis_MPIdouble(org_isite1 - 1, org_sigma1,
+          mltply::Spin::GC::General::X_CisAis_MPIdouble(org_isite1 - 1, org_sigma1,
             1.0, nstate, Xvec, vec);
         }
         else {
           // transverse magnetic field
-          mltply::SpinGC::General::X_CisAit_MPIdouble(
+          mltply::Spin::GC::General::X_CisAit_MPIdouble(
             org_isite1 - 1, org_sigma1, org_sigma2, 1.0, nstate, Xvec, vec);
         }
       }
@@ -429,7 +429,7 @@ shared(i_max, org_isite1, org_sigma1, org_sigma2, tmp_off,Def::SiteToBit, Def::T
         }
       }
     }
-    MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
+    wrapperMPI::MultiVecProd(i_max, nstate, vec, Xvec, prod[i]);
   }
 }
 /**
@@ -489,30 +489,30 @@ int expec::cisajs::main(
   prod = cd_2d_allocate(Def::NCisAjt, nstate);
   switch (Def::iCalcModel) {
   case DC::HubbardGC:
-    expec::cisajs::HubbardGC(nstate, Xvec, vec, prod);
+    expec::cisajs::Hubbard::GC(nstate, Xvec, vec, prod);
     break;
 
   case DC::KondoGC:
   case DC::Hubbard:
   case DC::Kondo:
-    expec::cisajs::Hubbard(nstate, Xvec, vec, prod);
+    expec::cisajs::Hubbard::C(nstate, Xvec, vec, prod);
     break;
 
   case DC::Spin: // for the Sz-conserved spin system
     if (Def::iFlgGeneralSpin == FALSE) {
-      expec::cisajs::SpinHalf(nstate, Xvec, vec, prod);
+      expec::cisajs::Spin::C::Half(nstate, Xvec, vec, prod);
     }
     else {
-      expec::cisajs::SpinGeneral(nstate, Xvec, vec, prod);
+      expec::cisajs::Spin::C::General(nstate, Xvec, vec, prod);
     }
     break;
 
   case DC::SpinGC:
     if (Def::iFlgGeneralSpin == FALSE) {
-      expec::cisajs::SpinGCHalf(nstate, Xvec, vec, prod);
+      expec::cisajs::Spin::GC::Half(nstate, Xvec, vec, prod);
     }
     else {
-      expec::cisajs::SpinGCGeneral(nstate, Xvec, vec, prod);
+      expec::cisajs::Spin::GC::General(nstate, Xvec, vec, prod);
     }
     break;
 

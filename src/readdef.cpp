@@ -241,10 +241,10 @@ int ReadcalcmodFile(
   Def::iNGPU=0;
 #endif
   /*=======================================================================*/
-  fp = fopenMPI(defname, "r");
+  fp = wrapperMPI::Fopen(defname, "r");
   if(fp==NULL) return ReadDefFileError(defname);
   /* read Parameters from calcmod.def*/
-  while (fgetsMPI(ctmpLine, D_CharTmpReadDef + D_CharKWDMAX, fp) != NULL) {
+  while (wrapperMPI::Fgets(ctmpLine, D_CharTmpReadDef + D_CharKWDMAX, fp) != NULL) {
     if( (iret=GetKWWithIdx(ctmpLine, ctmp, &itmp)) !=0){
       if(iret==1) continue;
       return(-1);
@@ -399,10 +399,10 @@ int GetFileName(
     strcpy(cFileNameList[i],"");
   }
 
-  fplist = fopenMPI(cFileListNameFile, "r");
+  fplist = wrapperMPI::Fopen(cFileListNameFile, "r");
   if(fplist==NULL) return ReadDefFileError(cFileListNameFile);
 
-  while(fgetsMPI(ctmp2, 256, fplist) != NULL){
+  while(wrapperMPI::Fgets(ctmp2, 256, fplist) != NULL){
     memset(ctmpKW, '\0', strlen(ctmpKW));
     memset(ctmpFileName, '\0', strlen(ctmpFileName));
     sscanf(ctmp2,"%s %s\n", ctmpKW, ctmpFileName);
@@ -509,7 +509,7 @@ int ReadDefFileNInt(
       continue;
     }
     fprintf(MP::STDOUT, "  Read File %s for %s.\n", defname, cKWListOfFileNameList[iKWidx]);
-    fp = fopenMPI(defname, "r");
+    fp = wrapperMPI::Fopen(defname, "r");
     if (fp == NULL) return ReadDefFileError(defname);
     switch (iKWidx) {
     case KWCalcMod:
@@ -524,24 +524,24 @@ int ReadDefFileNInt(
       /* Read modpara.def---------------------------------------*/
       //TODO: add error procedure here when parameters are not enough.
       //! Read Header (5 lines).
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &itmp); //2
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp); //3
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp); //4
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp); //5
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp); //3
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp); //4
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp); //5
   //! Read header name for files about data
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %s\n", ctmp, Def::CDataFileHead); //6
   //! Read header name for files about parameters
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %s\n", ctmp, Def::CParaFileHead); //7
   //! Read header (1 line).
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);   //8
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);   //8
       double dtmp, dtmp2;
       Def::read_hacker = 1;
       //! Read lines.
-      while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+      while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
         if (*ctmp2 == '\n') continue;
         sscanf(ctmp2, "%s %lf %lf\n", ctmp, &dtmp, &dtmp2);
         if (CheckWords(ctmp, "Nsite") == 0) {
@@ -639,99 +639,99 @@ int ReadDefFileNInt(
     case KWLocSpin:
       // Read locspn.def
       Def::iFlgGeneralSpin = FALSE;
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NLocSpn));
       break;
     case KWTrans:
       // Read transfer.def
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NTransfer));
       break;
     case KWCoulombIntra:
       /* Read coulombintra.def----------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NCoulombIntra));
       break;
     case KWCoulombInter:
       /* Read coulombinter.def----------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NCoulombInter));
       break;
     case KWHund:
       /* Read hund.def------------------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NHundCoupling));
       break;
     case KWPairHop:
       /* Read pairhop.def---------------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NPairHopping));
       Def::NPairHopping *= 2;
       break;
     case KWExchange:
       /* Read exchange.def--------------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NExchangeCoupling));
       break;
     case KWIsing:
       /* Read ising.def--------------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NIsingCoupling));
       break;
     case KWPairLift:
       /* Read exchange.def--------------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NPairLiftCoupling));
       break;
     case KWInterAll:
       /* Read InterAll.def--------------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NInterAll));
       break;
     case KWOneBodyG:
       /* Read cisajs.def----------------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NCisAjt));
       break;
     case KWTwoBodyG:
       /* Read cisajscktaltdc.def--------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NCisAjtCkuAlvDC));
       break;
     case KWLaser:
       /* Read laser.def--------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NLaser));
       break;
 
     case KWTEOneBody: {
       if (Def::iCalcType != DC::TimeEvolution) break;
       /* Read TEOnebody.def--------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NTETimeSteps));
-      fgetsMPI(ctmp2, 256, fp);
-      fgetsMPI(ctmp2, 256, fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       int iTETransMax = 0;
       if (Def::NTETimeSteps > 0) {
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           sscanf(ctmp2, "%lf %d \n", &dtmp, &itmp);
           for (i = 0; i < itmp; ++i) {
-            fgetsMPI(ctmp2, 256, fp);
+            wrapperMPI::Fgets(ctmp2, 256, fp);
           }
           if (iTETransMax < itmp) iTETransMax = itmp;
         }
@@ -742,18 +742,18 @@ int ReadDefFileNInt(
     case KWTETwoBody: {
       if (Def::iCalcType != DC::TimeEvolution) break;
       /* Read TETwobody.def--------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NTETimeSteps));
-      fgetsMPI(ctmp2, 256, fp);
-      fgetsMPI(ctmp2, 256, fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       int iTEInterAllMax = 0;
       if (Def::NTETimeSteps > 0) {
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           sscanf(ctmp2, "%lf %d \n", &dtmp, &itmp);
           for (i = 0; i < itmp; ++i) {
-            fgetsMPI(ctmp2, 256, fp);
+            wrapperMPI::Fgets(ctmp2, 256, fp);
           }
           if (iTEInterAllMax < itmp) iTEInterAllMax = itmp;
         }
@@ -771,16 +771,16 @@ int ReadDefFileNInt(
       Boost::ishift_nspin = 0;
       Boost::flgBoost = TRUE;
       //first line is skipped
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       //read numarrayJ
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%d\n", &(Boost::NumarrayJ));
       //skipp arrayJ
       for (iline = 0; iline < Boost::NumarrayJ * 3; iline++) {
-        fgetsMPI(ctmp2, 256, fp);
+        wrapperMPI::Fgets(ctmp2, 256, fp);
       }
       //read W0 R0 num_pivot ishift_nspin
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%ld %ld %ld %ld\n", &(Boost::W0), &(Boost::R0), &(Boost::num_pivot),
         &(Boost::ishift_nspin));
 
@@ -788,15 +788,15 @@ int ReadDefFileNInt(
 
     case KWSingleExcitation:
       /* Read singleexcitation.def----------------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NNSingleExcitationOperator));
       break;
 
     case KWPairExcitation:
       /* Read pairexcitation.def----------------------------------------*/
-      fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%s %d\n", ctmp, &(Def::NNPairExcitationOperator));
       break;
 
@@ -1421,10 +1421,10 @@ int ReadDefFileIdxPara()
     strcpy(defname, cFileNameListFile[iKWidx]);
     if (strcmp(defname, "") == 0 || iKWidx == KWSpectrumVec) continue;
     fprintf(MP::STDOUT, "  Read File %s.\n", defname);
-    fp = fopenMPI(defname, "r");
+    fp = wrapperMPI::Fopen(defname, "r");
     if (fp == NULL) return ReadDefFileError(defname);
     if (iKWidx != KWBoost) {
-      for (i = 0; i < IgnoreLinesInDef; i++) fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);
+      for (i = 0; i < IgnoreLinesInDef; i++) wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
     }
 
     idx = 0;
@@ -1432,7 +1432,7 @@ int ReadDefFileIdxPara()
     switch (iKWidx) {
     case KWLocSpin:
       /* Read locspn.def----------------------------------------*/
-      while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+      while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
         if (idx == Def::Nsite) {
           fclose(fp);
           return ReadDefFileError(defname);
@@ -1458,7 +1458,7 @@ int ReadDefFileIdxPara()
       /* transfer.def--------------------------------------*/
       if (Def::NTransfer > 0) {
         icnt_trans = 0;
-        while (fgetsMPI(ctmp2, 256, fp) != NULL)
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL)
         {
           if (idx == Def::NTransfer) {
             fclose(fp);
@@ -1561,7 +1561,7 @@ int ReadDefFileIdxPara()
     case KWCoulombIntra:
       /*coulombintra.def----------------------------------*/
       if (Def::NCoulombIntra > 0) {
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           if (idx == Def::NCoulombIntra) {
             fclose(fp);
             return ReadDefFileError(defname);
@@ -1583,7 +1583,7 @@ int ReadDefFileIdxPara()
     case KWCoulombInter:
       /*coulombinter.def----------------------------------*/
       if (Def::NCoulombInter > 0) {
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           if (idx == Def::NCoulombInter) {
             fclose(fp);
             return ReadDefFileError(defname);
@@ -1608,7 +1608,7 @@ int ReadDefFileIdxPara()
     case KWHund:
       /*hund.def------------------------------------------*/
       if (Def::NHundCoupling > 0) {
-        while (fgetsMPI(ctmp2, 256, fp) != NULL)
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL)
         {
           if (idx == Def::NHundCoupling) {
             fclose(fp);
@@ -1638,7 +1638,7 @@ int ReadDefFileIdxPara()
       }
 
       if (Def::NPairHopping > 0) {
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           if (idx == Def::NPairHopping / 2) {
             fclose(fp);
             return ReadDefFileError(defname);
@@ -1664,7 +1664,7 @@ int ReadDefFileIdxPara()
     case KWExchange:
       /*exchange.def--------------------------------------*/
       if (Def::NExchangeCoupling > 0) {
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           if (idx == Def::NExchangeCoupling) {
             fclose(fp);
             return ReadDefFileError(defname);
@@ -1689,7 +1689,7 @@ int ReadDefFileIdxPara()
     case KWIsing:
       /*ising.def--------------------------------------*/
       if (Def::NIsingCoupling > 0) {
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           if (idx == Def::NIsingCoupling) {
             fclose(fp);
             return ReadDefFileError(defname);
@@ -1726,7 +1726,7 @@ int ReadDefFileIdxPara()
           fprintf(MP::STDOUT, "PairLift is active only in SpinGC.\n");
           return(-1);
         }
-        while (fgetsMPI(ctmp2, 256, fp) != NULL)
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL)
         {
           if (idx == Def::NPairLiftCoupling) {
             fclose(fp);
@@ -1756,7 +1756,7 @@ int ReadDefFileIdxPara()
       if (Def::NInterAll > 0) {
         icnt_interall = 0;
         icnt_diagonal = 0;
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           if (idx == Def::NInterAll) {
             fclose(fp);
             return ReadDefFileError(defname);
@@ -1825,7 +1825,7 @@ int ReadDefFileIdxPara()
     case KWOneBodyG:
       /*cisajs.def----------------------------------------*/
       if (Def::NCisAjt > 0) {
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           if (idx == Def::NCisAjt) {
             fclose(fp);
             return ReadDefFileError(defname);
@@ -1863,7 +1863,7 @@ int ReadDefFileIdxPara()
     case KWTwoBodyG:
       /*cisajscktaltdc.def--------------------------------*/
       if (Def::NCisAjtCkuAlvDC > 0) {
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           if (idx == Def::NCisAjtCkuAlvDC) {
             fclose(fp);
             return ReadDefFileError(defname);
@@ -1882,7 +1882,7 @@ int ReadDefFileIdxPara()
 
           if (Def::iCalcModel == DC::Spin || Def::iCalcModel == DC::SpinGC) {
             if (CheckFormatForSpinInt(isite1, isite2, isite3, isite4) != 0) {
-              exitMPI(-1);
+              wrapperMPI::Exit(-1);
               //Def::NCisAjtCkuAlvDC--;
               //continue;
             }
@@ -1912,7 +1912,7 @@ int ReadDefFileIdxPara()
       /*laser.def----------------------------------*/
       if (Def::NLaser > 0) {
         //printf("Read Start\n");
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           sscanf(ctmp2, "%s %lf\n", ctmp, &(Def::ParaLaser[idx]));
           //printf("[%d]:%f\n",idx,Def::ParaLaser[idx]);
           idx++;
@@ -1927,10 +1927,10 @@ int ReadDefFileIdxPara()
     case KWTEOneBody:
       if (Def::NTETimeSteps > 0) {
         idx = 0;
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           sscanf(ctmp2, "%lf %d\n", &(Def::TETime[idx]), &(Def::NTETransfer[idx]));
           for (i = 0; i < Def::NTETransfer[idx]; ++i) {
-            fgetsMPI(ctmp2, 256, fp);
+            wrapperMPI::Fgets(ctmp2, 256, fp);
             sscanf(ctmp2, "%d %d %d %d %lf %lf\n",
               &isite1,
               &isigma1,
@@ -1962,12 +1962,12 @@ int ReadDefFileIdxPara()
     case KWTETwoBody:
       if (Def::NTETimeSteps > 0) {
         idx = 0;
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           sscanf(ctmp2, "%lf %d\n", &(Def::TETime[idx]), &(Def::NTEInterAll[idx]));
           icnt_interall = 0;
           icnt_diagonal = 0;
           for (i = 0; i < Def::NTEInterAll[idx]; ++i) {
-            fgetsMPI(ctmp2, 256, fp);
+            wrapperMPI::Fgets(ctmp2, 256, fp);
             sscanf(ctmp2, "%d %d %d %d %d %d %d %d %lf %lf\n",
               &isite1,
               &isigma1,
@@ -2034,7 +2034,7 @@ int ReadDefFileIdxPara()
     case KWBoost:
       /* boost.def--------------------------------*/
       //input magnetic field
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
       sscanf(ctmp2, "%lf %lf %lf\n",
         &dArrayValue_re[0],
         &dArrayValue_re[1],
@@ -2044,13 +2044,13 @@ int ReadDefFileIdxPara()
       }
 
       //this line is skipped;
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
 
       //input arrayJ
       if (Boost::NumarrayJ > 0) {
         for (iline = 0; iline < Boost::NumarrayJ; iline++) {
           for (ilineIn = 0; ilineIn < 3; ilineIn++) {
-            fgetsMPI(ctmp2, 256, fp);
+            wrapperMPI::Fgets(ctmp2, 256, fp);
             sscanf(ctmp2, "%lf %lf %lf\n",
               &dArrayValue_re[0],
               &dArrayValue_re[1],
@@ -2063,13 +2063,13 @@ int ReadDefFileIdxPara()
       }
 
       //this line is skipped;
-      fgetsMPI(ctmp2, 256, fp);
+      wrapperMPI::Fgets(ctmp2, 256, fp);
 
       //read list_6spin_star
       if (Boost::num_pivot > 0) {
         for (iline = 0; iline < Boost::num_pivot; iline++) {
           //input
-          fgetsMPI(ctmp2, 256, fp);
+          wrapperMPI::Fgets(ctmp2, 256, fp);
           sscanf(ctmp2, "%d %d %d %d %d %d %d\n",
             &Boost::list_6spin_star[iline][0],
             &Boost::list_6spin_star[iline][1],
@@ -2094,7 +2094,7 @@ int ReadDefFileIdxPara()
         for (iline = 0; iline < Boost::num_pivot; iline++) {
           //input
           for (ilineIn2 = 0; ilineIn2 < Boost::list_6spin_star[iline][0]; ilineIn2++) {
-            fgetsMPI(ctmp2, 256, fp);
+            wrapperMPI::Fgets(ctmp2, 256, fp);
             sscanf(ctmp2, "%d %d %d %d %d %d %d\n",
               &Boost::list_6spin_pair[iline][0][ilineIn2],
               &Boost::list_6spin_pair[iline][1][ilineIn2],
@@ -2127,13 +2127,13 @@ int ReadDefFileIdxPara()
           fclose(fp);
           return ReadDefFileError(defname);
         }
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           sscanf(ctmp2, "%d\n", &Def::NSingleExcitationOperator[idx]);
           Def::SingleExcitationOperator[idx] = (int**)malloc(sizeof(int*)*Def::NSingleExcitationOperator[idx]);
           Def::ParaSingleExcitationOperator[idx] = (std::complex<double>*)malloc(
             sizeof(std::complex<double>)*Def::NSingleExcitationOperator[idx]);
           for (i = 0; i < Def::NSingleExcitationOperator[idx]; ++i) {
-            fgetsMPI(ctmp2, 256, fp);
+            wrapperMPI::Fgets(ctmp2, 256, fp);
             sscanf(ctmp2, "%d %d %d %lf %lf\n",
               &isite1,
               &isigma1,
@@ -2166,13 +2166,13 @@ int ReadDefFileIdxPara()
     case KWPairExcitation:
       /*pairexcitation.def----------------------------------------*/
       if (Def::NNPairExcitationOperator > 0) {
-        while (fgetsMPI(ctmp2, 256, fp) != NULL) {
+        while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
           sscanf(ctmp2, "%d\n", &Def::NPairExcitationOperator[idx]);
           Def::PairExcitationOperator[idx] = (int**)malloc(sizeof(int*)*Def::NPairExcitationOperator[idx]);
           Def::ParaPairExcitationOperator[idx] = (std::complex<double>*)malloc(
             sizeof(std::complex<double>)*Def::NPairExcitationOperator[idx]);
           for (i = 0; i < Def::NPairExcitationOperator[idx]; ++i) {
-            fgetsMPI(ctmp2, 256, fp);
+            wrapperMPI::Fgets(ctmp2, 256, fp);
             sscanf(ctmp2, "%d %d %d %d %d %lf %lf\n",
               &isite1,
               &isigma1,
@@ -3016,11 +3016,11 @@ to get the name of keyword, i.e. cKWListOfFileNameList[KWTest] = "Test".
       continue;
     }
     fprintf(MP::STDOUT, "  Read File %s for %s.\n", defname, cKWListOfFileNameList[iKWidx]);
-    fp = fopenMPI(defname, "r");
+    fp = wrapperMPI::Fopen(defname, "r");
     if (fp == NULL) return ReadDefFileError(defname);
     switch (iKWidx) {
     case KWTest:
-        fgetsMPI(...); //Add the procedure to read-line here.
+        wrapperMPI::Fgets(...); //Add the procedure to read-line here.
     }
  ```
 @sa ReadDefFileNInt
@@ -3073,23 +3073,23 @@ You can set a value of parameters with a new keyword in ``modpara`` file by foll
 1. The first eight lines are header (not touch!).
   ```
         //! Read Header (5 lines).
-       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp); //1
-       fgetsMPI(ctmp2, 256, fp);
+       wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp); //1
+       wrapperMPI::Fgets(ctmp2, 256, fp);
        sscanf(ctmp2, "%s %d\n", ctmp, &itmp); //2
-       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp); //3
-       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp); //4
-       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp); //5
+       wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp); //3
+       wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp); //4
+       wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp); //5
        //! Read header name for files about data
-       fgetsMPI(ctmp2, 256, fp);
+       wrapperMPI::Fgets(ctmp2, 256, fp);
        sscanf(ctmp2, "%s %s\n", ctmp, Def::CDataFileHead); //6
         //! Read header name for files about parameters
-       fgetsMPI(ctmp2, 256, fp);
+       wrapperMPI::Fgets(ctmp2, 256, fp);
        sscanf(ctmp2, "%s %s\n", ctmp, Def::CParaFileHead); //7
        //! Read header (1 line).
-       fgetsMPI(ctmp, sizeof(ctmp) / sizeof(char), fp);   //8
+       wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);   //8
   ```
 
-2. Each line is read by ``` fgetsMPI(ctmp2, 256, fp) ``` function.
+2. Each line is read by ``` wrapperMPI::Fgets(ctmp2, 256, fp) ``` function.
 
 3. The line is divided into keyword and number by using ``CheckWords`` function.
 
@@ -3131,10 +3131,10 @@ In the following, we describe the detail of the flow of setting the calculation 
   Def::iFlgMPI=0;
   ```
 
-2. Each line is read by ``` fgetsMPI ``` function. 
+2. Each line is read by ``` wrapperMPI::Fgets ``` function. 
    ``GetKWWithIdx`` function reads ctmp = keyword, itmp=index.
   ```
-   while( fgetsMPI(ctmpLine, D_CharTmpReadDef+D_CharKWDMAfp)!=NULL ){
+   while( wrapperMPI::Fgets(ctmpLine, D_CharTmpReadDef+D_CharKWDMAfp)!=NULL ){
     if( (iret=GetKWWithIdx(ctmpLine, ctmp, &itmp)) !=0){
       if(iret==1) continue;
       return(-1);

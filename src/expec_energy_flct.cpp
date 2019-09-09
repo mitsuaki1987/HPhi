@@ -33,7 +33,7 @@
 /// \param X [in, out] X Struct to get information about file header names, dimension of hirbert space, calc type and output physical quantities.
 /// \retval 0 normally finished.
 /// \retval -1 abnormally finished.
-void expec::energy_flct::HubbardGC(
+void expec::energy_flct::Hubbard::GC(
   int nstate,
   std::complex<double> **tmp_v0
 ) {
@@ -164,12 +164,12 @@ shared(tmp_v0,List::c1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
       Phys::Sz2[istate] += Sz2_t[mythread][istate];
     }
   }
-  SumMPI_dv(nstate, Phys::doublon);
-  SumMPI_dv(nstate, Phys::doublon2);
-  SumMPI_dv(nstate, Phys::num);
-  SumMPI_dv(nstate, Phys::num2);
-  SumMPI_dv(nstate, Phys::Sz);
-  SumMPI_dv(nstate, Phys::Sz2);
+  wrapperMPI::Sum_dv(nstate, Phys::doublon);
+  wrapperMPI::Sum_dv(nstate, Phys::doublon2);
+  wrapperMPI::Sum_dv(nstate, Phys::num);
+  wrapperMPI::Sum_dv(nstate, Phys::num2);
+  wrapperMPI::Sum_dv(nstate, Phys::Sz);
+  wrapperMPI::Sum_dv(nstate, Phys::Sz2);
 
   for (istate = 0; istate < nstate; istate++) {
     Phys::Sz[istate] *= 0.5;
@@ -190,7 +190,7 @@ shared(tmp_v0,List::c1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
 /// \param X [in, out] X Struct to get information about file header names, dimension of hirbert space, calc type and output physical quantities.
 /// \retval 0 normally finished.
 /// \retval -1 abnormally finished.
-void expec::energy_flct::Hubbard(
+void expec::energy_flct::Hubbard::C(
   int nstate,
   std::complex<double> **tmp_v0
 ) {
@@ -322,12 +322,12 @@ private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
       Phys::Sz2[istate] += Sz2_t[mythread][istate];
     }
   }
-  SumMPI_dv(nstate, Phys::doublon);
-  SumMPI_dv(nstate, Phys::doublon2);
-  SumMPI_dv(nstate, Phys::num);
-  SumMPI_dv(nstate, Phys::num2);
-  SumMPI_dv(nstate, Phys::Sz);
-  SumMPI_dv(nstate, Phys::Sz2);
+  wrapperMPI::Sum_dv(nstate, Phys::doublon);
+  wrapperMPI::Sum_dv(nstate, Phys::doublon2);
+  wrapperMPI::Sum_dv(nstate, Phys::num);
+  wrapperMPI::Sum_dv(nstate, Phys::num2);
+  wrapperMPI::Sum_dv(nstate, Phys::Sz);
+  wrapperMPI::Sum_dv(nstate, Phys::Sz2);
 
   for (istate = 0; istate < nstate; istate++) {
     Phys::Sz[istate] *= 0.5;
@@ -348,7 +348,7 @@ private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
 /// \param X [in, out] X Struct to get information about file header names, dimension of hirbert space, calc type and output physical quantities.
 /// \retval 0 normally finished.
 /// \retval -1 abnormally finished.
-void expec::energy_flct::HalfSpinGC(
+void expec::energy_flct::Spin::GC::Half(
   
   int nstate,
   std::complex<double> **tmp_v0
@@ -429,8 +429,8 @@ shared(tmp_v0,Sz_t,Sz2_t,nstate, i_max,MP::myrank,i_32,is1_up_a,is1_up_b,Def::Ns
       Phys::Sz2[istate] += Sz2_t[mythread][istate];
     }
   }
-  SumMPI_dv(nstate, Phys::Sz);
-  SumMPI_dv(nstate, Phys::Sz2);
+  wrapperMPI::Sum_dv(nstate, Phys::Sz);
+  wrapperMPI::Sum_dv(nstate, Phys::Sz2);
 
   for (istate = 0; istate < nstate; istate++) {
     Phys::doublon[istate] = 0.0;
@@ -451,7 +451,7 @@ shared(tmp_v0,Sz_t,Sz2_t,nstate, i_max,MP::myrank,i_32,is1_up_a,is1_up_b,Def::Ns
 /// \param X [in, out] X Struct to get information about file header names, dimension of hirbert space, calc type and output physical quantities.
 /// \retval 0 normally finished.
 /// \retval -1 abnormally finished.
-void expec::energy_flct::GeneralSpinGC(
+void expec::energy_flct::Spin::GC::General(
   
   int nstate,
   std::complex<double> **tmp_v0
@@ -508,8 +508,8 @@ Def::SiteToBit, Def::Tpow,Def::Nsite,Def::NsiteMPI)
       Phys::Sz2[istate] += Sz2_t[mythread][istate];
     }
   }
-  SumMPI_dv(nstate, Phys::Sz);
-  SumMPI_dv(nstate, Phys::Sz2);
+  wrapperMPI::Sum_dv(nstate, Phys::Sz);
+  wrapperMPI::Sum_dv(nstate, Phys::Sz2);
 
   for (istate = 0; istate < nstate; istate++) {
     Phys::doublon[istate] = 0.0;
@@ -586,20 +586,20 @@ int expec::energy_flct::main(
 
   switch (Def::iCalcModel) {
   case DC::HubbardGC:
-    expec::energy_flct::HubbardGC(nstate, tmp_v0);
+    expec::energy_flct::Hubbard::GC(nstate, tmp_v0);
     break;
   case DC::KondoGC:
   case DC::Hubbard:
   case DC::Kondo:
-    expec::energy_flct::Hubbard(nstate, tmp_v0);
+    expec::energy_flct::Hubbard::C(nstate, tmp_v0);
     break;
 
   case DC::SpinGC:
     if (Def::iFlgGeneralSpin == FALSE) {
-      expec::energy_flct::HalfSpinGC(nstate, tmp_v0);
+      expec::energy_flct::Spin::GC::Half(nstate, tmp_v0);
     }
     else {//for generalspin
-      expec::energy_flct::GeneralSpinGC(nstate, tmp_v0);
+      expec::energy_flct::Spin::GC::General(nstate, tmp_v0);
     }
     break;/*case SpinGC*/
     /* SpinGCBoost */
@@ -650,8 +650,8 @@ shared(tmp_v1,tmp_v0,nstate,i_max)
       Phys::var[istate] += real(conj(tmp_v0[j][istate])*tmp_v0[j][istate]); // E^2 = <v1|H*H|v1>=<v0|v0>
     }
   }
-  SumMPI_dv(nstate, Phys::energy);
-  SumMPI_dv(nstate, Phys::var);
+  wrapperMPI::Sum_dv(nstate, Phys::energy);
+  wrapperMPI::Sum_dv(nstate, Phys::var);
 
   switch (Def::iCalcType) {
   case DC::TPQCalc:

@@ -135,7 +135,7 @@ int Rearray_Interactions(
  * @retval -1 abnormally finished
  *
  */
-void expec::cisajscktalt::HubbardGC(
+void expec::cisajscktalt::Hubbard::GC(
   int nstate, 
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -168,25 +168,25 @@ void expec::cisajscktalt::HubbardGC(
       isite3 = Def::OrgTpow[2 * org_isite3 - 2 + org_sigma3];
       isite4 = Def::OrgTpow[2 * org_isite4 - 2 + org_sigma4];
       if (isite1 == isite2 && isite3 == isite4) {
-        mltply::HubbardGC::X_CisAisCjtAjt_MPI(org_isite1 - 1, org_sigma1, org_isite3 - 1, org_sigma3,
+        mltply::Hubbard::GC::X_CisAisCjtAjt_MPI(org_isite1 - 1, org_sigma1, org_isite3 - 1, org_sigma3,
           1.0, nstate, Xvec, vec);
       }
       else if (isite1 == isite2 && isite3 != isite4) {
-        mltply::HubbardGC::X_CisAisCjtAku_MPI(
+        mltply::Hubbard::GC::X_CisAisCjtAku_MPI(
           org_isite1 - 1, org_sigma1, org_isite3 - 1, org_sigma3, org_isite4 - 1, org_sigma4,
           1.0, nstate, Xvec, vec);
       }
       else if (isite1 != isite2 && isite3 == isite4) {
-        mltply::HubbardGC::X_CisAjtCkuAku_MPI(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::GC::X_CisAjtCkuAku_MPI(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
           org_isite3 - 1, org_sigma3, 1.0, nstate, Xvec, vec);
       }
       else if (isite1 != isite2 && isite3 != isite4) {
-        mltply::HubbardGC::X_CisAjtCkuAlv_MPI(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::GC::X_CisAjtCkuAlv_MPI(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
           org_isite3 - 1, org_sigma3, org_isite4 - 1, org_sigma4, 1.0, nstate, Xvec, vec);
       }
     }//InterPE
     else {
-      mltply::general_int_GetInfo(org_isite1, org_isite2, org_isite3, org_isite4,
+      mltply::Hubbard::general_int_GetInfo(org_isite1, org_isite2, org_isite3, org_isite4,
         org_sigma1, org_sigma2, org_sigma3, org_sigma4, tmp_V);
 
       i_max = Large::i_max;
@@ -204,14 +204,14 @@ void expec::cisajscktalt::HubbardGC(
 #pragma omp parallel for default(none) private(j) shared(vec,Xvec,nstate, \
 i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_V)
         for (j = 1; j <= i_max; j++) {
-          mltply::HubbardGC::CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, Xvec, vec);
+          mltply::Hubbard::GC::CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, Xvec, vec);
         }
       }
       else if (isite1 == isite2 && isite3 != isite4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_V)
         for (j = 1; j <= i_max; j++) {
-          mltply::HubbardGC::CisAisCjtAku_element(j, isite1, isite3, isite4, Bsum, Bdiff,
+          mltply::Hubbard::GC::CisAisCjtAku_element(j, isite1, isite3, isite4, Bsum, Bdiff,
             tmp_V, nstate, Xvec, vec, &tmp_off);
         }
       }
@@ -219,7 +219,7 @@ shared(vec,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,t
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_V) 
         for (j = 1; j <= i_max; j++) {
-          mltply::HubbardGC::CisAjtCkuAku_element(j, isite1, isite2, isite3, Asum, Adiff,
+          mltply::Hubbard::GC::CisAjtCkuAku_element(j, isite1, isite2, isite3, Asum, Adiff,
             tmp_V, nstate, Xvec, vec, &tmp_off);
         }
       }
@@ -227,12 +227,12 @@ shared(vec,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,t
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_V) 
         for (j = 1; j <= i_max; j++) {
-          mltply::HubbardGC::CisAjtCkuAlv_element(j, isite1, isite2, isite3, isite4, Asum, Adiff,
+          mltply::Hubbard::GC::CisAjtCkuAlv_element(j, isite1, isite2, isite3, isite4, Asum, Adiff,
             Bsum, Bdiff, tmp_V, nstate, Xvec, vec, &tmp_off);
         }
       }
     }
-    MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
+    wrapperMPI::MultiVecProd(i_max, nstate, vec, Xvec, prod[i]);
   }//Intra PE
 }
 /**
@@ -245,7 +245,7 @@ shared(vec,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,t
  * @retval -1 abnormally finished
  *
  */
-void expec::cisajscktalt::Hubbard(
+void expec::cisajscktalt::Hubbard::C(
   int nstate, 
   std::complex<double> **Xvec, 
   std::complex<double> **vec,
@@ -286,26 +286,26 @@ void expec::cisajscktalt::Hubbard(
       isite3 = Def::OrgTpow[2 * org_isite3 - 2 + org_sigma3];
       isite4 = Def::OrgTpow[2 * org_isite4 - 2 + org_sigma4];
       if (isite1 == isite2 && isite3 == isite4) {
-        mltply::Hubbard::X_CisAisCjtAjt_MPI(org_isite1 - 1, org_sigma1,
+        mltply::Hubbard::C::X_CisAisCjtAjt_MPI(org_isite1 - 1, org_sigma1,
           org_isite3 - 1, org_sigma3, 1.0, nstate, Xvec, vec);
       }
       else if (isite1 == isite2 && isite3 != isite4) {
         //printf("org_isite1=%d, org_isite2=%d, org_isite3=%d, org_isite4=%d\n", org_isite1, org_isite2, org_isite3, org_isite4);
-        mltply::Hubbard::X_CisAisCjtAku_MPI(org_isite1 - 1, org_sigma1,
+        mltply::Hubbard::C::X_CisAisCjtAku_MPI(org_isite1 - 1, org_sigma1,
           org_isite3 - 1, org_sigma3, org_isite4 - 1, org_sigma4, 1.0, nstate, Xvec, vec);
       }
       else if (isite1 != isite2 && isite3 == isite4) {
-        mltply::Hubbard::X_CisAjtCkuAku_MPI(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::C::X_CisAjtCkuAku_MPI(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
           org_isite3 - 1, org_sigma3, 1.0, nstate, Xvec, vec);
 
       }
       else if (isite1 != isite2 && isite3 != isite4) {
-        mltply::Hubbard::X_CisAjtCkuAlv_MPI(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::C::X_CisAjtCkuAlv_MPI(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
           org_isite3 - 1, org_sigma3, org_isite4 - 1, org_sigma4, 1.0, nstate, Xvec, vec);
       }
     }//InterPE
     else {
-      mltply::general_int_GetInfo(
+      mltply::Hubbard::general_int_GetInfo(
         org_isite1, org_isite2, org_isite3, org_isite4,
         org_sigma1, org_sigma2, org_sigma3, org_sigma4, tmp_V
       );
@@ -326,14 +326,14 @@ void expec::cisajscktalt::Hubbard(
 #pragma omp parallel for default(none) private(j) shared(vec,tmp_V,Xvec,nstate, \
 i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff)
         for (j = 1; j <= i_max; j++) {
-          mltply::Hubbard::CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, Xvec, vec);
+          mltply::Hubbard::C::CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, Xvec, vec);
         }
       }
       else if (isite1 == isite2 && isite3 != isite4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff)
         for (j = 1; j <= i_max; j++) {
-          mltply::Hubbard::CisAisCjtAku_element(j, isite1, isite3, isite4, Bsum, Bdiff,
+          mltply::Hubbard::C::CisAisCjtAku_element(j, isite1, isite3, isite4, Bsum, Bdiff,
             tmp_V, nstate, Xvec, vec, &tmp_off);
         }
       }
@@ -341,7 +341,7 @@ shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,B
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff)
         for (j = 1; j <= i_max; j++) {
-          mltply::Hubbard::CisAjtCkuAku_element(j, isite1, isite2, isite3, Asum, Adiff,
+          mltply::Hubbard::C::CisAjtCkuAku_element(j, isite1, isite2, isite3, Asum, Adiff,
             tmp_V, nstate, Xvec, vec, &tmp_off);
         }
       }
@@ -349,12 +349,12 @@ shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,B
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff)
         for (j = 1; j <= i_max; j++) {
-          mltply::Hubbard::CisAjtCkuAlv_element(j, isite1, isite2, isite3, isite4, Asum, Adiff, Bsum, Bdiff,
+          mltply::Hubbard::C::CisAjtCkuAlv_element(j, isite1, isite2, isite3, isite4, Asum, Adiff, Bsum, Bdiff,
             tmp_V, nstate, Xvec, vec, &tmp_off);
         }
       }
     }
-    MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
+    wrapperMPI::MultiVecProd(i_max, nstate, vec, Xvec, prod[i]);
   }
 }
 /**
@@ -367,7 +367,7 @@ shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,B
  * @retval -1 abnormally finished
  *
  */
-void expec::cisajscktalt::SpinHalf(
+void expec::cisajscktalt::Spin::C::Half(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec,
@@ -400,18 +400,18 @@ void expec::cisajscktalt::SpinHalf(
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
         is1_up = Def::Tpow[org_isite1 - 1];
         is2_up = Def::Tpow[org_isite3 - 1];
-        num1 = mltply::SpinGC::Half::X_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
-        num2 = mltply::SpinGC::Half::X_CisAis((long int)MP::myrank + 1, is2_up, org_sigma3);
+        num1 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
+        num2 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is2_up, org_sigma3);
         zaxpy_long(i_max*nstate, tmp_V * (std::complex<double>)(num1*num2),
           &vec[1][0], &Xvec[1][0]);
       }
       else if (org_isite1 == org_isite3 && org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) {
         is1_up = Def::Tpow[org_isite1 - 1];
-        num1 = mltply::SpinGC::Half::X_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
+        num1 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
         zaxpy_long(i_max*nstate, tmp_V * (std::complex<double>)num1, &vec[1][0], &Xvec[1][0]);
       }
       else if (org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) {//exchange
-        mltply::Spin::Half::X_general_int_MPIdouble(
+        mltply::Spin::C::Half::X_general_int_MPIdouble(
           org_isite1 - 1, org_sigma1, org_sigma2, org_isite3 - 1, org_sigma3, org_sigma4, 
           tmp_V, nstate, Xvec, vec);
       }
@@ -423,17 +423,17 @@ void expec::cisajscktalt::SpinHalf(
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
         is1_up = Def::Tpow[org_isite1 - 1];
         is2_up = Def::Tpow[org_isite3 - 1];
-        num2 = mltply::SpinGC::Half::X_CisAis((long int)MP::myrank + 1, is2_up, org_sigma3);
+        num2 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is2_up, org_sigma3);
 #pragma omp parallel for default(none)shared(vec,Xvec,nstate,one, \
 i_max, tmp_V, is1_up, org_sigma1, num2) private(j, num1,dmv)
         for (j = 1; j <= i_max; j++) {
-          num1 = mltply::Spin::Half::X_CisAis(j, is1_up, org_sigma1);
+          num1 = mltply::Spin::C::Half::X_CisAis(j, is1_up, org_sigma1);
           dmv = tmp_V * (std::complex<double>)(num1*num2);
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
         }
       }
       else if (org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) {//exchange
-        mltply::Spin::Half::X_general_int_MPIsingle(
+        mltply::Spin::C::Half::X_general_int_MPIsingle(
           org_isite1 - 1, org_sigma1, org_sigma2, org_isite3 - 1, org_sigma3, org_sigma4, 
           tmp_V, nstate, Xvec, vec);
       }
@@ -448,7 +448,7 @@ i_max, tmp_V, is1_up, org_sigma1, num2) private(j, num1,dmv)
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4, tmp_V)
         for (j = 1; j <= i_max; j++) {
-          mltply::Spin::Half::CisAisCisAis_element(j, isA_up, isB_up, org_sigma2, org_sigma4,
+          mltply::Spin::C::Half::CisAisCisAis_element(j, isA_up, isB_up, org_sigma2, org_sigma4,
             tmp_V, nstate, Xvec, vec);
         }
       }
@@ -456,7 +456,7 @@ shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4, tmp_V)
 #pragma omp parallel for default(none) private(j, dmv) \
 shared(i_max,isA_up,org_sigma1, tmp_V,vec,Xvec,nstate,one)
         for (j = 1; j <= i_max; j++) {
-          dmv = tmp_V * (std::complex<double>)mltply::Spin::Half::X_CisAis(j, 
+          dmv = tmp_V * (std::complex<double>)mltply::Spin::C::Half::X_CisAis(j, 
             isA_up, org_sigma1);
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
         }
@@ -465,7 +465,7 @@ shared(i_max,isA_up,org_sigma1, tmp_V,vec,Xvec,nstate,one)
 #pragma omp parallel for default(none) private(j, tmp_sgn, dmv,tmp_off) \
 shared(vec,Xvec,nstate,one, i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
         for (j = 1; j <= i_max; j++) {
-          tmp_sgn = mltply::Spin::Half::X_exchange_element(j, isA_up, isB_up, org_sigma2, org_sigma4, &tmp_off);
+          tmp_sgn = mltply::Spin::C::Half::X_exchange_element(j, isA_up, isB_up, org_sigma2, org_sigma4, &tmp_off);
           dmv = tmp_sgn;
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[tmp_off][0], &one);
         }
@@ -474,7 +474,7 @@ shared(vec,Xvec,nstate,one, i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
                 // error message will be added
       }
     }
-    MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
+    wrapperMPI::MultiVecProd(i_max, nstate, vec, Xvec, prod[i]);
   }
 }
 /**
@@ -487,7 +487,7 @@ shared(vec,Xvec,nstate,one, i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
  * @retval -1 abnormally finished
  *
  */
-void expec::cisajscktalt::SpinGeneral(
+void expec::cisajscktalt::Spin::C::General(
   int nstate, 
   std::complex<double> **Xvec, 
   std::complex<double> **vec, 
@@ -530,12 +530,12 @@ void expec::cisajscktalt::SpinGeneral(
 
     if (org_isite1 > Def::Nsite && org_isite3 > Def::Nsite) {
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
-        mltply::Spin::General::X_CisAisCjuAju_MPIdouble(
+        mltply::Spin::C::General::X_CisAisCjuAju_MPIdouble(
           org_isite1 - 1, org_sigma1, org_isite3 - 1, org_sigma3, 
           tmp_V, nstate, Xvec, vec);
       }
       else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
-        mltply::Spin::General::X_CisAitCjuAjv_MPIdouble(
+        mltply::Spin::C::General::X_CisAitCjuAjv_MPIdouble(
           org_isite1 - 1, org_sigma1, org_sigma2, org_isite3 - 1, org_sigma3, org_sigma4,
           tmp_V, nstate, Xvec, vec);
       }
@@ -544,11 +544,11 @@ void expec::cisajscktalt::SpinGeneral(
     }
     else if (org_isite3 > Def::Nsite || org_isite1 > Def::Nsite) {
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
-        mltply::Spin::General::X_CisAisCjuAju_MPIsingle(
+        mltply::Spin::C::General::X_CisAisCjuAju_MPIsingle(
           org_isite1 - 1, org_sigma1, org_isite3 - 1, org_sigma3, tmp_V, nstate, Xvec, vec);
       }
       else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
-        mltply::Spin::General::X_CisAitCjuAjv_MPIsingle(
+        mltply::Spin::C::General::X_CisAitCjuAjv_MPIsingle(
           org_isite1 - 1, org_sigma1, org_sigma2, org_isite3 - 1, org_sigma3, org_sigma4,
           tmp_V, nstate, Xvec, vec);
       }
@@ -587,7 +587,7 @@ MP::myrank,tmp_V,vec,List::c1,Xvec,nstate,one,Def::SiteToBit, Def::Tpow, Check::
         }
       }
     }
-    MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
+    wrapperMPI::MultiVecProd(i_max, nstate, vec, Xvec, prod[i]);
   }
 }
 /**
@@ -600,7 +600,7 @@ MP::myrank,tmp_V,vec,List::c1,Xvec,nstate,one,Def::SiteToBit, Def::Tpow, Check::
  * @retval -1 abnormally finished
  *
  */
-void expec::cisajscktalt::SpinGCHalf(
+void expec::cisajscktalt::Spin::GC::Half(
   int nstate,
   std::complex<double> **Xvec,
   std::complex<double> **vec, 
@@ -628,48 +628,48 @@ void expec::cisajscktalt::SpinGCHalf(
     if (org_isite1 > Def::Nsite && org_isite3 > Def::Nsite) { //org_isite3 >= org_isite1 > Nsite
 
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
-        mltply::SpinGC::Half::X_CisAisCjuAju_MPIdouble(
+        mltply::Spin::GC::Half::X_CisAisCjuAju_MPIdouble(
           org_isite1 - 1, org_sigma1, (org_isite3 - 1), org_sigma3, tmp_V, nstate, Xvec, vec);
 
       }
       else if (org_isite1 == org_isite3 && org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) { //diagonal (for spin: cuadcdau=cuau)
-        mltply::SpinGC::Half::X_CisAis_MPIdouble(
+        mltply::Spin::GC::Half::X_CisAis_MPIdouble(
           org_isite1 - 1, org_sigma1, tmp_V, nstate, Xvec, vec);
       }
       else if (org_sigma1 == org_sigma2 && org_sigma3 != org_sigma4) {
-        mltply::SpinGC::Half::X_CisAisCjuAjv_MPIdouble(
+        mltply::Spin::GC::Half::X_CisAisCjuAjv_MPIdouble(
           org_isite1 - 1, org_sigma1, org_isite3 - 1, org_sigma3, org_sigma4, 
           tmp_V, nstate, Xvec, vec);
       }
       else if (org_sigma1 != org_sigma2 && org_sigma3 == org_sigma4) {
-        mltply::SpinGC::Half::X_CisAitCjuAju_MPIdouble(
+        mltply::Spin::GC::Half::X_CisAitCjuAju_MPIdouble(
           org_isite1 - 1, org_sigma1, org_sigma2, org_isite3 - 1, org_sigma3,
           tmp_V, nstate, Xvec, vec);
       }
       else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
-        mltply::SpinGC::Half::X_CisAitCiuAiv_MPIdouble(
+        mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIdouble(
           org_isite1 - 1, org_sigma1, org_sigma2, org_isite3 - 1, org_sigma3, org_sigma4, 
           tmp_V, nstate, Xvec, vec);
       }
     }
     else if (org_isite3 > Def::Nsite || org_isite1 > Def::Nsite) { //org_isite3 > Nsite >= org_isite1
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
-        mltply::SpinGC::Half::X_CisAisCjuAju_MPIsingle(
+        mltply::Spin::GC::Half::X_CisAisCjuAju_MPIsingle(
           org_isite1 - 1, org_sigma1, (org_isite3 - 1), org_sigma3, tmp_V, nstate, Xvec, vec);
 
       }
       else if (org_sigma1 == org_sigma2 && org_sigma3 != org_sigma4) {
-        mltply::SpinGC::Half::X_CisAisCjuAjv_MPIsingle(
+        mltply::Spin::GC::Half::X_CisAisCjuAjv_MPIsingle(
           org_isite1 - 1, org_sigma1, org_isite3 - 1, org_sigma3, org_sigma4,
           tmp_V, nstate, Xvec, vec);
       }
       else if (org_sigma1 != org_sigma2 && org_sigma3 == org_sigma4) {
-        mltply::SpinGC::Half::X_CisAitCjuAju_MPIsingle(
+        mltply::Spin::GC::Half::X_CisAitCjuAju_MPIsingle(
           org_isite1 - 1, org_sigma2, org_isite3 - 1, org_sigma3, 
           tmp_V, nstate, Xvec, vec);
       }
       else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
-        mltply::SpinGC::Half::X_CisAitCiuAiv_MPIsingle(
+        mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(
           org_isite1 - 1, org_sigma1, org_sigma2, org_isite3 - 1, org_sigma3, org_sigma4,
           tmp_V, nstate, Xvec, vec);
       }
@@ -682,7 +682,7 @@ void expec::cisajscktalt::SpinGCHalf(
 #pragma omp parallel for default(none) private(j) \
 shared(vec,Xvec,nstate, i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
           for (j = 1; j <= i_max; j++) {
-            mltply::SpinGC::Half::CisAisCisAis_element(j, isA_up, isB_up, org_sigma2, org_sigma4,
+            mltply::Spin::GC::Half::CisAisCisAis_element(j, isA_up, isB_up, org_sigma2, org_sigma4,
               tmp_V, nstate, Xvec, vec);
           }
         }
@@ -690,7 +690,7 @@ shared(vec,Xvec,nstate, i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
           for (j = 1; j <= i_max; j++) {
-            mltply::SpinGC::Half::CisAisCitAiu_element(j, org_sigma2, org_sigma4, isA_up, isB_up,
+            mltply::Spin::GC::Half::CisAisCitAiu_element(j, org_sigma2, org_sigma4, isA_up, isB_up,
               tmp_V, nstate, Xvec, vec, &tmp_off);
           }
         }
@@ -698,7 +698,7 @@ shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
           for (j = 1; j <= i_max; j++) {
-            mltply::SpinGC::Half::CisAitCiuAiu_element(j, org_sigma2, org_sigma4, isA_up, isB_up,
+            mltply::Spin::GC::Half::CisAitCiuAiu_element(j, org_sigma2, org_sigma4, isA_up, isB_up,
               tmp_V, nstate, Xvec, vec, &tmp_off);
           }
         }
@@ -706,13 +706,13 @@ shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
           for (j = 1; j <= i_max; j++) {
-            mltply::SpinGC::Half::CisAitCiuAiv_element(j, org_sigma2, org_sigma4, isA_up, isB_up,
+            mltply::Spin::GC::Half::CisAitCiuAiv_element(j, org_sigma2, org_sigma4, isA_up, isB_up,
               tmp_V, nstate, Xvec, vec, &tmp_off);
           }
         }
       }
     }
-    MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
+    wrapperMPI::MultiVecProd(i_max, nstate, vec, Xvec, prod[i]);
   }
 }
 /**
@@ -725,7 +725,7 @@ shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
  * @retval -1 abnormally finished
  *
  */
-void expec::cisajscktalt::SpinGCGeneral(
+void expec::cisajscktalt::Spin::GC::General(
   int nstate, 
   std::complex<double> **Xvec, 
   std::complex<double> **vec, 
@@ -754,42 +754,42 @@ void expec::cisajscktalt::SpinGCGeneral(
 
     if (org_isite1 > Def::Nsite && org_isite3 > Def::Nsite) {
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
-        mltply::SpinGC::General::X_CisAisCjuAju_MPIdouble(
+        mltply::Spin::GC::General::X_CisAisCjuAju_MPIdouble(
           org_isite1 - 1, org_sigma1, org_isite3 - 1, org_sigma3, tmp_V, nstate, Xvec, vec);
       }
       else if (org_sigma1 == org_sigma2 && org_sigma3 != org_sigma4) {
-        mltply::SpinGC::General::X_CisAisCjuAjv_MPIdouble(
+        mltply::Spin::GC::General::X_CisAisCjuAjv_MPIdouble(
           org_isite1 - 1, org_sigma1, org_isite3 - 1, org_sigma3, org_sigma4, 
           tmp_V, nstate, Xvec, vec);
       }
       else if (org_sigma1 != org_sigma2 && org_sigma3 == org_sigma4) {
-        mltply::SpinGC::General::X_CisAitCjuAju_MPIdouble(
+        mltply::Spin::GC::General::X_CisAitCjuAju_MPIdouble(
           org_isite1 - 1, org_sigma1, org_sigma2, org_isite3 - 1, org_sigma3, 
           tmp_V, nstate, Xvec, vec);
       }
       else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
-        mltply::SpinGC::General::X_CisAitCjuAjv_MPIdouble(
+        mltply::Spin::GC::General::X_CisAitCjuAjv_MPIdouble(
           org_isite1 - 1, org_sigma1, org_sigma2, org_isite3 - 1, org_sigma3, org_sigma4,
           tmp_V, nstate, Xvec, vec);
       }
     }
     else if (org_isite3 > Def::Nsite || org_isite1 > Def::Nsite) {
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
-        mltply::SpinGC::General::X_CisAisCjuAju_MPIsingle(
+        mltply::Spin::GC::General::X_CisAisCjuAju_MPIsingle(
           org_isite1 - 1, org_sigma1, org_isite3 - 1, org_sigma3, tmp_V, nstate, Xvec, vec);
       }
       else if (org_sigma1 == org_sigma2 && org_sigma3 != org_sigma4) {
-        mltply::SpinGC::General::X_CisAisCjuAjv_MPIsingle(
+        mltply::Spin::GC::General::X_CisAisCjuAjv_MPIsingle(
           org_isite1 - 1, org_sigma1, org_isite3 - 1, org_sigma3, org_sigma4, 
           tmp_V, nstate, Xvec, vec);
       }
       else if (org_sigma1 != org_sigma2 && org_sigma3 == org_sigma4) {
-        mltply::SpinGC::General::X_CisAitCjuAju_MPIsingle(
+        mltply::Spin::GC::General::X_CisAitCjuAju_MPIsingle(
           org_isite1 - 1, org_sigma1, org_sigma2, org_isite3 - 1, org_sigma3, 
           tmp_V, nstate, Xvec, vec);
       }
       else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
-        mltply::SpinGC::General::X_CisAitCjuAjv_MPIsingle(
+        mltply::Spin::GC::General::X_CisAitCjuAjv_MPIsingle(
           org_isite1 - 1, org_sigma1, org_sigma2, org_isite3 - 1, org_sigma3, org_sigma4, 
           tmp_V, nstate, Xvec, vec);
       }
@@ -856,7 +856,7 @@ tmp_V,vec,Xvec,nstate,one, Def::SiteToBit, Def::Tpow)
         }
       }
     }
-    MultiVecProdMPI(i_max, nstate, vec, Xvec, prod[i]);
+    wrapperMPI::MultiVecProd(i_max, nstate, vec, Xvec, prod[i]);
   }
 }
 /**
@@ -913,30 +913,30 @@ int expec::cisajscktalt::main(
 
   switch (Def::iCalcModel) {
   case DC::HubbardGC:
-    expec::cisajscktalt::HubbardGC(nstate, Xvec, vec, prod);
+    expec::cisajscktalt::Hubbard::GC(nstate, Xvec, vec, prod);
     break;
 
   case DC::KondoGC:
   case DC::Hubbard:
   case DC::Kondo:
-    expec::cisajscktalt::Hubbard(nstate, Xvec, vec, prod);
+    expec::cisajscktalt::Hubbard::C(nstate, Xvec, vec, prod);
     break;
 
   case DC::Spin:
     if (Def::iFlgGeneralSpin == FALSE) {
-      expec::cisajscktalt::SpinHalf(nstate, Xvec, vec, prod);
+      expec::cisajscktalt::Spin::C::Half(nstate, Xvec, vec, prod);
     }
     else {
-      expec::cisajscktalt::SpinGeneral(nstate, Xvec, vec, prod);
+      expec::cisajscktalt::Spin::C::General(nstate, Xvec, vec, prod);
     }
     break;
 
   case DC::SpinGC:
     if (Def::iFlgGeneralSpin == FALSE) {
-      expec::cisajscktalt::SpinGCHalf(nstate, Xvec, vec, prod);
+      expec::cisajscktalt::Spin::GC::Half(nstate, Xvec, vec, prod);
     }
     else {
-      expec::cisajscktalt::SpinGCGeneral(nstate, Xvec, vec, prod);
+      expec::cisajscktalt::Spin::GC::General(nstate, Xvec, vec, prod);
     }
     break;
 

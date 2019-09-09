@@ -77,21 +77,21 @@ int GetPairExcitedState
 
   switch (Def::iCalcModel) {
   case DC::HubbardGC:
-    iret = GetExcitedState::Pair::HubbardGC(nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetExcitedState::Pair::Hubbard::GC(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
   case DC::KondoGC:
   case DC::Hubbard:
   case DC::Kondo:
-    iret = GetExcitedState::Pair::Hubbard(nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetExcitedState::Pair::Hubbard::C(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
   case DC::Spin: // for the Sz-conserved spin system
-    iret = GetExcitedState::Pair::Spin::main(nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetExcitedState::Pair::Spin::C::main(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
   case DC::SpinGC:
-    iret = GetExcitedState::Pair::SpinGC::main(nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetExcitedState::Pair::Spin::GC::main(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
   default:

@@ -154,7 +154,7 @@ void xsetmem::large()
       || List::c2_2 == NULL
       ) {
       fprintf(MP::STDOUT, "Error: Fail for memory allocation.\n");
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
   }
 
@@ -176,7 +176,7 @@ void xsetmem::large()
   Wave::v1 = cd_2d_allocate(Check::idim_max + 1, nstate);
 #ifdef __MPI
   long int MAXidim_max;
-  MAXidim_max = MaxMPI_li(Check::idim_max);
+  MAXidim_max = wrapperMPI::Max_li(Check::idim_max);
   if (GetlistSize() == TRUE) List::c1buf = li_1d_allocate(MAXidim_max + 1);
   Wave::v1buf = cd_2d_allocate(MAXidim_max + 1, nstate);
 #else

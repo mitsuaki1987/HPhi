@@ -129,7 +129,7 @@ int CalcByTEM(
     if (fp == NULL) {
       fprintf(stderr, "Error: A file of Inputvector does not exist.\n");
       fclose(fp);
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
     byte_size = fread(&step_initial, sizeof(int), 1, fp);
     byte_size = fread(&i_max, sizeof(long int), 1, fp);
@@ -137,7 +137,7 @@ int CalcByTEM(
       fprintf(stderr, "Error: A file of Inputvector is incorrect.\n");
       fclose(fp);
       printf("byte_size : %d\n", (int)byte_size);
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
     byte_size = fread(&Wave::v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
     fclose(fp);
@@ -252,7 +252,7 @@ int CalcByTEM(
         sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", Def::CDataFileHead, Step::step_i, MP::myrank);
         if (childfopenALL(sdt, "wb", &fp) != 0) {
           fclose(fp);
-          exitMPI(-1);
+          wrapperMPI::Exit(-1);
         }
         fwrite(&Step::step_i, sizeof(Step::step_i), 1, fp);
         fwrite(&Check::idim_max, sizeof(long int), 1, fp);
@@ -267,7 +267,7 @@ int CalcByTEM(
     sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", Def::CDataFileHead, rand_i, MP::myrank);
     if (childfopenALL(sdt, "wb", &fp) != 0) {
       fclose(fp);
-      exitMPI(-1);
+      wrapperMPI::Exit(-1);
     }
     fwrite(&Step::step_i, sizeof(Step::step_i), 1, fp);
     fwrite(&Check::idim_max, sizeof(long int), 1, fp);

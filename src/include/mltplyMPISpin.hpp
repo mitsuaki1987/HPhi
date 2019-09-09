@@ -22,56 +22,57 @@
 
 namespace mltply {
   namespace Spin {
-    namespace Half {
-      void general_int_MPIsingle(long int i_int, int nstate,
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-      void general_int_MPIdouble(long int i_int, int nstate,
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-      void X_general_int_MPIsingle(
-        int org_isite1, int org_ispin1, int org_ispin2, int org_isite3,
-        int org_ispin3, int org_ispin4,
-        std::complex<double> tmp_J, int nstate,
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-      void X_general_int_MPIdouble(
-        int org_isite1, int org_ispin1, int org_ispin2, int org_isite3,
-        int org_ispin3, int org_ispin4,
-        std::complex<double> tmp_J, int nstate,
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-      void X_general_int_TotalS_MPIdouble(
-        int org_isite1, int org_isite3, int nstate,
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+    namespace C {
+      namespace Half {
+        void general_int_MPIsingle(long int i_int, int nstate,
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        void general_int_MPIdouble(long int i_int, int nstate,
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        void X_general_int_MPIsingle(
+          int org_isite1, int org_ispin1, int org_ispin2, int org_isite3,
+          int org_ispin3, int org_ispin4,
+          std::complex<double> tmp_J, int nstate,
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        void X_general_int_MPIdouble(
+          int org_isite1, int org_ispin1, int org_ispin2, int org_isite3,
+          int org_ispin3, int org_ispin4,
+          std::complex<double> tmp_J, int nstate,
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        void X_general_int_TotalS_MPIdouble(
+          int org_isite1, int org_isite3, int nstate,
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      }
+      namespace General {
+        void general_int_MPIdouble(
+          long int i_int, int nstate,
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        void general_int_MPIsingle(
+          long int i_int, int nstate,
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      }
     }
-    namespace General {
-      void general_int_MPIdouble(
-        long int i_int, int nstate, 
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-      void general_int_MPIsingle(
-        long int i_int, int nstate, 
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-    }
-  }
-  namespace SpinGC {
-    namespace Half {
-      void general_int_MPIdouble(
-        long int i_int, int nstate,
-        std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1);
+    namespace GC {
+      namespace Half {
+        void general_int_MPIdouble(
+          long int i_int, int nstate,
+          std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1);
+        void general_int_MPIsingle(
+          long int i_int, int nstate,
+          std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1);
+      }
+      namespace General {
+        void general_int_MPIdouble(
+          long int i_int, int nstate,
+          std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1);
 
-      void general_int_MPIsingle(
-        long int i_int, int nstate,
-        std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1);
-    }
-    namespace General {
-      void general_int_MPIdouble(
-        long int i_int, int nstate,
-        std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1);
-
-      void general_int_MPIsingle(
-        long int i_int, int nstate, 
-        std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1);
+        void general_int_MPIsingle(
+          long int i_int, int nstate,
+          std::complex<double>** tmp_v0,
+          std::complex<double>** tmp_v1);
+      }
     }
   }
 }

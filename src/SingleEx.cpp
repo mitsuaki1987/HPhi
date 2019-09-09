@@ -41,13 +41,13 @@ int GetSingleExcitedState(
 
   switch (Def::iCalcModel) {
   case DC::HubbardGC:
-    iret = GetExcitedState::Single::HubbardGC(nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetExcitedState::Single::Hubbard::GC(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
   case DC::KondoGC:
   case DC::Hubbard:
   case DC::Kondo:
-    iret = GetExcitedState::Single::Hubbard(nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetExcitedState::Single::Hubbard::C(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
   case DC::Spin:
