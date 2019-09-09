@@ -165,12 +165,11 @@ void mltply::Hubbard::GC::X_general_hopp_MPIsingle(
   int org_isite2,//!<[in] Site 2
   int org_ispin2,//!<[in] Spin 2
   std::complex<double> tmp_trans,//!<[in] Hopping integral
-  //!<[inout]
   int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ) {
   int mask2, state1, state2, origin, bit2diff, Fsgn;
-  long int idim_max_buf, j, mask1, state1check, bit1diff, ioff;
+  long int j, mask1, state1check, bit1diff, ioff;
   std::complex<double> trans, dmv;
   int one = 1;
   /*
@@ -183,9 +182,7 @@ void mltply::Hubbard::GC::X_general_hopp_MPIsingle(
 
   SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
 
-  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
   /*
     Index in the intra PE
@@ -206,10 +203,10 @@ void mltply::Hubbard::GC::X_general_hopp_MPIsingle(
   bit1diff = Def::Tpow[2 * Def::Nsite - 1] * 2 - mask1 * 2;
 
 #pragma omp parallel default(none) private(j,dmv,state1,Fsgn,ioff) \
-shared(idim_max_buf,trans,mask1,state1check,bit1diff,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
+shared(Check::idim_max,trans,mask1,state1check,bit1diff,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
   {
 #pragma omp for
-    for (j = 0; j < idim_max_buf; j++) {
+    for (j = 0; j < Check::idim_max; j++) {
 
       state1 = j & mask1;
 

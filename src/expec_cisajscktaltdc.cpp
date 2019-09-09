@@ -161,8 +161,8 @@ void expec::cisajscktalt::Hubbard::GC(
     org_isite4 = Def::CisAjtCkuAlvDC[i][6] + 1;
     org_sigma4 = Def::CisAjtCkuAlvDC[i][7];
 
-    if (CheckPE(org_isite1 - 1) == TRUE || CheckPE(org_isite2 - 1) == TRUE ||
-      CheckPE(org_isite3 - 1) == TRUE || CheckPE(org_isite4 - 1) == TRUE) {
+    if (mltply::Hubbard::CheckPE(org_isite1 - 1) == TRUE || mltply::Hubbard::CheckPE(org_isite2 - 1) == TRUE ||
+      mltply::Hubbard::CheckPE(org_isite3 - 1) == TRUE || mltply::Hubbard::CheckPE(org_isite4 - 1) == TRUE) {
       isite1 = Def::OrgTpow[2 * org_isite1 - 2 + org_sigma1];
       isite2 = Def::OrgTpow[2 * org_isite2 - 2 + org_sigma2];
       isite3 = Def::OrgTpow[2 * org_isite3 - 2 + org_sigma3];
@@ -279,8 +279,8 @@ void expec::cisajscktalt::Hubbard::C(
       }
     }
 
-    if (CheckPE(org_isite1 - 1) == TRUE || CheckPE(org_isite2 - 1) == TRUE ||
-      CheckPE(org_isite3 - 1) == TRUE || CheckPE(org_isite4 - 1) == TRUE) {
+    if (mltply::Hubbard::CheckPE(org_isite1 - 1) == TRUE || mltply::Hubbard::CheckPE(org_isite2 - 1) == TRUE ||
+      mltply::Hubbard::CheckPE(org_isite3 - 1) == TRUE || mltply::Hubbard::CheckPE(org_isite4 - 1) == TRUE) {
       isite1 = Def::OrgTpow[2 * org_isite1 - 2 + org_sigma1];
       isite2 = Def::OrgTpow[2 * org_isite2 - 2 + org_sigma2];
       isite3 = Def::OrgTpow[2 * org_isite3 - 2 + org_sigma3];

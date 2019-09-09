@@ -17,6 +17,14 @@
 
 namespace mltply {
   namespace Hubbard {
+    int CheckPE(int isite);
+    int CheckBit_Cis(long int is1_spin, long int orgbit, long int* offbit);
+    int CheckBit_Ajt(long int is1_spin, long int orgbit, long int* offbit);
+    int CheckBit_InterAllPE(int isite1, int isigma1, int isite2, int isigma2,
+      int isite3, int isigma3, int isite4, int isigma4, long int orgbit, long int* offbit);
+    int CheckBit_PairPE(int isite1, int isigma1, int isite3, int isigma3, long int orgbit);
+    int GetSgnInterAll(long int isite1, long int isite2, long int isite3, long int isite4,
+      int* Fsgn, long int orgbit, long int* offbit);
     namespace C {
       void X_CisAisCjtAjt_MPI(int org_isite1, int org_ispin1,
         int org_isite3, int org_ispin3, std::complex<double> tmp_V, int nstate,
@@ -83,12 +91,3 @@ namespace mltply {
     }
   }
 }
-int CheckPE(int isite);
-int CheckBit_Cis(long int is1_spin, long int orgbit, long int* offbit);
-int CheckBit_Ajt(long int is1_spin, long int orgbit, long int* offbit);
-int CheckBit_InterAllPE(int isite1, int isigma1, int isite2, int isigma2,
-  int isite3, int isigma3, int isite4, int isigma4, long int orgbit, long int* offbit);
-
-int CheckBit_PairPE(int isite1, int isigma1, int isite3, int isigma3, long int orgbit);
-int GetSgnInterAll(long int isite1, long int isite2, long int isite3, long int isite4,
-  int* Fsgn, long int orgbit, long int* offbit);

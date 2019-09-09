@@ -27,7 +27,7 @@
 @brief Check whether this site is in the inter process region or not
 @return 1 if it is inter-process region, 0 if not.
 */
-int CheckPE(
+int mltply::Hubbard::CheckPE(
   int org_isite//!<[in] Site index
 ){
   if (org_isite + 1 > Def::Nsite) {
@@ -36,14 +36,14 @@ int CheckPE(
   else {
     return FALSE;
   }
-}/*int CheckPE*/
+}/*int mltply::Hubbard::CheckPE*/
 /**
 @brief Check the occupation of @f$(i,s)@f$ state,
 and compute the index of final wavefunction associated to 
 @f$c^\dagger_{is}@f$
 @return 1 if unoccupied, 0 if occupied
 */
-int CheckBit_Cis(
+int mltply::Hubbard::CheckBit_Cis(
   long int is1_spin,//!<[in] Index of site+spin
   long int orgbit,//!<[in] Index of initial wavefunction
   long int *offbit//!<[out] Index of final wavefunction
@@ -56,14 +56,14 @@ int CheckBit_Cis(
   }
   *offbit = 0;
   return FALSE;
-}/*int CheckBit_Cis*/
+}/*int mltply::Hubbard::CheckBit_Cis*/
 /**
 @brief Check the occupation of @f$(i,s)@f$ state,
 and compute the index of final wavefunction associated to
 @f$c_{jt}@f$
 @return 1 if occupied, 0 if unoccupied
 */
-int CheckBit_Ajt(
+int mltply::Hubbard::CheckBit_Ajt(
   long int is1_spin,//!<[in] Index of site+spin
   long int orgbit,//!<[in] Index of initial wavefunction
   long int *offbit//!<[out] Index of final wavefunction
@@ -76,14 +76,14 @@ int CheckBit_Ajt(
   }
   *offbit = 0;
   return FALSE;
-}/*int CheckBit_Ajt*/
+}/*int mltply::Hubbard::CheckBit_Ajt*/
 /**
 @brief Compute the index of final wavefunction associated to
 @f$c_{4}^\dagger c_{3}c_{2}^\dagger c_{1}@f$, and
 check whether this operator is relevant or not
 @return 1 if relevant, 0 if irrelevant
 */
-int CheckBit_InterAllPE(
+int mltply::Hubbard::CheckBit_InterAllPE(
   int org_isite1,//!<[in] Site 1
   int org_isigma1,//!<[in] Spin 1
   int org_isite2,//!<[in] Site 2
@@ -102,33 +102,33 @@ int CheckBit_InterAllPE(
   tmp_org=orgbit;
   tmp_off=0;
 
-  if (CheckPE(org_isite1) == TRUE) {
+  if (mltply::Hubbard::CheckPE(org_isite1) == TRUE) {
     tmp_ispin = Def::Tpow[2 * org_isite1 + org_isigma1];
-    if (CheckBit_Ajt(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
+    if (mltply::Hubbard::CheckBit_Ajt(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
       iflgBitExist = FALSE;
     }
     tmp_org = tmp_off;
   }
 
-  if (CheckPE(org_isite2) == TRUE ) {
+  if (mltply::Hubbard::CheckPE(org_isite2) == TRUE ) {
     tmp_ispin = Def::Tpow[2 * org_isite2 + org_isigma2];
-    if (CheckBit_Cis(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
+    if (mltply::Hubbard::CheckBit_Cis(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
       iflgBitExist = FALSE;
     }
     tmp_org = tmp_off;
   }
 
-  if (CheckPE(org_isite3) == TRUE) {
+  if (mltply::Hubbard::CheckPE(org_isite3) == TRUE) {
     tmp_ispin = Def::Tpow[2 * org_isite3 + org_isigma3];
-    if (CheckBit_Ajt(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
+    if (mltply::Hubbard::CheckBit_Ajt(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
       iflgBitExist = FALSE;
     }
     tmp_org = tmp_off;
   }
 
-  if (CheckPE(org_isite4) == TRUE) {
+  if (mltply::Hubbard::CheckPE(org_isite4) == TRUE) {
     tmp_ispin = Def::Tpow[2 * org_isite4 + org_isigma4];
-    if (CheckBit_Cis(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
+    if (mltply::Hubbard::CheckBit_Cis(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
       iflgBitExist = FALSE;
     }
     tmp_org = tmp_off;
@@ -141,12 +141,12 @@ int CheckBit_InterAllPE(
   
   *offbit=tmp_org;
   return TRUE;
-}/*int CheckBit_InterAllPE*/
+}/*int mltply::Hubbard::CheckBit_InterAllPE*/
 /**
 @brief Check the occupation of both site 1 and site 3
 @return 1 if both sites are occupied, 0 if not
 */
-int CheckBit_PairPE(
+int mltply::Hubbard::CheckBit_PairPE(
   int org_isite1,//!<[in] Site 1
   int org_isigma1,//!<[in] Spin 1
   int org_isite3,//!<[in] Site 3
@@ -158,16 +158,16 @@ int CheckBit_PairPE(
   int iflgBitExist = TRUE;
   tmp_org=orgbit;
   
-  if(CheckPE(org_isite1)==TRUE){
+  if(mltply::Hubbard::CheckPE(org_isite1)==TRUE){
     tmp_ispin = Def::Tpow[2 * org_isite1 + org_isigma1];
-    if (CheckBit_Ajt(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
+    if (mltply::Hubbard::CheckBit_Ajt(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
       iflgBitExist=FALSE;
     }
   }
   
-  if (CheckPE(org_isite3) == TRUE) {
+  if (mltply::Hubbard::CheckPE(org_isite3) == TRUE) {
     tmp_ispin = Def::Tpow[2 * org_isite3 + org_isigma3];
-    if (CheckBit_Ajt(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
+    if (mltply::Hubbard::CheckBit_Ajt(tmp_ispin, tmp_org, &tmp_off) != TRUE) {
       iflgBitExist = FALSE;
     }
   }
@@ -177,14 +177,14 @@ int CheckBit_PairPE(
   }
 
   return TRUE;
-}/*int CheckBit_PairPE*/
+}/*int mltply::Hubbard::CheckBit_PairPE*/
 /**
 @brief Compute the index of final wavefunction associated to
 @f$c_{4}^\dagger c_{3}c_{2}^\dagger c_{1}@f$, and
 Fermion sign
 @return 1 if relevant, 0 if irrelevant
 */
-int GetSgnInterAll(
+int mltply::Hubbard::GetSgnInterAll(
   long int isite1,//!<[in] Site 1
   long int isite2,//!<[in] Site 2
   long int isite3,//!<[in] Site 3
@@ -251,7 +251,7 @@ int GetSgnInterAll(
   *Fsgn =tmp_sgn;
   *offbit = *offbit%Def::OrgTpow[2*Def::Nsite];
   return TRUE;
-}/*int GetSgnInterAll*/
+}/*int mltply::Hubbard::GetSgnInterAll*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{is} c_{jt}^\dagger c_{jt}@f$
 term of grandcanonical Hubbard system
@@ -272,7 +272,7 @@ void mltply::Hubbard::GC::X_CisAisCjtAjt_MPI(
   long int tmp_off, j;
   int one = 1;
 
-  iCheck=CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, (long int) MP::myrank);
+  iCheck=mltply::Hubbard::CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, (long int) MP::myrank);
   if(iCheck != TRUE){
     return;
   }
@@ -287,7 +287,7 @@ void mltply::Hubbard::GC::X_CisAisCjtAjt_MPI(
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(org_isite1,org_ispin1,org_isite3,org_ispin3,nstate,one,tmp_v0,tmp_v1,tmp_ispin1, i_max,tmp_V)
     for (j = 1; j <= i_max; j++) {
-      if (CheckBit_Ajt(tmp_ispin1, j - 1, &tmp_off) == TRUE) {
+      if (mltply::Hubbard::CheckBit_Ajt(tmp_ispin1, j - 1, &tmp_off) == TRUE) {
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
       }
     }/*for (j = 1; j <= i_max; j++)*/
@@ -310,7 +310,6 @@ void mltply::Hubbard::GC::X_CisAjtCkuAku_MPI(
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
   long int i_max = Check::idim_max;
-  long int idim_max_buf;
   int iCheck, Fsgn;
   long int isite1, isite2, isite3;
   long int tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4;
@@ -320,7 +319,7 @@ void mltply::Hubbard::GC::X_CisAjtCkuAku_MPI(
   long int org_rankbit;
   int one = 1;
 
-  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, (long int) MP::myrank, &origin);
+  iCheck = mltply::Hubbard::CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, (long int) MP::myrank, &origin);
   isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
   isite2 = Def::Tpow[2 * org_isite2 + org_ispin2];
   isite3 = Def::Tpow[2 * org_isite3 + org_ispin3];
@@ -335,7 +334,7 @@ void mltply::Hubbard::GC::X_CisAjtCkuAku_MPI(
     else Adiff = tmp_isite1 - tmp_isite2 * 2;
   }
   else {
-    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, (long int) MP::myrank, &origin);
+    iCheck = mltply::Hubbard::CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, (long int) MP::myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
       tmp_isite4 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
@@ -356,7 +355,7 @@ void mltply::Hubbard::GC::X_CisAjtCkuAku_MPI(
 
   if (MP::myrank == origin) {// only k is in PE
 
-    if (CheckBit_Ajt(isite3, MP::myrank, &tmp_off) == FALSE) return;
+    if (mltply::Hubbard::CheckBit_Ajt(isite3, MP::myrank, &tmp_off) == FALSE) return;
 
 #pragma omp parallel default(none) private(j,tmp_off) \
 shared(i_max,Asum,Adiff,isite1,isite2, tmp_V,tmp_v0, tmp_v1,nstate,Large::mode)
@@ -376,12 +375,11 @@ shared(i_max,Asum,Adiff,isite1,isite2, tmp_V,tmp_v0, tmp_v1,nstate,Large::mode)
     return;
   }//MP::myrank =origin
   else {
-    idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-    wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+    wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
 #pragma omp parallel default(none) private(j,dmv,tmp_off,Fsgn,org_rankbit,Adiff) \
 shared(Wave::v1buf,tmp_v1,nstate,one,tmp_v0,MP::myrank,origin,isite3,org_isite3,isite1,isite2, Def::OrgTpow, \
-org_isite2,org_isite1,idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4, Def::Nsite)
+org_isite2,org_isite1,Check::idim_max,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4, Def::Nsite)
     {
       if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite) {
         if (isite2 > isite1) Adiff = isite2 - isite1 * 2;
@@ -391,14 +389,14 @@ org_isite2,org_isite1,idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_is
 
         if (org_isite3 + 1 > Def::Nsite) {
 #pragma omp for
-          for (j = 1; j <= idim_max_buf; j++) {
+          for (j = 1; j <= Check::idim_max; j++) {
             zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[j][0], &one);
           }/*for (j = 1; j <= idim_max_buf; j++)*/
         }
         else { //org_isite3 <= Def::Nsite
 #pragma omp for
-          for (j = 1; j <= idim_max_buf; j++) {
-            if (CheckBit_Ajt(isite3, j - 1, &tmp_off) == TRUE) {
+          for (j = 1; j <= Check::idim_max; j++) {
+            if (mltply::Hubbard::CheckBit_Ajt(isite3, j - 1, &tmp_off) == TRUE) {
               zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[j][0], &one);
             }
           }/*for (j = 1; j <= idim_max_buf; j++)*/
@@ -407,8 +405,8 @@ org_isite2,org_isite1,idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_is
       else {
         org_rankbit = Def::OrgTpow[2 * Def::Nsite] * origin;
 #pragma omp for
-        for (j = 1; j <= idim_max_buf; j++) {
-          if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, (j - 1) + org_rankbit, &tmp_off) == TRUE) {
+        for (j = 1; j <= Check::idim_max; j++) {
+          if (mltply::Hubbard::GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, (j - 1) + org_rankbit, &tmp_off) == TRUE) {
             dmv = tmp_V * (std::complex<double>)Fsgn;
             zaxpy_(&nstate, &dmv, &Wave::v1buf[j][0], &one, &tmp_v0[tmp_off + 1][0], &one);
           }
@@ -456,7 +454,6 @@ void mltply::Hubbard::GC::X_CisAjtCkuAlv_MPI(
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
   long int i_max = Check::idim_max;
-  long int idim_max_buf;
   int iCheck, Fsgn;
   long int isite1, isite2, isite3, isite4;
   long int tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4;
@@ -467,7 +464,7 @@ void mltply::Hubbard::GC::X_CisAjtCkuAlv_MPI(
   int iFlgHermite = FALSE;
   int one = 1;
 
-  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2,
+  iCheck = mltply::Hubbard::CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2,
                                org_isite3, org_ispin3, org_isite4, org_ispin4,
                                (long int) MP::myrank, &origin);
   isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
@@ -482,7 +479,7 @@ void mltply::Hubbard::GC::X_CisAjtCkuAlv_MPI(
     tmp_isite4 = Def::OrgTpow[2 * org_isite4 + org_ispin4];
   }
   else {
-    iCheck = CheckBit_InterAllPE(org_isite4, org_ispin4, org_isite3, org_ispin3,
+    iCheck = mltply::Hubbard::CheckBit_InterAllPE(org_isite4, org_ispin4, org_isite3, org_ispin3,
                                  org_isite2, org_ispin2, org_isite1, org_ispin1,
                                  (long int) MP::myrank, &origin);
     if (iCheck == TRUE) {
@@ -545,8 +542,7 @@ shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
     return;
   }//MP::myrank =origin
   else {
-    idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-    wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+    wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
     if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite
      && org_isite3 + 1 > Def::Nsite && org_isite4 + 1 > Def::Nsite) {
@@ -575,9 +571,9 @@ shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
     else {
       org_rankbit = Def::OrgTpow[2 * Def::Nsite] * origin;
 #pragma omp parallel for default(none) private(j,dmv,tmp_off,Fsgn) \
-shared(idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,org_rankbit,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
-      for (j = 1; j <= idim_max_buf; j++) {
-        if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, (j - 1) + org_rankbit, &tmp_off) == TRUE) {
+shared(Check::idim_max,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,org_rankbit,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
+      for (j = 1; j <= Check::idim_max; j++) {
+        if (mltply::Hubbard::GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, (j - 1) + org_rankbit, &tmp_off) == TRUE) {
           dmv = tmp_V * (std::complex<double>)Fsgn;
           zaxpy_(&nstate, &dmv, &Wave::v1buf[j][0], &one, &tmp_v0[tmp_off + 1][0], &one);
         }
@@ -603,7 +599,7 @@ void mltply::Hubbard::GC::X_CisAis_MPI(
 
   isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
   if (org_isite1 + 1 > Def::Nsite) {
-    if (CheckBit_Ajt(isite1, (long int) MP::myrank, &tmp_off) == FALSE) return;
+    if (mltply::Hubbard::CheckBit_Ajt(isite1, (long int) MP::myrank, &tmp_off) == FALSE) return;
 
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
   }/*if (org_isite1 + 1 > Def::Nsite)*/
@@ -611,9 +607,9 @@ void mltply::Hubbard::GC::X_CisAis_MPI(
 #pragma omp parallel for default(none) private(j, tmp_off) \
 shared(tmp_v0, tmp_v1,nstate,one, i_max, tmp_V, isite1)
     for (j = 1; j <= i_max; j++) {
-      if (CheckBit_Ajt(isite1, j - 1, &tmp_off) == TRUE) {
+      if (mltply::Hubbard::CheckBit_Ajt(isite1, j - 1, &tmp_off) == TRUE) {
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
-      }/*if (CheckBit_Ajt(isite1, j - 1, &tmp_off) == TRUE)*/
+      }/*if (mltply::Hubbard::CheckBit_Ajt(isite1, j - 1, &tmp_off) == TRUE)*/
     }/*for (j = 1; j <= i_max; j++)*/
   }/*if (org_isite1 + 1 <= Def::Nsite)*/
 }/*std::complex<double> mltply::Hubbard::GC::X_CisAis_MPI*/
@@ -663,7 +659,7 @@ void mltply::Hubbard::C::X_CisAisCjtAjt_MPI(
   long int tmp_off, j;
   int one = 1;
 
-  iCheck = CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, (long int) MP::myrank);
+  iCheck = mltply::Hubbard::CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, (long int) MP::myrank);
   if (iCheck != TRUE) return;
   
   if (org_isite1 + 1 > Def::Nsite && org_isite3 + 1 > Def::Nsite) {
@@ -676,7 +672,7 @@ void mltply::Hubbard::C::X_CisAisCjtAjt_MPI(
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(tmp_v0,tmp_v1,List::c1,org_isite1,org_ispin1,org_isite3,org_ispin3,nstate,one, i_max,tmp_V,tmp_ispin1)
     for (j = 1; j <= i_max; j++) {
-      if (CheckBit_Ajt(tmp_ispin1, List::c1[j], &tmp_off) == TRUE) {
+      if (mltply::Hubbard::CheckBit_Ajt(tmp_ispin1, List::c1[j], &tmp_off) == TRUE) {
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
       }
     }/*for (j = 1; j <= i_max; j++)*/
@@ -712,7 +708,7 @@ void mltply::Hubbard::C::X_CisAjtCkuAlv_MPI(
   int iFlgHermite = FALSE;
   int one = 1;
 
-  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2,
+  iCheck = mltply::Hubbard::CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2,
                                org_isite3, org_ispin3, org_isite4, org_ispin4,
                                (long int) MP::myrank, &origin);
   //printf("iCheck=%d, MP::myrank=%d, origin=%d\n", iCheck, MP::myrank, origin);
@@ -728,7 +724,7 @@ void mltply::Hubbard::C::X_CisAjtCkuAlv_MPI(
     tmp_isite4 = Def::OrgTpow[2 * org_isite4 + org_ispin4];
   }/*if (iCheck == TRUE)*/
   else {
-    iCheck = CheckBit_InterAllPE(org_isite4, org_ispin4, org_isite3, org_ispin3,
+    iCheck = mltply::Hubbard::CheckBit_InterAllPE(org_isite4, org_ispin4, org_isite3, org_ispin3,
                                  org_isite2, org_ispin2, org_isite1, org_ispin1,
                                  (long int) MP::myrank, &origin);
     if (iCheck == TRUE) {
@@ -835,7 +831,7 @@ Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::c1buf, List::c2_1, List::c2_2, La
       {
 #pragma omp for
         for (j = 1; j <= idim_max_buf; j++) {
-          if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, 
+          if (mltply::Hubbard::GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, 
             List::c1buf[j] + org_rankbit, &tmp_off) == TRUE)
           {
             if (GetOffComp(List::c2_1, List::c2_2, tmp_off, Large::irght, Large::ilft, Large::ihfbit, &ioff) == TRUE)
@@ -876,7 +872,7 @@ void mltply::Hubbard::C::X_CisAjtCkuAku_MPI(
   long int org_rankbit;
   int one = 1;
   //printf("Deubg0-0: org_isite1=%d, org_ispin1=%d, org_isite2=%d, org_ispin2=%d, org_isite3=%d, org_ispin3=%d\n", org_isite1, org_ispin1,org_isite2, org_ispin2,org_isite3, org_ispin3);
-  iCheck = CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, (long int) MP::myrank, &origin);
+  iCheck = mltply::Hubbard::CheckBit_InterAllPE(org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite3, org_ispin3, (long int) MP::myrank, &origin);
   //printf("iCheck=%d, MP::myrank=%d, origin=%d\n", iCheck, MP::myrank, origin);
 
   isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
@@ -893,7 +889,7 @@ void mltply::Hubbard::C::X_CisAjtCkuAku_MPI(
     else Adiff = tmp_isite1 - tmp_isite2 * 2;
   }/*if (iCheck == TRUE)*/
   else {
-    iCheck = CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, (long int) MP::myrank, &origin);
+    iCheck = mltply::Hubbard::CheckBit_InterAllPE(org_isite3, org_ispin3, org_isite3, org_ispin3, org_isite2, org_ispin2, org_isite1, org_ispin1, (long int) MP::myrank, &origin);
     if (iCheck == TRUE) {
       tmp_V = conj(tmp_V);
       tmp_isite4 = Def::OrgTpow[2 * org_isite1 + org_ispin1];
@@ -956,7 +952,7 @@ org_isite1,org_isite2,Def::Nsite,Large::irght, Large::ilft, Large::ihfbit,Def::O
         else { //org_isite3 <= Def::Nsite
 #pragma omp for
           for (j = 1; j <= idim_max_buf; j++) {
-            if (CheckBit_Ajt(isite3, List::c1buf[j], &tmp_off) == TRUE) {
+            if (mltply::Hubbard::CheckBit_Ajt(isite3, List::c1buf[j], &tmp_off) == TRUE) {
               GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
                 Large::irght, Large::ilft, Large::ihfbit, &ioff);
               zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
@@ -968,7 +964,7 @@ org_isite1,org_isite2,Def::Nsite,Large::irght, Large::ilft, Large::ihfbit,Def::O
         org_rankbit = Def::OrgTpow[2 * Def::Nsite] * origin;
 #pragma omp for
         for (j = 1; j <= idim_max_buf; j++) {
-          if (GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, 
+          if (mltply::Hubbard::GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, 
             List::c1buf[j] + org_rankbit, &tmp_off) == TRUE) {
             dmv = tmp_V * (std::complex<double>)Fsgn;
             GetOffComp(List::c2_1, List::c2_2, tmp_off,
@@ -1016,7 +1012,7 @@ void mltply::Hubbard::C::X_CisAis_MPI(
 
   isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
   if (org_isite1 + 1 > Def::Nsite) {
-    if (CheckBit_Ajt(isite1, (long int) MP::myrank, &tmp_off) == FALSE)
+    if (mltply::Hubbard::CheckBit_Ajt(isite1, (long int) MP::myrank, &tmp_off) == FALSE)
       return;
 
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
@@ -1049,7 +1045,6 @@ void mltply::Hubbard::GC::X_Cis_MPI(
   long int *Tpow//!<[in] Similar to DefineList::Tpow
 ) {
   int mask2, state2, origin, bit2diff, Fsgn;
-  long int idim_max_buf;
   std::complex<double> trans;
 
   // org_isite >= Nsite
@@ -1066,8 +1061,7 @@ void mltply::Hubbard::GC::X_Cis_MPI(
   //SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
   SgnBit((long int) (bit2diff), &Fsgn); // Fermion sign
 
-  idim_max_buf = wrapperMPI::SendRecv_i(origin, idim_max);
-  wrapperMPI::SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  wrapperMPI::SendRecv_cv(origin, idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
   if (state2 == mask2) {
     trans = 0;
@@ -1077,7 +1071,7 @@ void mltply::Hubbard::GC::X_Cis_MPI(
   }
   else return;
 
-  zaxpy_long(idim_max_buf*nstate, trans, &Wave::v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(Check::idim_max*nstate, trans, &Wave::v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> mltply::Hubbard::GC::X_Cis_MPI*/
 /**
 @brief Single creation/annihilation operator
@@ -1097,7 +1091,6 @@ void mltply::Hubbard::GC::X_Ajt_MPI(
   long int *Tpow//!<[in] Similar to DefineList::Tpow
 ) {
   int mask2, state2, origin, bit2diff, Fsgn;
-  long int idim_max_buf;
   std::complex<double> trans;
 
   // org_isite >= Nsite
@@ -1114,14 +1107,13 @@ void mltply::Hubbard::GC::X_Ajt_MPI(
   //SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
   SgnBit((long int) (bit2diff), &Fsgn); // Fermion sign
 
-  idim_max_buf = wrapperMPI::SendRecv_i(origin, idim_max);
-  wrapperMPI::SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  wrapperMPI::SendRecv_cv(origin, idim_max*nstate, idim_max *nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
   if (     state2 == 0    ) trans = 0;
   else if (state2 == mask2) trans = (double)Fsgn * tmp_trans;
   else return;
 
-  zaxpy_long(idim_max_buf*nstate, trans, &Wave::v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(idim_max *nstate, trans, &Wave::v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> mltply::Hubbard::GC::X_Ajt_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger@f$

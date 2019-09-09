@@ -104,7 +104,6 @@ void mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIdouble(
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
   int mask1, mask2, state1, state2, origin;
-  long int idim_max_buf;
   std::complex<double> Jint;
 
   mask1 = (int)Def::Tpow[org_isite1];
@@ -138,10 +137,9 @@ void mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIdouble(
     return;
   }
 
-  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
-  zaxpy_long(nstate * idim_max_buf, Jint, &Wave::v1buf[1][0], &tmp_v0[1][0]);
+  zaxpy_long(nstate * Check::idim_max, Jint, &Wave::v1buf[1][0], &tmp_v0[1][0]);
 }/*void mltply::Spin::GC::Half::CisAitCiuAiv_MPIdouble*/
 /**
 @brief Wrapper for calculating CisAisCjuAjv term in Spin model + GC
@@ -176,7 +174,6 @@ void mltply::Spin::GC::Half::X_CisAisCjuAjv_MPIdouble(
 ) {
   int mask1, mask2, state2;
   long int origin, num1;
-  long int idim_max_buf;
   std::complex<double> Jint;
 
   if (org_isite1 == org_isite3 && org_ispin1 == org_ispin4) {//CisAisCitAis
@@ -199,8 +196,7 @@ void mltply::Spin::GC::Half::X_CisAisCjuAjv_MPIdouble(
     return;
   }
 
-  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
   zaxpy_long(Check::idim_max*nstate, Jint, &Wave::v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> mltply::Spin::GC::Half::X_CisAisCjuAjv_MPIdouble*/
@@ -239,7 +235,6 @@ void mltply::Spin::GC::Half::X_CisAitCjuAju_MPIdouble(
 ) {
   int mask1, mask2, state1, num1;
   long int origin;
-  long int idim_max_buf;
   std::complex<double> Jint;
 
   if (org_isite1 == org_isite3 && org_ispin1 == org_ispin3) {//cisaitcisais
@@ -272,8 +267,8 @@ void mltply::Spin::GC::Half::X_CisAitCjuAju_MPIdouble(
     }
   }
 
-  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, 
+    &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
   zaxpy_long(Check::idim_max*nstate, Jint, &Wave::v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double> mltply::Spin::GC::Half::X_CisAisCjuAjv_MPIdouble*/
@@ -375,7 +370,7 @@ void mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
   int mask2, state2, origin;
-  long int mask1, idim_max_buf, j, ioff, state1, state1check;
+  long int mask1, j, ioff, state1, state1check;
   std::complex<double> Jint;
   int one = 1;
   /*
@@ -398,16 +393,16 @@ void mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(
   }
   else return;
 
-  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, 
+    &tmp_v1[1][0], &Wave::v1buf[1][0]);
   /*
   Index in the intra PE
   */
   mask1 = Def::Tpow[org_isite1];
 
 #pragma omp parallel for default(none) private(j, state1, ioff) \
-shared(idim_max_buf, Jint, state1check, mask1,Wave::v1buf, tmp_v1, tmp_v0,nstate,one)
-  for (j = 0; j < idim_max_buf; j++) {
+shared(Check::idim_max, Jint, state1check, mask1,Wave::v1buf, tmp_v1, tmp_v0,nstate,one)
+  for (j = 0; j < Check::idim_max; j++) {
     state1 = mltply::Spin::GC::Half::X_CisAit(j + 1, mask1, state1check, &ioff);
     if (state1 != 0) {
       zaxpy_(&nstate, &Jint, &Wave::v1buf[j + 1][0], &one, &tmp_v0[ioff + 1][0], &one);
@@ -447,7 +442,7 @@ void mltply::Spin::GC::Half::X_CisAisCjuAjv_MPIsingle(
   std::complex<double> **tmp_v1//!<[in] Vector to be producted
 ) {
   int mask2, state2, origin;
-  long int mask1, idim_max_buf, j, state1, state1check;
+  long int mask1, j, state1, state1check;
   std::complex<double> Jint;
   int one = 1;
   /*
@@ -469,16 +464,15 @@ void mltply::Spin::GC::Half::X_CisAisCjuAjv_MPIsingle(
   }
   else return;
 
-  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
   /*
   Index in the intra PE
   */
   mask1 = Def::Tpow[org_isite1];
 
 #pragma omp parallel for default(none) private(j, state1) \
-shared(idim_max_buf, Jint, state1check, mask1, Wave::v1buf, tmp_v1, tmp_v0,nstate,one)
-  for (j = 0; j < idim_max_buf; j++) {
+shared(Check::idim_max, Jint, state1check, mask1, Wave::v1buf, tmp_v1, tmp_v0,nstate,one)
+  for (j = 0; j < Check::idim_max; j++) {
     state1 = (j & mask1) / mask1;
     if (state1 == state1check) {
       zaxpy_(&nstate, &Jint, &Wave::v1buf[j + 1][0], &one, &tmp_v0[j + 1][0], &one);
@@ -1267,7 +1261,6 @@ void mltply::Spin::GC::Half::X_CisAit_MPIdouble(
   std::complex<double> **tmp_v1 /**< [in] v0 = H v1*/)
 {
   int mask1, state1, origin;
-  long int idim_max_buf;
   std::complex<double> trans;
   
   mask1 = (int)Def::Tpow[org_isite1];
@@ -1287,8 +1280,8 @@ void mltply::Spin::GC::Half::X_CisAit_MPIdouble(
     return;
   }
 
-  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate,
+    &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
   zaxpy_long(Check::idim_max*nstate, trans, &Wave::v1buf[1][0], &tmp_v0[1][0]);
 }/*std::complex<double>  mltply::Spin::GC::Half::X_CisAit_MPIdouble*/

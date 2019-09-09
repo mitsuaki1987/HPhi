@@ -220,8 +220,8 @@ int mltply::Hubbard::C::main(
     sigma4 = Def::InterAll_OffDiagonal[i][7];
     tmp_V = Def::ParaInterAll_OffDiagonal[i];
 
-    if (CheckPE(isite1 - 1) == TRUE || CheckPE(isite2 - 1) == TRUE ||
-        CheckPE(isite3 - 1) == TRUE || CheckPE(isite4 - 1) == TRUE) {
+    if (mltply::Hubbard::CheckPE(isite1 - 1) == TRUE || mltply::Hubbard::CheckPE(isite2 - 1) == TRUE ||
+        mltply::Hubbard::CheckPE(isite3 - 1) == TRUE || mltply::Hubbard::CheckPE(isite4 - 1) == TRUE) {
       StartTimer(321);
       ibitsite1 = Def::OrgTpow[2*isite1-2+sigma1] ;
       ibitsite2 = Def::OrgTpow[2 * isite2 - 2 + sigma2];
@@ -405,8 +405,8 @@ int mltply::Hubbard::GC::main(
     sigma4 = Def::InterAll_OffDiagonal[i][7];
     tmp_V = Def::ParaInterAll_OffDiagonal[i];
 
-    if ( CheckPE(isite1 - 1) == TRUE || CheckPE(isite2 - 1) == TRUE
-      || CheckPE(isite3 - 1) == TRUE || CheckPE(isite4 - 1) == TRUE) 
+    if ( mltply::Hubbard::CheckPE(isite1 - 1) == TRUE || mltply::Hubbard::CheckPE(isite2 - 1) == TRUE
+      || mltply::Hubbard::CheckPE(isite3 - 1) == TRUE || mltply::Hubbard::CheckPE(isite4 - 1) == TRUE) 
     {
       StartTimer(221);
       ibitsite1 = Def::OrgTpow[2 * isite1 - 2 + sigma1];
