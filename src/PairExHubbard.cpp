@@ -111,7 +111,7 @@ shared(i_max,isite1, tmp_trans,tmp_v0,tmp_v1,nstate)
         }
       }
       else {
-        child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
+        mltply::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
         mltply::HubbardGC::general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
       }
     }
@@ -162,7 +162,7 @@ int GetExcitedState::Pair::Hubbard(
     tmp_trans = Def::ParaPairExcitationOperator[iEx][i];
     ibitsite1 = Def::OrgTpow[2 * org_isite1 - 2 + org_sigma1];
     ibitsite2 = Def::OrgTpow[2 * org_isite2 - 2 + org_sigma2];
-    child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
+    mltply::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
     Asum = Large::isA_spin;
     Adiff = Large::A_spin;
 
@@ -236,7 +236,7 @@ shared(tmp_v0, tmp_v1,one,dmv,nstate,i_max, tmp_trans)
         }
       }
       else {
-        child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
+        mltply::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
         if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {
           is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {

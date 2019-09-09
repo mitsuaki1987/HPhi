@@ -186,7 +186,7 @@ void expec::cisajscktalt::HubbardGC(
       }
     }//InterPE
     else {
-      child_general_int_GetInfo(org_isite1, org_isite2, org_isite3, org_isite4,
+      mltply::general_int_GetInfo(org_isite1, org_isite2, org_isite3, org_isite4,
         org_sigma1, org_sigma2, org_sigma3, org_sigma4, tmp_V);
 
       i_max = Large::i_max;
@@ -305,7 +305,7 @@ void expec::cisajscktalt::Hubbard(
       }
     }//InterPE
     else {
-      child_general_int_GetInfo(
+      mltply::general_int_GetInfo(
         org_isite1, org_isite2, org_isite3, org_isite4,
         org_sigma1, org_sigma2, org_sigma3, org_sigma4, tmp_V
       );

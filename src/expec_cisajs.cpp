@@ -99,7 +99,7 @@ void expec::cisajs::HubbardGC(
       }
     }
     else {
-      child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
+      mltply::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
       mltply::HubbardGC::general_hopp(nstate, Xvec, vec, tmp_OneGreen);
     }
 
@@ -179,7 +179,7 @@ void expec::cisajs::Hubbard(
       }
     }
     else {
-      child_general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
+      mltply::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {
         is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
 

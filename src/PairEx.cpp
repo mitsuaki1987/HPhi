@@ -87,11 +87,11 @@ int GetPairExcitedState
     break;
 
   case DC::Spin: // for the Sz-conserved spin system
-    iret = GetExcitedState::Pair::Spin(nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetExcitedState::Pair::Spin::main(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
   case DC::SpinGC:
-    iret = GetExcitedState::Pair::SpinGC(nstate, tmp_v0, tmp_v1, iEx);
+    iret = GetExcitedState::Pair::SpinGC::main(nstate, tmp_v0, tmp_v1, iEx);
     break;
 
   default:

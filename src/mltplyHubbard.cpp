@@ -195,7 +195,7 @@ int mltply::Hubbard::main(
         isite2 = Def::EDGeneralTransfer[idx][2] + 1;
         sigma1 = Def::EDGeneralTransfer[idx][1];
         sigma2 = Def::EDGeneralTransfer[idx][3];
-        child_general_hopp_GetInfo(isite1, isite2, sigma1, sigma2);
+        mltply::general_hopp_GetInfo(isite1, isite2, sigma1, sigma2);
         tmp_trans = -Def::EDParaGeneralTransfer[idx];
         Large::tmp_trans = tmp_trans;
         mltply::Hubbard::general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
@@ -261,7 +261,7 @@ int mltply::Hubbard::main(
         sigma4 = Def::InterAll_OffDiagonal[idx][7];
         tmp_V = Def::ParaInterAll_OffDiagonal[idx];
 
-        child_general_int_GetInfo(isite1, isite2, isite3, isite4, 
+        mltply::general_int_GetInfo(isite1, isite2, isite3, isite4,
           sigma1, sigma2, sigma3, sigma4, tmp_V);
 
         mltply::Hubbard::general_int(nstate, tmp_v0, tmp_v1);
@@ -292,7 +292,7 @@ int mltply::Hubbard::main(
       StartTimer(332);
       for (ihermite = 0; ihermite<2; ihermite++) {
         idx = i + ihermite;
-        child_pairhopp_GetInfo(idx);
+        mltply::pairhopp_GetInfo(idx);
         mltply::Hubbard::pairhopp(nstate, tmp_v0, tmp_v1);
       }/*for (ihermite = 0; ihermite<2; ihermite++)*/
       StopTimer(332);
@@ -318,7 +318,7 @@ int mltply::Hubbard::main(
     }
     else {
       StartTimer(342);
-      child_exchange_GetInfo(i);
+      mltply::exchange_GetInfo(i);
       mltply::Hubbard::exchange(nstate, tmp_v0, tmp_v1);
       StopTimer(342);
     }
@@ -382,7 +382,7 @@ int mltply::HubbardGC::main(
         isite2 = Def::EDGeneralTransfer[idx][2] + 1;
         sigma1 = Def::EDGeneralTransfer[idx][1];
         sigma2 = Def::EDGeneralTransfer[idx][3];
-        child_general_hopp_GetInfo(isite1, isite2, sigma1, sigma2);
+        mltply::general_hopp_GetInfo(isite1, isite2, sigma1, sigma2);
         tmp_trans = -Def::EDParaGeneralTransfer[idx];
         mltply::HubbardGC::general_hopp(nstate, tmp_v0, tmp_v1, tmp_trans);
       }
@@ -441,7 +441,7 @@ int mltply::HubbardGC::main(
         sigma4 = Def::InterAll_OffDiagonal[idx][7];
         tmp_V = Def::ParaInterAll_OffDiagonal[idx];
           
-        child_general_int_GetInfo(isite1, isite2, isite3, isite4, 
+        mltply::general_int_GetInfo(isite1, isite2, isite3, isite4,
                                         sigma1, sigma2, sigma3, sigma4, tmp_V); 
         mltply::HubbardGC::general_int(nstate, tmp_v0, tmp_v1);
       }/*for(ihermite=0; ihermite<2; ihermite++)*/
@@ -470,7 +470,7 @@ int mltply::HubbardGC::main(
       StartTimer(232);
       for (ihermite = 0; ihermite<2; ihermite++) {
         idx = i + ihermite;
-        child_pairhopp_GetInfo(idx);
+        mltply::pairhopp_GetInfo(idx);
         mltply::HubbardGC::pairhopp(nstate, tmp_v0, tmp_v1);
       }/*for (ihermite = 0; ihermite<2; ihermite++)*/
       StopTimer(232);
@@ -496,7 +496,7 @@ int mltply::HubbardGC::main(
     }
     else {
       StartTimer(242);
-      child_exchange_GetInfo(i);
+      mltply::exchange_GetInfo(i);
       mltply::HubbardGC::exchange(nstate, tmp_v0, tmp_v1);
       StopTimer(242);
     }

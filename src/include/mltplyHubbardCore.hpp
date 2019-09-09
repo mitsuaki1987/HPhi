@@ -16,11 +16,11 @@
 
 namespace mltply {
 
-  void child_general_hopp_GetInfo(long int isite1, long int isite2, long int sigma1, long int sigma2);
-  void child_general_int_GetInfo(long int isite1, long int isite2, long int isite3, long int isite4,
+  void general_hopp_GetInfo(long int isite1, long int isite2, long int sigma1, long int sigma2);
+  void general_int_GetInfo(long int isite1, long int isite2, long int isite3, long int isite4,
     long int sigma1, long int sigma2, long int sigma3, long int sigma4, std::complex<double> tmp_V);
-  void child_pairhopp_GetInfo(int iPairHopp);
-  void child_exchange_GetInfo(int iExchange);
+  void pairhopp_GetInfo(int iPairHopp);
+  void exchange_GetInfo(int iExchange);
 
   namespace Hubbard {
     void pairhopp_element(long int j, int nstate, std::complex<double>** tmp_v0,

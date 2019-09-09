@@ -31,7 +31,7 @@
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void child_general_hopp_GetInfo(
+void mltply::general_hopp_GetInfo(
   long int isite1,//!<[in] Site index
   long int isite2,//!<[in] Site index
   long int sigma1,//!<[in] Spin index
@@ -70,7 +70,7 @@ void child_general_hopp_GetInfo(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void child_general_int_GetInfo(
+void mltply::general_int_GetInfo(
   long int isite1,//!<[in] Site index
   long int isite2,//!<[in] Site index
   long int isite3,//!<[in] Site index
@@ -158,7 +158,7 @@ void child_general_int_GetInfo(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void child_pairhopp_GetInfo(
+void mltply::pairhopp_GetInfo(
   int iPairHopp//!<[in] Index of pairhopp interaction
 ) {
   int isite1 = Def::PairHopping[iPairHopp][0] + 1;
@@ -182,7 +182,7 @@ void child_pairhopp_GetInfo(
 @author Takahiro Misawa (The University of Tokyo)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
-void child_exchange_GetInfo(
+void mltply::exchange_GetInfo(
   int iExchange//!<[in] Index of exchange interaction
 ) {
   int isite1 = Def::ExchangeCoupling[iExchange][0] + 1;
