@@ -50,21 +50,21 @@ int GetExcitedState::Pair::Hubbard::GC(
   long int is;
   i_max = Check::idim_maxOrg;
   for (i = 0; i < Def::NPairExcitationOperator[iEx]; i++) {
-    org_isite1 = Def::PairExcitationOperator[iEx][i][0] + 1;
-    org_isite2 = Def::PairExcitationOperator[iEx][i][2] + 1;
+    org_isite1 = Def::PairExcitationOperator[iEx][i][0];
+    org_isite2 = Def::PairExcitationOperator[iEx][i][2];
     org_sigma1 = Def::PairExcitationOperator[iEx][i][1];
     org_sigma2 = Def::PairExcitationOperator[iEx][i][3];
     tmp_trans = Def::ParaPairExcitationOperator[iEx][i];
 
-    if (org_isite1 > Def::Nsite &&
-      org_isite2 > Def::Nsite) {
+    if (org_isite1 >= Def::Nsite &&
+      org_isite2 >= Def::Nsite) {
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {
         if (Def::PairExcitationOperator[iEx][i][4] == 0) {
           if (org_sigma1 == 0) {
-            is = Def::Tpow[2 * org_isite1 - 2];
+            is = Def::Tpow[2 * org_isite1];
           }
           else {
-            is = Def::Tpow[2 * org_isite1 - 1];
+            is = Def::Tpow[2 * org_isite1 + 1];
           }
           ibit = (long int) MP::myrank & is;
           if (ibit != is) {
@@ -74,10 +74,10 @@ int GetExcitedState::Pair::Hubbard::GC(
         }
         else {//Def::PairExcitationOperator[iEx][i][4]==1
           if (org_sigma1 == 0) {
-            is = Def::Tpow[2 * org_isite1 - 2];
+            is = Def::Tpow[2 * org_isite1];
           }
           else {
-            is = Def::Tpow[2 * org_isite1 - 1];
+            is = Def::Tpow[2 * org_isite1 + 1];
           }
           ibit = (long int) MP::myrank & is;
           if (ibit == is) {
@@ -86,24 +86,24 @@ int GetExcitedState::Pair::Hubbard::GC(
         }
       }
       else {
-        mltply::Hubbard::GC::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::GC::X_general_hopp_MPIdouble(org_isite1, org_sigma1, org_isite2, org_sigma2,
           -tmp_trans, nstate, tmp_v0, tmp_v1);
       }
     }
-    else if (org_isite2 > Def::Nsite || org_isite1 > Def::Nsite) {
+    else if (org_isite2 >= Def::Nsite || org_isite1 >= Def::Nsite) {
       if (org_isite1 < org_isite2) {
-        mltply::Hubbard::GC::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::GC::X_general_hopp_MPIsingle(org_isite1, org_sigma1, org_isite2, org_sigma2,
           -tmp_trans, nstate, tmp_v0, tmp_v1);
       }
       else {
-        mltply::Hubbard::GC::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1,
+        mltply::Hubbard::GC::X_general_hopp_MPIsingle(org_isite2, org_sigma2, org_isite1, org_sigma1,
           -conj(tmp_trans), nstate, tmp_v0, tmp_v1);
       }
     }
     else {
 
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2 && Def::PairExcitationOperator[iEx][i][4] == 0) {
-        isite1 = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
+        isite1 = Def::Tpow[2 * org_isite1 + org_sigma1];
 #pragma omp parallel for default(none) private(j) \
 shared(i_max,isite1, tmp_trans,tmp_v0,tmp_v1,nstate)
         for (j = 1; j <= i_max; j++) {
@@ -155,34 +155,34 @@ int GetExcitedState::Pair::Hubbard::C(
   Large::mode = M_CALCSPEC;
 
   for (i = 0; i < Def::NPairExcitationOperator[iEx]; i++) {
-    org_isite1 = Def::PairExcitationOperator[iEx][i][0] + 1;
-    org_isite2 = Def::PairExcitationOperator[iEx][i][2] + 1;
+    org_isite1 = Def::PairExcitationOperator[iEx][i][0];
+    org_isite2 = Def::PairExcitationOperator[iEx][i][2];
     org_sigma1 = Def::PairExcitationOperator[iEx][i][1];
     org_sigma2 = Def::PairExcitationOperator[iEx][i][3];
     tmp_trans = Def::ParaPairExcitationOperator[iEx][i];
-    ibitsite1 = Def::OrgTpow[2 * org_isite1 - 2 + org_sigma1];
-    ibitsite2 = Def::OrgTpow[2 * org_isite2 - 2 + org_sigma2];
+    ibitsite1 = Def::OrgTpow[2 * org_isite1 + org_sigma1];
+    ibitsite2 = Def::OrgTpow[2 * org_isite2 + org_sigma2];
     mltply::Hubbard::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
     Asum = Large::isA_spin;
     Adiff = Large::A_spin;
 
     if (Def::iFlagListModified == TRUE // Not to adopt HubbrdNConserved
       && org_sigma1 != org_sigma2) {
-      if (org_isite1 > Def::Nsite &&
-        org_isite2 > Def::Nsite)
+      if (org_isite1 >= Def::Nsite &&
+        org_isite2 >= Def::Nsite)
       {
-        mltply::Hubbard::C::X_CisAjt_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::C::X_CisAjt_MPIdouble(org_isite1, org_sigma1, org_isite2, org_sigma2,
           -tmp_trans, nstate, tmp_v0, tmp_v1);
       }
-      else if (org_isite2 > Def::Nsite
-        || org_isite1 > Def::Nsite)
+      else if (org_isite2 >= Def::Nsite
+        || org_isite1 >= Def::Nsite)
       {
         if (org_isite1 < org_isite2) {
-          mltply::Hubbard::C::X_CisAjt_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+          mltply::Hubbard::C::X_CisAjt_MPIsingle(org_isite1, org_sigma1, org_isite2, org_sigma2,
             -tmp_trans, nstate, tmp_v0, tmp_v1);
         }
         else {
-          mltply::Hubbard::C::X_CisAjt_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1,
+          mltply::Hubbard::C::X_CisAjt_MPIsingle(org_isite2, org_sigma2, org_isite1, org_sigma1,
             -conj(tmp_trans), nstate, tmp_v0, tmp_v1);
         }
       }
@@ -199,10 +199,10 @@ ibitsite1,ibitsite2,List::c1_org,MP::myrank)
       }
     }
     else {
-      if (org_isite1 > Def::Nsite &&
-        org_isite2 > Def::Nsite) {
+      if (org_isite1 >= Def::Nsite &&
+        org_isite2 >= Def::Nsite) {
         if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {//diagonal
-          is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
+          is = Def::Tpow[2 * org_isite1 + org_sigma1];
           ibit = (long int) MP::myrank & is;
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
             if (ibit != is) {
@@ -221,24 +221,24 @@ shared(tmp_v0, tmp_v1,one,dmv,nstate,i_max, tmp_trans)
           }
         }
         else {
-          mltply::Hubbard::C::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+          mltply::Hubbard::C::X_general_hopp_MPIdouble(org_isite1, org_sigma1, org_isite2, org_sigma2,
             -tmp_trans, nstate, tmp_v0, tmp_v1);
         }
       }
-      else if (org_isite2 > Def::Nsite || org_isite1 > Def::Nsite) {
+      else if (org_isite2 >= Def::Nsite || org_isite1 >= Def::Nsite) {
         if (org_isite1 < org_isite2) {
-          mltply::Hubbard::C::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+          mltply::Hubbard::C::X_general_hopp_MPIsingle(org_isite1, org_sigma1, org_isite2, org_sigma2,
             -tmp_trans, nstate, tmp_v0, tmp_v1);
         }
         else {
-          mltply::Hubbard::C::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1,
+          mltply::Hubbard::C::X_general_hopp_MPIsingle(org_isite2, org_sigma2, org_isite1, org_sigma1,
             -conj(tmp_trans), nstate, tmp_v0, tmp_v1);
         }
       }
       else {
         mltply::Hubbard::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
         if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {
-          is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
+          is = Def::Tpow[2 * org_isite1 + org_sigma1];
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
 #pragma omp parallel for default(none) private(num1,ibit,dmv) \
 shared(List::c1,nstate,tmp_v0,tmp_v1,one,i_max,is,tmp_trans)

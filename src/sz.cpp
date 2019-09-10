@@ -1519,7 +1519,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N, Check::sdim)
 
           for (ib = 0; ib < ihfbit; ib++) {
             i2Sz = 0;
-            for (j = 1; j <= irghtsite; j++) {
+            for (j = 0; j < irghtsite; j++) {
               i2Sz += GetLocal2Sz(j, ib, Def::SiteToBit, Def::Tpow);
             }
             list_2_1_Sz[ib] = i2Sz;
@@ -1530,8 +1530,8 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N, Check::sdim)
           for (ib = 0; ib < ilftdim; ib++) {
             list_jb[ib] = jb;
             i2Sz = 0;
-            for (j = 1; j <= (N - irghtsite); j++) {
-              i2Sz += GetLocal2Sz(j + irghtsite, ib*ihfbit, Def::SiteToBit, Def::Tpow);
+            for (j = irghtsite; j < N; j++) {
+              i2Sz += GetLocal2Sz(j, ib*ihfbit, Def::SiteToBit, Def::Tpow);
             }
             list_2_2_Sz[ib] = i2Sz;
             if ((Def::Total2Sz - i2Sz + (int)Max2Sz) >= 0 && (Def::Total2Sz - i2Sz) <= (int)Max2Sz) {

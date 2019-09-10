@@ -30,7 +30,7 @@
 int mltply::Hubbard::CheckPE(
   int org_isite//!<[in] Site index
 ){
-  if (org_isite + 1 > Def::Nsite) {
+  if (org_isite >= Def::Nsite) {
     return TRUE;
   }
   else {
@@ -277,10 +277,10 @@ void mltply::Hubbard::GC::X_CisAisCjtAjt_MPI(
     return;
   }
 
-  if (org_isite1 + 1 > Def::Nsite && org_isite3 + 1 > Def::Nsite) {
+  if (org_isite1 >= Def::Nsite && org_isite3 >= Def::Nsite) {
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
-  }/*if (org_isite1 + 1 > Def::Nsite && org_isite3 + 1 > Def::Nsite)*/
-  else if (org_isite1 + 1 > Def::Nsite || org_isite3 + 1 > Def::Nsite) {
+  }/*if (org_isite1 >= Def::Nsite && org_isite3 >= Def::Nsite)*/
+  else if (org_isite1 >= Def::Nsite || org_isite3 >= Def::Nsite) {
     if (org_isite1 > org_isite3) tmp_ispin1 = Def::Tpow[2 * org_isite3 + org_ispin3];
     else                         tmp_ispin1 = Def::Tpow[2 * org_isite1 + org_ispin1];
 
@@ -381,13 +381,13 @@ shared(i_max,Asum,Adiff,isite1,isite2, tmp_V,tmp_v0, tmp_v1,nstate,Large::mode)
 shared(Wave::v1buf,tmp_v1,nstate,one,tmp_v0,MP::myrank,origin,isite3,org_isite3,isite1,isite2, Def::OrgTpow, \
 org_isite2,org_isite1,Check::idim_max,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4, Def::Nsite)
     {
-      if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite) {
+      if (org_isite1 >= Def::Nsite && org_isite2 >= Def::Nsite) {
         if (isite2 > isite1) Adiff = isite2 - isite1 * 2;
         else Adiff = isite1 - isite2 * 2;
         SgnBit(((long int) MP::myrank & Adiff), &Fsgn);
         tmp_V *= Fsgn;
 
-        if (org_isite3 + 1 > Def::Nsite) {
+        if (org_isite3 >= Def::Nsite) {
 #pragma omp for
           for (j = 1; j <= Check::idim_max; j++) {
             zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[j][0], &one);
@@ -401,7 +401,7 @@ org_isite2,org_isite1,Check::idim_max,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp
             }
           }/*for (j = 1; j <= idim_max_buf; j++)*/
         }
-      }/*if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite)*/
+      }/*if (org_isite1 >= Def::Nsite && org_isite2 >= Def::Nsite)*/
       else {
         org_rankbit = Def::OrgTpow[2 * Def::Nsite] * origin;
 #pragma omp for
@@ -544,8 +544,8 @@ shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
   else {
     wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
 
-    if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite
-     && org_isite3 + 1 > Def::Nsite && org_isite4 + 1 > Def::Nsite) {
+    if (org_isite1 >= Def::Nsite && org_isite2 >= Def::Nsite
+     && org_isite3 >= Def::Nsite && org_isite4 >= Def::Nsite) {
 
       if (isite2 > isite1) Adiff = isite2 - isite1 * 2;
       else Adiff = isite1 - isite2 * 2;
@@ -598,11 +598,11 @@ void mltply::Hubbard::GC::X_CisAis_MPI(
   int one = 1;
 
   isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
-  if (org_isite1 + 1 > Def::Nsite) {
+  if (org_isite1 >= Def::Nsite) {
     if (mltply::Hubbard::CheckBit_Ajt(isite1, (long int) MP::myrank, &tmp_off) == FALSE) return;
 
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
-  }/*if (org_isite1 + 1 > Def::Nsite)*/
+  }/*if (org_isite1 >= Def::Nsite)*/
   else {
 #pragma omp parallel for default(none) private(j, tmp_off) \
 shared(tmp_v0, tmp_v1,nstate,one, i_max, tmp_V, isite1)
@@ -611,7 +611,7 @@ shared(tmp_v0, tmp_v1,nstate,one, i_max, tmp_V, isite1)
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
       }/*if (mltply::Hubbard::CheckBit_Ajt(isite1, j - 1, &tmp_off) == TRUE)*/
     }/*for (j = 1; j <= i_max; j++)*/
-  }/*if (org_isite1 + 1 <= Def::Nsite)*/
+  }/*if (org_isite1 <= Def::Nsite)*/
 }/*std::complex<double> mltply::Hubbard::GC::X_CisAis_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{jt}@f$
@@ -628,10 +628,10 @@ void mltply::Hubbard::GC::X_CisAjt_MPI(
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
 
-  if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite) {
+  if (org_isite1 >= Def::Nsite && org_isite2 >= Def::Nsite) {
     mltply::Hubbard::GC::X_general_hopp_MPIdouble(org_isite1, org_ispin1, org_isite2, org_ispin2, tmp_trans, nstate, tmp_v0, tmp_v1);
   }
-  else if (org_isite1 + 1 > Def::Nsite || org_isite2 + 1 > Def::Nsite) {
+  else if (org_isite1 >= Def::Nsite || org_isite2 >= Def::Nsite) {
     mltply::Hubbard::GC::X_general_hopp_MPIsingle(org_isite1, org_ispin1, org_isite2, org_ispin2, tmp_trans, nstate, tmp_v0, tmp_v1);
   }
   else {
@@ -662,10 +662,10 @@ void mltply::Hubbard::C::X_CisAisCjtAjt_MPI(
   iCheck = mltply::Hubbard::CheckBit_PairPE(org_isite1, org_ispin1, org_isite3, org_ispin3, (long int) MP::myrank);
   if (iCheck != TRUE) return;
   
-  if (org_isite1 + 1 > Def::Nsite && org_isite3 + 1 > Def::Nsite) {
+  if (org_isite1 >= Def::Nsite && org_isite3 >= Def::Nsite) {
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
-  }/*if (org_isite1 + 1 > Def::Nsite && org_isite3 + 1 > Def::Nsite)*/
-  else if (org_isite1 + 1 > Def::Nsite || org_isite3 + 1 > Def::Nsite) {
+  }/*if (org_isite1 >= Def::Nsite && org_isite3 >= Def::Nsite)*/
+  else if (org_isite1 >= Def::Nsite || org_isite3 >= Def::Nsite) {
     if (org_isite1 > org_isite3) tmp_ispin1 = Def::Tpow[2 * org_isite3 + org_ispin3];
     else                         tmp_ispin1 = Def::Tpow[2 * org_isite1 + org_ispin1];
 
@@ -676,7 +676,7 @@ shared(tmp_v0,tmp_v1,List::c1,org_isite1,org_ispin1,org_isite3,org_ispin3,nstate
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
       }
     }/*for (j = 1; j <= i_max; j++)*/
-  }/*if (org_isite1 + 1 > Def::Nsite || org_isite3 + 1 > Def::Nsite)*/
+  }/*if (org_isite1 >= Def::Nsite || org_isite3 >= Def::Nsite)*/
 }/*std::complex<double> mltply::Hubbard::C::X_CisAisCjtAjt_MPI*/
 /**
 @brief Compute @f$c_{is}^\dagger c_{jt} c_{ku}^\dagger c_{lv}@f$
@@ -788,8 +788,8 @@ shared(i_max, tmp_V, isite1, isite4, Adiff,tmp_v1, tmp_v0,nstate)
     wrapperMPI::SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
 
     wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
-    if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite
-     && org_isite3 + 1 > Def::Nsite && org_isite4 + 1 > Def::Nsite)
+    if (org_isite1 >= Def::Nsite && org_isite2 >= Def::Nsite
+     && org_isite3 >= Def::Nsite && org_isite4 >= Def::Nsite)
     {
       if (isite2 > isite1) Adiff = isite2 - isite1 * 2;
       else Adiff = isite1 - isite2 * 2;
@@ -819,8 +819,8 @@ Wave::v1buf,tmp_v1,nstate,tmp_v0,List::c2_1,List::c2_2,List::c1buf,one)
           }
         }/*for (j = 1; j <= idim_max_buf; j++)*/
       }/*End of parallel region*/
-    }//org_isite1+1 > Def::Nsite && org_isite2+1 > Def::Nsite
-            // && org_isite3+1 > Def::Nsite && org_isite4+1 > Def::Nsite
+    }//org_isite1 >= Def::Nsite && org_isite2 >= Def::Nsite
+            // && org_isite3 >= Def::Nsite && org_isite4 >= Def::Nsite
     else {
       org_rankbit = Def::OrgTpow[2 * Def::Nsite] * origin;
 
@@ -935,20 +935,20 @@ nstate,one,tmp_v0,List::c1buf,List::c2_1,List::c2_2,origin,org_isite3,MP::myrank
 org_isite1,org_isite2,Def::Nsite,Large::irght, Large::ilft, Large::ihfbit,Def::OrgTpow)
     {
 
-      if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite) {
+      if (org_isite1 >= Def::Nsite && org_isite2 >= Def::Nsite) {
         if (isite2 > isite1) Adiff = isite2 - isite1 * 2;
         else Adiff = isite1 - isite2 * 2;
         SgnBit(((long int) MP::myrank & Adiff), &Fsgn);
         tmp_V *= Fsgn;
 
-        if (org_isite3 + 1 > Def::Nsite) {
+        if (org_isite3 >= Def::Nsite) {
 #pragma omp for
           for (j = 1; j <= idim_max_buf; j++) {
             GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
               Large::irght, Large::ilft, Large::ihfbit, &ioff);
             zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
           }/*for (j = 1; j <= idim_max_buf; j++)*/
-        }/*if (org_isite3 + 1 > Def::Nsite)*/
+        }/*if (org_isite3 >= Def::Nsite)*/
         else { //org_isite3 <= Def::Nsite
 #pragma omp for
           for (j = 1; j <= idim_max_buf; j++) {
@@ -958,8 +958,8 @@ org_isite1,org_isite2,Def::Nsite,Large::irght, Large::ilft, Large::ihfbit,Def::O
               zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
             }
           }/*for (j = 1; j <= idim_max_buf; j++)*/
-        }/*if (org_isite3 + 1 <= Def::Nsite)*/
-      }/*if (org_isite1 + 1 > Def::Nsite && org_isite2 + 1 > Def::Nsite)*/
+        }/*if (org_isite3 <= Def::Nsite)*/
+      }/*if (org_isite1 >= Def::Nsite && org_isite2 >= Def::Nsite)*/
       else {
         org_rankbit = Def::OrgTpow[2 * Def::Nsite] * origin;
 #pragma omp for
@@ -1011,12 +1011,12 @@ void mltply::Hubbard::C::X_CisAis_MPI(
   int one = 1;
 
   isite1 = Def::Tpow[2 * org_isite1 + org_ispin1];
-  if (org_isite1 + 1 > Def::Nsite) {
+  if (org_isite1 >= Def::Nsite) {
     if (mltply::Hubbard::CheckBit_Ajt(isite1, (long int) MP::myrank, &tmp_off) == FALSE)
       return;
 
     zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[1][0], &tmp_v0[1][0]);
-  }/*if (org_isite1 + 1 > Def::Nsite)*/
+  }/*if (org_isite1 >= Def::Nsite)*/
   else {
 #pragma omp parallel for default(none) private(j, tmp_off) \
 shared(tmp_v0, tmp_v1, List::c1,nstate,one, i_max, tmp_V, isite1)
@@ -1025,7 +1025,7 @@ shared(tmp_v0, tmp_v1, List::c1,nstate,one, i_max, tmp_V, isite1)
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
       }/*if (X_CisAis(List::c1[j], isite1) != 0)*/
     }/*for (j = 1; j <= i_max; j++)*/
-  }/*if (org_isite1 + 1 <= Def::Nsite)*/
+  }/*if (org_isite1 <= Def::Nsite)*/
 }/*std::complex<double> mltply::Hubbard::C::X_CisAis_MPI*/
 /**
 @brief Single creation/annihilation operator

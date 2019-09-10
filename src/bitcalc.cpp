@@ -186,9 +186,9 @@ int GetOffCompGeneralSpin(
   const long int* Tpow  //!<[in] List for getting total bit at a site before
 )
 {
-  if (off_ispin > SiteToBit[org_isite - 1] - 1 ||
+  if (off_ispin > SiteToBit[org_isite] - 1 ||
     off_ispin<0 ||
-    org_ispin>SiteToBit[org_isite - 1] - 1 ||
+    org_ispin>SiteToBit[org_isite] - 1 ||
     org_ispin < 0) {
     *_ioffComp = 0;
     return FALSE;
@@ -201,7 +201,7 @@ int GetOffCompGeneralSpin(
   //delete org_ispin and create off_ispin
   long int tmp_off = 0;
   tmp_off = (long int)(off_ispin - org_ispin);
-  tmp_off *= Tpow[org_isite - 1];
+  tmp_off *= Tpow[org_isite];
   tmp_off += org_ibit;
   *_ioffComp = tmp_off;
   return TRUE;
@@ -318,7 +318,7 @@ int GetBitGeneral(
   const long int* Tpow  //!<[in] List for getting total bit at a site before
 )
 {
-  long int tmp_bit = (org_bit / Tpow[isite - 1]) % SiteToBit[isite - 1];
+  long int tmp_bit = (org_bit / Tpow[isite]) % SiteToBit[isite];
   return (tmp_bit);
 }
 /**
@@ -339,7 +339,7 @@ int GetLocal2Sz
   int bitAtSite = 0;
   //get bit
   bitAtSite = GetBitGeneral(isite, org_bit, SiteToBit, Tpow);
-  TwiceSz = -(SiteToBit[isite - 1] - 1) + 2 * bitAtSite; //-2S^{total}_i+2Sz_i
+  TwiceSz = -(SiteToBit[isite] - 1) + 2 * bitAtSite; //-2S^{total}_i+2Sz_i
   return TwiceSz;
 }
 /** 

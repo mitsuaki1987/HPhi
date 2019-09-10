@@ -41,23 +41,23 @@ void mltply::Hubbard::general_hopp_GetInfo(
   Compute mask for checking occupations of @f$(i_1,\sigma_1)@f$ (LargeList::is1_spin)
   and @f$(i_2,\sigma_2)@f$ (LargeList::is2_spin)
   */
-  Large::is1_spin = Def::Tpow[2 * isite1 - 2 + sigma1];
-  Large::is2_spin = Def::Tpow[2 * isite2 - 2 + sigma2];
+  Large::is1_spin = Def::Tpow[2 * isite1 + sigma1];
+  Large::is2_spin = Def::Tpow[2 * isite2 + sigma2];
   /**
   Compute mask for Fermion sign (LargeList::A_spin)
   */
   if (isite1 > isite2) {
-    Large::A_spin = (Def::Tpow[2 * isite1 - 2 + sigma1] - Def::Tpow[2 * isite2 - 1 + sigma2]);
+    Large::A_spin = (Def::Tpow[2 * isite1 + sigma1] - Def::Tpow[2 * isite2 + 1 + sigma2]);
   }
   else if (isite1 < isite2) {
-    Large::A_spin = (Def::Tpow[2 * isite2 - 2 + sigma2] - Def::Tpow[2 * isite1 - 1 + sigma1]);
+    Large::A_spin = (Def::Tpow[2 * isite2 + sigma2] - Def::Tpow[2 * isite1 + 1 + sigma1]);
   }
   else {
     if (sigma1 > sigma2) {
-      Large::A_spin = (Def::Tpow[2 * isite1 - 2 + sigma1] - Def::Tpow[2 * isite2 - 1 + sigma2]);
+      Large::A_spin = (Def::Tpow[2 * isite1 + sigma1] - Def::Tpow[2 * isite2 + 1 + sigma2]);
     }
     else {
-      Large::A_spin = (Def::Tpow[2 * isite2 - 2 + sigma2] - Def::Tpow[2 * isite1 - 1 + sigma1]);
+      Large::A_spin = (Def::Tpow[2 * isite2 + sigma2] - Def::Tpow[2 * isite1 + 1 + sigma1]);
     }
   }
   /**
@@ -88,46 +88,46 @@ void mltply::Hubbard::general_int_GetInfo(
   Compute mask for checking occupations of @f$(i_1,\sigma_1)@f$ (LargeList::is1_spin)
   and @f$(i_2,\sigma_2)@f$ (LargeList::is2_spin)
   */
-  is1_spin = Def::Tpow[2 * isite1 - 2 + sigma1];
-  is2_spin = Def::Tpow[2 * isite2 - 2 + sigma2];
+  is1_spin = Def::Tpow[2 * isite1 + sigma1];
+  is2_spin = Def::Tpow[2 * isite2 + sigma2];
   /**
   Compute mask for Fermion sign (LargeList::A_spin)
   */
   if (isite1 > isite2) {
-    A_spin = (Def::Tpow[2 * isite1 - 2 + sigma1] - Def::Tpow[2 * isite2 - 1 + sigma2]);
+    A_spin = (Def::Tpow[2 * isite1 + sigma1] - Def::Tpow[2 * isite2 + 1 + sigma2]);
   }
   else if (isite2 > isite1) {
-    A_spin = (Def::Tpow[2 * isite2 - 2 + sigma2] - Def::Tpow[2 * isite1 - 1 + sigma1]);
+    A_spin = (Def::Tpow[2 * isite2 + sigma2] - Def::Tpow[2 * isite1 + 1 + sigma1]);
   }
   else {//isite1=isite2
     if (sigma1 > sigma2) {
-      A_spin = (Def::Tpow[2 * isite1 - 2 + sigma1] - Def::Tpow[2 * isite2 - 1 + sigma2]);
+      A_spin = (Def::Tpow[2 * isite1 + sigma1] - Def::Tpow[2 * isite2 + 1 + sigma2]);
     }
     else {
-      A_spin = (Def::Tpow[2 * isite2 - 2 + sigma2] - Def::Tpow[2 * isite1 - 1 + sigma1]);
+      A_spin = (Def::Tpow[2 * isite2 + sigma2] - Def::Tpow[2 * isite1 + 1 + sigma1]);
     }
   }
   /**
   Compute mask for checking occupations of @f$(i_3,\sigma_3)@f$ (LargeList::is3_spin)
   and @f$(i_4,\sigma_4)@f$ (LargeList::is4_spin)
   */
-  is3_spin = Def::Tpow[2 * isite3 - 2 + sigma3];
-  is4_spin = Def::Tpow[2 * isite4 - 2 + sigma4];
+  is3_spin = Def::Tpow[2 * isite3 + sigma3];
+  is4_spin = Def::Tpow[2 * isite4 + sigma4];
   /**
   Compute mask for Fermion sign (LargeList::B_spin)
   */
   if (isite3 > isite4) {
-    B_spin = (Def::Tpow[2 * isite3 - 2 + sigma3] - Def::Tpow[2 * isite4 - 1 + sigma4]);
+    B_spin = (Def::Tpow[2 * isite3 + sigma3] - Def::Tpow[2 * isite4 + 1 + sigma4]);
   }
   else if (isite3 < isite4) {
-    B_spin = (Def::Tpow[2 * isite4 - 2 + sigma4] - Def::Tpow[2 * isite3 - 1 + sigma3]);
+    B_spin = (Def::Tpow[2 * isite4 + sigma4] - Def::Tpow[2 * isite3 + 1 + sigma3]);
   }
   else {//isite3=isite4
     if (sigma3 > sigma4) {
-      B_spin = (Def::Tpow[2 * isite3 - 2 + sigma3] - Def::Tpow[2 * isite4 - 1 + sigma4]);
+      B_spin = (Def::Tpow[2 * isite3 + sigma3] - Def::Tpow[2 * isite4 + 1 + sigma4]);
     }
     else {
-      B_spin = (Def::Tpow[2 * isite4 - 2 + sigma4] - Def::Tpow[2 * isite3 - 1 + sigma3]);
+      B_spin = (Def::Tpow[2 * isite4 + sigma4] - Def::Tpow[2 * isite3 + 1 + sigma3]);
     }
   }
   /**
@@ -161,8 +161,8 @@ void mltply::Hubbard::general_int_GetInfo(
 void mltply::Hubbard::pairhopp_GetInfo(
   int iPairHopp//!<[in] Index of pairhopp interaction
 ) {
-  int isite1 = Def::PairHopping[iPairHopp][0] + 1;
-  int isite2 = Def::PairHopping[iPairHopp][1] + 1;
+  int isite1 = Def::PairHopping[iPairHopp][0];
+  int isite2 = Def::PairHopping[iPairHopp][1];
   /**
   Copy coupling constant (LargeList::tmp_J)
   */
@@ -172,10 +172,10 @@ void mltply::Hubbard::pairhopp_GetInfo(
   @f$(i_1,\uparrow)@f$ (LargeList::is1_up), @f$(i_1,\downarrow)@f$ (LargeList::is1_down)
   @f$(i_2,\uparrow)@f$ (LargeList::is2_up), @f$(i_2,\downarrow)@f$ (LargeList::is2_down)
   */
-  Large::is1_up = Def::Tpow[2 * isite1 - 2];
-  Large::is1_down = Def::Tpow[2 * isite1 - 1];
-  Large::is2_up = Def::Tpow[2 * isite2 - 2];
-  Large::is2_down = Def::Tpow[2 * isite2 - 1];
+  Large::is1_up = Def::Tpow[2 * isite1];
+  Large::is1_down = Def::Tpow[2 * isite1 + 1];
+  Large::is2_up = Def::Tpow[2 * isite2];
+  Large::is2_down = Def::Tpow[2 * isite2 + 1];
 }/*int child_pairhopp_GetInfo*/
 /**
 @brief Compute mask for bit operation of exchange term.
@@ -185,8 +185,8 @@ void mltply::Hubbard::pairhopp_GetInfo(
 void mltply::Hubbard::exchange_GetInfo(
   int iExchange//!<[in] Index of exchange interaction
 ) {
-  int isite1 = Def::ExchangeCoupling[iExchange][0] + 1;
-  int isite2 = Def::ExchangeCoupling[iExchange][1] + 1;
+  int isite1 = Def::ExchangeCoupling[iExchange][0];
+  int isite2 = Def::ExchangeCoupling[iExchange][1];
   /**
   Copy coupling constant (LargeList::tmp_J)
   */
@@ -196,10 +196,10 @@ void mltply::Hubbard::exchange_GetInfo(
   @f$(i_1,\uparrow)@f$ (LargeList::is1_up), @f$(i_1,\downarrow)@f$ (LargeList::is1_down)
   @f$(i_2,\uparrow)@f$ (LargeList::is2_up), @f$(i_2,\downarrow)@f$ (LargeList::is2_down)
   */
-  Large::is1_up = Def::Tpow[2 * isite1 - 2];
-  Large::is1_down = Def::Tpow[2 * isite1 - 1];
-  Large::is2_up = Def::Tpow[2 * isite2 - 2];
-  Large::is2_down = Def::Tpow[2 * isite2 - 1];
+  Large::is1_up = Def::Tpow[2 * isite1];
+  Large::is1_down = Def::Tpow[2 * isite1 + 1];
+  Large::is2_up = Def::Tpow[2 * isite2];
+  Large::is2_down = Def::Tpow[2 * isite2 + 1];
 }/*int child_exchange_GetInfo*/
 
 /******************************************************************************/

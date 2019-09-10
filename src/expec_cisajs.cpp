@@ -64,18 +64,18 @@ void expec::cisajs::Hubbard::GC(
   for (i = 0; i < Def::NCisAjt; i++) {
     zclear(i_max*nstate, &Xvec[1][0]);
     complex_conj = 0;
-    org_isite1 = Def::CisAjt[i][0] + 1;
-    org_isite2 = Def::CisAjt[i][2] + 1;
+    org_isite1 = Def::CisAjt[i][0];
+    org_isite2 = Def::CisAjt[i][2];
     org_sigma1 = Def::CisAjt[i][1];
     org_sigma2 = Def::CisAjt[i][3];
-    if (org_isite1 > Def::Nsite &&
-      org_isite2 > Def::Nsite) {
+    if (org_isite1 >= Def::Nsite &&
+      org_isite2 >= Def::Nsite) {
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {
         if (org_sigma1 == 0) {
-          is = Def::Tpow[2 * org_isite1 - 2];
+          is = Def::Tpow[2 * org_isite1];
         }
         else {
-          is = Def::Tpow[2 * org_isite1 - 1];
+          is = Def::Tpow[2 * org_isite1];
         }
         ibit = (long int)MP::myrank & is;
         if (ibit == is) {
@@ -83,17 +83,17 @@ void expec::cisajs::Hubbard::GC(
         }
       }
       else {
-        mltply::Hubbard::GC::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::GC::X_general_hopp_MPIdouble(org_isite1, org_sigma1, org_isite2, org_sigma2,
           -tmp_OneGreen, nstate, Xvec, vec);
       }
     }
-    else if (org_isite2 > Def::Nsite || org_isite1 > Def::Nsite) {
+    else if (org_isite2 >= Def::Nsite || org_isite1 >= Def::Nsite) {
       if (org_isite1 < org_isite2) {
-        mltply::Hubbard::GC::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::GC::X_general_hopp_MPIsingle(org_isite1, org_sigma1, org_isite2, org_sigma2,
           -tmp_OneGreen, nstate, Xvec, vec);
       }
       else {
-        mltply::Hubbard::GC::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1, 
+        mltply::Hubbard::GC::X_general_hopp_MPIsingle(org_isite2, org_sigma2, org_isite1, org_sigma1, 
           -tmp_OneGreen, nstate, Xvec, vec);
         complex_conj = 1;
       }
@@ -131,8 +131,8 @@ void expec::cisajs::Hubbard::C(
   for (i = 0; i < Def::NCisAjt; i++) {
     zclear(i_max*nstate, &Xvec[1][0]);
     complex_conj = 0;
-    org_isite1 = Def::CisAjt[i][0] + 1;
-    org_isite2 = Def::CisAjt[i][2] + 1;
+    org_isite1 = Def::CisAjt[i][0];
+    org_isite2 = Def::CisAjt[i][2];
     org_sigma1 = Def::CisAjt[i][1];
     org_sigma2 = Def::CisAjt[i][3];
 
@@ -144,8 +144,8 @@ void expec::cisajs::Hubbard::C(
     }
 
     if (Def::iCalcModel == DC::Kondo || Def::iCalcModel == DC::KondoGC) {
-      if ((Def::LocSpn[org_isite1 - 1] == 1 && Def::LocSpn[org_isite2 - 1] == 0) ||
-          (Def::LocSpn[org_isite1 - 1] == 0 && Def::LocSpn[org_isite2 - 1] == 1)
+      if ((Def::LocSpn[org_isite1] == 1 && Def::LocSpn[org_isite2] == 0) ||
+          (Def::LocSpn[org_isite1] == 0 && Def::LocSpn[org_isite2] == 1)
         )
       {
         zclear(nstate, prod[i]);
@@ -153,27 +153,27 @@ void expec::cisajs::Hubbard::C(
       }
     }
 
-    if (org_isite1 > Def::Nsite &&
-      org_isite2 > Def::Nsite) {
+    if (org_isite1 >= Def::Nsite &&
+      org_isite2 >= Def::Nsite) {
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {//diagonal
-        is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
+        is = Def::Tpow[2 * org_isite1 + org_sigma1];
         ibit = (long int)MP::myrank & is;
         if (ibit == is) {
           zaxpy_long(i_max*nstate, tmp_OneGreen, &vec[1][0], &Xvec[1][0]);
         }
       }
       else {
-        mltply::Hubbard::C::X_general_hopp_MPIdouble(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2, 
+        mltply::Hubbard::C::X_general_hopp_MPIdouble(org_isite1, org_sigma1, org_isite2, org_sigma2, 
           -tmp_OneGreen, nstate, Xvec, vec);
       }
     }
-    else if (org_isite2 > Def::Nsite || org_isite1 > Def::Nsite) {
+    else if (org_isite2 >= Def::Nsite || org_isite1 >= Def::Nsite) {
       if (org_isite1 < org_isite2) {
-        mltply::Hubbard::C::X_general_hopp_MPIsingle(org_isite1 - 1, org_sigma1, org_isite2 - 1, org_sigma2,
+        mltply::Hubbard::C::X_general_hopp_MPIsingle(org_isite1, org_sigma1, org_isite2, org_sigma2,
           -tmp_OneGreen, nstate, Xvec, vec);
       }
       else {
-        mltply::Hubbard::C::X_general_hopp_MPIsingle(org_isite2 - 1, org_sigma2, org_isite1 - 1, org_sigma1, 
+        mltply::Hubbard::C::X_general_hopp_MPIsingle(org_isite2, org_sigma2, org_isite1, org_sigma1, 
           -tmp_OneGreen, nstate, Xvec, vec);
         complex_conj = 1;
       }
@@ -181,7 +181,7 @@ void expec::cisajs::Hubbard::C(
     else {
       mltply::Hubbard::general_hopp_GetInfo(org_isite1, org_isite2, org_sigma1, org_sigma2);
       if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2) {
-        is = Def::Tpow[2 * org_isite1 - 2 + org_sigma1];
+        is = Def::Tpow[2 * org_isite1 + org_sigma1];
 
 #pragma omp parallel for default(none) private(num1, ibit, dmv) \
 shared(List::c1, vec,Xvec,nstate,one,tmp_OneGreen, i_max, is)
@@ -224,23 +224,23 @@ void expec::cisajs::Spin::C::Half(
   i_max = Check::idim_max;
 
   for (i = 0; i < Def::NCisAjt; i++) {
-    zclear(i_max*nstate, &Xvec[1][0]);
-    org_isite1 = Def::CisAjt[i][0] + 1;
-    org_isite2 = Def::CisAjt[i][2] + 1;
+    zclear(i_max * nstate, &Xvec[1][0]);
+    org_isite1 = Def::CisAjt[i][0];
+    org_isite2 = Def::CisAjt[i][2];
     org_sigma1 = Def::CisAjt[i][1];
     org_sigma2 = Def::CisAjt[i][3];
 
     if (org_sigma1 == org_sigma2) {
       if (org_isite1 == org_isite2) {
-        if (org_isite1 > Def::Nsite) {
-          is1_up = Def::Tpow[org_isite1 - 1];
+        if (org_isite1 >= Def::Nsite) {
+          is1_up = Def::Tpow[org_isite1];
           ibit1 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
           if (ibit1 != 0) {
             zaxpy_long(i_max*nstate, 1.0, &vec[1][0], &Xvec[1][0]);
           }
-        }// org_isite1 > Def::Nsite
+        }// org_isite1 >= Def::Nsite
         else {
-          isite1 = Def::Tpow[org_isite1 - 1];
+          isite1 = Def::Tpow[org_isite1];
 #pragma omp parallel for default(none) private(j,dmv) \
 shared(i_max, isite1, org_sigma1, vec,Xvec,nstate,one)
           for (j = 1; j <= i_max; j++) {
@@ -271,13 +271,13 @@ void expec::cisajs::Spin::C::General(
 
   for (i = 0; i < Def::NCisAjt; i++) {
     zclear(i_max*nstate, &Xvec[1][0]);
-    org_isite1 = Def::CisAjt[i][0] + 1;
-    org_isite2 = Def::CisAjt[i][2] + 1;
+    org_isite1 = Def::CisAjt[i][0];
+    org_isite2 = Def::CisAjt[i][2];
     org_sigma1 = Def::CisAjt[i][1];
     org_sigma2 = Def::CisAjt[i][3];
 
     if (org_isite1 == org_isite2) {
-      if (org_isite1 > Def::Nsite) {
+      if (org_isite1 >= Def::Nsite) {
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
           num1 = BitCheckGeneral((long int)MP::myrank,
@@ -323,22 +323,22 @@ void expec::cisajs::Spin::GC::Half(
 
   for (i = 0; i < Def::NCisAjt; i++) {
     zclear(i_max*nstate, &Xvec[1][0]);
-    org_isite1 = Def::CisAjt[i][0] + 1;
-    org_isite2 = Def::CisAjt[i][2] + 1;
+    org_isite1 = Def::CisAjt[i][0];
+    org_isite2 = Def::CisAjt[i][2];
     org_sigma1 = Def::CisAjt[i][1];
     org_sigma2 = Def::CisAjt[i][3];
 
     if (org_isite1 == org_isite2) {
-      if (org_isite1 > Def::Nsite) {
+      if (org_isite1 >= Def::Nsite) {
         if (org_sigma1 == org_sigma2) {  // longitudinal magnetic field
-          mltply::Spin::GC::Half::X_CisAis_MPIdouble(org_isite1 - 1, org_sigma1, 1.0, nstate, Xvec, vec);
+          mltply::Spin::GC::Half::X_CisAis_MPIdouble(org_isite1, org_sigma1, 1.0, nstate, Xvec, vec);
         }
         else {  // transverse magnetic field
-          mltply::Spin::GC::Half::X_CisAit_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, 1.0, nstate, Xvec, vec);
+          mltply::Spin::GC::Half::X_CisAit_MPIdouble(org_isite1, org_sigma1, org_sigma2, 1.0, nstate, Xvec, vec);
         }
       }
       else {
-        isite1 = Def::Tpow[org_isite1 - 1];
+        isite1 = Def::Tpow[org_isite1];
 
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
@@ -386,21 +386,21 @@ void expec::cisajs::Spin::GC::General(
 
   for (i = 0; i < Def::NCisAjt; i++) {
     zclear(i_max*nstate, &Xvec[1][0]);
-    org_isite1 = Def::CisAjt[i][0] + 1;
-    org_isite2 = Def::CisAjt[i][2] + 1;
+    org_isite1 = Def::CisAjt[i][0];
+    org_isite2 = Def::CisAjt[i][2];
     org_sigma1 = Def::CisAjt[i][1];
     org_sigma2 = Def::CisAjt[i][3];
     if (org_isite1 == org_isite2) {
-      if (org_isite1 > Def::Nsite) {
+      if (org_isite1 >= Def::Nsite) {
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
-          mltply::Spin::GC::General::X_CisAis_MPIdouble(org_isite1 - 1, org_sigma1,
+          mltply::Spin::GC::General::X_CisAis_MPIdouble(org_isite1, org_sigma1,
             1.0, nstate, Xvec, vec);
         }
         else {
           // transverse magnetic field
           mltply::Spin::GC::General::X_CisAit_MPIdouble(
-            org_isite1 - 1, org_sigma1, org_sigma2, 1.0, nstate, Xvec, vec);
+            org_isite1, org_sigma1, org_sigma2, 1.0, nstate, Xvec, vec);
         }
       }
       else {//org_isite1 <= Def::Nsite

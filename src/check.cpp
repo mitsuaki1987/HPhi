@@ -152,8 +152,8 @@ int check(){
     NCond   = Def::Nsite-Def::NLocSpn;
     NLocSpn = Def::NLocSpn;
     //4^Nc*2^Ns
-    for(u_loc=0;u_loc <(2*NCond+NLocSpn); u_loc++){
-      comb_sum= 2*comb_sum;     
+    for (u_loc = 0; u_loc < (2 * NCond + NLocSpn); u_loc++) {
+      comb_sum = 2 * comb_sum;
     }
     break;
   case DC::Spin:
@@ -164,14 +164,14 @@ int check(){
         return FALSE;
       }
       //comb_sum= Binomial(Ns, Def::Ne, comb, Ns);
-      comb_sum= Binomial(Ns, Def::Nup, comb, Ns);
+      comb_sum = Binomial(Ns, Def::Nup, comb, Ns);
     }
     else{
       idimmax = 1;
       Def::Tpow[0]=idimmax;
-      for(isite=0; isite<Def::Nsite;isite++){
-        idimmax=idimmax*Def::SiteToBit[isite];
-        Def::Tpow[isite+1]=idimmax;
+      for (isite = 0; isite < Def::Nsite; isite++) {
+        idimmax = idimmax * Def::SiteToBit[isite];
+        Def::Tpow[isite + 1] = idimmax;
       }
       comb_sum=0;
 #pragma omp parallel for default(none) reduction(+:comb_sum) private(tmp_sz, isite) \
@@ -179,7 +179,7 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
       for (idim = 0; idim < idimmax; idim++) {
         tmp_sz = 0;
         for (isite = 0; isite < Def::Nsite; isite++) {
-          tmp_sz += GetLocal2Sz(isite + 1, idim, Def::SiteToBit, Def::Tpow);
+          tmp_sz += GetLocal2Sz(isite, idim, Def::SiteToBit, Def::Tpow);
         }
         if(tmp_sz == Def::Total2Sz){
           comb_sum +=1;

@@ -51,27 +51,27 @@ int GetExcitedState::Pair::Spin::GC::Half(
   i_max = Check::idim_maxOrg;
 
   for (i = 0; i < Def::NPairExcitationOperator[iEx]; i++) {
-    org_isite1 = Def::PairExcitationOperator[iEx][i][0] + 1;
-    org_isite2 = Def::PairExcitationOperator[iEx][i][2] + 1;
+    org_isite1 = Def::PairExcitationOperator[iEx][i][0];
+    org_isite2 = Def::PairExcitationOperator[iEx][i][2];
     org_sigma1 = Def::PairExcitationOperator[iEx][i][1];
     org_sigma2 = Def::PairExcitationOperator[iEx][i][3];
     tmp_trans = Def::ParaPairExcitationOperator[iEx][i];
     if (org_isite1 == org_isite2) {
-      if (org_isite1 > Def::Nsite) {
+      if (org_isite1 >= Def::Nsite) {
         if (org_sigma1 == org_sigma2) {  // longitudinal magnetic field
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
-            mltply::Spin::GC::Half::X_AisCis_MPIdouble(org_isite1 - 1, org_sigma1, -tmp_trans, nstate, tmp_v0, tmp_v1);
+            mltply::Spin::GC::Half::X_AisCis_MPIdouble(org_isite1, org_sigma1, -tmp_trans, nstate, tmp_v0, tmp_v1);
           }
           else {
-            mltply::Spin::GC::Half::X_CisAis_MPIdouble(org_isite1 - 1, org_sigma1, tmp_trans, nstate, tmp_v0, tmp_v1);
+            mltply::Spin::GC::Half::X_CisAis_MPIdouble(org_isite1, org_sigma1, tmp_trans, nstate, tmp_v0, tmp_v1);
           }
         }
         else {  // transverse magnetic field
-          mltply::Spin::GC::Half::X_CisAit_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, tmp_trans, nstate, tmp_v0, tmp_v1);
+          mltply::Spin::GC::Half::X_CisAit_MPIdouble(org_isite1, org_sigma1, org_sigma2, tmp_trans, nstate, tmp_v0, tmp_v1);
         }
       }
       else {
-        isite1 = Def::Tpow[org_isite1 - 1];
+        isite1 = Def::Tpow[org_isite1];
         if (org_sigma1 == org_sigma2) {
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
             // longitudinal magnetic field
@@ -139,25 +139,25 @@ int GetExcitedState::Pair::Spin::GC::General(
   i_max = Check::idim_maxOrg;
 
   for (i = 0; i < Def::NPairExcitationOperator[iEx]; i++) {
-    org_isite1 = Def::PairExcitationOperator[iEx][i][0] + 1;
-    org_isite2 = Def::PairExcitationOperator[iEx][i][2] + 1;
+    org_isite1 = Def::PairExcitationOperator[iEx][i][0];
+    org_isite2 = Def::PairExcitationOperator[iEx][i][2];
     org_sigma1 = Def::PairExcitationOperator[iEx][i][1];
     org_sigma2 = Def::PairExcitationOperator[iEx][i][3];
     tmp_trans = Def::ParaPairExcitationOperator[iEx][i];
     if (org_isite1 == org_isite2) {
-      if (org_isite1 > Def::Nsite) {
+      if (org_isite1 >= Def::Nsite) {
         if (org_sigma1 == org_sigma2) {
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
             // longitudinal magnetic field
-            mltply::Spin::GC::General::X_AisCis_MPIdouble(org_isite1 - 1, org_sigma1, -tmp_trans, nstate, tmp_v0, tmp_v1);
+            mltply::Spin::GC::General::X_AisCis_MPIdouble(org_isite1, org_sigma1, -tmp_trans, nstate, tmp_v0, tmp_v1);
           }
           else {
-            mltply::Spin::GC::General::X_CisAis_MPIdouble(org_isite1 - 1, org_sigma1, tmp_trans, nstate, tmp_v0, tmp_v1);
+            mltply::Spin::GC::General::X_CisAis_MPIdouble(org_isite1, org_sigma1, tmp_trans, nstate, tmp_v0, tmp_v1);
           }
         }
         else {
           // transverse magnetic field
-          mltply::Spin::GC::General::X_CisAit_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, tmp_trans, nstate, tmp_v0, tmp_v1);
+          mltply::Spin::GC::General::X_CisAit_MPIdouble(org_isite1, org_sigma1, org_sigma2, tmp_trans, nstate, tmp_v0, tmp_v1);
         }
       }
       else {//org_isite1 <= Def::Nsite
@@ -256,15 +256,15 @@ int GetExcitedState::Pair::Spin::C::Half(
   i_max = Check::idim_maxOrg;
 
   for (i = 0; i < Def::NPairExcitationOperator[iEx]; i++) {
-    org_isite1 = Def::PairExcitationOperator[iEx][i][0] + 1;
-    org_isite2 = Def::PairExcitationOperator[iEx][i][2] + 1;
+    org_isite1 = Def::PairExcitationOperator[iEx][i][0];
+    org_isite2 = Def::PairExcitationOperator[iEx][i][2];
     org_sigma1 = Def::PairExcitationOperator[iEx][i][1];
     org_sigma2 = Def::PairExcitationOperator[iEx][i][3];
     tmp_trans = Def::ParaPairExcitationOperator[iEx][i];
     if (org_sigma1 == org_sigma2) {
       if (org_isite1 == org_isite2) {
-        if (org_isite1 > Def::Nsite) {
-          is1_up = Def::Tpow[org_isite1 - 1];
+        if (org_isite1 >= Def::Nsite) {
+          is1_up = Def::Tpow[org_isite1];
           ibit1 = mltply::Spin::GC::Half::X_CisAis((long int) MP::myrank + 1, is1_up, org_sigma1);
           if (Def::PairExcitationOperator[iEx][i][4] == 0) {
             if (ibit1 == 0) {
@@ -284,9 +284,9 @@ shared(tmp_v0, tmp_v1,one,nstate,i_max, tmp_trans)
                 zaxpy_(&nstate, &tmp_trans, tmp_v1[j], &one, tmp_v0[j], &one);
             }
           }
-        }// org_isite1 > Def::Nsite
+        }// org_isite1 >= Def::Nsite
         else {
-          isite1 = Def::Tpow[org_isite1 - 1];
+          isite1 = Def::Tpow[org_isite1];
           if (org_isite1 == org_isite2 && org_sigma1 == org_sigma2 &&
             Def::PairExcitationOperator[iEx][i][4] == 0) {
 #pragma omp parallel for default(none) private(j,dmv) \
@@ -313,12 +313,12 @@ shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma1,tmp_trans)
       }
     }
     else { //org_sigma1 != org_sigma2             // for the canonical case
-      if (org_isite1 > Def::Nsite) {//For MPI
-        mltply::Spin::C::Half::X_CisAit_MPIdouble(org_isite1 - 1, org_sigma2, tmp_trans, 
+      if (org_isite1 >= Def::Nsite) {//For MPI
+        mltply::Spin::C::Half::X_CisAit_MPIdouble(org_isite1, org_sigma2, tmp_trans, 
           nstate, tmp_v0, tmp_v1, i_max);
       }
       else {
-        isite1 = Def::Tpow[org_isite1 - 1];
+        isite1 = Def::Tpow[org_isite1];
 #pragma omp parallel for default(none) private(j,tmp_off,num1,dmv) \
 shared(tmp_v0,tmp_v1,one,nstate,i_max,isite1,org_sigma2,tmp_trans)
         for (j = 1; j <= i_max; j++) {
@@ -357,13 +357,13 @@ int GetExcitedState::Pair::Spin::C::General(
   i_max = Check::idim_maxOrg;
 
   for (i = 0; i < Def::NPairExcitationOperator[iEx]; i++) {
-    org_isite1 = Def::PairExcitationOperator[iEx][i][0] + 1;
-    org_isite2 = Def::PairExcitationOperator[iEx][i][2] + 1;
+    org_isite1 = Def::PairExcitationOperator[iEx][i][0];
+    org_isite2 = Def::PairExcitationOperator[iEx][i][2];
     org_sigma1 = Def::PairExcitationOperator[iEx][i][1];
     org_sigma2 = Def::PairExcitationOperator[iEx][i][3];
     tmp_trans = Def::ParaPairExcitationOperator[iEx][i];
     if (org_isite1 == org_isite2) {
-      if (org_isite1 > Def::Nsite) {
+      if (org_isite1 >= Def::Nsite) {
         if (org_sigma1 == org_sigma2) {
           // longitudinal magnetic field
           num1 = BitCheckGeneral((long int) MP::myrank,
@@ -389,7 +389,7 @@ shared(tmp_v0, tmp_v1,one,nstate,i_max, tmp_trans)
           }
         }//org_sigma1=org_sigma2
         else {//org_sigma1 != org_sigma2
-          mltply::Spin::C::General::X_CisAit_MPIdouble(org_isite1 - 1, org_sigma1, org_sigma2, 
+          mltply::Spin::C::General::X_CisAit_MPIdouble(org_isite1, org_sigma1, org_sigma2, 
             tmp_trans, nstate, tmp_v0, tmp_v1, i_max);
         }
       }

@@ -66,13 +66,13 @@ void totalspin_Hubbard(
     Phys::s2[istate] = 0.0;
     Phys::Sz[istate] = 0.0;
   }
-  for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
-    is1_up = Def::Tpow[2 * isite1 - 2];
-    is1_down = Def::Tpow[2 * isite1 - 1];
+  for (isite1 = 0; isite1 < Def::NsiteMPI; isite1++) {
+    is1_up = Def::Tpow[2 * isite1];
+    is1_down = Def::Tpow[2 * isite1 + 1];
 
-    for (isite2 = 1; isite2 <= Def::NsiteMPI; isite2++) {
-      is2_up = Def::Tpow[2 * isite2 - 2];
-      is2_down = Def::Tpow[2 * isite2 - 1];
+    for (isite2 = 0; isite2 < Def::NsiteMPI; isite2++) {
+      is2_up = Def::Tpow[2 * isite2];
+      is2_down = Def::Tpow[2 * isite2 + 1];
 
       for (j = 1; j <= i_max; j++) {
 
@@ -147,12 +147,12 @@ void totalspin_HubbardGC(
     Phys::s2[istate] = 0.0;
     Phys::Sz[istate] = 0.0;
   }
-  for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
-    for (isite2 = 1; isite2 <= Def::NsiteMPI; isite2++) {
-      is1_up = Def::Tpow[2 * isite1 - 2];
-      is1_down = Def::Tpow[2 * isite1 - 1];
-      is2_up = Def::Tpow[2 * isite2 - 2];
-      is2_down = Def::Tpow[2 * isite2 - 1];
+  for (isite1 = 0; isite1 < Def::NsiteMPI; isite1++) {
+    for (isite2 = 0; isite2 < Def::NsiteMPI; isite2++) {
+      is1_up = Def::Tpow[2 * isite1];
+      is1_down = Def::Tpow[2 * isite1 + 1];
+      is2_up = Def::Tpow[2 * isite2];
+      is2_down = Def::Tpow[2 * isite2 + 1];
 
       for (j = 1; j <= i_max; j++) {
         list_1_j = j - 1;
@@ -234,13 +234,13 @@ void totalspin_Spin(
   }
   if (Def::iFlgGeneralSpin == FALSE) {
     GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit);
-    for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
-      for (isite2 = 1; isite2 <= Def::NsiteMPI; isite2++) {
+    for (isite1 = 0; isite1 < Def::NsiteMPI; isite1++) {
+      for (isite2 = 0; isite2 < Def::NsiteMPI; isite2++) {
 
-        if (isite1 > Def::Nsite && isite2 > Def::Nsite) {
+        if (isite1 >= Def::Nsite && isite2 >= Def::Nsite) {
 #ifdef __MPI
-          is1_up = Def::Tpow[isite1 - 1];
-          is2_up = Def::Tpow[isite2 - 1];
+          is1_up = Def::Tpow[isite1];
+          is2_up = Def::Tpow[isite2];
           is_up = is1_up + is2_up;
           num1_up = mltply::Spin::GC::Half::X_CisAis((long int) MP::myrank + 1, is1_up, 1);
           num1_down = 1 - num1_up;
@@ -259,11 +259,11 @@ void totalspin_Spin(
             }
           }
           else {//off diagonal
-            //debug spn += X_child_general_int_spin_TotalS_MPIdouble(isite1 - 1, isite2 - 1, nstate, vec, vec);
+            //debug spn += X_child_general_int_spin_TotalS_MPIdouble(isite1, isite2, nstate, vec, vec);
           }
 #endif
         }
-        else if (isite1 > Def::Nsite || isite2 > Def::Nsite) {
+        else if (isite1 >= Def::Nsite || isite2 >= Def::Nsite) {
 #ifdef __MPI
           if (isite1 < isite2) {
             tmp_isite1 = isite1;
@@ -289,16 +289,16 @@ void totalspin_Spin(
               Phys::s2[istate] += real(conj(vec[j][istate]) * vec[j][istate] * spn_z) / 4.0;
           }
           if (isite1 < isite2) {
-            //debug spn += X_child_general_int_spin_MPIsingle(isite1 - 1, 0, 1, isite2 - 1, 1, 0, 1.0, nstate, vec, vec);
+            //debug spn += X_child_general_int_spin_MPIsingle(isite1, 0, 1, isite2, 1, 0, 1.0, nstate, vec, vec);
           }
           else {
-            //debug spn += conj(X_child_general_int_spin_MPIsingle(isite2 - 1, 1, 0, isite1 - 1, 0, 1, 1.0, nstate, vec, vec));
+            //debug spn += conj(X_child_general_int_spin_MPIsingle(isite2, 1, 0, isite1, 0, 1, 1.0, nstate, vec, vec));
           }
 #endif
         }//isite1 > Nsite || isite2 > Nsite
         else {
-          is1_up = Def::Tpow[isite1 - 1];
-          is2_up = Def::Tpow[isite2 - 1];
+          is1_up = Def::Tpow[isite1];
+          is2_up = Def::Tpow[isite2];
           is_up = is1_up + is2_up;
 
           for (j = 1; j <= i_max; j++) {
@@ -334,10 +334,10 @@ void totalspin_Spin(
   else {
     double S1 = 0;
     double S2 = 0;
-    for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
-      for (isite2 = 1; isite2 <= Def::NsiteMPI; isite2++) {
-        S1 = 0.5 * (Def::SiteToBit[isite1 - 1] - 1);
-        S2 = 0.5 * (Def::SiteToBit[isite2 - 1] - 1);
+    for (isite1 = 0; isite1 < Def::NsiteMPI; isite1++) {
+      for (isite2 = 0; isite2 < Def::NsiteMPI; isite2++) {
+        S1 = 0.5 * (Def::SiteToBit[isite1] - 1);
+        S2 = 0.5 * (Def::SiteToBit[isite2] - 1);
         if (isite1 == isite2) {
           for (j = 1; j <= i_max; j++) {
             spn_z1 = 0.5 * GetLocal2Sz(isite1, List::c1[j], Def::SiteToBit, Def::Tpow);
@@ -428,9 +428,9 @@ void totalspin_SpinGC(
     Phys::Sz[istate] = 0.0;
   }
   if (Def::iFlgGeneralSpin == FALSE) {
-    for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
-      if (isite1 > Def::Nsite) {
-        is1_up = Def::Tpow[isite1 - 1];
+    for (isite1 = 0; isite1 < Def::NsiteMPI; isite1++) {
+      if (isite1 >= Def::Nsite) {
+        is1_up = Def::Tpow[isite1];
         ibit1_up = MP::myrank & is1_up;
         num1_up = ibit1_up / is1_up;
         num1_down = 1 - num1_up;
@@ -440,7 +440,7 @@ void totalspin_SpinGC(
         }
       }
       else {
-        is1_up = Def::Tpow[isite1 - 1];
+        is1_up = Def::Tpow[isite1];
         for (j = 1; j <= i_max; j++) {
           list_1_j = j - 1;
           ibit1_up = list_1_j & is1_up;
@@ -450,11 +450,11 @@ void totalspin_SpinGC(
             Phys::Sz[istate] += real(conj(vec[j][istate])*vec[j][istate]) * (num1_up - num1_down) / 2.0;
         }
       }
-      for (isite2 = 1; isite2 <= Def::NsiteMPI; isite2++) {
+      for (isite2 = 0; isite2 < Def::NsiteMPI; isite2++) {
 
-        if (isite1 > Def::Nsite && isite2 > Def::Nsite) {
-          is1_up = Def::Tpow[isite1 - 1];
-          is2_up = Def::Tpow[isite2 - 1];
+        if (isite1 >= Def::Nsite && isite2 >= Def::Nsite) {
+          is1_up = Def::Tpow[isite1];
+          is2_up = Def::Tpow[isite2];
           num1_up = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is1_up, 1);
           num1_down = 1 - num1_up;
           num2_up = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is2_up, 1);
@@ -472,10 +472,10 @@ void totalspin_SpinGC(
           }//isite1 = isite2
           else {//off diagonal
             //debug spn += mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIdouble(
-            //debug   isite1 - 1, 0, 1, isite2 - 1, 1, 0, 1.0, nstate, vec, vec) / 2.0;
+            //debug   isite1, 0, 1, isite2, 1, 0, 1.0, nstate, vec, vec) / 2.0;
           }
         }
-        else if (isite1 > Def::Nsite || isite2 > Def::Nsite) {
+        else if (isite1 >= Def::Nsite || isite2 >= Def::Nsite) {
           if (isite1 < isite2) {
             tmp_isite1 = isite1;
             tmp_isite2 = isite2;
@@ -499,14 +499,14 @@ void totalspin_SpinGC(
               Phys::s2[istate] += real(conj(vec[j][istate])*vec[j][istate] * spn_z2) / 4.0;
           }
           if (isite1 < isite2) {
-            //debug spn += mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(isite1 - 1, 0, 1, isite2 - 1, 1, 0, 1.0, nstate, vec, vec) / 2.0;
+            //debug spn += mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(isite1, 0, 1, isite2, 1, 0, 1.0, nstate, vec, vec) / 2.0;
           }
           else {
-            //debug spn += conj(mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(isite2 - 1, 1, 0, isite1 - 1, 0, 1, 1.0, nstate, vec, vec)) / 2.0;
+            //debug spn += conj(mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(isite2, 1, 0, isite1, 0, 1, 1.0, nstate, vec, vec)) / 2.0;
           }
         }
         else {
-          is2_up = Def::Tpow[isite2 - 1];
+          is2_up = Def::Tpow[isite2];
           is_up = is1_up + is2_up;
           for (j = 1; j <= i_max; j++) {
             list_1_j = j - 1;
@@ -542,9 +542,9 @@ void totalspin_SpinGC(
   else {//general spin
     double S1 = 0;
     double S2 = 0;
-    for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
-      S1 = 0.5*(Def::SiteToBit[isite1 - 1] - 1);
-      if (isite1 > Def::Nsite) {
+    for (isite1 = 0; isite1 < Def::NsiteMPI; isite1++) {
+      S1 = 0.5*(Def::SiteToBit[isite1] - 1);
+      if (isite1 >= Def::Nsite) {
         spn_z1 = 0.5*GetLocal2Sz(isite1, (long int) MP::myrank, Def::SiteToBit, Def::Tpow);
         for (j = 1; j <= i_max; j++) {
           for (istate = 0; istate < nstate; istate++) {
@@ -562,12 +562,12 @@ void totalspin_SpinGC(
           }
         }
       }
-      for (isite2 = 1; isite2 <= Def::NsiteMPI; isite2++) {
+      for (isite2 = 0; isite2 < Def::NsiteMPI; isite2++) {
         if (isite1 == isite2) continue;
-        S2 = 0.5*(Def::SiteToBit[isite2 - 1] - 1);
-        if (isite1 > Def::Nsite && isite2 > Def::Nsite) {
+        S2 = 0.5*(Def::SiteToBit[isite2] - 1);
+        if (isite1 >= Def::Nsite && isite2 >= Def::Nsite) {
         }
-        else if (isite1 > Def::Nsite || isite2 > Def::Nsite) {
+        else if (isite1 >= Def::Nsite || isite2 >= Def::Nsite) {
         }
         else { //inner-process
           for (j = 1; j <= i_max; j++) {

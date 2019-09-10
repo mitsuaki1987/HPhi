@@ -63,14 +63,14 @@ void expec::energy_flct::Hubbard::GC(
   is1_up_b = 0;
   is1_down_a = 0;
   is1_down_b = 0;
-  for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
-    if (isite1 > Def::Nsite) {
-      is1_up_a += Def::Tpow[2 * isite1 - 2];
-      is1_down_a += Def::Tpow[2 * isite1 - 1];
+  for (isite1 = 0; isite1 < Def::NsiteMPI; isite1++) {
+    if (isite1 >= Def::Nsite) {
+      is1_up_a += Def::Tpow[2 * isite1];
+      is1_down_a += Def::Tpow[2 * isite1 + 1];
     }
     else {
-      is1_up_b += Def::Tpow[2 * isite1 - 2];
-      is1_down_b += Def::Tpow[2 * isite1 - 1];
+      is1_up_b += Def::Tpow[2 * isite1];
+      is1_down_b += Def::Tpow[2 * isite1 + 1];
     }
   }
   //[e]
@@ -94,7 +94,7 @@ shared(tmp_v0,List::c1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
       bit_up = 0;
       bit_down = 0;
       bit_D = 0;
-      // isite1 > Def::Nsite
+      // isite1 >= Def::Nsite
       ibit_up = (long int) MP::myrank & is1_up_a;
       u_ibit1 = ibit_up >> 32;
       l_ibit1 = ibit_up & i_32;
@@ -221,14 +221,14 @@ void expec::energy_flct::Hubbard::C(
   is1_up_b = 0;
   is1_down_a = 0;
   is1_down_b = 0;
-  for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
-    if (isite1 > Def::Nsite) {
-      is1_up_a += Def::Tpow[2 * isite1 - 2];
-      is1_down_a += Def::Tpow[2 * isite1 - 1];
+  for (isite1 = 0; isite1 < Def::NsiteMPI; isite1++) {
+    if (isite1 >= Def::Nsite) {
+      is1_up_a += Def::Tpow[2 * isite1];
+      is1_down_a += Def::Tpow[2 * isite1 + 1];
     }
     else {
-      is1_up_b += Def::Tpow[2 * isite1 - 2];
-      is1_down_b += Def::Tpow[2 * isite1 - 1];
+      is1_up_b += Def::Tpow[2 * isite1];
+      is1_down_b += Def::Tpow[2 * isite1 + 1];
     }
   }
   //[e]
@@ -252,7 +252,7 @@ private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
       bit_down = 0;
       bit_D = 0;
       tmp_list_1 = List::c1[j];
-      // isite1 > Def::Nsite
+      // isite1 >= Def::Nsite
       ibit_up = (long int) MP::myrank & is1_up_a;
       u_ibit1 = ibit_up >> 32;
       l_ibit1 = ibit_up & i_32;
@@ -374,12 +374,12 @@ void expec::energy_flct::Spin::GC::Half(
   //[s] for bit count
   is1_up_a = 0;
   is1_up_b = 0;
-  for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
-    if (isite1 > Def::Nsite) {
-      is1_up_a += Def::Tpow[isite1 - 1];
+  for (isite1 = 0; isite1 < Def::NsiteMPI; isite1++) {
+    if (isite1 >= Def::Nsite) {
+      is1_up_a += Def::Tpow[isite1];
     }
     else {
-      is1_up_b += Def::Tpow[isite1 - 1];
+      is1_up_b += Def::Tpow[isite1];
     }
   }
   //[e]
@@ -400,7 +400,7 @@ shared(tmp_v0,Sz_t,Sz2_t,nstate, i_max,MP::myrank,i_32,is1_up_a,is1_up_b,Def::Ns
         tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       Sz = 0.0;
 
-      // isite1 > Def::Nsite
+      // isite1 >= Def::Nsite
       ibit1 = (long int) MP::myrank & is1_up_a;
       u_ibit1 = ibit1 >> 32;
       l_ibit1 = ibit1 & i_32;
@@ -484,9 +484,9 @@ Def::SiteToBit, Def::Tpow,Def::Nsite,Def::NsiteMPI)
       for (istate = 0; istate < nstate; istate++) \
         tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       Sz = 0.0;
-      for (isite1 = 1; isite1 <= Def::NsiteMPI; isite1++) {
+      for (isite1 = 0; isite1 < Def::NsiteMPI; isite1++) {
         //prefactor 0.5 is added later.
-        if (isite1 > Def::Nsite) {
+        if (isite1 >= Def::Nsite) {
           Sz += GetLocal2Sz(isite1, MP::myrank, Def::SiteToBit, Def::Tpow);
         }
         else {

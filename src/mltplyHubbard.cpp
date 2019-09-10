@@ -171,18 +171,18 @@ int mltply::Hubbard::C::main(
   */
   StartTimer(310);
   for (i = 0; i < Def::EDNTransfer; i+=2) {
-    if (Def::EDGeneralTransfer[i][0] + 1 > Def::Nsite &&
-        Def::EDGeneralTransfer[i][2] + 1 > Def::Nsite) {
+    if (Def::EDGeneralTransfer[i][0] >= Def::Nsite &&
+        Def::EDGeneralTransfer[i][2] >= Def::Nsite) {
       StartTimer(311);
       mltply::Hubbard::C::general_hopp_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(311);
     }
-    else if (Def::EDGeneralTransfer[i][2] + 1 > Def::Nsite) {
+    else if (Def::EDGeneralTransfer[i][2] >= Def::Nsite) {
       StartTimer(312);
       mltply::Hubbard::C::general_hopp_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(312);
     }
-    else if (Def::EDGeneralTransfer[i][0] + 1 > Def::Nsite) {
+    else if (Def::EDGeneralTransfer[i][0] >= Def::Nsite) {
       StartTimer(312);
       mltply::Hubbard::C::general_hopp_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
       StopTimer(312);
@@ -191,8 +191,8 @@ int mltply::Hubbard::C::main(
       StartTimer(313);
       for (ihermite = 0; ihermite<2; ihermite++) {
         idx = i + ihermite;
-        isite1 = Def::EDGeneralTransfer[idx][0] + 1;
-        isite2 = Def::EDGeneralTransfer[idx][2] + 1;
+        isite1 = Def::EDGeneralTransfer[idx][0];
+        isite2 = Def::EDGeneralTransfer[idx][2];
         sigma1 = Def::EDGeneralTransfer[idx][1];
         sigma2 = Def::EDGeneralTransfer[idx][3];
         mltply::Hubbard::general_hopp_GetInfo(isite1, isite2, sigma1, sigma2);
@@ -208,42 +208,42 @@ int mltply::Hubbard::C::main(
   InterAll
   */
   StartTimer(320);
-  for (i = 0; i < Def::NInterAll_OffDiagonal; i+=2) {
+  for (i = 0; i < Def::NInterAll_OffDiagonal; i += 2) {
         
-    isite1 = Def::InterAll_OffDiagonal[i][0] + 1;
-    isite2 = Def::InterAll_OffDiagonal[i][2] + 1;
-    isite3 = Def::InterAll_OffDiagonal[i][4] + 1;
-    isite4 = Def::InterAll_OffDiagonal[i][6] + 1;
+    isite1 = Def::InterAll_OffDiagonal[i][0];
+    isite2 = Def::InterAll_OffDiagonal[i][2];
+    isite3 = Def::InterAll_OffDiagonal[i][4];
+    isite4 = Def::InterAll_OffDiagonal[i][6];
     sigma1 = Def::InterAll_OffDiagonal[i][1];
     sigma2 = Def::InterAll_OffDiagonal[i][3];
     sigma3 = Def::InterAll_OffDiagonal[i][5];
     sigma4 = Def::InterAll_OffDiagonal[i][7];
     tmp_V = Def::ParaInterAll_OffDiagonal[i];
 
-    if (mltply::Hubbard::CheckPE(isite1 - 1) == TRUE || mltply::Hubbard::CheckPE(isite2 - 1) == TRUE ||
-        mltply::Hubbard::CheckPE(isite3 - 1) == TRUE || mltply::Hubbard::CheckPE(isite4 - 1) == TRUE) {
+    if (mltply::Hubbard::CheckPE(isite1) == TRUE || mltply::Hubbard::CheckPE(isite2) == TRUE ||
+        mltply::Hubbard::CheckPE(isite3) == TRUE || mltply::Hubbard::CheckPE(isite4) == TRUE) {
       StartTimer(321);
-      ibitsite1 = Def::OrgTpow[2*isite1-2+sigma1] ;
-      ibitsite2 = Def::OrgTpow[2 * isite2 - 2 + sigma2];
-      ibitsite3 = Def::OrgTpow[2 * isite3 - 2 + sigma3];
-      ibitsite4 = Def::OrgTpow[2 * isite4 - 2 + sigma4];
+      ibitsite1 = Def::OrgTpow[2 * isite1 + sigma1];
+      ibitsite2 = Def::OrgTpow[2 * isite2 + sigma2];
+      ibitsite3 = Def::OrgTpow[2 * isite3 + sigma3];
+      ibitsite4 = Def::OrgTpow[2 * isite4 + sigma4];
       if (ibitsite1 == ibitsite2 && ibitsite3 == ibitsite4) {
-        mltply::Hubbard::C::X_CisAisCjtAjt_MPI(isite1 - 1, sigma1,
-          isite3 - 1, sigma3,
+        mltply::Hubbard::C::X_CisAisCjtAjt_MPI(isite1, sigma1,
+          isite3, sigma3,
           tmp_V, nstate, tmp_v0, tmp_v1);
       }
       else if (ibitsite1 == ibitsite2 && ibitsite3 != ibitsite4) {
-        mltply::Hubbard::C::X_CisAisCjtAku_MPI(isite1 - 1, sigma1,
-          isite3 - 1, sigma3, isite4 - 1, sigma4,
+        mltply::Hubbard::C::X_CisAisCjtAku_MPI(isite1, sigma1,
+          isite3, sigma3, isite4, sigma4,
           tmp_V, nstate, tmp_v0, tmp_v1);
       }
       else if (ibitsite1 != ibitsite2 && ibitsite3 == ibitsite4) {
-        mltply::Hubbard::C::X_CisAjtCkuAku_MPI(isite1 - 1, sigma1, isite2 - 1, sigma2,
-          isite3 - 1, sigma3, tmp_V, nstate, tmp_v0, tmp_v1);
+        mltply::Hubbard::C::X_CisAjtCkuAku_MPI(isite1, sigma1, isite2, sigma2,
+          isite3, sigma3, tmp_V, nstate, tmp_v0, tmp_v1);
       }
       else if (ibitsite1 != ibitsite2 && ibitsite3 != ibitsite4) {
-        mltply::Hubbard::C::X_CisAjtCkuAlv_MPI(isite1 - 1, sigma1, isite2 - 1, sigma2,
-          isite3 - 1, sigma3, isite4 - 1, sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
+        mltply::Hubbard::C::X_CisAjtCkuAlv_MPI(isite1, sigma1, isite2, sigma2,
+          isite3, sigma3, isite4, sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
       }
       StopTimer(321);
     }
@@ -251,10 +251,10 @@ int mltply::Hubbard::C::main(
       StartTimer(322);
       for (ihermite = 0; ihermite < 2; ihermite++) {
         idx = i + ihermite;
-        isite1 = Def::InterAll_OffDiagonal[idx][0] + 1;
-        isite2 = Def::InterAll_OffDiagonal[idx][2] + 1;
-        isite3 = Def::InterAll_OffDiagonal[idx][4] + 1;
-        isite4 = Def::InterAll_OffDiagonal[idx][6] + 1;
+        isite1 = Def::InterAll_OffDiagonal[idx][0];
+        isite2 = Def::InterAll_OffDiagonal[idx][2];
+        isite3 = Def::InterAll_OffDiagonal[idx][4];
+        isite4 = Def::InterAll_OffDiagonal[idx][6];
         sigma1 = Def::InterAll_OffDiagonal[idx][1];
         sigma2 = Def::InterAll_OffDiagonal[idx][3];
         sigma3 = Def::InterAll_OffDiagonal[idx][5];
@@ -278,8 +278,8 @@ int mltply::Hubbard::C::main(
     sigma1=0;
     sigma2=1;
         
-    if ( Def::PairHopping[i][0] + 1 > Def::Nsite 
-      || Def::PairHopping[i][1] + 1 > Def::Nsite)
+    if ( Def::PairHopping[i][0] >= Def::Nsite 
+      || Def::PairHopping[i][1] >= Def::Nsite)
     {
       StartTimer(331);
       mltply::Hubbard::C::X_CisAjtCkuAlv_MPI(
@@ -306,8 +306,8 @@ int mltply::Hubbard::C::main(
   for (i = 0; i < Def::NExchangeCoupling; i ++) {
     sigma1 = 0;
     sigma2 = 1;
-    if (Def::ExchangeCoupling[i][0] + 1 > Def::Nsite ||
-        Def::ExchangeCoupling[i][1] + 1 > Def::Nsite) 
+    if (Def::ExchangeCoupling[i][0] >= Def::Nsite ||
+        Def::ExchangeCoupling[i][1] >= Def::Nsite) 
     {
       StartTimer(341);
       mltply::Hubbard::C::X_CisAjtCkuAlv_MPI(
@@ -358,18 +358,18 @@ int mltply::Hubbard::GC::main(
   */
   StartTimer(210);
   for (i = 0; i < Def::EDNTransfer; i += 2) {
-    if (Def::EDGeneralTransfer[i][0] + 1 > Def::Nsite &&
-        Def::EDGeneralTransfer[i][2] + 1 > Def::Nsite) {
+    if (Def::EDGeneralTransfer[i][0] >= Def::Nsite &&
+        Def::EDGeneralTransfer[i][2] >= Def::Nsite) {
       StartTimer(211);
       mltply::Hubbard::GC::general_hopp_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(211);
     }
-    else if (Def::EDGeneralTransfer[i][2] + 1 > Def::Nsite){
+    else if (Def::EDGeneralTransfer[i][2] >= Def::Nsite){
       StartTimer(212);
       mltply::Hubbard::GC::general_hopp_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(212);
     }
-    else if (Def::EDGeneralTransfer[i][0] + 1 > Def::Nsite) {
+    else if (Def::EDGeneralTransfer[i][0] >= Def::Nsite) {
       StartTimer(212);
       mltply::Hubbard::GC::general_hopp_MPIsingle(i+1, nstate, tmp_v0, tmp_v1);
       StopTimer(212);
@@ -378,8 +378,8 @@ int mltply::Hubbard::GC::main(
       StartTimer(213);
       for (ihermite = 0; ihermite<2; ihermite++) {
         idx = i + ihermite;
-        isite1 = Def::EDGeneralTransfer[idx][0] + 1;
-        isite2 = Def::EDGeneralTransfer[idx][2] + 1;
+        isite1 = Def::EDGeneralTransfer[idx][0];
+        isite2 = Def::EDGeneralTransfer[idx][2];
         sigma1 = Def::EDGeneralTransfer[idx][1];
         sigma2 = Def::EDGeneralTransfer[idx][3];
         mltply::Hubbard::general_hopp_GetInfo(isite1, isite2, sigma1, sigma2);
@@ -395,46 +395,46 @@ int mltply::Hubbard::GC::main(
   */
   StartTimer(220);
   for (i = 0; i < Def::NInterAll_OffDiagonal; i+=2) {
-    isite1 = Def::InterAll_OffDiagonal[i][0] + 1;
-    isite2 = Def::InterAll_OffDiagonal[i][2] + 1;
-    isite3 = Def::InterAll_OffDiagonal[i][4] + 1;
-    isite4 = Def::InterAll_OffDiagonal[i][6] + 1;
+    isite1 = Def::InterAll_OffDiagonal[i][0];
+    isite2 = Def::InterAll_OffDiagonal[i][2];
+    isite3 = Def::InterAll_OffDiagonal[i][4];
+    isite4 = Def::InterAll_OffDiagonal[i][6];
     sigma1 = Def::InterAll_OffDiagonal[i][1];
     sigma2 = Def::InterAll_OffDiagonal[i][3];
     sigma3 = Def::InterAll_OffDiagonal[i][5];
     sigma4 = Def::InterAll_OffDiagonal[i][7];
     tmp_V = Def::ParaInterAll_OffDiagonal[i];
 
-    if ( mltply::Hubbard::CheckPE(isite1 - 1) == TRUE || mltply::Hubbard::CheckPE(isite2 - 1) == TRUE
-      || mltply::Hubbard::CheckPE(isite3 - 1) == TRUE || mltply::Hubbard::CheckPE(isite4 - 1) == TRUE) 
+    if ( mltply::Hubbard::CheckPE(isite1) == TRUE || mltply::Hubbard::CheckPE(isite2) == TRUE
+      || mltply::Hubbard::CheckPE(isite3) == TRUE || mltply::Hubbard::CheckPE(isite4) == TRUE) 
     {
       StartTimer(221);
-      ibitsite1 = Def::OrgTpow[2 * isite1 - 2 + sigma1];
-      ibitsite2 = Def::OrgTpow[2 * isite2 - 2 + sigma2];
-      ibitsite3 = Def::OrgTpow[2 * isite3 - 2 + sigma3];
-      ibitsite4 = Def::OrgTpow[2 * isite4 - 2 + sigma4];
+      ibitsite1 = Def::OrgTpow[2 * isite1 + sigma1];
+      ibitsite2 = Def::OrgTpow[2 * isite2 + sigma2];
+      ibitsite3 = Def::OrgTpow[2 * isite3 + sigma3];
+      ibitsite4 = Def::OrgTpow[2 * isite4 + sigma4];
       if (ibitsite1 == ibitsite2 && ibitsite3 == ibitsite4) 
         mltply::Hubbard::GC::X_CisAisCjtAjt_MPI(
-          isite1 - 1, sigma1, isite3 - 1, sigma3, tmp_V, nstate, tmp_v0, tmp_v1);
+          isite1, sigma1, isite3, sigma3, tmp_V, nstate, tmp_v0, tmp_v1);
       else if (ibitsite1 == ibitsite2 && ibitsite3 != ibitsite4) 
         mltply::Hubbard::GC::X_CisAisCjtAku_MPI(
-          isite1 - 1, sigma1, isite3 - 1, sigma3, isite4 - 1, sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
+          isite1, sigma1, isite3, sigma3, isite4, sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
       else if (ibitsite1 != ibitsite2 && ibitsite3 == ibitsite4) 
         mltply::Hubbard::GC::X_CisAjtCkuAku_MPI(
-          isite1 - 1, sigma1, isite2 - 1, sigma2, isite3 - 1, sigma3, tmp_V, nstate, tmp_v0, tmp_v1);
+          isite1, sigma1, isite2, sigma2, isite3, sigma3, tmp_V, nstate, tmp_v0, tmp_v1);
       else if (ibitsite1 != ibitsite2 && ibitsite3 != ibitsite4) 
         mltply::Hubbard::GC::X_CisAjtCkuAlv_MPI(
-          isite1 - 1, sigma1, isite2 - 1, sigma2, isite3 - 1, sigma3, isite4 - 1, sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
+          isite1, sigma1, isite2, sigma2, isite3, sigma3, isite4, sigma4, tmp_V, nstate, tmp_v0, tmp_v1);
       StopTimer(221);
     }//InterPE
     else{
       StartTimer(222);
       for(ihermite=0; ihermite<2; ihermite++){
         idx=i+ihermite;
-        isite1 = Def::InterAll_OffDiagonal[idx][0] + 1;
-        isite2 = Def::InterAll_OffDiagonal[idx][2] + 1;
-        isite3 = Def::InterAll_OffDiagonal[idx][4] + 1;
-        isite4 = Def::InterAll_OffDiagonal[idx][6] + 1;
+        isite1 = Def::InterAll_OffDiagonal[idx][0];
+        isite2 = Def::InterAll_OffDiagonal[idx][2];
+        isite3 = Def::InterAll_OffDiagonal[idx][4];
+        isite4 = Def::InterAll_OffDiagonal[idx][6];
         sigma1 = Def::InterAll_OffDiagonal[idx][1];
         sigma2 = Def::InterAll_OffDiagonal[idx][3];
         sigma3 = Def::InterAll_OffDiagonal[idx][5];
@@ -456,8 +456,8 @@ int mltply::Hubbard::GC::main(
   for (i = 0; i < Def::NPairHopping; i +=2) {
     sigma1 = 0;
     sigma2 = 1;
-    if ( Def::PairHopping[i][0] + 1 > Def::Nsite
-      || Def::PairHopping[i][1] + 1 > Def::Nsite) 
+    if ( Def::PairHopping[i][0] >= Def::Nsite
+      || Def::PairHopping[i][1] >= Def::Nsite) 
     {
       StartTimer(231);
       mltply::Hubbard::GC::X_CisAjtCkuAlv_MPI(
@@ -468,7 +468,7 @@ int mltply::Hubbard::GC::main(
     }
     else {
       StartTimer(232);
-      for (ihermite = 0; ihermite<2; ihermite++) {
+      for (ihermite = 0; ihermite < 2; ihermite++) {
         idx = i + ihermite;
         mltply::Hubbard::pairhopp_GetInfo(idx);
         mltply::Hubbard::GC::pairhopp(nstate, tmp_v0, tmp_v1);
@@ -484,8 +484,8 @@ int mltply::Hubbard::GC::main(
   for (i = 0; i < Def::NExchangeCoupling; i++) {
     sigma1=0;
     sigma2=1;
-    if ( Def::ExchangeCoupling[i][0] + 1 > Def::Nsite
-      || Def::ExchangeCoupling[i][1] + 1 > Def::Nsite) 
+    if ( Def::ExchangeCoupling[i][0] >= Def::Nsite
+      || Def::ExchangeCoupling[i][1] >= Def::Nsite) 
     {
       StartTimer(241);
       mltply::Hubbard::GC::X_CisAjtCkuAlv_MPI(

@@ -567,22 +567,22 @@ void mltply::Spin::GC::General::X_CisAisCjuAjv_MPIdouble(
     return;
   }
 
-  if (BitCheckGeneral(MP::myrank, org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow) == TRUE
-    && GetOffCompGeneralSpin((long int) MP::myrank, org_isite3 + 1, org_ispin3, org_ispin4,
+  if (BitCheckGeneral(MP::myrank, org_isite1, org_ispin1, Def::SiteToBit, Def::Tpow) == TRUE
+    && GetOffCompGeneralSpin((long int) MP::myrank, org_isite3, org_ispin3, org_ispin4,
       &off, Def::SiteToBit, Def::Tpow) == TRUE)
     tmp_V = tmp_J;
   else {
-    if (GetOffCompGeneralSpin((long int) MP::myrank, org_isite3 + 1, org_ispin4, org_ispin3,
+    if (GetOffCompGeneralSpin((long int) MP::myrank, org_isite3, org_ispin4, org_ispin3,
       &off, Def::SiteToBit, Def::Tpow) == TRUE)
     {
-      if (BitCheckGeneral((long int)off, org_isite1 + 1, org_ispin1, Def::SiteToBit,
+      if (BitCheckGeneral((long int)off, org_isite1, org_ispin1, Def::SiteToBit,
         Def::Tpow) == TRUE)
       {
         tmp_V = conj(tmp_J);
         if(Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
-      }/*BitCheckGeneral(off, org_isite1 + 1, org_ispin1)*/
+      }/*BitCheckGeneral(off, org_isite1, org_ispin1)*/
       else return;
-    }/*GetOffCompGeneralSpin(MP::myrank, org_isite3 + 1, org_ispin4, org_ispin3, &off)*/
+    }/*GetOffCompGeneralSpin(MP::myrank, org_isite3, org_ispin4, org_ispin3, &off)*/
     else return;
   }
   origin = (int)off;
@@ -613,17 +613,17 @@ void mltply::Spin::GC::General::X_CisAitCjuAju_MPIdouble(
     return;
   }
 
-  if (BitCheckGeneral(MP::myrank, org_isite3 + 1, org_ispin3, Def::SiteToBit, Def::Tpow) == TRUE
-    && GetOffCompGeneralSpin((long int) MP::myrank, org_isite1 + 1, org_ispin2, org_ispin1, &off,
+  if (BitCheckGeneral(MP::myrank, org_isite3, org_ispin3, Def::SiteToBit, Def::Tpow) == TRUE
+    && GetOffCompGeneralSpin((long int) MP::myrank, org_isite1, org_ispin2, org_ispin1, &off,
       Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = conj(tmp_J);
     if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
   }
-  else if (GetOffCompGeneralSpin((long int) MP::myrank, org_isite1 + 1, org_ispin1, org_ispin2,
+  else if (GetOffCompGeneralSpin((long int) MP::myrank, org_isite1, org_ispin1, org_ispin2,
     &off, Def::SiteToBit, Def::Tpow) == TRUE)
   {
-    if (BitCheckGeneral((long int)off, org_isite3 + 1, org_ispin3,
+    if (BitCheckGeneral((long int)off, org_isite3, org_ispin3,
       Def::SiteToBit, Def::Tpow) == TRUE) {
       tmp_V = tmp_J;
     }
@@ -665,10 +665,10 @@ void mltply::Spin::GC::General::X_CisAitCjuAjv_MPIdouble(
     return;
   }
   //cisaitcisait
-  if (GetOffCompGeneralSpin((long int) MP::myrank, org_isite1 + 1, org_ispin1, org_ispin2,
+  if (GetOffCompGeneralSpin((long int) MP::myrank, org_isite1, org_ispin1, org_ispin2,
     &tmp_off, Def::SiteToBit, Def::Tpow) == TRUE) {
 
-    if (GetOffCompGeneralSpin(tmp_off, org_isite3 + 1, org_ispin3, org_ispin4,
+    if (GetOffCompGeneralSpin(tmp_off, org_isite3, org_ispin3, org_ispin4,
       &off, Def::SiteToBit, Def::Tpow) == TRUE) {
 
       tmp_V = tmp_J;
@@ -680,10 +680,10 @@ void mltply::Spin::GC::General::X_CisAitCjuAjv_MPIdouble(
   }
 
   if (ihermite == FALSE) {
-    if (GetOffCompGeneralSpin((long int) MP::myrank, org_isite3 + 1, org_ispin4, org_ispin3, &tmp_off,
+    if (GetOffCompGeneralSpin((long int) MP::myrank, org_isite3, org_ispin4, org_ispin3, &tmp_off,
       Def::SiteToBit, Def::Tpow) == TRUE) {
 
-      if (GetOffCompGeneralSpin(tmp_off, org_isite1 + 1, org_ispin2, org_ispin1, &off, Def::SiteToBit,
+      if (GetOffCompGeneralSpin(tmp_off, org_isite1, org_ispin2, org_ispin1, &off, Def::SiteToBit,
                                       Def::Tpow) == TRUE) {
         tmp_V = conj(tmp_J);
         if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
@@ -716,10 +716,10 @@ void mltply::Spin::GC::General::X_CisAisCjuAju_MPIdouble(
   long int num1;
   std::complex<double> tmp_V;
 
-  num1 = BitCheckGeneral((long int) MP::myrank, org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
+  num1 = BitCheckGeneral((long int) MP::myrank, org_isite1, org_ispin1, Def::SiteToBit, Def::Tpow);
 
   if (num1 == TRUE) {
-    num1 = BitCheckGeneral((long int) MP::myrank, org_isite3 + 1, org_ispin3, Def::SiteToBit, Def::Tpow);
+    num1 = BitCheckGeneral((long int) MP::myrank, org_isite3, org_ispin3, Def::SiteToBit, Def::Tpow);
     if (num1 == TRUE) {
       tmp_V = tmp_J;
     }
@@ -746,12 +746,12 @@ void mltply::Spin::GC::General::X_CisAit_MPIdouble(
   int origin;
   std::complex<double> tmp_V;
 
-  if (GetOffCompGeneralSpin((long int) MP::myrank, org_isite1 + 1, org_ispin1, org_ispin2,
+  if (GetOffCompGeneralSpin((long int) MP::myrank, org_isite1, org_ispin1, org_ispin2,
     &off, Def::SiteToBit, Def::Tpow) == TRUE) {
     tmp_V = tmp_trans;
   }
   else if (GetOffCompGeneralSpin((long int) MP::myrank,
-    org_isite1 + 1, org_ispin2, org_ispin1, &off,
+    org_isite1, org_ispin2, org_ispin1, &off,
     Def::SiteToBit, Def::Tpow) == TRUE) {
     tmp_V = conj(tmp_trans);
     if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
@@ -780,7 +780,7 @@ void mltply::Spin::GC::General::X_CisAis_MPIdouble(
   std::complex<double> tmp_V;
 
   num1 = BitCheckGeneral((long int) MP::myrank,
-    org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
+    org_isite1, org_ispin1, Def::SiteToBit, Def::Tpow);
   if (num1 != 0) {
     tmp_V = tmp_trans;
   }
@@ -804,7 +804,7 @@ void mltply::Spin::GC::General::X_AisCis_MPIdouble(
   std::complex<double> tmp_V;
 
   num1 = BitCheckGeneral((long int) MP::myrank,
-    org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
+    org_isite1, org_ispin1, Def::SiteToBit, Def::Tpow);
   if (num1 == 0) {
     tmp_V = tmp_trans;
   }
@@ -832,12 +832,12 @@ void mltply::Spin::C::General::X_CisAit_MPIdouble(
   int origin, one = 1;
   std::complex<double> tmp_V;
   
-  if (GetOffCompGeneralSpin((long int) MP::myrank, org_isite1 + 1, org_ispin1, org_ispin2,
+  if (GetOffCompGeneralSpin((long int) MP::myrank, org_isite1, org_ispin1, org_ispin2,
                             &off, Def::SiteToBit, Def::Tpow) == TRUE) {
     tmp_V = tmp_trans;
   }
   else if (GetOffCompGeneralSpin((long int) MP::myrank,
-                                 org_isite1 + 1, org_ispin2, org_ispin1, &off,
+                                 org_isite1, org_ispin2, org_ispin1, &off,
                                  Def::SiteToBit, Def::Tpow) == TRUE) {
     tmp_V = conj(tmp_trans);
     if (Large::mode == M_CORR || Large::mode ==M_CALCSPEC) tmp_V = 0.0;
@@ -877,20 +877,20 @@ void mltply::Spin::GC::General::X_CisAisCjuAjv_MPIsingle(
   std::complex<double> tmp_V;
 
   if (GetOffCompGeneralSpin((long int)MP::myrank,
-    org_isite3 + 1, org_ispin3, org_ispin4, &off,
+    org_isite3, org_ispin3, org_ispin4, &off,
     Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = tmp_J;
-    isite = org_isite1 + 1;
+    isite = org_isite1;
     IniSpin = org_ispin1;
   }
   else if (GetOffCompGeneralSpin((long int)MP::myrank,
-    org_isite3 + 1, org_ispin4, org_ispin3, &off,
+    org_isite3, org_ispin4, org_ispin3, &off,
     Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = conj(tmp_J);
     if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
-    isite = org_isite1 + 1;
+    isite = org_isite1;
     IniSpin = org_ispin1;
   }
   else return;
@@ -929,10 +929,10 @@ void mltply::Spin::GC::General::X_CisAitCjuAju_MPIsingle(
   std::complex<double> tmp_V, dmv;
 
   num1 = BitCheckGeneral((long int)MP::myrank, 
-    org_isite3+1, org_ispin3, Def::SiteToBit, Def::Tpow);
+    org_isite3, org_ispin3, Def::SiteToBit, Def::Tpow);
   if(num1 != 0){
     tmp_V = tmp_J;
-    isite = org_isite1 + 1;
+    isite = org_isite1;
     IniSpin = org_ispin2;
     FinSpin = org_ispin1;
   }
@@ -977,21 +977,21 @@ void mltply::Spin::GC::General::X_CisAitCjuAjv_MPIsingle(
   std::complex<double> tmp_V;
 
   if (GetOffCompGeneralSpin((long int)MP::myrank,
-    org_isite3 + 1, org_ispin3, org_ispin4, &off,
+    org_isite3, org_ispin3, org_ispin4, &off,
     Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = tmp_J;
-    isite = org_isite1 + 1;
+    isite = org_isite1;
     IniSpin = org_ispin2;
     FinSpin = org_ispin1;
   }
   else if (GetOffCompGeneralSpin((long int)MP::myrank,
-    org_isite3 + 1, org_ispin4, org_ispin3, &off,
+    org_isite3, org_ispin4, org_ispin3, &off,
     Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = conj(tmp_J);
     if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
-    isite = org_isite1 + 1;
+    isite = org_isite1;
     IniSpin = org_ispin1;
     FinSpin = org_ispin2;
   }
@@ -1030,7 +1030,7 @@ void mltply::Spin::GC::General::X_CisAisCjuAju_MPIsingle(
   std::complex<double> tmp_V, dmv;
   int one = 1;
 
-  num1 = BitCheckGeneral((long int)MP::myrank, org_isite3+1, org_ispin3, Def::SiteToBit, Def::Tpow);
+  num1 = BitCheckGeneral((long int)MP::myrank, org_isite3, org_ispin3, Def::SiteToBit, Def::Tpow);
   if (num1 != FALSE) {
     tmp_V = tmp_J;
   }
@@ -1040,7 +1040,7 @@ void mltply::Spin::GC::General::X_CisAisCjuAju_MPIsingle(
 shared(tmp_V, org_isite1, org_ispin1,tmp_v0, tmp_v1,nstate,one, \
 Check::idim_max, Def::SiteToBit, Def::Tpow)
   for (j = 1; j <= Check::idim_max; j++) {
-    num1 = BitCheckGeneral(j - 1, org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
+    num1 = BitCheckGeneral(j - 1, org_isite1, org_ispin1, Def::SiteToBit, Def::Tpow);
 
     dmv = tmp_V * (std::complex<double>)num1;
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
@@ -1067,9 +1067,9 @@ void mltply::Spin::C::General::X_CisAitCjuAjv_MPIdouble(
   std::complex<double> tmp_V;
   int ihermite=TRUE;
 
-  if (GetOffCompGeneralSpin((long int)MP::myrank, org_isite1 + 1, org_ispin1, org_ispin2, &tmp_off, Def::SiteToBit, Def::Tpow) == TRUE)
+  if (GetOffCompGeneralSpin((long int)MP::myrank, org_isite1, org_ispin1, org_ispin2, &tmp_off, Def::SiteToBit, Def::Tpow) == TRUE)
   {
-    if (GetOffCompGeneralSpin(tmp_off, org_isite3 + 1, org_ispin3, org_ispin4, &off, Def::SiteToBit, Def::Tpow) == TRUE)
+    if (GetOffCompGeneralSpin(tmp_off, org_isite3, org_ispin3, org_ispin4, &off, Def::SiteToBit, Def::Tpow) == TRUE)
     {
       tmp_V = tmp_J;
     }
@@ -1082,9 +1082,9 @@ void mltply::Spin::C::General::X_CisAitCjuAjv_MPIdouble(
   }
   
   if (ihermite == FALSE) {
-    if (GetOffCompGeneralSpin((long int)MP::myrank, org_isite3 + 1, org_ispin4, org_ispin3, &tmp_off, Def::SiteToBit, Def::Tpow) == TRUE)
+    if (GetOffCompGeneralSpin((long int)MP::myrank, org_isite3, org_ispin4, org_ispin3, &tmp_off, Def::SiteToBit, Def::Tpow) == TRUE)
     {
-      if (GetOffCompGeneralSpin(tmp_off, org_isite1 + 1, org_ispin2, org_ispin1, &off, Def::SiteToBit, Def::Tpow) == TRUE)
+      if (GetOffCompGeneralSpin(tmp_off, org_isite1, org_ispin2, org_ispin1, &off, Def::SiteToBit, Def::Tpow) == TRUE)
       {
         tmp_V = conj(tmp_J);
         if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) {
@@ -1127,7 +1127,7 @@ void mltply::Spin::C::General::X_CisAisCjuAju_MPIdouble(
   std::complex<double> tmp_V;
 
   if (org_isite1 == org_isite3 && org_ispin1 == org_ispin3) {
-    num1 = BitCheckGeneral((long int) MP::myrank, org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
+    num1 = BitCheckGeneral((long int) MP::myrank, org_isite1, org_ispin1, Def::SiteToBit, Def::Tpow);
     if (num1 != FALSE) {
       tmp_V = tmp_J;
     }
@@ -1136,9 +1136,9 @@ void mltply::Spin::C::General::X_CisAisCjuAju_MPIdouble(
     }
   }
   else {
-    num1 = BitCheckGeneral((long int) MP::myrank, org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
+    num1 = BitCheckGeneral((long int) MP::myrank, org_isite1, org_ispin1, Def::SiteToBit, Def::Tpow);
     if (num1 != FALSE) {
-      num1 = BitCheckGeneral((long int) MP::myrank, org_isite3 + 1, org_ispin3, Def::SiteToBit,
+      num1 = BitCheckGeneral((long int) MP::myrank, org_isite3, org_ispin3, Def::SiteToBit,
         Def::Tpow);
       if (num1 != FALSE) {
         tmp_V = tmp_J;
@@ -1173,7 +1173,7 @@ void mltply::Spin::C::General::X_CisAisCjuAju_MPIsingle(
   std::complex<double> tmp_V, dmv;
   int one = 1;
 
-  num1 = BitCheckGeneral((long int) MP::myrank, org_isite3 + 1, org_ispin3, Def::SiteToBit, Def::Tpow);
+  num1 = BitCheckGeneral((long int) MP::myrank, org_isite3, org_ispin3, Def::SiteToBit, Def::Tpow);
   if (num1 != FALSE) {
     tmp_V = tmp_J;
   }
@@ -1183,7 +1183,7 @@ void mltply::Spin::C::General::X_CisAisCjuAju_MPIsingle(
 shared(tmp_V, org_isite1, org_ispin1,tmp_v0, tmp_v1, List::c1,nstate, \
 one,Check::idim_max, Def::SiteToBit, Def::Tpow)
   for (j = 1; j <= Check::idim_max; j++) {
-    num1 = BitCheckGeneral(List::c1[j], org_isite1 + 1, org_ispin1, Def::SiteToBit, Def::Tpow);
+    num1 = BitCheckGeneral(List::c1[j], org_isite1, org_ispin1, Def::SiteToBit, Def::Tpow);
 
     dmv = tmp_V * (std::complex<double>)num1;
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
@@ -1210,20 +1210,20 @@ void mltply::Spin::C::General::X_CisAitCjuAjv_MPIsingle(
   std::complex<double> tmp_V;
   
   if (GetOffCompGeneralSpin((long int)MP::myrank,
-    org_isite3 + 1, org_ispin3, org_ispin4, &off,
+    org_isite3, org_ispin3, org_ispin4, &off,
     Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = tmp_J;
-    isite = org_isite1 + 1;
+    isite = org_isite1;
     IniSpin = org_ispin2;
     FinSpin = org_ispin1;
   }
   else if (GetOffCompGeneralSpin((long int)MP::myrank,
-    org_isite3 + 1, org_ispin4, org_ispin3, &off, Def::SiteToBit, Def::Tpow) == TRUE)
+    org_isite3, org_ispin4, org_ispin3, &off, Def::SiteToBit, Def::Tpow) == TRUE)
   {
     tmp_V = conj(tmp_J);
     if (Large::mode == M_CORR || Large::mode == M_CALCSPEC) tmp_V = 0.0;
-    isite = org_isite1 + 1;
+    isite = org_isite1;
     IniSpin = org_ispin1;
     FinSpin = org_ispin2;
   }

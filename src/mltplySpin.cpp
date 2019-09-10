@@ -208,18 +208,18 @@ int mltply::Spin::C::Half::main(
   */
   StartTimer(410);
   for (i = 0; i < Def::NInterAll_OffDiagonal; i+=2) {
-    if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite &&
-        Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
+    if (Def::InterAll_OffDiagonal[i][0] >= Def::Nsite &&
+        Def::InterAll_OffDiagonal[i][4] >= Def::Nsite) {
       StartTimer(411);
       mltply::Spin::C::Half::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(411);
     }
-    else if (Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
+    else if (Def::InterAll_OffDiagonal[i][4] >= Def::Nsite) {
       StartTimer(412);
       mltply::Spin::C::Half::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(412);
     }
-    else if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite) {
+    else if (Def::InterAll_OffDiagonal[i][0] >= Def::Nsite) {
       StartTimer(413);
       mltply::Spin::C::Half::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
       StopTimer(413);
@@ -228,8 +228,8 @@ int mltply::Spin::C::Half::main(
       StartTimer(414);
       for (ihermite = 0; ihermite<2; ihermite++) {
         idx = i + ihermite;
-        isite1 = Def::InterAll_OffDiagonal[idx][0] + 1;
-        isite2 = Def::InterAll_OffDiagonal[idx][4] + 1;
+        isite1 = Def::InterAll_OffDiagonal[idx][0];
+        isite2 = Def::InterAll_OffDiagonal[idx][4];
         sigma1 = Def::InterAll_OffDiagonal[idx][1];
         sigma2 = Def::InterAll_OffDiagonal[idx][3];
         sigma3 = Def::InterAll_OffDiagonal[idx][5];
@@ -248,8 +248,8 @@ int mltply::Spin::C::Half::main(
   StartTimer(420);   
   for (i = 0; i < Def::NExchangeCoupling; i++) {
     sigma1=0; sigma2=1;
-    if (Def::ExchangeCoupling[i][0] + 1 > Def::Nsite &&
-        Def::ExchangeCoupling[i][1] + 1 > Def::Nsite) {
+    if (Def::ExchangeCoupling[i][0] >= Def::Nsite &&
+        Def::ExchangeCoupling[i][1] >= Def::Nsite) {
       StartTimer(421);
       mltply::Spin::C::Half::X_general_int_MPIdouble(
         Def::ExchangeCoupling[i][0], sigma1, sigma2, 
@@ -257,7 +257,7 @@ int mltply::Spin::C::Half::main(
         Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
       StopTimer(421);
     }
-    else if (Def::ExchangeCoupling[i][1] + 1 > Def::Nsite) {
+    else if (Def::ExchangeCoupling[i][1] >= Def::Nsite) {
       StartTimer(422);
       mltply::Spin::C::Half::X_general_int_MPIsingle(
         Def::ExchangeCoupling[i][0], sigma1, sigma2, 
@@ -265,7 +265,7 @@ int mltply::Spin::C::Half::main(
         Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
       StopTimer(422);
     }
-    else if (Def::ExchangeCoupling[i][0] + 1 > Def::Nsite) {
+    else if (Def::ExchangeCoupling[i][0] >= Def::Nsite) {
       StartTimer(423);
       mltply::Spin::C::Half::X_general_int_MPIsingle(
         Def::ExchangeCoupling[i][1], sigma2, sigma1, 
@@ -322,18 +322,18 @@ int mltply::Spin::C::General::main(
   StartTimer(410);
   ihfbit =Check::sdim;
   for (i = 0; i < Def::NInterAll_OffDiagonal; i += 2) {
-    if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite &&
-        Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
+    if (Def::InterAll_OffDiagonal[i][0] >= Def::Nsite &&
+        Def::InterAll_OffDiagonal[i][4] >= Def::Nsite) {
       StartTimer(411);
       mltply::Spin::C::General::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(411);
     }
-    else if (Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
+    else if (Def::InterAll_OffDiagonal[i][4] >= Def::Nsite) {
       StartTimer(412);
       mltply::Spin::C::General::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(412);
     }
-    else if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite) {
+    else if (Def::InterAll_OffDiagonal[i][0] >= Def::Nsite) {
       StartTimer(412);
       mltply::Spin::C::General::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
       StopTimer(412);
@@ -342,8 +342,8 @@ int mltply::Spin::C::General::main(
       StartTimer(413);
       for (ihermite = 0; ihermite < 2; ihermite++) {
         idx = i + ihermite;
-        isite1 = Def::InterAll_OffDiagonal[idx][0] + 1;
-        isite2 = Def::InterAll_OffDiagonal[idx][4] + 1;
+        isite1 = Def::InterAll_OffDiagonal[idx][0];
+        isite2 = Def::InterAll_OffDiagonal[idx][4];
         sigma1 = Def::InterAll_OffDiagonal[idx][1];
         sigma2 = Def::InterAll_OffDiagonal[idx][3];
         sigma3 = Def::InterAll_OffDiagonal[idx][5];
@@ -422,8 +422,8 @@ int mltply::Spin::GC::Half::main(
 
   StartTimer(510);
   for (i = 0; i < Def::EDNTransfer; i+=2 ) {
-    if(Def::EDGeneralTransfer[i][0]+1 > Def::Nsite){
-      if(Def::EDGeneralTransfer[i][1]==Def::EDGeneralTransfer[i][3]){
+    if(Def::EDGeneralTransfer[i][0] >= Def::Nsite){
+      if (Def::EDGeneralTransfer[i][1] == Def::EDGeneralTransfer[i][3]) {
         fprintf(stderr, "Transverse_OffDiagonal component is illegal.\n");
       }
       else{
@@ -434,13 +434,13 @@ int mltply::Spin::GC::Half::main(
           nstate, tmp_v0, tmp_v1);
         StopTimer(511);
       }
-    }/*if(Def::EDGeneralTransfer[i][0]+1 > Def::Nsite)*/
+    }/*if(Def::EDGeneralTransfer[i][0] >= Def::Nsite)*/
     else{
       StartTimer(512);
       for(ihermite=0; ihermite<2; ihermite++){
         idx=i+ihermite;
-        isite1 = Def::EDGeneralTransfer[idx][0] + 1;
-        isite2 = Def::EDGeneralTransfer[idx][2] + 1;
+        isite1 = Def::EDGeneralTransfer[idx][0];
+        isite2 = Def::EDGeneralTransfer[idx][2];
         sigma1 = Def::EDGeneralTransfer[idx][1];
         sigma2 = Def::EDGeneralTransfer[idx][3];
         tmp_trans = -Def::EDParaGeneralTransfer[idx];
@@ -452,7 +452,7 @@ int mltply::Spin::GC::Half::main(
         else{
           // longitudinal magnetic field (considerd in diagonalcalc.cpp)
           // transverse magnetic field
-          is1_spin = Def::Tpow[isite1 - 1];
+          is1_spin = Def::Tpow[isite1];
 #pragma omp parallel for default(none) private(j, tmp_sgn, off) \
 shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
           for (j = 1; j <= i_max; j++) {
@@ -472,18 +472,18 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
   */
   StartTimer(520);
   for (i = 0; i < Def::NInterAll_OffDiagonal; i += 2) {
-    if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite &&
-        Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
+    if (Def::InterAll_OffDiagonal[i][0] >= Def::Nsite &&
+        Def::InterAll_OffDiagonal[i][4] >= Def::Nsite) {
       StartTimer(521);
       mltply::Spin::GC::Half::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(521);
     }
-    else if (Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
+    else if (Def::InterAll_OffDiagonal[i][4] >= Def::Nsite) {
       StartTimer(522);
       mltply::Spin::GC::Half::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(522);
     }
-    else if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite) {
+    else if (Def::InterAll_OffDiagonal[i][0] >= Def::Nsite) {
       StartTimer(522);
       mltply::Spin::GC::Half::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
       StopTimer(522);
@@ -492,8 +492,8 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
       StartTimer(523);
       for (ihermite = 0; ihermite < 2; ihermite++) {
         idx = i + ihermite;
-        isite1 = Def::InterAll_OffDiagonal[idx][0] + 1;
-        isite2 = Def::InterAll_OffDiagonal[idx][4] + 1;
+        isite1 = Def::InterAll_OffDiagonal[idx][0];
+        isite2 = Def::InterAll_OffDiagonal[idx][4];
         sigma1 = Def::InterAll_OffDiagonal[idx][1];
         sigma2 = Def::InterAll_OffDiagonal[idx][3];
         sigma3 = Def::InterAll_OffDiagonal[idx][5];
@@ -512,8 +512,8 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
   StartTimer(530);
   for (i = 0; i < Def::NExchangeCoupling; i++) {
     sigma1=0; sigma2=1;
-    if (Def::ExchangeCoupling[i][0] + 1 > Def::Nsite &&
-        Def::ExchangeCoupling[i][1] + 1 > Def::Nsite){
+    if (Def::ExchangeCoupling[i][0] >= Def::Nsite &&
+        Def::ExchangeCoupling[i][1] >= Def::Nsite){
       StartTimer(531);
       mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIdouble(
         Def::ExchangeCoupling[i][0], sigma1, sigma2, 
@@ -521,7 +521,7 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
         Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
       StopTimer(531);
     }
-    else if (Def::ExchangeCoupling[i][1] + 1 > Def::Nsite) {
+    else if (Def::ExchangeCoupling[i][1] >= Def::Nsite) {
       StartTimer(532);
       mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(
         Def::ExchangeCoupling[i][0], sigma1, sigma2,
@@ -529,7 +529,7 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
         Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
       StopTimer(532);
     }
-    else if (Def::ExchangeCoupling[i][0] + 1 > Def::Nsite) {
+    else if (Def::ExchangeCoupling[i][0] >= Def::Nsite) {
       StartTimer(532);
       mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(
         Def::ExchangeCoupling[i][1], sigma2, sigma1,
@@ -551,8 +551,8 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
   StartTimer(540);
   for (i = 0; i < Def::NPairLiftCoupling; i++) {
     sigma1 =0; sigma2=1;
-    if (Def::PairLiftCoupling[i][0] + 1 > Def::Nsite &&
-        Def::PairLiftCoupling[i][1] + 1 > Def::Nsite) {
+    if (Def::PairLiftCoupling[i][0] >= Def::Nsite &&
+        Def::PairLiftCoupling[i][1] >= Def::Nsite) {
       StartTimer(541);
       mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIdouble(
         Def::PairLiftCoupling[i][0], sigma1, sigma2, 
@@ -560,7 +560,7 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
         Def::ParaPairLiftCoupling[i], nstate, tmp_v0, tmp_v1);
       StopTimer(541);
     }
-    else if (Def::PairLiftCoupling[i][1] + 1 > Def::Nsite) {
+    else if (Def::PairLiftCoupling[i][1] >= Def::Nsite) {
       StartTimer(542);
       mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(
         Def::PairLiftCoupling[i][0], sigma1, sigma2, 
@@ -568,7 +568,7 @@ shared(i_max, is1_spin, sigma2, tmp_trans,tmp_v0, tmp_v1,one,nstate)
         Def::ParaPairLiftCoupling[i], nstate, tmp_v0, tmp_v1);
       StopTimer(542);
     }
-    else if (Def::PairLiftCoupling[i][0] + 1 > Def::Nsite) {
+    else if (Def::PairLiftCoupling[i][0] >= Def::Nsite) {
       StartTimer(542);
       mltply::Spin::GC::Half::X_CisAitCiuAiv_MPIsingle(
         Def::PairLiftCoupling[i][1], sigma1, sigma2,
@@ -621,22 +621,22 @@ int mltply::Spin::GC::General::main(
 
   StartTimer(510);
   for (i = 0; i < Def::EDNTransfer; i += 2) {
-    isite1 = Def::EDGeneralTransfer[i][0] + 1;
-    isite2 = Def::EDGeneralTransfer[i][2] + 1;
+    isite1 = Def::EDGeneralTransfer[i][0];
+    isite2 = Def::EDGeneralTransfer[i][2];
     sigma1 = Def::EDGeneralTransfer[i][1];
     sigma2 = Def::EDGeneralTransfer[i][3];
     tmp_trans = -Def::EDParaGeneralTransfer[idx];
     if (isite1 == isite2) {
       if (sigma1 != sigma2) {
-        if (isite1 > Def::Nsite) {
+        if (isite1 >= Def::Nsite) {
           mltply::Spin::GC::General::X_CisAit_MPIdouble(
-            isite1 - 1, sigma1, sigma2, tmp_trans, nstate, tmp_v0, tmp_v1);
-        }/*if (isite1 > Def::Nsite)*/
+            isite1, sigma1, sigma2, tmp_trans, nstate, tmp_v0, tmp_v1);
+        }/*if (isite1 >= Def::Nsite)*/
         else {
           for (ihermite = 0; ihermite<2; ihermite++) {
             idx = i + ihermite;
-            isite1 = Def::EDGeneralTransfer[idx][0] + 1;
-            isite2 = Def::EDGeneralTransfer[idx][2] + 1;
+            isite1 = Def::EDGeneralTransfer[idx][0];
+            isite2 = Def::EDGeneralTransfer[idx][2];
             sigma1 = Def::EDGeneralTransfer[idx][1];
             sigma2 = Def::EDGeneralTransfer[idx][3];
             tmp_trans = -Def::EDParaGeneralTransfer[idx];
@@ -670,18 +670,18 @@ tmp_v1,one,nstate, Def::SiteToBit, Def::Tpow)
   */
   StartTimer(520);
   for (i = 0; i< Def::NInterAll_OffDiagonal; i += 2) {
-    if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite &&
-        Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
+    if (Def::InterAll_OffDiagonal[i][0] >= Def::Nsite &&
+        Def::InterAll_OffDiagonal[i][4] >= Def::Nsite) {
       StartTimer(521);
       mltply::Spin::GC::General::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
       StopTimer(521);
     }
-    else if (Def::InterAll_OffDiagonal[i][4] + 1 > Def::Nsite) {
+    else if (Def::InterAll_OffDiagonal[i][4] >= Def::Nsite) {
       StartTimer(522);
       mltply::Spin::GC::General::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
       StopTimer(522);
     }
-    else if (Def::InterAll_OffDiagonal[i][0] + 1 > Def::Nsite) {
+    else if (Def::InterAll_OffDiagonal[i][0] >= Def::Nsite) {
       StartTimer(522);
       mltply::Spin::GC::General::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
       StopTimer(522);
@@ -690,8 +690,8 @@ tmp_v1,one,nstate, Def::SiteToBit, Def::Tpow)
       StartTimer(523);
       for (ihermite = 0; ihermite < 2; ihermite++) {
         idx = i + ihermite;
-        isite1 = Def::InterAll_OffDiagonal[idx][0] + 1;
-        isite2 = Def::InterAll_OffDiagonal[idx][4] + 1;
+        isite1 = Def::InterAll_OffDiagonal[idx][0];
+        isite2 = Def::InterAll_OffDiagonal[idx][4];
         sigma1 = Def::InterAll_OffDiagonal[idx][1];
         sigma2 = Def::InterAll_OffDiagonal[idx][3];
         sigma3 = Def::InterAll_OffDiagonal[idx][5];
@@ -879,8 +879,8 @@ void mltply::Spin::GC::Half::general_int(
   org_sigma3 = Large::is3_spin;
   org_sigma4 = Large::is4_spin;
   tmp_V = Large::tmp_V;
-  isA_up = Def::Tpow[org_isite1 - 1];
-  isB_up = Def::Tpow[org_isite2 - 1];
+  isA_up = Def::Tpow[org_isite1];
+  isB_up = Def::Tpow[org_isite2];
 
 #pragma omp parallel default(none) private(j,tmp_off) \
 shared(tmp_v0,tmp_v1,nstate,i_max,isA_up,isB_up,org_sigma1,org_sigma2,org_sigma3,org_sigma4,tmp_V) 

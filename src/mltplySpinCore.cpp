@@ -36,8 +36,8 @@
 int mltply::Spin::exchange_GetInfo(
   int iExchange//!<[in] Counter of exchange interaction
 ) {
-  int isite1 = Def::ExchangeCoupling[iExchange][0] + 1;
-  int isite2 = Def::ExchangeCoupling[iExchange][1] + 1;
+  int isite1 = Def::ExchangeCoupling[iExchange][0];
+  int isite2 = Def::ExchangeCoupling[iExchange][1];
   /**
    Set the exchange coupling constant (LargeList::tmp_J)
   */
@@ -46,8 +46,8 @@ int mltply::Spin::exchange_GetInfo(
   Set the bit mask for computing spin state of both site
   (LargeList::is1_up, LargeList::is2_up)
   */
-  Large::is1_up = Def::Tpow[isite1 - 1];
-  Large::is2_up = Def::Tpow[isite2 - 1];
+  Large::is1_up = Def::Tpow[isite1];
+  Large::is2_up = Def::Tpow[isite2];
   /**
   Set the bit mask for exchange 2 spins (LargeList::isA_spin)
   */
@@ -63,8 +63,8 @@ int mltply::Spin::exchange_GetInfo(
 int mltply::Spin::pairlift_GetInfo(
   int iPairLift
 ) {
-  int isite1 = Def::PairLiftCoupling[iPairLift][0] + 1;
-  int isite2 = Def::PairLiftCoupling[iPairLift][1] + 1;
+  int isite1 = Def::PairLiftCoupling[iPairLift][0];
+  int isite2 = Def::PairLiftCoupling[iPairLift][1];
   /**
   Set the pairlift coupling constant (LargeList::tmp_J)
   */
@@ -73,8 +73,8 @@ int mltply::Spin::pairlift_GetInfo(
   Set the bit mask for computing spin state of both site
   (LargeList::is1_up, LargeList::is2_up)
   */
-  Large::is1_up = Def::Tpow[isite1 - 1];
-  Large::is2_up = Def::Tpow[isite2 - 1];
+  Large::is1_up = Def::Tpow[isite1];
+  Large::is2_up = Def::Tpow[isite2];
   /**
   Set the bit mask for exchange 2 spins (LargeList::isA_spin)
   */
@@ -106,8 +106,8 @@ int mltply::Spin::general_int_GetInfo(
   Set the bit mask for computing spin state of both site
   (LargeList::is1_up, LargeList::is2_up)
   */
-  Large::is1_up = Def::Tpow[isite1 - 1];
-  Large::is2_up = Def::Tpow[isite2 - 1];
+  Large::is1_up = Def::Tpow[isite1];
+  Large::is2_up = Def::Tpow[isite2];
   /**
   Set the bit mask for general interaction 
   (LargeList::is1_spin, LargeList::is2_spin, LargeList::is3_spin, LargeList::is4_spin)
