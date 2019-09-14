@@ -103,7 +103,7 @@ int CalcByTPQ(
       fprintf(stderr, "Error: A file of Inputvector is incorrect.\n");
       wrapperMPI::Exit(-1);
     }
-    byte_size = fread(Wave::v0, sizeof(std::complex<double>), (Check::idim_max + 1)*NumAve, fp);
+    byte_size = fread(Wave::v0, sizeof(std::complex<double>), Check::idim_max*NumAve, fp);
     TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector finishes: %s\n", "a", 0, Step::step_i);
     fprintf(MP::STDOUT, "%s", "  End  :  Input vector.\n");
     fclose(fp);
@@ -284,7 +284,7 @@ int CalcByTPQ(
     }
     fwrite(&Step::step_i, sizeof(Step::step_i), 1, fp);
     fwrite(&Check::idim_max, sizeof(Check::idim_max), 1, fp);
-    fwrite(Wave::v1, sizeof(std::complex<double>), (Check::idim_max + 1)*NumAve, fp);
+    fwrite(Wave::v1, sizeof(std::complex<double>), Check::idim_max*NumAve, fp);
     fclose(fp);
     TimeKeeperWithRandAndStep("%s_Time_TPQ_Step.dat", "  set %d step %d:output vector finishes: %s\n", "a", 0, Step::step_i);
     fprintf(MP::STDOUT, "%s", "  End  :  Output vector.\n");

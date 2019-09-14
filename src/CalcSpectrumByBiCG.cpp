@@ -118,7 +118,7 @@ void SeedSwitch(
 
     *rho /= std::pow(pi[iter-1][iz_seed0], 2);
 
-    for (idim = 1; idim <= ndim; idim++) {
+    for (idim = 0; idim < ndim; idim++) {
       v2[idim][0] /= pi[iter][iz_seed0];
       v4[idim][0] /= std::conj(pi[iter][iz_seed0]);
       v3[idim][0] /= pi[iter-1][iz_seed0];
@@ -185,11 +185,11 @@ int CalcSpectrumByBiCG(
   <li>Malloc vector for old residual vector (@f${\bf r}_{\rm old}@f$)
   and old shadow residual vector (@f${\bf {\tilde r}}_{\rm old}@f$).</li>
   */
-  v12 = cd_2d_allocate(Check::idim_max + 1, 1);
-  v14 = cd_2d_allocate(Check::idim_max + 1, 1);
-  v3 = cd_2d_allocate(Check::idim_max + 1, 1);
-  v5 = cd_2d_allocate(Check::idim_max + 1, 1);
-  vL = cd_2d_allocate(Check::idim_max + 1, 1);
+  v12 = cd_2d_allocate(Check::idim_max, 1);
+  v14 = cd_2d_allocate(Check::idim_max, 1);
+  v3 = cd_2d_allocate(Check::idim_max, 1);
+  v5 = cd_2d_allocate(Check::idim_max, 1);
+  vL = cd_2d_allocate(Check::idim_max, 1);
   lz_conv = i_1d_allocate(Nomega);
   /**
   <li>Set initial result vector(+shadow result vector)
@@ -204,10 +204,10 @@ int CalcSpectrumByBiCG(
     if (childfopenALL(sdt, "rb", &fp) != 0) {
       fprintf(MP::STDOUT, "INFO: File for the restart is not found.\n");
       fprintf(MP::STDOUT, "      Start from SCRATCH.\n");
-      zclear(Check::idim_max, &v2[1][0]);
+      zclear(Check::idim_max, &v2[0][0]);
       GetExcitedState(1, v2, v1Org, 0);
 #pragma omp parallel for default(none) shared(v2,v4,v1Org,Check::idim_max) private(idim)
-      for (idim = 1; idim <= Check::idim_max; idim++) 
+      for (idim = 0; idim < Check::idim_max; idim++) 
         v4[idim][0] = v2[idim][0];
     }
     else {
@@ -218,10 +218,10 @@ int CalcSpectrumByBiCG(
         printf("%s %ld %ld %d\n", sdt, i_max, Check::idim_max, iter_old);
         wrapperMPI::Exit(-1);
       }
-      byte_size = fread(&v2[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
-      byte_size = fread(&v3[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
-      byte_size = fread(&v4[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
-      byte_size = fread(&v5[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+      byte_size = fread(&v2[0][0], sizeof(std::complex<double>), Check::idim_max, fp);
+      byte_size = fread(&v3[0][0], sizeof(std::complex<double>), Check::idim_max, fp);
+      byte_size = fread(&v4[0][0], sizeof(std::complex<double>), Check::idim_max, fp);
+      byte_size = fread(&v5[0][0], sizeof(std::complex<double>), Check::idim_max, fp);
       fclose(fp);
       fprintf(MP::STDOUT, "  End:   Input vectors for recalculation.\n");
       TimeKeeper("%s_TimeKeeper.dat", "Input vectors for recalculation finishes: %s", "a");
@@ -229,10 +229,10 @@ int CalcSpectrumByBiCG(
     }/*if (childfopenALL(sdt, "rb", &fp) == 0)*/
   }/*if (Def::iFlgCalcSpec > RECALC_FROM_TMComponents)*/
   else {
-    zclear(Check::idim_max, &v2[1][0]);
+    zclear(Check::idim_max, &v2[0][0]);
     GetExcitedState(1, v2, v1Org, 0);
 #pragma omp parallel for default(none) shared(v2,v4,v1Org,Check::idim_max) private(idim)
-    for (idim = 1; idim <= Check::idim_max; idim++)
+    for (idim = 0; idim < Check::idim_max; idim++)
       v4[idim][0] = v2[idim][0];
   }
   /**
@@ -319,13 +319,13 @@ int CalcSpectrumByBiCG(
     <li>@f${\bf v}_{2}={\hat H}{\bf v}_{12}, {\bf v}_{4}={\hat H}{\bf v}_{14}@f$,
     where @f${\bf v}_{12}, {\bf v}_{14}@f$ are old (shadow) residual vector.</li>
     */
-    zclear(Check::idim_max, &v12[1][0]);
-    zclear(Check::idim_max, &v14[1][0]);
+    zclear(Check::idim_max, &v12[0][0]);
+    zclear(Check::idim_max, &v14[0][0]);
     mltply::main(1, v12, v2);
     mltply::main(1, v14, v4);
     
     for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
-      zclear(Check::idim_max, &vL[1][0]);
+      zclear(Check::idim_max, &vL[0][0]);
       GetExcitedState(1, vL, v1Org, idcSpectrum + 1);
       res_proj[iter][idcSpectrum] = wrapperMPI::VecProd(Check::idim_max, &vL[0][0], &v2[0][0]);
     }
@@ -339,7 +339,7 @@ int CalcSpectrumByBiCG(
     else
       beta[iter] = rho / rho_old;
 
-    for (idim = 1; idim <= Check::idim_max; idim++) {
+    for (idim = 0; idim < Check::idim_max; idim++) {
       v12[idim][0] = z_seed * v2[idim][0] - v12[idim][0];
       v14[idim][0] = std::conj(z_seed) * v4[idim][0] - v14[idim][0];
     }
@@ -363,7 +363,7 @@ int CalcSpectrumByBiCG(
     /*
     Update residual
     */
-    for (idim = 1; idim <= Check::idim_max; idim++) {
+    for (idim = 0; idim < Check::idim_max; idim++) {
       v12[idim][0] = (1.0 + alpha[iter] * beta[iter] / alpha[iter-1]) * v2[idim][0]
         - alpha[iter] * v12[idim][0]
         - alpha[iter] * beta[iter] / alpha[iter-1] * v3[idim][0];
@@ -374,7 +374,7 @@ int CalcSpectrumByBiCG(
         - std::conj(alpha[iter] * beta[iter] / alpha[iter-1]) * v5[idim][0];
       v5[idim][0] = v4[idim][0];
       v4[idim][0] = v14[idim][0];
-    }/*for (idim = 1; idim <= Check::idim_max; idim++)*/
+    }/*for (idim = 0; idim < Check::idim_max; idim++)*/
     /*
     Seed Switching
     */
@@ -436,10 +436,10 @@ int CalcSpectrumByBiCG(
     }
     byte_size = fwrite(&iter, sizeof(iter), 1, fp);
     byte_size = fwrite(&Check::idim_max, sizeof(Check::idim_max), 1, fp);
-    byte_size = fwrite(&v2[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
-    byte_size = fwrite(&v3[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
-    byte_size = fwrite(&v4[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
-    byte_size = fwrite(&v5[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+    byte_size = fwrite(&v2[0][0], sizeof(std::complex<double>), Check::idim_max, fp);
+    byte_size = fwrite(&v3[0][0], sizeof(std::complex<double>), Check::idim_max, fp);
+    byte_size = fwrite(&v4[0][0], sizeof(std::complex<double>), Check::idim_max, fp);
+    byte_size = fwrite(&v5[0][0], sizeof(std::complex<double>), Check::idim_max, fp);
     fclose(fp);
 
     fprintf(MP::STDOUT, "    End:   Output vectors for recalculation.\n");

@@ -182,7 +182,7 @@ int MakeExcitedList(
 
   if (*iFlgListModifed == TRUE) {
     if (GetlistSize() == TRUE) {
-      List::c1_org = li_1d_allocate(Check::idim_max + 1);
+      List::c1_org = li_1d_allocate(Check::idim_max);
 #ifdef __MPI
       long int MAXidim_max;
       MAXidim_max = wrapperMPI::Max_li(Check::idim_max);
@@ -317,7 +317,7 @@ int MakeExcitedList(
   MAXidim_maxOrg = wrapperMPI::Max_li(Check::idim_maxOrg);
   if (MAXidim_max < MAXidim_maxOrg) {
     free_cd_2d_allocate(Wave::v1buf);
-    Wave::v1buf = cd_2d_allocate(MAXidim_maxOrg + 1, 1);
+    Wave::v1buf = cd_2d_allocate(MAXidim_maxOrg, 1);
   }
 #endif // MPI
 
@@ -327,12 +327,12 @@ int MakeExcitedList(
 
 #ifdef _DEBUG
   if (*iFlgListModifed == TRUE) {
-    for (j = 1; j <= Check::idim_maxOrg; j++) {
+    for (j = 0; j < Check::idim_maxOrg; j++) {
       fprintf(stdout, "Debug1: MP::myrank=%d, list_1_org[ %ld] = %ld\n",
         MP::myrank, j, List::c1_org[j] + MP::myrank * Def::OrgTpow[2 * Def::NsiteMPI - 1]);
     }
 
-    for (j = 1; j <= Check::idim_max; j++) {
+    for (j = 0; j < Check::idim_max; j++) {
       fprintf(stdout, "Debug2: MP::myrank=%d, list_1[ %ld] = %ld\n", MP::myrank, j, List::c1[j] + MP::myrank * 64);
     }
   }
@@ -445,8 +445,8 @@ void CalcSpectrum()
     }
     free_d_1d_allocate(List::Diagonal);
     free_cd_2d_allocate(Wave::v0);
-    v1Org = cd_2d_allocate(Check::idim_max + 1, 1);
-    for (i = 1; i <= Check::idim_max; i++) v1Org[i][0] = Wave::v1[i][0];
+    v1Org = cd_2d_allocate(Check::idim_max, 1);
+    for (i = 0; i < Check::idim_max; i++) v1Org[i][0] = Wave::v1[i][0];
     free_cd_2d_allocate(Wave::v1);
 #ifdef __MPI
     free_li_1d_allocate(List::c1buf);
@@ -521,7 +521,7 @@ void CalcSpectrum()
   if (Def::iFlgCalcSpec == DC::RECALC_NOT ||
     Def::iFlgCalcSpec == DC::RECALC_OUTPUT_TMComponents_VEC ||
     (Def::iFlgCalcSpec == DC::RECALC_INOUT_TMComponents_VEC && Def::iCalcType == DC::CG)) {
-    v1Org = cd_2d_allocate(Check::idim_maxOrg + 1, 1);
+    v1Org = cd_2d_allocate(Check::idim_maxOrg, 1);
     //input eigen vector
     StartTimer(6101);
     fprintf(MP::STDOUT, "  Start: An Eigenvector is inputted in CalcSpectrum.\n");

@@ -63,7 +63,7 @@ int FirstMultiply() {
 shared(Wave::v0,Wave::v1,MP::nthreads,MP::myrank,rand_i,MP::STDOUT,i_max,Def::initial_iv,Def::iInitialVecType)
   {
 #pragma omp for
-    for (i = 1; i <= i_max; i++) {
+    for (i = 0; i < i_max; i++) {
       Wave::v0[i][rand_i] = 0.0;
       Wave::v1[i][rand_i] = 0.0;
     }
@@ -82,14 +82,14 @@ shared(Wave::v0,Wave::v1,MP::nthreads,MP::myrank,rand_i,MP::STDOUT,i_max,Def::in
 
       StartTimer(3101);
 #pragma omp for
-      for (i = 1; i <= i_max; i++)
+      for (i = 0; i < i_max; i++)
         Wave::v1[i][rand_i] = std::complex<double>
         (2.0*(dsfmt_genrand_close_open(&dsfmt) - 0.5),
           2.0*(dsfmt_genrand_close_open(&dsfmt) - 0.5));
       }/*if (Def::iInitialVecType == 0)*/
       else {
 #pragma omp for
-        for (i = 1; i <= i_max; i++)
+        for (i = 0; i < i_max; i++)
           Wave::v1[i][rand_i] = 2.0*(dsfmt_genrand_close_open(&dsfmt) - 0.5);
       }
       StopTimer(3101);
@@ -100,13 +100,13 @@ shared(Wave::v0,Wave::v1,MP::nthreads,MP::myrank,rand_i,MP::STDOUT,i_max,Def::in
   dnorm = 0.0;
 #pragma omp parallel for default(none) private(i) \
 shared(Wave::v1, i_max, rand_i) reduction(+:dnorm)
-      for (i = 1; i <= i_max; i++)
+      for (i = 0; i < i_max; i++)
         dnorm += real(conj(Wave::v1[i][rand_i])*Wave::v1[i][rand_i]);
     dnorm = wrapperMPI::Sum_d(dnorm);
     dnorm = sqrt(dnorm);
     Step::global_1st_norm[rand_i] = dnorm;
 #pragma omp parallel for default(none) private(i) shared(Wave::v1,rand_i,i_max, dnorm)
-    for (i = 1; i <= i_max; i++) Wave::v1[i][rand_i] = Wave::v1[i][rand_i] / dnorm;
+    for (i = 0; i < i_max; i++) Wave::v1[i][rand_i] = Wave::v1[i][rand_i] / dnorm;
   }/*for (rand_i = 0; rand_i < Step::NumAve; rand_i++)*/
 
   TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", 
@@ -126,7 +126,7 @@ Compute expectation value at infinite temperature
   if (iret != 0) return -1;
 
 #pragma omp parallel for default(none) private(i,rand_i) shared(Wave::v0,Wave::v1,i_max,Step::NumAve)
-  for (i = 1; i <= i_max; i++) 
+  for (i = 0; i < i_max; i++) 
     for (rand_i = 0; rand_i < Step::NumAve; rand_i++) Wave::v0[i][rand_i] = Wave::v1[i][rand_i];
   StartTimer(3102);
   if(expec::energy_flct::main(Step::NumAve, Wave::v0, Wave::v1) !=0){
@@ -138,19 +138,19 @@ Compute expectation value at infinite temperature
   for (rand_i = 0; rand_i < Step::NumAve; rand_i++) {
 #pragma omp parallel for default(none) private(i) \
 shared(Wave::v0, Wave::v1,rand_i, i_max, Ns, Step::LargeValue, MP::myrank)
-    for (i = 1; i <= i_max; i++) {
+    for (i = 0; i < i_max; i++) {
       Wave::v0[i][rand_i] = Step::LargeValue * Wave::v1[i][rand_i] - Wave::v0[i][rand_i] / Ns;
     }
 
     dnorm = 0.0;
 #pragma omp parallel for default(none) private(i) shared(Wave::v0,rand_i,i_max) reduction(+:dnorm)
-    for (i = 1; i <= i_max; i++)
+    for (i = 0; i < i_max; i++)
       dnorm += real(conj(Wave::v0[i][rand_i])*Wave::v0[i][rand_i]);
     dnorm = wrapperMPI::Sum_d(dnorm);
     dnorm = sqrt(dnorm);
     Step::global_norm[rand_i] = dnorm;
 #pragma omp parallel for default(none) private(i) shared(Wave::v0,rand_i,i_max, dnorm)
-    for (i = 1; i <= i_max; i++) Wave::v0[i][rand_i] = Wave::v0[i][rand_i] / dnorm;
+    for (i = 0; i < i_max; i++) Wave::v0[i][rand_i] = Wave::v0[i][rand_i] / dnorm;
   }/*for (rand_i = 0; rand_i < Step::NumAve; rand_i++)*/
   TimeKeeperWithRandAndStep("%s_TimeKeeper.dat", "set %d step %d:TPQ finishes: %s", "a", rand_i, Step::step_i);
   return 0;

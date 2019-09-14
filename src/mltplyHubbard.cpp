@@ -526,7 +526,7 @@ void mltply::Hubbard::C::pairhopp(
 
 #pragma omp parallel for default(none) private(j, off) \
 shared(tmp_v0, tmp_v1,nstate,i_max)
-  for (j = 1; j <= i_max; j++) 
+  for (j = 0; j < i_max; j++) 
     mltply::Hubbard::C::pairhopp_element(j, nstate, tmp_v0, tmp_v1, &off);
   return;
 }/*std::complex<double> child_pairhopp*/
@@ -545,7 +545,7 @@ void mltply::Hubbard::C::exchange(
 
 #pragma omp parallel for default(none) private(j, off) \
 shared(tmp_v0, tmp_v1,nstate,i_max)
-  for (j = 1; j <= i_max; j++) 
+  for (j = 0; j < i_max; j++) 
     mltply::Hubbard::C::exchange_element(j, nstate, tmp_v0, tmp_v1, &off);
   return;
 }/*std::complex<double> child_exchange*/
@@ -558,7 +558,6 @@ void mltply::Hubbard::C::general_hopp(
   int nstate,
   std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1,//!<[in] Input producted vector
-  //!<[inout]
   std::complex<double> trans//!<[in] Hopping integral
 ) {
   long int j, isite1, isite2, Asum, Adiff;
@@ -570,7 +569,7 @@ void mltply::Hubbard::C::general_hopp(
   Adiff = Large::A_spin;
 #pragma omp parallel for default(none) private(j) \
 shared(tmp_v0, tmp_v1,nstate,i_max,Asum,Adiff,isite1,isite2,trans) 
-  for (j = 1; j <= i_max; j++)
+  for (j = 0; j < i_max; j++)
     CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, trans);
   return;
 }/*std::complex<double> child_general_hopp*/
@@ -580,9 +579,9 @@ shared(tmp_v0, tmp_v1,nstate,i_max,Asum,Adiff,isite1,isite2,trans)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void mltply::Hubbard::GC::general_hopp(
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1,//!<[in] Input producted vector
-  //!<[inout]
   std::complex<double> trans//!<[in] Hopping integral
 ) {
   long int j, isite1, isite2, Asum, Adiff;
@@ -597,13 +596,13 @@ void mltply::Hubbard::GC::general_hopp(
   if (isite1 == isite2) {
 #pragma omp parallel for default(none) private(j) \
 shared(tmp_v0, tmp_v1,nstate,i_max,isite1, trans)
-    for (j = 1; j <= i_max; j++)
+    for (j = 0; j < i_max; j++)
       mltply::Hubbard::GC::CisAis(j, nstate, tmp_v0, tmp_v1, isite1, trans);
   }/*if (isite1 == isite2)*/
   else {
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(tmp_v0,tmp_v1,nstate,i_max,Asum,Adiff,isite1,isite2,trans)
-    for (j = 1; j <= i_max; j++) 
+    for (j = 0; j < i_max; j++) 
       mltply::Hubbard::GC::CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, trans, &tmp_off);
   }
   return;
@@ -644,23 +643,23 @@ shared(i_max, isite1, isite2, isite3, isite4, Asum, Bsum, Adiff, Bdiff, tmp_V) \
   {
     if (isite1 == isite2 && isite3 == isite4) {
 #pragma omp for
-      for (j = 1; j <= i_max; j++)
+      for (j = 0; j < i_max; j++)
         mltply::Hubbard::C::CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, tmp_v0, tmp_v1);
     }/*if (isite1 == isite2 && isite3 == isite4)*/
     else if (isite1 == isite2 && isite3 != isite4) {
 #pragma omp for
-      for (j = 1; j <= i_max; j++)
+      for (j = 0; j < i_max; j++)
         mltply::Hubbard::C::CisAisCjtAku_element(
           j, isite1, isite3, isite4, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 == isite2 && isite3 != isite4)*/
     else if (isite1 != isite2 && isite3 == isite4) {
 #pragma omp for
-      for (j = 1; j <= i_max; j++)
+      for (j = 0; j < i_max; j++)
         mltply::Hubbard::C::CisAjtCkuAku_element(j, isite1, isite2, isite3, Asum, Adiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 != isite2 && isite3 == isite4)*/
     else if (isite1 != isite2 && isite3 != isite4) {
 #pragma omp for
-      for (j = 1; j <= i_max; j++)
+      for (j = 0; j < i_max; j++)
         mltply::Hubbard::C::CisAjtCkuAlv_element(
           j, isite1, isite2, isite3, isite4, Asum, Adiff, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off_2);
     }/*if (isite1 != isite2 && isite3 != isite4)*/
@@ -701,25 +700,25 @@ shared(tmp_v0, tmp_v1,nstate)
   {
     if (isite1 == isite2 && isite3 == isite4) {
 #pragma omp for
-      for (j = 1; j <= i_max; j++)
+      for (j = 0; j < i_max; j++)
         mltply::Hubbard::GC::CisAisCisAis_element(j, isite1, isite3, tmp_V, 
           nstate, tmp_v0, tmp_v1);
     }/*if (isite1 == isite2 && isite3 == isite4)*/
     else if (isite1 == isite2 && isite3 != isite4) {
 #pragma omp for
-      for (j = 1; j <= i_max; j++)
+      for (j = 0; j < i_max; j++)
         mltply::Hubbard::GC::CisAisCjtAku_element(j, isite1, isite3, isite4, Bsum, Bdiff, tmp_V,
           nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 == isite2 && isite3 != isite4)*/
     else if (isite1 != isite2 && isite3 == isite4) {
 #pragma omp for
-      for (j = 1; j <= i_max; j++)
+      for (j = 0; j < i_max; j++)
         mltply::Hubbard::GC::CisAjtCkuAku_element(
           j, isite1, isite2, isite3, Asum, Adiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 != isite2 && isite3 == isite4)*/
     else if (isite1 != isite2 && isite3 != isite4) {
 #pragma omp for
-      for (j = 1; j <= i_max; j++)
+      for (j = 0; j < i_max; j++)
         mltply::Hubbard::GC::CisAjtCkuAlv_element(
           j, isite1, isite2, isite3, isite4, Asum, Adiff, Bsum, Bdiff, tmp_V, nstate, tmp_v0, tmp_v1, &tmp_off);
     }/*if (isite1 != isite2 && isite3 != isite4)*/
@@ -741,7 +740,7 @@ void mltply::Hubbard::GC::pairhopp(
 
 #pragma omp parallel for default(none) private(j,off) \
 shared(tmp_v0, tmp_v1,nstate,i_max)
-  for (j = 1; j <= i_max; j++) 
+  for (j = 0; j < i_max; j++) 
     mltply::Hubbard::GC::pairhopp_element(j, nstate, tmp_v0, tmp_v1, &off);
 
   return;
@@ -761,7 +760,7 @@ void mltply::Hubbard::GC::exchange(
 
 #pragma omp parallel for default(none) private(j, off) \
 shared(tmp_v0, tmp_v1,nstate,i_max)
-  for (j = 1; j <= i_max; j++) 
+  for (j = 0; j < i_max; j++) 
     mltply::Hubbard::GC::exchange_element(j, nstate, tmp_v0, tmp_v1, &off);
   return;
 }/*std::complex<double> GC_child_exchange*/

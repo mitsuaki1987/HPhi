@@ -35,7 +35,6 @@
 @version 1.2
 */
 int GetExcitedState::Single::Hubbard::C(
-  //!<define list to get and put information of calculation
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1,//!<[in] v0 = H v1
@@ -70,7 +69,7 @@ int GetExcitedState::Single::Hubbard::C(
 #pragma omp parallel for default(none) private(j,  isgn,tmp_off,dmv) \
 shared(Large::irght, Large::ilft, Large::ihfbit,nstate,tmp_v0, tmp_v1, List::c1_org,one, \
 idim_max, tmpphi, org_isite, ispin, List::c2_1, List::c2_2, is1_spin)
-        for (j = 1; j <= idim_max; j++) {//idim_max -> original dimension
+        for (j = 0; j < idim_max; j++) {//idim_max -> original dimension
           isgn = mltply::Hubbard::C::X_Cis(j, is1_spin, &tmp_off, 
             List::c1_org, List::c2_1, List::c2_2,
             Large::irght, Large::ilft, Large::ihfbit);
@@ -88,7 +87,7 @@ idim_max, tmpphi, org_isite, ispin, List::c2_1, List::c2_2, is1_spin)
 #pragma omp parallel for default(none) private(j, isgn, tmp_off,dmv) \
 shared(tmp_v0,tmp_v1,List::c1_org,List::c1,one,nstate,idim_max,tmpphi,org_isite,ispin, \
 List::c2_1,List::c2_2,is1_spin,MP::myrank, Large::irght, Large::ilft, Large::ihfbit)
-        for (j = 1; j <= idim_max; j++) {//idim_max -> original dimension
+        for (j = 0; j < idim_max; j++) {//idim_max -> original dimension
           isgn = mltply::Hubbard::C::X_Ajt(j, is1_spin, &tmp_off, List::c1_org, List::c2_1, List::c2_2,
             Large::irght, Large::ilft, Large::ihfbit);
           dmv = (std::complex<double>)isgn * tmpphi;
@@ -140,10 +139,10 @@ int GetExcitedState::Single::Hubbard::GC(
       else {
 #pragma omp parallel for default(none) private(j, is1_spin, tmp_off) \
 shared(tmp_v0,tmp_v1,nstate,idim_max, tmpphi, org_isite, ispin,Def::Tpow)
-        for (j = 1; j <= idim_max; j++) {
+        for (j = 0; j < idim_max; j++) {
           is1_spin = Def::Tpow[2 * org_isite + ispin];
           mltply::Hubbard::GC::Cis(j, nstate, tmp_v0, tmp_v1, is1_spin, tmpphi, &tmp_off);
-        }/*for (j = 1; j <= idim_max; j++)*/
+        }/*for (j = 0; j < idim_max; j++)*/
       }
     }
     else if (itype == 0) {
@@ -154,10 +153,10 @@ shared(tmp_v0,tmp_v1,nstate,idim_max, tmpphi, org_isite, ispin,Def::Tpow)
       else {
 #pragma omp parallel for default(none) private(j, is1_spin, tmp_off) \
 shared(tmp_v0,tmp_v1,nstate, idim_max, tmpphi, org_isite, ispin,Def::Tpow)
-        for (j = 1; j <= idim_max; j++) {
+        for (j = 0; j < idim_max; j++) {
           is1_spin = Def::Tpow[2 * org_isite + ispin];
           mltply::Hubbard::GC::Ajt(j, nstate, tmp_v0, tmp_v1, is1_spin, tmpphi, &tmp_off);
-        }/*for (j = 1; j <= idim_max; j++)*/
+        }/*for (j = 0; j < idim_max; j++)*/
       }
     }
   }

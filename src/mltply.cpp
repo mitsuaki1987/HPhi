@@ -87,7 +87,7 @@ int mltply::main(
   StartTimer(100);
 #pragma omp parallel for default(none) private(dmv) \
 shared(tmp_v0, tmp_v1, List::Diagonal,one,nstate,i_max)
-  for (j = 1; j <= i_max; j++) {
+  for (j = 0; j < i_max; j++) {
     dmv = List::Diagonal[j];
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
   }

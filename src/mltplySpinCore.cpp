@@ -135,7 +135,6 @@ int mltply::Spin::general_int_GetInfo(
 */
 int mltply::Spin::C::Half::X_CisAit(
   long int j,//!<[in] Index of initial wavefunction
-  //!<[inout]
   long int is1_spin,//!<[in] Bit mask for computing spin state
   long int sigma2,//!<[in] Spin state at site 2
   long int *tmp_off//!<[out] Index of final wavefunction
@@ -143,7 +142,7 @@ int mltply::Spin::C::Half::X_CisAit(
   long int list_1_j;
   long int off;
   list_1_j = List::c1_org[j];
-  if (mltply::Spin::GC::Half::X_CisAit(list_1_j + 1, is1_spin, sigma2, &off) != 0) {
+  if (mltply::Spin::GC::Half::X_CisAit(list_1_j, is1_spin, sigma2, &off) != 0) {
     GetOffComp(List::c2_1, List::c2_2, off, Large::irght, Large::ilft, Large::ihfbit, tmp_off);
     return 1;
   }
@@ -182,7 +181,7 @@ int mltply::Spin::GC::Half::X_CisAis(
   int A_ibit_tmp;
   long int list_1_j;
   // off = j
-  list_1_j = j - 1;
+  list_1_j = j;
   A_ibit_tmp = ((list_1_j & is1_spin) / is1_spin) ^ (1 - sigma1);
   return A_ibit_tmp;
 }/*int X_SpinGC_CisAis*/
@@ -201,7 +200,7 @@ int mltply::Spin::GC::Half::X_CisAit(
 ) {
   long int list_1_j, ibit_tmp_1;
 
-  list_1_j = j - 1;
+  list_1_j = j;
 
   ibit_tmp_1 = list_1_j & is1_spin;
   if (ibit_tmp_1 == 0 && sigma2 == 0) {    // down -> up
@@ -263,9 +262,9 @@ int mltply::Spin::C::Half::X_exchange_element(
 */
 void mltply::Spin::C::Half::exchange_element(
   long int j,//!<[in] Index of initial wavefunction
-  int nstate, std::complex<double> **tmp_v0,//!<[out] Resulting wavefunction
+  int nstate,
+  std::complex<double> **tmp_v0,//!<[out] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  //!<[inout]
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   long int off;
@@ -306,7 +305,7 @@ void mltply::Spin::GC::Half::exchange_element(
   long int list_1_j, list_1_off;
   int one = 1;
 
-  list_1_j = j - 1;
+  list_1_j = j;
 
   long int ibit_tmp;
   ibit_tmp = (list_1_j & is_up);
@@ -316,7 +315,7 @@ void mltply::Spin::GC::Half::exchange_element(
   else {
     list_1_off = list_1_j ^ is_up;
     *tmp_off = list_1_off;
-    zaxpy_(&nstate, &tmp_J, &tmp_v1[j][0], &one, &tmp_v0[list_1_off + 1][0], &one);
+    zaxpy_(&nstate, &tmp_J, &tmp_v1[j][0], &one, &tmp_v0[list_1_off][0], &one);
   }
 }/*std::complex<double> GC_child_exchange_spin_element*/
 /**
@@ -326,23 +325,23 @@ void mltply::Spin::GC::Half::exchange_element(
 */
 void mltply::Spin::GC::Half::pairlift_element(
   long int j,//!<[in] Index of initial wavefunction
-  int nstate, std::complex<double> **tmp_v0,//!<[out] Resulting wavefunction
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[out] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  //!<[inout]
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   long int is_up = Large::isA_spin;
   std::complex<double> tmp_J = Large::tmp_J;
   int one = 1;
   long int list_1_off;
-  long int list_1_j = j - 1;
+  long int list_1_j = j;
   long int ibit_tmp;
   //ibit_tmp = ((list_1_j & is1_up) / is1_up) ^ ((list_1_j & is2_up) / is2_up);
   ibit_tmp = (list_1_j & is_up);
   if (ibit_tmp == 0 || ibit_tmp == is_up) {
     list_1_off = list_1_j ^ is_up; //Change: ++ -> -- or -- -> ++
     *tmp_off = list_1_off;
-    zaxpy_(&nstate, &tmp_J, &tmp_v1[j][0], &one, &tmp_v0[list_1_off + 1][0], &one);
+    zaxpy_(&nstate, &tmp_J, &tmp_v1[j][0], &one, &tmp_v0[list_1_off][0], &one);
   }
 }/*std::complex<double> GC_child_pairlift_spin_element*/
 //[s]Spin
@@ -415,7 +414,8 @@ void mltply::Spin::GC::Half::CisAisCitAiu_element(
   long int isA_up,//!<[in] Bit mask for spin 1
   long int isB_up,//!<[in] Bit mask for spin 2
   std::complex<double> tmp_V,//!<[in] Coupling constatnt
-  int nstate, std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
@@ -424,10 +424,10 @@ void mltply::Spin::GC::Half::CisAisCitAiu_element(
   int one = 1;
   tmp_sgn = mltply::Spin::GC::Half::X_CisAit(j, isB_up, org_sigma4, tmp_off);
   if (tmp_sgn != 0) {
-    tmp_sgn *= mltply::Spin::GC::Half::X_CisAis((*tmp_off + 1), isA_up, org_sigma2);
+    tmp_sgn *= mltply::Spin::GC::Half::X_CisAis((*tmp_off), isA_up, org_sigma2);
     if (tmp_sgn != 0) {
       dmv = (std::complex<double>)tmp_sgn * tmp_V;
-      zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
+      zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off][0], &one);
     }/*if (tmp_sgn != 0)*/
   }/*if (tmp_sgn != 0)*/
 }/*std::complex<double> GC_child_CisAisCitAiu_spin_element*/
@@ -444,7 +444,8 @@ void mltply::Spin::GC::Half::CisAitCiuAiu_element(
   long int isA_up,//!<[in] Bit mask for spin 1
   long int isB_up,//!<[in] Bit mask for spin 2
   std::complex<double> tmp_V,//!<[in] Coupling constatnt
-  int nstate, std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
+  int nstate,
+  std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
@@ -456,7 +457,7 @@ void mltply::Spin::GC::Half::CisAitCiuAiu_element(
     tmp_sgn *= mltply::Spin::GC::Half::X_CisAit(j, isA_up, org_sigma2, tmp_off);
     if (tmp_sgn != 0) {
       dmv = (std::complex<double>)tmp_sgn * tmp_V;
-      zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
+      zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off][0], &one);
     }/*if (tmp_sgn != 0)*/
   }/*if (tmp_sgn != 0)*/
 }/*std::complex<double> GC_child_CisAitCiuAiu_spin_element*/
@@ -473,7 +474,8 @@ void mltply::Spin::GC::Half::CisAitCiuAiv_element(
   long int isA_up,//!<[in] Bit mask for spin 1
   long int isB_up,//!<[in] Bit mask for spin 2
   std::complex<double> tmp_V,//!<[in] Coupling constatnt
-  int nstate, std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
+  int nstate,
+  std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   long int *tmp_off_2//!<[out] Index of final wavefunction
 ) {
@@ -483,10 +485,10 @@ void mltply::Spin::GC::Half::CisAitCiuAiv_element(
   int one = 1;
   tmp_sgn = mltply::Spin::GC::Half::X_CisAit(j, isB_up, org_sigma4, &tmp_off_1);
   if (tmp_sgn != 0) {
-    tmp_sgn *= mltply::Spin::GC::Half::X_CisAit((tmp_off_1 + 1), isA_up, org_sigma2, tmp_off_2);
+    tmp_sgn *= mltply::Spin::GC::Half::X_CisAit(tmp_off_1, isA_up, org_sigma2, tmp_off_2);
     if (tmp_sgn != 0) {
       dmv = (std::complex<double>)tmp_sgn * tmp_V;
-      zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off_2 + 1][0], &one);
+      zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off_2][0], &one);
     }/*if (tmp_sgn != 0)*/
   }/*if (tmp_sgn != 0)*/
 }/*std::complex<double> GC_child_CisAitCiuAiv_spin_element*/

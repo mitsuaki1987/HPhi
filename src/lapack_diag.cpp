@@ -46,11 +46,6 @@ int lapack_diag()
 
   i_max = Check::idim_max;
 
-  for (i = 0; i < i_max; i++) {
-    for (j = 0; j < i_max; j++) {
-      Wave::v0[i][j] = Wave::v0[i + 1][j];
-    }
-  }
   xMsize = i_max;
   if (Def::iNGPU == 0) {
 #ifdef _SCALAPACK
@@ -95,7 +90,7 @@ int lapack_diag()
   }
   for (i = 0; i < i_max; i++) {
     for (j = 0; j < i_max; j++) {
-      Wave::v0[i + 1][j] = Wave::v1[i][j];
+      Wave::v0[i][j] = Wave::v1[i][j];
     }
   }
 

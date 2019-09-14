@@ -37,9 +37,9 @@ int CalcByFullDiag::main()
   fprintf(MP::STDOUT, "%s", "######  Start: Setting Hamiltonian.  ######\n\n");
   StartTimer(5100);
   if (Def::iInputHam == FALSE) {
-    zclear((Check::idim_max + 1) * Check::idim_max, &Wave::v0[0][0]);
-    zclear((Check::idim_max + 1) * Check::idim_max, &Wave::v1[0][0]);
-    for (idim = 1; idim <= Check::idim_max; idim++) Wave::v1[idim][idim - 1] = 1.0;
+    zclear(Check::idim_max * Check::idim_max, &Wave::v0[0][0]);
+    zclear(Check::idim_max * Check::idim_max, &Wave::v1[0][0]);
+    for (idim = 0; idim < Check::idim_max; idim++) Wave::v1[idim][idim] = 1.0;
     mltply::main(Check::idim_max, Wave::v0, Wave::v1);
   }
   else if (Def::iInputHam == TRUE) {

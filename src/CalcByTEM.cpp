@@ -139,7 +139,7 @@ int CalcByTEM(
       printf("byte_size : %d\n", (int)byte_size);
       wrapperMPI::Exit(-1);
     }
-    byte_size = fread(&Wave::v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+    byte_size = fread(&Wave::v1[0][0], sizeof(std::complex<double>), Check::idim_max, fp);
     fclose(fp);
     if (Def::iReStart == DC::RESTART_NOT || Def::iReStart == DC::RESTART_OUT) {
       step_initial = 0;
@@ -170,7 +170,7 @@ int CalcByTEM(
 
   int iInterAllOffDiagonal_org = Def::NInterAll_OffDiagonal;
   int iTransfer_org = Def::EDNTransfer;
-  v2 = cd_2d_allocate(Check::idim_max + 1, 1);
+  v2 = cd_2d_allocate(Check::idim_max, 1);
   for (Step::step_i = step_initial; Step::step_i < Def::Lanczos_max; Step::step_i++) {
     Def::istep = Step::step_i;
 
@@ -256,7 +256,7 @@ int CalcByTEM(
         }
         fwrite(&Step::step_i, sizeof(Step::step_i), 1, fp);
         fwrite(&Check::idim_max, sizeof(long int), 1, fp);
-        fwrite(&Wave::v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+        fwrite(&Wave::v1[0][0], sizeof(std::complex<double>), Check::idim_max, fp);
         fclose(fp);
       }
     }
@@ -271,7 +271,7 @@ int CalcByTEM(
     }
     fwrite(&Step::step_i, sizeof(Step::step_i), 1, fp);
     fwrite(&Check::idim_max, sizeof(long int), 1, fp);
-    fwrite(&Wave::v1[0][0], sizeof(std::complex<double>), Check::idim_max + 1, fp);
+    fwrite(&Wave::v1[0][0], sizeof(std::complex<double>), Check::idim_max, fp);
     fclose(fp);
   }
 

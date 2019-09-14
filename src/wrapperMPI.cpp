@@ -328,7 +328,7 @@ double wrapperMPI::Norm_dc(
   dnorm = 0.0;
 #pragma omp parallel for default(none) private(i) \
 shared(_v1, idim) reduction(+:dnorm)
-    for (i = 1; i <= idim; i++) 
+    for (i = 0; i < idim; i++) 
       dnorm += real(conj(_v1[i])*_v1[i]);
  
 #ifdef __MPI
@@ -351,7 +351,7 @@ void wrapperMPI::Norm_dv(
   int istate;
 
   for (istate = 0; istate < nstate; istate++) dnorm[istate] = 0.0;
-  for (idim = 1; idim <= ndim; idim++) {
+  for (idim = 0; idim < ndim; idim++) {
     for (istate = 0; istate < nstate; istate++) {
       dnorm[istate] += real(conj(_v1[idim][istate])*_v1[idim][istate]);
     }
@@ -382,7 +382,7 @@ std::complex<double> wrapperMPI::VecProd(
     mythread = 0;
 #endif
 #pragma omp for
-    for (idim = 1; idim <= ndim; idim++) 
+    for (idim = 0; idim < ndim; idim++) 
       prod_thr[mythread] += conj(v1[idim]) * v2[idim];
   }
   prod = 0.0;
@@ -409,7 +409,7 @@ void wrapperMPI::MultiVecProd(
   int istate;
 
   for (istate = 0; istate < nstate; istate++) prod[istate] = 0.0;
-  for (idim = 1; idim <= ndim; idim++) {
+  for (idim = 0; idim < ndim; idim++) {
     for (istate = 0; istate < nstate; istate++) {
       prod[istate] += conj(v1[idim][istate])*v2[idim][istate];
     }

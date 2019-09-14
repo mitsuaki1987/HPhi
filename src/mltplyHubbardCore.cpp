@@ -227,7 +227,7 @@ void mltply::Hubbard::GC::CisAis(
   std::complex<double> dmv;
   int one = 1;
 
-  list_1_j = j - 1;
+  list_1_j = j;
   A_ibit_tmp = (list_1_j & is1_spin) / is1_spin;
   dmv = tmp_trans * (std::complex<double>)A_ibit_tmp;
   zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
@@ -248,7 +248,7 @@ void mltply::Hubbard::GC::AisCis(
   std::complex<double> dmv;
   int one = 1;
 
-  list_1_j = j - 1;
+  list_1_j = j;
   A_ibit_tmp = (list_1_j & is1_spin) / is1_spin;
   dmv = tmp_trans * (std::complex<double>)(1 - A_ibit_tmp);
   zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
@@ -276,9 +276,9 @@ int mltply::Hubbard::C::X_CisAis(
 */
 void mltply::Hubbard::C::CisAjt(
   long int j,//!<[in] Index of wavefunction
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] @f$v_0 = H v_1@f$
+  int nstate,
+  std::complex<double> **tmp_v0,//!<[inout] @f$v_0 = H v_1@f$
   std::complex<double> **tmp_v1,//!<[in] Vector to be producted
-  //!<[inout]
   long int is1_spin,//!<[in] Mask for occupation of (is)
   long int is2_spin,//!<[in] Mask for occupation of (jt)
   long int sum_spin,//!<[in] Mask for hopping
@@ -330,7 +330,7 @@ void mltply::Hubbard::GC::CisAjt(
   int sgn;
   std::complex<double> dmv;
 
-  list_1_j = j - 1;
+  list_1_j = j;
   ibit_tmp_1 = (list_1_j & is1_spin);
   ibit_tmp_2 = (list_1_j & is2_spin);
   *tmp_off = 0;
@@ -342,7 +342,7 @@ void mltply::Hubbard::GC::CisAjt(
     list_1_off = list_1_j ^ sum_spin;
     *tmp_off = list_1_off;
     dmv = (std::complex<double>)sgn * tmp_V;
-    zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off + 1][0], &one);
+    zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off][0], &one);
   }
   else {
     return;
@@ -356,7 +356,6 @@ void mltply::Hubbard::GC::CisAjt(
 */
 int mltply::Hubbard::C::X_CisAjt(
   long int list_1_j,//!<[in] Similer to ::List::c1 ?
-  //!<[in]
   long int is1_spin,//!<[in] Mask for occupation of (is)
   long int is2_spin,//!<[in] Mask for occupation of (jt)
   long int sum_spin,//!<[in] Mask for hopping
@@ -537,7 +536,7 @@ void mltply::Hubbard::GC::exchange_element(
   std::complex<double> tmp_J = Large::tmp_J;
   int one = 1;
 
-  list_1_j = j - 1;
+  list_1_j = j;
   ibit1_up = list_1_j & is1_up;
   ibit2_up = list_1_j & is2_up;
   ibit1_down = list_1_j & is1_down;
@@ -551,7 +550,7 @@ void mltply::Hubbard::GC::exchange_element(
     *tmp_off = list_1_off;
 
     dmv = tmp_J;
-    zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off + 1][0], &one);
+    zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off][0], &one);
   }
   else if (ibit1_up != 0 && ibit1_down == 0 && ibit2_up == 0 && ibit2_down != 0) {
     iexchg = list_1_j - (is1_up + is2_down);
@@ -560,7 +559,7 @@ void mltply::Hubbard::GC::exchange_element(
     *tmp_off = list_1_off;
 
     dmv = tmp_J;
-    zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off + 1][0], &one);
+    zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off][0], &one);
   }
 }/*std::complex<double> GC_child_exchange_element*/
 /**
@@ -586,7 +585,7 @@ void mltply::Hubbard::GC::pairhopp_element(
   std::complex<double> tmp_J = Large::tmp_J;
   int one = 1;
 
-  list_1_j = j - 1;
+  list_1_j = j;
 
   ibit1_up = list_1_j & is1_up;
 
@@ -602,7 +601,7 @@ void mltply::Hubbard::GC::pairhopp_element(
     list_1_off = iexchg;
     *tmp_off = list_1_off;
     dmv = tmp_J;
-    zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off + 1][0], &one);
+    zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off][0], &one);
   }
 }
 /**
@@ -748,8 +747,8 @@ void mltply::Hubbard::GC::CisAisCisAis_element(
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = mltply::Hubbard::C::X_CisAis(j - 1, isite3);
-  tmp_sgn *= mltply::Hubbard::C::X_CisAis(j - 1, isite1);
+  tmp_sgn = mltply::Hubbard::C::X_CisAis(j, isite3);
+  tmp_sgn *= mltply::Hubbard::C::X_CisAis(j, isite1);
   if (tmp_sgn != 0) {
     dmv = tmp_V * (std::complex<double>)tmp_sgn;
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
@@ -777,12 +776,12 @@ void mltply::Hubbard::GC::CisAisCjtAku_element(
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = mltply::Hubbard::GC::X_CisAjt((j - 1), isite3, isite4, Bsum, Bdiff, tmp_off);
+  tmp_sgn = mltply::Hubbard::GC::X_CisAjt(j, isite3, isite4, Bsum, Bdiff, tmp_off);
   if (tmp_sgn != 0) {
     tmp_sgn *= mltply::Hubbard::C::X_CisAis(*tmp_off, isite1);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
-      zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
+      zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off][0], &one);
     }
   }
 }/*std::complex<double> GC_child_CisAisCjtAku_element*/
@@ -807,12 +806,12 @@ void mltply::Hubbard::GC::CisAjtCkuAku_element(
   int tmp_sgn;
   std::complex<double> dmv;
   int one = 1;
-  tmp_sgn = mltply::Hubbard::C::X_CisAis(j - 1, isite3);
+  tmp_sgn = mltply::Hubbard::C::X_CisAis(j, isite3);
   if (tmp_sgn != 0) {
-    tmp_sgn *= mltply::Hubbard::GC::X_CisAjt(j - 1, isite1, isite2, Asum, Adiff, tmp_off);
+    tmp_sgn *= mltply::Hubbard::GC::X_CisAjt(j, isite1, isite2, Asum, Adiff, tmp_off);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
-      zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off + 1][0], &one);
+      zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off][0], &one);
     }/*if (tmp_sgn != 0)*/
   }/*if (tmp_sgn != 0)*/
 }/*std::complex<double> GC_child_CisAjtCkuAku_element*/
@@ -833,7 +832,8 @@ void mltply::Hubbard::GC::CisAjtCkuAlv_element(
   long int Bsum,//!<[in] Bit mask for hopping
   long int Bdiff,//!<[in] Bit mask for Fermion sign
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
+  int nstate,
+  std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   long int *tmp_off_2//!<[out] Index of final wavefunction
 ) {
@@ -842,12 +842,12 @@ void mltply::Hubbard::GC::CisAjtCkuAlv_element(
   std::complex<double> dmv;
   int one = 1;
 
-  tmp_sgn = mltply::Hubbard::GC::X_CisAjt(j - 1, isite3, isite4, Bsum, Bdiff, &tmp_off_1);
+  tmp_sgn = mltply::Hubbard::GC::X_CisAjt(j, isite3, isite4, Bsum, Bdiff, &tmp_off_1);
   if (tmp_sgn != 0) {
     tmp_sgn *= mltply::Hubbard::GC::X_CisAjt(tmp_off_1, isite1, isite2, Asum, Adiff, tmp_off_2);
     if (tmp_sgn != 0) {
       dmv = tmp_V * (std::complex<double>)tmp_sgn;
-      zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off_2 + 1][0], &one);
+      zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[*tmp_off_2][0], &one);
     }
   }
 }/*std::complex<double> GC_child_CisAjtCkuAlv_element*/
@@ -874,7 +874,7 @@ void mltply::Hubbard::GC::Cis(
   std::complex<double> dmv;
   int one = 1;
 
-  list_1_j = j - 1;
+  list_1_j = j;
 
   ibit_tmp_1 = (list_1_j & is1_spin);
   // is1_spin >= 1
@@ -893,7 +893,7 @@ void mltply::Hubbard::GC::Cis(
     list_1_off = list_1_j | is1_spin; // OR
     *tmp_off = list_1_off;
     dmv = (std::complex<double>)(ipsgn * sgn) * tmp_V;
-    zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off + 1][0], &one);
+    zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off][0], &one);
   }
   else {
     return;
@@ -908,7 +908,8 @@ term of grandcanonical Hubbard system
 */
 void mltply::Hubbard::GC::Ajt(
   long int j,//!<[in] Index of initial wavefunction
-  int nstate, std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
+  int nstate,
+  std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   long int is1_spin,//!<[in] Bit mask
   std::complex<double> tmp_V,//!<[in] Coupling constant
@@ -921,9 +922,9 @@ void mltply::Hubbard::GC::Ajt(
   std::complex<double> dmv;
   int one = 1;
 
-  list_1_j = j - 1;
+  list_1_j = j;
 
-  ibit_tmp_1 = (list_1_j & is1_spin);
+  ibit_tmp_1 = list_1_j & is1_spin;
   // is1_spin >= 1
 
   *tmp_off = 0;
@@ -939,7 +940,7 @@ void mltply::Hubbard::GC::Ajt(
     list_1_off = list_1_j ^ is1_spin;
     *tmp_off = list_1_off;
     dmv = (std::complex<double>)(ipsgn * sgn) * tmp_V;
-    zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off + 1][0], &one);
+    zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[list_1_off][0], &one);
   }
   else {
     return;

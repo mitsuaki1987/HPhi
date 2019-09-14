@@ -146,7 +146,7 @@ void xsetmem::large()
   int nstate;
 
   if (GetlistSize() == TRUE) {
-    List::c1 = li_1d_allocate(Check::idim_max + 1);
+    List::c1 = li_1d_allocate(Check::idim_max);
     List::c2_1 = li_1d_allocate(Large::SizeOflist_2_1);
     List::c2_2 = li_1d_allocate(Large::SizeOflist_2_2);
     if (List::c1 == NULL
@@ -158,7 +158,7 @@ void xsetmem::large()
     }
   }
 
-  List::Diagonal = d_1d_allocate(Check::idim_max + 1);
+  List::Diagonal = d_1d_allocate(Check::idim_max);
 
   if (Def::iCalcType == DC::FullDiag) {
     nstate = Check::idim_max;
@@ -172,15 +172,15 @@ void xsetmem::large()
   else {
     nstate = 1;
   }
-  Wave::v0 = cd_2d_allocate(Check::idim_max + 1, nstate);
-  Wave::v1 = cd_2d_allocate(Check::idim_max + 1, nstate);
+  Wave::v0 = cd_2d_allocate(Check::idim_max, nstate);
+  Wave::v1 = cd_2d_allocate(Check::idim_max, nstate);
 #ifdef __MPI
   long int MAXidim_max;
   MAXidim_max = wrapperMPI::Max_li(Check::idim_max);
-  if (GetlistSize() == TRUE) List::c1buf = li_1d_allocate(MAXidim_max + 1);
+  if (GetlistSize() == TRUE) List::c1buf = li_1d_allocate(MAXidim_max);
   Wave::v1buf = cd_2d_allocate(MAXidim_max + 1, nstate);
 #else
-  if (Def::iCalcType == DC::CG)  Wave::v1buf = cd_2d_allocate(Check::idim_max + 1, nstate);
+  if (Def::iCalcType == DC::CG)  Wave::v1buf = cd_2d_allocate(Check::idim_max, nstate);
 #endif // MPI
 
   Phys::num_down = d_1d_allocate(nstate);

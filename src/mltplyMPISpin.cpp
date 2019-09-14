@@ -81,17 +81,17 @@ void mltply::Spin::C::Half::X_general_int_MPIdouble(
   else return;
 
   idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-  wrapperMPI::SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  wrapperMPI::SendRecv_iv(origin, Check::idim_max, idim_max_buf, List::c1, List::c1buf);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
 
 #pragma omp parallel for default(none) private(j, ioff) \
 shared(idim_max_buf,Jint,Large::irght, Large::ilft, Large::ihfbit, \
 List::c2_1,List::c2_2,List::c1buf,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
-  for (j = 1; j <= idim_max_buf; j++) {
+  for (j = 0; j < idim_max_buf; j++) {
     GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
         Large::irght, Large::ilft, Large::ihfbit, &ioff);
     zaxpy_(&nstate, &Jint, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
-  }/*for (j = 1; j <= idim_max_buf; j++)*/
+  }/*for (j = 0; j < idim_max_buf; j++)*/
 }/*std::complex<double> X_child_general_int_spin_MPIdouble*/
 /**
 @brief Exchange term in Spin model
@@ -120,17 +120,17 @@ void mltply::Spin::C::Half::X_general_int_TotalS_MPIdouble(
   if (ibit_tmp == 0) return;
 
   idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-  wrapperMPI::SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  wrapperMPI::SendRecv_iv(origin, Check::idim_max, idim_max_buf, List::c1, List::c1buf);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
 
 #pragma omp parallel for default(none)  private(j, dmv, ioff) \
 shared(idim_max_buf, Large::irght, Large::ilft, Large::ihfbit, \
 List::c2_1, List::c2_2, List::c1buf, Wave::v1buf, tmp_v1, tmp_v0,nstate,one)
-  for (j = 1; j <= idim_max_buf; j++) {
+  for (j = 0; j < idim_max_buf; j++) {
     GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
       Large::irght, Large::ilft, Large::ihfbit, &ioff);
     zaxpy_(&nstate, &dmv, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
-  }/*for (j = 1; j <= idim_max_buf; j++)*/
+  }/*for (j = 0; j < idim_max_buf; j++)*/
   return;
 }/*std::complex<double> X_child_general_int_spin_MPIdouble*/
 /**
@@ -191,8 +191,8 @@ void mltply::Spin::C::Half::X_general_int_MPIsingle(
   else return;
 
   idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-  wrapperMPI::SendRecv_iv(origin, Check::idim_max + 1, idim_max_buf + 1, List::c1, List::c1buf);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[1][0], &Wave::v1buf[1][0]);
+  wrapperMPI::SendRecv_iv(origin, Check::idim_max, idim_max_buf, List::c1, List::c1buf);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
   /*
   Index in the intra PE
   */
@@ -203,7 +203,7 @@ void mltply::Spin::C::Half::X_general_int_MPIsingle(
 shared(idim_max_buf, Jint, mask1, state1check, org_isite1, \
 Large::irght, Large::ilft, Large::ihfbit, \
 List::c2_1, List::c2_2, List::c1buf, Wave::v1buf, tmp_v1, tmp_v0,nstate,one)
-  for (j = 1; j <= idim_max_buf; j++) {
+  for (j = 0; j < idim_max_buf; j++) {
     jreal = List::c1buf[j];
 
     state1 = (jreal & mask1) / mask1;

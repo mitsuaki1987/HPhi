@@ -88,7 +88,7 @@ shared(tmp_v0,List::c1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
     mythread = 0;
 #endif
 #pragma omp for
-    for (j = 1; j <= i_max; j++) {
+    for (j = 0; j < i_max; j++) {
       for (istate = 0; istate < nstate; istate++)
         tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       bit_up = 0;
@@ -114,13 +114,13 @@ shared(tmp_v0,List::c1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
       bit_D += pop(l_ibit1);
 
       // isite1 <= Def::Nsite
-      ibit_up = (long int) (j - 1) & is1_up_b;
+      ibit_up = (long int) j & is1_up_b;
       u_ibit1 = ibit_up >> 32;
       l_ibit1 = ibit_up & i_32;
       bit_up += pop(u_ibit1);
       bit_up += pop(l_ibit1);
 
-      ibit_down = (long int) (j - 1) & is1_down_b;
+      ibit_down = (long int) j & is1_down_b;
       u_ibit1 = ibit_down >> 32;
       l_ibit1 = ibit_down & i_32;
       bit_down += pop(u_ibit1);
@@ -144,7 +144,7 @@ shared(tmp_v0,List::c1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
         Sz_t[mythread][istate] += tmp_v02[istate] * Sz;
         Sz2_t[mythread][istate] += tmp_v02[istate] * Sz * Sz;
       }
-    }/*for (j = 1; j <= i_max; j++)*/
+    }/*for (j = 0; j < i_max; j++)*/
     free_d_1d_allocate(tmp_v02);
   }/*end of parallel region*/
 
@@ -245,7 +245,7 @@ private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
     mythread = 0;
 #endif
 #pragma omp for
-    for (j = 1; j <= i_max; j++) {
+    for (j = 0; j < i_max; j++) {
       for (istate = 0; istate < nstate; istate++)
         tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       bit_up = 0;
@@ -302,7 +302,7 @@ private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
         Sz_t[mythread][istate] += tmp_v02[istate] * Sz;
         Sz2_t[mythread][istate] += tmp_v02[istate] * Sz * Sz;
       }
-    }/*for (j = 1; j <= i_max; j++)*/
+    }/*for (j = 0; j < i_max; j++)*/
     free_d_1d_allocate(tmp_v02);
   }/*end of parallel region*/
 
@@ -395,7 +395,7 @@ shared(tmp_v0,Sz_t,Sz2_t,nstate, i_max,MP::myrank,i_32,is1_up_a,is1_up_b,Def::Ns
     mythread = 0;
 #endif
 #pragma omp for
-    for (j = 1; j <= i_max; j++) {
+    for (j = 0; j < i_max; j++) {
       for (istate = 0; istate < nstate; istate++)
         tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       Sz = 0.0;
@@ -407,7 +407,7 @@ shared(tmp_v0,Sz_t,Sz2_t,nstate, i_max,MP::myrank,i_32,is1_up_a,is1_up_b,Def::Ns
       Sz += pop(u_ibit1);
       Sz += pop(l_ibit1);
       // isite1 <= Def::Nsite
-      ibit1 = (long int) (j - 1)&is1_up_b;
+      ibit1 = (long int) j & is1_up_b;
       u_ibit1 = ibit1 >> 32;
       l_ibit1 = ibit1 & i_32;
       Sz += pop(u_ibit1);
@@ -418,7 +418,7 @@ shared(tmp_v0,Sz_t,Sz2_t,nstate, i_max,MP::myrank,i_32,is1_up_a,is1_up_b,Def::Ns
         Sz_t[mythread][istate] += tmp_v02[istate] * Sz;
         Sz2_t[mythread][istate] += tmp_v02[istate] * Sz * Sz;
       }
-    }/*for (j = 1; j <= i_max; j++)*/
+    }/*for (j = 0; j < i_max; j++)*/
     free_d_1d_allocate(tmp_v02);
   }/*End of parallel region*/
   for (istate = 0; istate < nstate; istate++) {
@@ -480,7 +480,7 @@ Def::SiteToBit, Def::Tpow,Def::Nsite,Def::NsiteMPI)
     mythread = 0;
 #endif
 #pragma omp for
-    for (j = 1; j <= i_max; j++) {
+    for (j = 0; j < i_max; j++) {
       for (istate = 0; istate < nstate; istate++) \
         tmp_v02[istate] = real(conj(tmp_v0[j][istate]) * tmp_v0[j][istate]);
       Sz = 0.0;
@@ -490,14 +490,14 @@ Def::SiteToBit, Def::Tpow,Def::Nsite,Def::NsiteMPI)
           Sz += GetLocal2Sz(isite1, MP::myrank, Def::SiteToBit, Def::Tpow);
         }
         else {
-          Sz += GetLocal2Sz(isite1, j - 1, Def::SiteToBit, Def::Tpow);
+          Sz += GetLocal2Sz(isite1, j, Def::SiteToBit, Def::Tpow);
         }
       }
       for (istate = 0; istate < nstate; istate++) {
         Sz_t[mythread][istate] += tmp_v02[istate] * Sz;
         Sz2_t[mythread][istate] += tmp_v02[istate] * Sz * Sz;
       }
-    }/*for (j = 1; j <= i_max; j++)*/
+    }/*for (j = 0; j < i_max; j++)*/
     free_d_1d_allocate(tmp_v02);
   }/*End of parallel region*/
   for (istate = 0; istate < nstate; istate++) {
@@ -621,7 +621,7 @@ int expec::energy_flct::main(
 
 #pragma omp parallel for default(none) private(i,istate) \
 shared(tmp_v1,tmp_v0,nstate,i_max)
-  for (i = 1; i <= i_max; i++) {
+  for (i = 0; i < i_max; i++) {
     for (istate = 0; istate < nstate; istate++) {
       tmp_v1[i][istate] = tmp_v0[i][istate];
       tmp_v0[i][istate] = 0.0;
@@ -644,7 +644,7 @@ shared(tmp_v1,tmp_v0,nstate,i_max)
     Phys::energy[istate] = 0.0;
     Phys::var[istate] = 0.0;
   }
-  for (j = 1; j <= i_max; j++) {
+  for (j = 0; j < i_max; j++) {
     for (istate = 0; istate < nstate; istate++) {
       Phys::energy[istate] += real(conj(tmp_v1[j][istate])*tmp_v0[j][istate]); // E   = <v1|H|v1>=<v1|v0>
       Phys::var[istate] += real(conj(tmp_v0[j][istate])*tmp_v0[j][istate]); // E^2 = <v1|H*H|v1>=<v0|v0>

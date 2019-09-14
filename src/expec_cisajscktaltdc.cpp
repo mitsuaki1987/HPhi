@@ -151,7 +151,7 @@ void expec::cisajscktalt::Hubbard::GC(
   long int i_max;
 
   for (i = 0; i < Def::NCisAjtCkuAlvDC; i++) {
-    zclear(Large::i_max*nstate, &Xvec[1][0]);
+    zclear(Large::i_max*nstate, &Xvec[0][0]);
     org_isite1 = Def::CisAjtCkuAlvDC[i][0];
     org_sigma1 = Def::CisAjtCkuAlvDC[i][1];
     org_isite2 = Def::CisAjtCkuAlvDC[i][2];
@@ -203,14 +203,14 @@ void expec::cisajscktalt::Hubbard::GC(
       if (isite1 == isite2 && isite3 == isite4) {
 #pragma omp parallel for default(none) private(j) shared(vec,Xvec,nstate, \
 i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_V)
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           mltply::Hubbard::GC::CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, Xvec, vec);
         }
       }
       else if (isite1 == isite2 && isite3 != isite4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_V)
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           mltply::Hubbard::GC::CisAisCjtAku_element(j, isite1, isite3, isite4, Bsum, Bdiff,
             tmp_V, nstate, Xvec, vec, &tmp_off);
         }
@@ -218,7 +218,7 @@ shared(vec,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,t
       else if (isite1 != isite2 && isite3 == isite4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_V) 
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           mltply::Hubbard::GC::CisAjtCkuAku_element(j, isite1, isite2, isite3, Asum, Adiff,
             tmp_V, nstate, Xvec, vec, &tmp_off);
         }
@@ -226,7 +226,7 @@ shared(vec,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,t
       else if (isite1 != isite2 && isite3 != isite4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,tmp_V) 
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           mltply::Hubbard::GC::CisAjtCkuAlv_element(j, isite1, isite2, isite3, isite4, Asum, Adiff,
             Bsum, Bdiff, tmp_V, nstate, Xvec, vec, &tmp_off);
         }
@@ -261,7 +261,7 @@ void expec::cisajscktalt::Hubbard::C(
   long int i_max;
 
   for (i = 0; i < Def::NCisAjtCkuAlvDC; i++) {
-    zclear(Large::i_max*nstate, &Xvec[1][0]);
+    zclear(Large::i_max*nstate, &Xvec[0][0]);
     org_isite1 = Def::CisAjtCkuAlvDC[i][0];
     org_sigma1 = Def::CisAjtCkuAlvDC[i][1];
     org_isite2 = Def::CisAjtCkuAlvDC[i][2];
@@ -325,14 +325,14 @@ void expec::cisajscktalt::Hubbard::C(
       if (isite1 == isite2 && isite3 == isite4) {
 #pragma omp parallel for default(none) private(j) shared(vec,tmp_V,Xvec,nstate, \
 i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff)
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           mltply::Hubbard::C::CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, Xvec, vec);
         }
       }
       else if (isite1 == isite2 && isite3 != isite4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff)
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           mltply::Hubbard::C::CisAisCjtAku_element(j, isite1, isite3, isite4, Bsum, Bdiff,
             tmp_V, nstate, Xvec, vec, &tmp_off);
         }
@@ -340,7 +340,7 @@ shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,B
       else if (isite1 != isite2 && isite3 == isite4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff)
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           mltply::Hubbard::C::CisAjtCkuAku_element(j, isite1, isite2, isite3, Asum, Adiff,
             tmp_V, nstate, Xvec, vec, &tmp_off);
         }
@@ -348,7 +348,7 @@ shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,B
       else if (isite1 != isite2 && isite3 != isite4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff)
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           mltply::Hubbard::C::CisAjtCkuAlv_element(j, isite1, isite2, isite3, isite4, Asum, Adiff, Bsum, Bdiff,
             tmp_V, nstate, Xvec, vec, &tmp_off);
         }
@@ -388,7 +388,7 @@ void expec::cisajscktalt::Spin::C::Half(
   Large::mode = M_CORR;
 
   for (i = 0; i < Def::NCisAjtCkuAlvDC; i++) {
-    zclear(i_max*nstate, &Xvec[1][0]);
+    zclear(i_max*nstate, &Xvec[0][0]);
     if (Rearray_Interactions(i, &org_isite1, &org_isite2, &org_isite3, &org_isite4,
       &org_sigma1, &org_sigma2, &org_sigma3, &org_sigma4, &tmp_V) != 0) {
       //error message will be added
@@ -400,15 +400,15 @@ void expec::cisajscktalt::Spin::C::Half(
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
         is1_up = Def::Tpow[org_isite1];
         is2_up = Def::Tpow[org_isite3];
-        num1 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
-        num2 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is2_up, org_sigma3);
+        num1 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank, is1_up, org_sigma1);
+        num2 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank, is2_up, org_sigma3);
         zaxpy_long(i_max*nstate, tmp_V * (std::complex<double>)(num1*num2),
-          &vec[1][0], &Xvec[1][0]);
+          &vec[0][0], &Xvec[0][0]);
       }
       else if (org_isite1 == org_isite3 && org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) {
         is1_up = Def::Tpow[org_isite1];
-        num1 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is1_up, org_sigma1);
-        zaxpy_long(i_max*nstate, tmp_V * (std::complex<double>)num1, &vec[1][0], &Xvec[1][0]);
+        num1 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank, is1_up, org_sigma1);
+        zaxpy_long(i_max*nstate, tmp_V * (std::complex<double>)num1, &vec[0][0], &Xvec[0][0]);
       }
       else if (org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) {//exchange
         mltply::Spin::C::Half::X_general_int_MPIdouble(
@@ -423,10 +423,10 @@ void expec::cisajscktalt::Spin::C::Half(
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
         is1_up = Def::Tpow[org_isite1];
         is2_up = Def::Tpow[org_isite3];
-        num2 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank + 1, is2_up, org_sigma3);
+        num2 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank, is2_up, org_sigma3);
 #pragma omp parallel for default(none)shared(vec,Xvec,nstate,one, \
 i_max, tmp_V, is1_up, org_sigma1, num2) private(j, num1,dmv)
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           num1 = mltply::Spin::C::Half::X_CisAis(j, is1_up, org_sigma1);
           dmv = tmp_V * (std::complex<double>)(num1*num2);
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
@@ -447,7 +447,7 @@ i_max, tmp_V, is1_up, org_sigma1, num2) private(j, num1,dmv)
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4, tmp_V)
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           mltply::Spin::C::Half::CisAisCisAis_element(j, isA_up, isB_up, org_sigma2, org_sigma4,
             tmp_V, nstate, Xvec, vec);
         }
@@ -455,7 +455,7 @@ shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4, tmp_V)
       else if (org_isite1 == org_isite3 && org_sigma1 == org_sigma4 && org_sigma3 == org_sigma2) {
 #pragma omp parallel for default(none) private(j, dmv) \
 shared(i_max,isA_up,org_sigma1, tmp_V,vec,Xvec,nstate,one)
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           dmv = tmp_V * (std::complex<double>)mltply::Spin::C::Half::X_CisAis(j, 
             isA_up, org_sigma1);
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
@@ -464,7 +464,7 @@ shared(i_max,isA_up,org_sigma1, tmp_V,vec,Xvec,nstate,one)
       else if (org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) { // exchange
 #pragma omp parallel for default(none) private(j, tmp_sgn, dmv,tmp_off) \
 shared(vec,Xvec,nstate,one, i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           tmp_sgn = mltply::Spin::C::Half::X_exchange_element(j, isA_up, isB_up, org_sigma2, org_sigma4, &tmp_off);
           dmv = tmp_sgn;
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[tmp_off][0], &one);
@@ -508,7 +508,7 @@ void expec::cisajscktalt::Spin::C::General(
   Large::mode = M_CORR;
 
   for (i = 0; i < Def::NCisAjtCkuAlvDC; i++) {
-    zclear(i_max*nstate, &Xvec[1][0]);
+    zclear(i_max*nstate, &Xvec[0][0]);
 
     if (Rearray_Interactions(i, &org_isite1, &org_isite2, &org_isite3, &org_isite4, 
       &org_sigma1, &org_sigma2, &org_sigma3, &org_sigma4, &tmp_V) != 0) {
@@ -560,7 +560,7 @@ void expec::cisajscktalt::Spin::C::General(
 #pragma omp parallel for default(none) private(j, num1) \
 shared(vec,List::c1,Xvec,nstate,one, i_max,org_isite1, org_sigma1,org_isite3, org_sigma3, \
 tmp_V, Def::SiteToBit, Def::Tpow)
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           num1 = BitCheckGeneral(List::c1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
           if (num1 != FALSE) {
             num1 = BitCheckGeneral(List::c1[j], org_isite3, org_sigma3, Def::SiteToBit, Def::Tpow);
@@ -574,7 +574,7 @@ tmp_V, Def::SiteToBit, Def::Tpow)
 #pragma omp parallel for default(none) private(list1_off,j,num1,tmp_off,tmp_off_2) \
 shared(i_max,org_isite1,org_isite3,org_sigma1,org_sigma2,org_sigma3,org_sigma4, \
 MP::myrank,tmp_V,vec,List::c1,Xvec,nstate,one,Def::SiteToBit, Def::Tpow, Check::sdim)
-        for (j = 1; j <= i_max; j++) {
+        for (j = 0; j < i_max; j++) {
           num1 = GetOffCompGeneralSpin(List::c1[j], org_isite3, org_sigma4, org_sigma3, &tmp_off, Def::SiteToBit, Def::Tpow);
           if (num1 != FALSE) {
             num1 = GetOffCompGeneralSpin(tmp_off, org_isite1, org_sigma2, org_sigma1, &tmp_off_2,
@@ -616,7 +616,7 @@ void expec::cisajscktalt::Spin::GC::Half(
   i_max = Check::idim_max;
 
   for (i = 0; i < Def::NCisAjtCkuAlvDC; i++) {
-    zclear(i_max*nstate, &Xvec[1][0]);
+    zclear(i_max*nstate, &Xvec[0][0]);
 
     if (Rearray_Interactions(i, &org_isite1, &org_isite2, &org_isite3, &org_isite4, 
       &org_sigma1, &org_sigma2, &org_sigma3, &org_sigma4, &tmp_V) != 0) {
@@ -681,7 +681,7 @@ void expec::cisajscktalt::Spin::GC::Half(
         if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
 #pragma omp parallel for default(none) private(j) \
 shared(vec,Xvec,nstate, i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
-          for (j = 1; j <= i_max; j++) {
+          for (j = 0; j < i_max; j++) {
             mltply::Spin::GC::Half::CisAisCisAis_element(j, isA_up, isB_up, org_sigma2, org_sigma4,
               tmp_V, nstate, Xvec, vec);
           }
@@ -689,7 +689,7 @@ shared(vec,Xvec,nstate, i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
         else if (org_sigma1 == org_sigma2 && org_sigma3 != org_sigma4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
-          for (j = 1; j <= i_max; j++) {
+          for (j = 0; j < i_max; j++) {
             mltply::Spin::GC::Half::CisAisCitAiu_element(j, org_sigma2, org_sigma4, isA_up, isB_up,
               tmp_V, nstate, Xvec, vec, &tmp_off);
           }
@@ -697,7 +697,7 @@ shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
         else if (org_sigma1 != org_sigma2 && org_sigma3 == org_sigma4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
-          for (j = 1; j <= i_max; j++) {
+          for (j = 0; j < i_max; j++) {
             mltply::Spin::GC::Half::CisAitCiuAiu_element(j, org_sigma2, org_sigma4, isA_up, isB_up,
               tmp_V, nstate, Xvec, vec, &tmp_off);
           }
@@ -705,7 +705,7 @@ shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
         else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
 shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
-          for (j = 1; j <= i_max; j++) {
+          for (j = 0; j < i_max; j++) {
             mltply::Spin::GC::Half::CisAitCiuAiv_element(j, org_sigma2, org_sigma4, isA_up, isB_up,
               tmp_V, nstate, Xvec, vec, &tmp_off);
           }
@@ -743,7 +743,7 @@ void expec::cisajscktalt::Spin::GC::General(
   Large::mode = M_CORR;
 
   for(i=0;i<Def::NCisAjtCkuAlvDC;i++){
-    zclear(i_max*nstate, &Xvec[1][0]);
+    zclear(i_max*nstate, &Xvec[0][0]);
 
     if (Rearray_Interactions(i, &org_isite1, &org_isite2, &org_isite3, &org_isite4,
       &org_sigma1, &org_sigma2, &org_sigma3, &org_sigma4, &tmp_V) != 0) {
@@ -799,10 +799,10 @@ void expec::cisajscktalt::Spin::GC::General(
 #pragma omp parallel for default(none) private(j, num1) \
 shared(vec,Xvec,nstate,one,i_max,org_isite1, org_sigma1,org_isite3, org_sigma3, \
 tmp_V, Def::SiteToBit, Def::Tpow)
-        for (j = 1; j <= i_max; j++) {
-          num1 = BitCheckGeneral(j - 1, org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
+        for (j = 0; j < i_max; j++) {
+          num1 = BitCheckGeneral(j, org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
           if (num1 != FALSE) {
-            num1 = BitCheckGeneral(j - 1, org_isite3, org_sigma3, Def::SiteToBit, Def::Tpow);
+            num1 = BitCheckGeneral(j, org_isite3, org_sigma3, Def::SiteToBit, Def::Tpow);
             if (num1 != FALSE) {
               zaxpy_(&nstate, &tmp_V, &vec[j][0], &one, &Xvec[j][0], &one);
             }
@@ -813,13 +813,13 @@ tmp_V, Def::SiteToBit, Def::Tpow)
 #pragma omp parallel for default(none) private(j, tmp_off, num1) \
 shared(vec,Xvec,nstate,one,i_max,org_isite1, org_isite3, org_sigma1,org_sigma3,org_sigma4, \
 tmp_V, Def::SiteToBit, Def::Tpow)
-        for (j = 1; j <= i_max; j++) {
-          num1 = GetOffCompGeneralSpin(j - 1, org_isite3, org_sigma4, org_sigma3,
+        for (j = 0; j < i_max; j++) {
+          num1 = GetOffCompGeneralSpin(j, org_isite3, org_sigma4, org_sigma3,
             &tmp_off, Def::SiteToBit, Def::Tpow);
           if (num1 != FALSE) {
             num1 = BitCheckGeneral(tmp_off, org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
             if (num1 != FALSE) {
-              zaxpy_(&nstate, &tmp_V, &vec[j][0], &one, &Xvec[tmp_off + 1][0], &one);
+              zaxpy_(&nstate, &tmp_V, &vec[j][0], &one, &Xvec[tmp_off][0], &one);
             }
           }
         }
@@ -828,13 +828,13 @@ tmp_V, Def::SiteToBit, Def::Tpow)
 #pragma omp parallel for default(none) private(j, num1, tmp_off) \
 shared(vec,Xvec,nstate,one,i_max,org_isite1, org_isite3, org_sigma1,org_sigma2, \
 org_sigma3, tmp_V, Def::SiteToBit, Def::Tpow)
-        for (j = 1; j <= i_max; j++) {
-          num1 = BitCheckGeneral(j - 1, org_isite3, org_sigma3, Def::SiteToBit, Def::Tpow);
+        for (j = 0; j < i_max; j++) {
+          num1 = BitCheckGeneral(j, org_isite3, org_sigma3, Def::SiteToBit, Def::Tpow);
           if (num1 != FALSE) {
-            num1 = GetOffCompGeneralSpin(j - 1, org_isite1, org_sigma2, org_sigma1,
+            num1 = GetOffCompGeneralSpin(j, org_isite1, org_sigma2, org_sigma1,
               &tmp_off, Def::SiteToBit, Def::Tpow);
             if (num1 != FALSE) {
-              zaxpy_(&nstate, &tmp_V, &vec[j][0], &one, &Xvec[tmp_off + 1][0], &one);
+              zaxpy_(&nstate, &tmp_V, &vec[j][0], &one, &Xvec[tmp_off][0], &one);
             }
           }
         }
@@ -843,14 +843,14 @@ org_sigma3, tmp_V, Def::SiteToBit, Def::Tpow)
 #pragma omp parallel for default(none) private(tmp_off,tmp_off_2,j, num1) \
 shared(i_max,org_isite1,org_isite3,org_sigma1,org_sigma2,org_sigma3,org_sigma4, \
 tmp_V,vec,Xvec,nstate,one, Def::SiteToBit, Def::Tpow)
-        for (j = 1; j <= i_max; j++) {
-          num1 = GetOffCompGeneralSpin(j - 1, org_isite3, org_sigma4, org_sigma3,
+        for (j = 0; j < i_max; j++) {
+          num1 = GetOffCompGeneralSpin(j, org_isite3, org_sigma4, org_sigma3,
             &tmp_off, Def::SiteToBit, Def::Tpow);
           if (num1 != FALSE) {
             num1 = GetOffCompGeneralSpin(tmp_off, org_isite1, org_sigma2, org_sigma1, 
               &tmp_off_2, Def::SiteToBit, Def::Tpow);
             if (num1 != FALSE) {
-              zaxpy_(&nstate, &tmp_V, &vec[j][0], &one, &Xvec[tmp_off_2 + 1][0], &one);
+              zaxpy_(&nstate, &tmp_V, &vec[j][0], &one, &Xvec[tmp_off_2][0], &one);
             }
           }
         }

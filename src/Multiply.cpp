@@ -51,7 +51,7 @@ int Multiply()
   // mltply is in expec_energy.cpp Wave::v0=H*Wave::v1
 #pragma omp parallel for default(none) private(i,rand_i)  \
 shared(Wave::v0, Wave::v1,Step::NumAve,i_max, Ns, Step::LargeValue)
-  for (i = 1; i <= i_max; i++) {
+  for (i = 0; i < i_max; i++) {
     for (rand_i = 0; rand_i < Step::NumAve; rand_i++) {
       Wave::v0[i][rand_i] = Step::LargeValue * Wave::v1[i][rand_i] - Wave::v0[i][rand_i] / Ns;  //Wave::v0=(l-H/Ns)*Wave::v1
     }
@@ -59,7 +59,7 @@ shared(Wave::v0, Wave::v1,Step::NumAve,i_max, Ns, Step::LargeValue)
   wrapperMPI::Norm_dv(i_max, Step::NumAve, Wave::v0, Step::global_norm);
 #pragma omp parallel for default(none) private(i,rand_i) \
 shared(i_max,Wave::v0,Step::NumAve,Step::global_norm)
-  for (i = 1; i <= i_max; i++) 
+  for (i = 0; i < i_max; i++) 
     for (rand_i = 0; rand_i < Step::NumAve; rand_i++)
       Wave::v0[i][rand_i] = Wave::v0[i][rand_i] / Step::global_norm[rand_i];
   return 0;
@@ -91,7 +91,7 @@ int MultiplyForTEM
   if (dt < pow(10.0, -14)) {
 #pragma omp parallel for default(none) private(i, tmp2) \
 shared(Wave::v0, Wave::v1, v2,i_max, dt)
-    for (i = 1; i <= i_max; i++) {
+    for (i = 0; i < i_max; i++) {
       tmp2 = Wave::v0[i][0];
       Wave::v0[i][0] = Wave::v1[i][0];  //Wave::v0=(1-i*dt*H)*Wave::v1
       Wave::v1[i][0] = tmp2;
@@ -103,7 +103,7 @@ shared(Wave::v0, Wave::v1, v2,i_max, dt)
     tmp1 *= std::complex<double>(0.0, -dt);
 #pragma omp parallel for default(none) private(i, tmp2) \
 shared(Wave::v0, Wave::v1, v2,i_max, dt, tmp1)
-    for (i = 1; i <= i_max; i++) {
+    for (i = 0; i < i_max; i++) {
       tmp2 = Wave::v0[i][0];
       Wave::v0[i][0] = Wave::v1[i][0] + tmp1 * tmp2;  //Wave::v0=(1-i*dt*H)*Wave::v1
       Wave::v1[i][0] = tmp2;
@@ -116,7 +116,7 @@ shared(Wave::v0, Wave::v1, v2,i_max, dt, tmp1)
 
 #pragma omp parallel for default(none) private(i) \
 shared(Wave::v0, Wave::v1, v2,i_max, tmp1, MP::myrank)
-      for (i = 1; i <= i_max; i++) {
+      for (i = 0; i < i_max; i++) {
         Wave::v0[i][0] += tmp1 * v2[i][0];
         Wave::v1[i][0] = v2[i][0];
         v2[i][0] = 0.0;
@@ -126,14 +126,14 @@ shared(Wave::v0, Wave::v1, v2,i_max, tmp1, MP::myrank)
   dnorm = 0.0;
 #pragma omp parallel for default(none) reduction(+: dnorm) private(i) \
 shared(Wave::v0,i_max)
-  for (i = 1; i <= i_max; i++) {
+  for (i = 0; i < i_max; i++) {
     dnorm += real(conj(Wave::v0[i][0])*Wave::v0[i][0]);
   }
   dnorm = wrapperMPI::Sum_d(dnorm);
   dnorm = sqrt(dnorm);
   Step::global_norm[0] = dnorm;
 #pragma omp parallel for default(none) private(i) shared(Wave::v0,i_max, dnorm)
-  for (i = 1; i <= i_max; i++) {
+  for (i = 0; i < i_max; i++) {
     Wave::v0[i][0] = Wave::v0[i][0] / dnorm;
   }
   return 0;

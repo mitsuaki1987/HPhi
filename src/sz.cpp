@@ -101,7 +101,7 @@ int child_omp_sz_Kondo_hacker(
     }
   }
   //[s] get ja  
-  ja = 1;
+  ja = 0;
   tmp_num_up = num_up;
   tmp_num_down = num_down;
   if (icheck_loc == 1) {
@@ -162,7 +162,6 @@ int child_omp_sz_Kondo_hacker(
     }
   }
   //[e] get ja
-  ja = ja - 1;
   return ja;
 }
 /** 
@@ -256,7 +255,7 @@ int child_omp_sz(
     num_down += div_down;
   }
   
-  ja=1;
+  ja=0;
   tmp_num_up   = num_up;
   tmp_num_down = num_down;
 
@@ -304,7 +303,6 @@ int child_omp_sz(
       } 
     }  
   }
-  ja=ja-1;    
   return ja; 
 }
 /** 
@@ -351,7 +349,7 @@ int child_omp_sz_hacker(long int ib,
     num_down += div_down;
   }
 
-  ja = 1;
+  ja = 0;
   tmp_num_up = num_up;
   tmp_num_down = num_down;
 
@@ -422,7 +420,6 @@ int child_omp_sz_hacker(long int ib,
       }
     }
   }
-  ja = ja - 1;
   return ja;
 }
 /** 
@@ -481,7 +478,7 @@ int child_omp_sz_Kondo(
     }
   }
   
-  ja=1;
+  ja = 0;
   tmp_num_up   = num_up;
   tmp_num_down = num_down;
   if(icheck_loc ==1){
@@ -532,7 +529,6 @@ int child_omp_sz_Kondo(
       }
     }
   }
-  ja=ja-1;    
   return ja; 
 }
 /** 
@@ -573,7 +569,7 @@ int child_omp_sz_KondoGC(
     }
   }
 
-  ja=1;
+  ja=0;
   if(icheck_loc ==1){
     for(ia=0;ia<Check::sdim;ia++){
       i=ia;
@@ -609,8 +605,6 @@ int child_omp_sz_KondoGC(
       }
     }
   }
-  ja=ja-1;
-    
   return ja; 
 }
 
@@ -651,7 +645,7 @@ int child_omp_sz_spin(
     div = div / Def::Tpow[j];
     num_up += div;
   }
-  ja = 1;
+  ja = 0;
   tmp_num_up = num_up;
 
   for (ia = 0; ia < ihfbit; ia++) {
@@ -670,7 +664,6 @@ int child_omp_sz_spin(
       ja += 1;
     }
   }
-  ja = ja - 1;
   return ja;
 }
 /** 
@@ -712,7 +705,7 @@ int child_omp_sz_spin_hacker(
     div = div / Def::Tpow[j];
     num_up += div;
   }
-  ja = 1;
+  ja = 0;
   tmp_num_up = num_up;
 
   // using hacker's delight
@@ -738,7 +731,6 @@ int child_omp_sz_spin_hacker(
       }
     }
   }
-  ja = ja - 1;
   return ja;
 }
 /** 
@@ -772,7 +764,7 @@ int child_omp_sz_GeneralSpin(
   int tmp_2Sz=0;
   jb = list_jb_[ib];
   list_2_2_Sz_ib =list_2_2_Sz_[ib];
-  ja=1;
+  ja = 0;
   for(ia=0;ia<ihfbit;ia++){
     tmp_2Sz=list_2_1_Sz_[ia]+list_2_2_Sz_ib;
     if(tmp_2Sz == Def::Total2Sz){
@@ -782,7 +774,6 @@ int child_omp_sz_GeneralSpin(
       ja+=1;
     } 
   }
-  ja=ja-1;
   return ja; 
 }
 

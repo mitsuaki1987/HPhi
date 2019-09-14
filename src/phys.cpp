@@ -63,18 +63,18 @@ void phys( //!<[inout]
 
     for (i = 0; i < neig; i++) {
       for (j = 0; j < i_max; j++) {
-        Wave::v0[j + 1][i] = 0.0;
+        Wave::v0[j][i] = 0.0;
       }
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       GetEigenVector(i, i_max, Z_vec, descZ_vec, vec_tmp);
       if (rank == 0) {
         for (j = 0; j < i_max; j++) {
-          Wave::v0[j + 1][i] = vec_tmp[j];
+          Wave::v0[j][i] = vec_tmp[j];
         }
       }
       else {
         for (j = 0; j < i_max; j++) {
-          Wave::v0[j + 1][i] = 0.0;
+          Wave::v0[j][i] = 0.0;
         }
       }
     }/*for (i = 0; i < neig; i++)*/
