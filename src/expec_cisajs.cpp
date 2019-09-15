@@ -455,7 +455,7 @@ int expec::cisajs::main(
   FILE *fp;
   char sdt[D_FileNameMax];
   std::complex<double> **prod;
-  long int irght, ilft, ihfbit, ica;
+  long int ica;
   long int i_max;
   //For TPQ
   int step = 0, rand_i = 0, istate;
@@ -463,13 +463,7 @@ int expec::cisajs::main(
   if (Def::NCisAjt < 1) return 0;
 
   i_max = Check::idim_max;
-  if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit) != 0) {
-    return -1;
-  }
   Large::i_max = i_max;
-  Large::irght = irght;
-  Large::ilft = ilft;
-  Large::ihfbit = ihfbit;
   Large::mode = M_CORR;
 
   switch (Def::iCalcType) {

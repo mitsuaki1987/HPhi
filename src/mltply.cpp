@@ -53,10 +53,7 @@ int mltply::main(
   std::complex<double> **tmp_v1 /**<[in]*/
 ) {
   int one = 1;
-  long int j=0;
-  long int irght=0;
-  long int ilft=0;
-  long int ihfbit=0;
+  long int j = 0;
   std::complex<double> dmv;
 
 
@@ -65,23 +62,7 @@ int mltply::main(
   StartTimer(1);
   i_max = Check::idim_max;
 
-  if (Def::iFlgGeneralSpin == FALSE) {
-    if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit) != 0) {
-      return -1;
-    }
-  }
-  else {
-    if (Def::iCalcModel == DC::Spin) {
-      if (GetSplitBitForGeneralSpin(Def::Nsite, &ihfbit, Def::SiteToBit) != 0) {
-        return -1;
-      }
-    }
-  }  
- 
   Large::i_max = i_max;
-  Large::irght = irght;
-  Large::ilft = ilft;
-  Large::ihfbit = ihfbit;
   Large::mode = M_MLTPLY;
 
   StartTimer(100);

@@ -543,7 +543,6 @@ int expec::energy_flct::main(
 ) {
 
   long int i, j;
-  long int irght, ilft, ihfbit;
   long int i_max;
   int istate;
 
@@ -564,14 +563,8 @@ int expec::energy_flct::main(
   }
 
   i_max = Check::idim_max;
-  if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit) != 0) {
-    return -1;
-  }
 
   Large::i_max = i_max;
-  Large::irght = irght;
-  Large::ilft = ilft;
-  Large::ihfbit = ihfbit;
   Large::mode = M_ENERGY;
   for (istate = 0; istate < nstate; istate++) Phys::energy[istate] = 0.0;
 

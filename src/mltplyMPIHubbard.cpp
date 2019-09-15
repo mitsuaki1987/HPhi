@@ -29,8 +29,8 @@ When both site1 and site2 are in the inter process region.
 void mltply::Hubbard::GC::general_hopp_MPIdouble
 (
  long int itrans,//!<[in] Transfer ID
- //!<[inout]
- int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
+ int nstate, 
+ std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
  std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   mltply::Hubbard::GC::X_general_hopp_MPIdouble(
@@ -50,8 +50,8 @@ void mltply::Hubbard::GC::X_general_hopp_MPIdouble(
   int org_isite2,//!<[in] @f$i_2@f$ of @f$c_{i_1 \sigma_1}^\dagger c_{i_2 \sigma_2}@f$
   int org_ispin2,//!<[in] @f$\sigma_2@f$ of @f$c_{i_1 \sigma_1}^\dagger c_{i_2 \sigma_2}@f$
   std::complex<double> tmp_trans,//!<[in] Transfer @f$t@f$
-  //!< [inout]
-  int nstate, std::complex<double> **tmp_v0,//!< [out] Result v0 = H v1
+  int nstate, 
+  std::complex<double> **tmp_v0,//!< [out] Result v0 = H v1
   std::complex<double> **tmp_v1 //!< [in] v0 = H v1
 ) {
   int mask1, mask2, state1, state2, origin, bitdiff, Fsgn;
@@ -93,8 +93,8 @@ void mltply::Hubbard::C::X_CisAjt_MPIdouble(
   int org_isite2,//!<[in] @f$i_2@f$ of @f$c_{i_1 \sigma_1}^\dagger c_{i_2 \sigma_2}@f$
   int org_ispin2,//!<[in] @f$\sigma_2@f$ of @f$c_{i_1 \sigma_1}^\dagger c_{i_2 \sigma_2}@f$
   std::complex<double> tmp_trans,//!<[in] Transfer @f$t@f$
-  //!< [inout]
-  int nstate, std::complex<double> **tmp_v0,//!< [out] Result v0 = H v1
+  int nstate,
+  std::complex<double> **tmp_v0,//!< [out] Result v0 = H v1
   std::complex<double> **tmp_v1//!< [in] v0 = H v1
 ) {
   int mask1, mask2, state1, state2, origin, bitdiff, Fsgn;
@@ -144,8 +144,8 @@ nstate,one,Large::irght, Large::ilft, Large::ihfbit)
 */
 void mltply::Hubbard::GC::general_hopp_MPIsingle(
   long int itrans,//!<[in] Transfer ID
-  //!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   mltply::Hubbard::GC::X_general_hopp_MPIsingle(
@@ -231,8 +231,8 @@ shared(Check::idim_max,trans,mask1,state1check,bit1diff,Wave::v1buf,tmp_v1,tmp_v
 */
 void mltply::Hubbard::C::general_hopp_MPIdouble(
   long int itrans,//!<[in] Transfer ID
-  //!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   mltply::Hubbard::C::X_general_hopp_MPIdouble( 
@@ -251,8 +251,8 @@ void mltply::Hubbard::C::X_general_hopp_MPIdouble(
   int org_isite2,//!<[in] Site 2
   int org_ispin2,//!<[in] Spin 2
   std::complex<double> tmp_trans,//!<[in] Hopping integral
-  //!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
+  int nstate,
+  std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ) {
   int mask1, mask2, state1, state2, origin, bitdiff, Fsgn;
@@ -283,9 +283,10 @@ void mltply::Hubbard::C::X_general_hopp_MPIdouble(
 
   idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
   wrapperMPI::SendRecv_iv(origin, Check::idim_max, idim_max_buf, List::c1, List::c1buf);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate,
+    &tmp_v1[0][0], &Wave::v1buf[0][0]);
 
-#pragma omp parallel default(none) private(j,Fsgn,ioff) \
+#pragma omp parallel default(none) private(j,ioff) \
 shared(idim_max_buf,trans,Large::irght, Large::ilft, Large::ihfbit, \
 List::c2_1,List::c2_2,List::c1buf,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
   {
@@ -304,8 +305,8 @@ List::c2_1,List::c2_2,List::c1buf,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
 */
 void mltply::Hubbard::C::general_hopp_MPIsingle(
   long int itrans,//!<[in] Transfer ID
-  //!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
+  int nstate,
+  std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ){
   mltply::Hubbard::C::X_general_hopp_MPIsingle(
@@ -324,8 +325,8 @@ void mltply::Hubbard::C::X_general_hopp_MPIsingle(
   int org_isite2,//!<[in] Site 2
   int org_ispin2,//!<[in] Spin 2
   std::complex<double> tmp_trans,//!<[in] Hopping integral
-  //!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1//!<[in] v0 = H v1
 ) {
   int mask2, state2, origin, bit2diff, Fsgn;

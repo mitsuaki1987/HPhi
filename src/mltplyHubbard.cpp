@@ -149,7 +149,8 @@ Other
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int mltply::Hubbard::C::main(
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ){
   long int i;
@@ -536,7 +537,8 @@ shared(tmp_v0, tmp_v1,nstate,i_max)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void mltply::Hubbard::C::exchange(
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1//!<[in] Input producted vector
 ) {
   long int j;

@@ -894,7 +894,6 @@ int sz
   long int j;
   long int div;
   long int num_up, num_down;
-  long int irght, ilft, ihfbit;
 
   //*[s] for omp parall
   int  all_up, all_down, tmp_res, num_threads;
@@ -991,16 +990,14 @@ int sz
     case DC::Kondo:
     case DC::Spin:
       if (Def::iFlgGeneralSpin == FALSE) {
-        if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit) != 0) {
+        if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, 
+          &Large::irght, &Large::ilft, &Large::ihfbit) != 0) {
           wrapperMPI::Exit(-1);
         }
-        Large::irght = irght;
-        Large::ilft = ilft;
-        Large::ihfbit = ihfbit;
         //fprintf(MP::STDOUT, "idim=%lf irght=%ld ilft=%ld ihfbit=%ld \n",idim,irght,ilft,ihfbit);
       }
       else {
-        ihfbit = Check::sdim;
+        Large::ihfbit = Check::sdim;
         //fprintf(MP::STDOUT, "idim=%lf ihfbit=%ld \n",idim, ihfbit);
       }
       break;
@@ -1012,7 +1009,7 @@ int sz
     jb = 0;
 
     if (Def::READ == 1) {
-      if (Read_sz(irght, ilft, ihfbit, &i_max) != 0) {
+      if (Read_sz(Large::irght, Large::ilft, Large::ihfbit, &i_max) != 0) {
         wrapperMPI::Exit(-1);
       }
     }
@@ -1057,7 +1054,7 @@ int sz
 
         for (ib = 0; ib < Check::sdim; ib++) {
           list_jb[ib] = jb;
-          i = ib * ihfbit;
+          i = ib * Large::ihfbit;
           icheck_loc = 1;
           for (j = (Def::Nsite + 1) / 2; j < Def::Nsite; j++) {
             div_up = i & Def::Tpow[2 * j];
@@ -1085,9 +1082,9 @@ int sz
 
         icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim)
         for (ib = 0; ib < Check::sdim; ib++) {
-          icnt += child_omp_sz_KondoGC(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
+          icnt += child_omp_sz_KondoGC(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
         }
         break;
 
@@ -1098,7 +1095,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
           jb = 0;
           for (ib = 0; ib < Check::sdim; ib++) { // sdim = 2^(N/2)
             list_jb[ib] = jb;
-            i = ib * ihfbit;
+            i = ib * Large::ihfbit;
             //[s] counting # of up and down electrons
             num_up = 0;
             for (j = 0; j <= N2 - 2; j += 2) { // even -> up spin
@@ -1128,7 +1125,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
 
           icnt = 0;
           for (ib = 0; ib < Check::sdim; ib++) {
-            icnt += child_omp_sz(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
+            icnt += child_omp_sz(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
           }
           break;
         }
@@ -1139,7 +1136,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
           for (ib = 0; ib < Check::sdim; ib++) {
             list_jb[ib] = jb;
 
-            i = ib * ihfbit;
+            i = ib * Large::ihfbit;
             num_up = 0;
             for (j = 0; j <= N2 - 2; j += 2) {
               div = i & Def::Tpow[j];
@@ -1168,9 +1165,9 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
 
           icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, Check::sdim)
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, Check::sdim)
           for (ib = 0; ib < Check::sdim; ib++) {
-            icnt += child_omp_sz_hacker(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
+            icnt += child_omp_sz_hacker(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
           }
           break;
         }
@@ -1193,7 +1190,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, Check::sdim)
           }
           for (ib = 0; ib < Check::sdim; ib++) {
             list_jb[ib] = jb;
-            i = ib * ihfbit;
+            i = ib * Large::ihfbit;
             num_up = 0;
             for (j = 0; j <= N2 - 2; j += 2) {
               div = i & Def::Tpow[j];
@@ -1222,9 +1219,9 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, Check::sdim)
 
           icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim) 
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim) 
           for (ib = 0; ib < Check::sdim; ib++) {
-            icnt += child_omp_sz(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
+            icnt += child_omp_sz(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
           }
           break;
         }
@@ -1240,7 +1237,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
           }
           for (ib = 0; ib < Check::sdim; ib++) {
             list_jb[ib] = jb;
-            i = ib * ihfbit;
+            i = ib * Large::ihfbit;
             num_up = 0;
             for (j = 0; j <= N2 - 2; j += 2) {
               div = i & Def::Tpow[j];
@@ -1269,9 +1266,9 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
 
           icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim) 
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim) 
           for (ib = 0; ib < Check::sdim; ib++) {
-            icnt += child_omp_sz_hacker(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
+            icnt += child_omp_sz_hacker(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
           }
 
           break;
@@ -1297,7 +1294,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
 
         for (ib = 0; ib < Check::sdim; ib++) { //sdim = 2^(N/2)
           list_jb[ib] = jb;
-          i = ib * ihfbit; // ihfbit=pow(2,((Nsite+1)/2))
+          i = ib * Large::ihfbit; // Large::ihfbit=pow(2,((Nsite+1)/2))
           num_up = 0;
           num_down = 0;
           icheck_loc = 1;
@@ -1366,17 +1363,17 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
         if (hacker == 0) {
           icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim)
           for (ib = 0; ib < Check::sdim; ib++) {
-            icnt += child_omp_sz_Kondo(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
+            icnt += child_omp_sz_Kondo(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
           }
         }
         else if (hacker == 1) {
           icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim)
           for (ib = 0; ib < Check::sdim; ib++) {
-            icnt += child_omp_sz_Kondo_hacker(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
+            icnt += child_omp_sz_Kondo_hacker(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
           }
         }
         break;
@@ -1385,7 +1382,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
         // this part can not be parallelized
         if (Def::iFlgGeneralSpin == FALSE) {
           hacker = Def::read_hacker;
-          //printf(" rank=%d:Ne=%ld ihfbit=%ld sdim=%ld\n", MP::myrank,Def::Ne,ihfbit,Check::sdim);
+          //printf(" rank=%d:Ne=%ld Large::ihfbit=%ld sdim=%ld\n", MP::myrank,Def::Ne,Large::ihfbit,Check::sdim);
           // using hacker's delight only + no open mp 
           if (hacker == -1) {
             icnt = 1;
@@ -1407,9 +1404,9 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
             while (tmp_i < max_tmp_i) {
               list_1_[icnt] = tmp_i;
 
-              ia = tmp_i & irght;
-              ib = tmp_i & ilft;
-              ib = ib / ihfbit;
+              ia = tmp_i & Large::irght;
+              ib = tmp_i & Large::ilft;
+              ib = ib / Large::ihfbit;
               if (ib == ibpatn) {
                 ja = ja + 1;
               }
@@ -1432,7 +1429,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
             jb = 0;
             for (ib = 0; ib < Check::sdim; ib++) {
               list_jb[ib] = jb;
-              i = ib * ihfbit;
+              i = ib * Large::ihfbit;
               num_up = 0;
               for (j = 0; j < N; j++) {
                 div_up = i & Def::Tpow[j];
@@ -1449,9 +1446,9 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N2, Check::sdim)
 
             icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb, Check::sdim)
+shared(Large::ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb, Check::sdim)
             for (ib = 0; ib < Check::sdim; ib++) {
-              icnt += child_omp_sz_spin_hacker(ib, ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb);
+              icnt += child_omp_sz_spin_hacker(ib, Large::ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb);
             }
             //printf(" rank=%d ib=%ld:Ne=%d icnt=%ld :idim_max=%ld N=%d\n", MP::myrank,ib,Def::Ne,icnt,Check::idim_max,N);
             // old version
@@ -1460,7 +1457,7 @@ shared(ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb, Check::sdim)
             jb = 0;
             for (ib = 0; ib < Check::sdim; ib++) {
               list_jb[ib] = jb;
-              i = ib * ihfbit;
+              i = ib * Large::ihfbit;
               num_up = 0;
               for (j = 0; j < N; j++) {
                 div_up = i & Def::Tpow[j];
@@ -1477,9 +1474,9 @@ shared(ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb, Check::sdim)
 
             icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N, Check::sdim)
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N, Check::sdim)
             for (ib = 0; ib < Check::sdim; ib++) {
-              icnt += child_omp_sz_spin(ib, ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb);
+              icnt += child_omp_sz_spin(ib, Large::ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb);
             }
           }
           else {
@@ -1494,7 +1491,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N, Check::sdim)
           int i2Sz = 0;
           for (j = 0; j < Def::Nsite; j++) {
             itmpSize *= Def::SiteToBit[j];
-            if (itmpSize == ihfbit) {
+            if (itmpSize == Large::ihfbit) {
               break;
             }
             irghtsite++;
@@ -1508,7 +1505,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N, Check::sdim)
             HilbertNumToSz[ib] = 0;
           }
 
-          for (ib = 0; ib < ihfbit; ib++) {
+          for (ib = 0; ib < Large::ihfbit; ib++) {
             i2Sz = 0;
             for (j = 0; j < irghtsite; j++) {
               i2Sz += GetLocal2Sz(j, ib, Def::SiteToBit, Def::Tpow);
@@ -1517,12 +1514,12 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N, Check::sdim)
             HilbertNumToSz[i2Sz + Max2Sz]++;
           }
           jb = 0;
-          long int ilftdim = (Def::Tpow[Def::Nsite - 1] * Def::SiteToBit[Def::Nsite - 1]) / ihfbit;
+          long int ilftdim = (Def::Tpow[Def::Nsite - 1] * Def::SiteToBit[Def::Nsite - 1]) / Large::ihfbit;
           for (ib = 0; ib < ilftdim; ib++) {
             list_jb[ib] = jb;
             i2Sz = 0;
             for (j = irghtsite; j < N; j++) {
-              i2Sz += GetLocal2Sz(j, ib*ihfbit, Def::SiteToBit, Def::Tpow);
+              i2Sz += GetLocal2Sz(j, ib*Large::ihfbit, Def::SiteToBit, Def::Tpow);
             }
             list_2_2_Sz[ib] = i2Sz;
             if ((Def::Total2Sz - i2Sz + (int)Max2Sz) >= 0 && (Def::Total2Sz - i2Sz) <= (int)Max2Sz) {
@@ -1535,9 +1532,9 @@ shared(list_1_, list_2_1_, list_2_2_, list_jb, ihfbit, N, Check::sdim)
 
           icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb, ilftdim, ihfbit)
+shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb, ilftdim, Large::ihfbit)
           for (ib = 0; ib < ilftdim; ib++) {
-            icnt += child_omp_sz_GeneralSpin(ib, ihfbit, list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz, list_jb);
+            icnt += child_omp_sz_GeneralSpin(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz, list_jb);
           }
           free_li_1d_allocate(HilbertNumToSz);
         }

@@ -464,9 +464,9 @@ void CheckMPI_Summary()
       fprintf(MP::STDOUT, "\n");
     }/*for (iproc = 0; iproc < MP::nproc; iproc++)*/
 
-    Check::idim_maxMPI = wrapperMPI::Sum_li(Check::idim_max);
-    fprintf(MP::STDOUT, "\n   Total dimension : %ld\n\n", Check::idim_maxMPI);
-    if (Check::idim_maxMPI < 1) {
+    idimMPI = wrapperMPI::Sum_li(Check::idim_max);
+    fprintf(MP::STDOUT, "\n   Total dimension : %ld\n\n", idimMPI);
+    if (idimMPI < 1) {
       fprintf(MP::STDOUT, "ERROR! Total dimension < 1\n");
       wrapperMPI::Exit(-1);
     }

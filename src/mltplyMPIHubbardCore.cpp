@@ -1038,14 +1038,13 @@ void mltply::Hubbard::GC::X_Cis_MPI(
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 += H v1*/,
   std::complex<double> **tmp_v1,//!<[in] v0 += H v1*/,
-  long int idim_max,//!<[in] Similar to CheckList::idim_max
-  long int *Tpow//!<[in] Similar to DefineList::Tpow
+  long int idim_max//!<[in] Similar to CheckList::idim_max
 ) {
   int mask2, state2, origin, bit2diff, Fsgn;
   std::complex<double> trans;
 
   // org_isite >= Nsite
-  mask2 = (int)Tpow[2 * org_isite + org_ispin];
+  mask2 = (int)Def::Tpow[2 * org_isite + org_ispin];
 
   origin = MP::myrank ^ mask2; // XOR
   state2 = origin & mask2;
@@ -1084,14 +1083,13 @@ void mltply::Hubbard::GC::X_Ajt_MPI(
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 += H v1*/,
   std::complex<double> **tmp_v1,//!<[in] v0 += H v1*/,
-  long int idim_max,//!<[in] Similar to CheckList::idim_max
-  long int *Tpow//!<[in] Similar to DefineList::Tpow
+  long int idim_max//!<[in] Similar to CheckList::idim_max
 ) {
   int mask2, state2, origin, bit2diff, Fsgn;
   std::complex<double> trans;
 
   // org_isite >= Nsite
-  mask2 = (int)Tpow[2 * org_isite + org_ispin];
+  mask2 = (int)Def::Tpow[2 * org_isite + org_ispin];
 
   origin = MP::myrank ^ mask2; // XOR
   state2 = origin & mask2;
@@ -1123,11 +1121,7 @@ void mltply::Hubbard::C::X_Cis_MPI(
   int nstate, 
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[inout] Initial wavefunction
-  long int idim_max,//!<[in] Similar to CheckList::idim_max
-  long int *Tpow,//!<[in] Similar to DefineList::Tpow
-  long int _irght,//!<[in] Similer to LargeList::irght
-  long int _ilft,//!<[in] Similer to LargeList::ilft
-  long int _ihfbit//!<[in] Similer to LargeList::ihfbit
+  long int idim_max//!<[in] Similar to CheckList::idim_max
 ) {
   int mask2, state2, origin, bit2diff, Fsgn;
   long int idim_max_buf, j, ioff;
@@ -1135,7 +1129,7 @@ void mltply::Hubbard::C::X_Cis_MPI(
   int one = 1;
 
   // org_isite >= Nsite
-  mask2 = (int)Tpow[2 * org_isite + org_ispin];
+  mask2 = (int)Def::Tpow[2 * org_isite + org_ispin];
 
   origin = MP::myrank ^ mask2; // XOR
   state2 = origin & mask2;
@@ -1160,11 +1154,11 @@ void mltply::Hubbard::C::X_Cis_MPI(
   else return;
 
 #pragma omp parallel for default(none) private(j) \
-shared(idim_max_buf, trans, ioff, _irght, _ilft, _ihfbit, List::c2_1, List::c2_2, \
+shared(idim_max_buf, trans, ioff, Large::irght, Large::ilft, Large::ihfbit, List::c2_1, List::c2_2, \
 Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::c1buf_org)
   for (j = 0; j < idim_max_buf; j++) {//idim_max_buf -> original
     GetOffComp(List::c2_1, List::c2_2, List::c1buf_org[j],
-      _irght, _ilft, _ihfbit, &ioff);
+      Large::irght, Large::ilft, Large::ihfbit, &ioff);
     zaxpy_(&nstate, &trans, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
   }/*for (j = 0; j < idim_max_buf; j++)*/
 }/*std::complex<double> mltply::Hubbard::GC::X_Cis_MPI*/
@@ -1178,11 +1172,7 @@ void mltply::Hubbard::C::X_Ajt_MPI(
   std::complex<double> tmp_trans,//!<[in] Coupling constant
   int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[inout] Initial wavefunction
-  long int idim_max,//!<[in] Similar to CheckList::idim_max
-  long int *Tpow,//!<[in] Similar to DefineList::Tpow
-  long int _irght,//!<[in] Similer to LargeList::irght
-  long int _ilft,//!<[in] Similer to LargeList::ilft
-  long int _ihfbit//!<[in] Similer to LargeList::ihfbit
+  long int idim_max//!<[in] Similar to CheckList::idim_max
 ){
   int mask2, state2, origin, bit2diff, Fsgn;
   long int idim_max_buf, j, ioff;
@@ -1190,7 +1180,7 @@ void mltply::Hubbard::C::X_Ajt_MPI(
   int one = 1;
 
   // org_isite >= Nsite
-  mask2 = (int)Tpow[2 * org_isite + org_ispin];
+  mask2 = (int)Def::Tpow[2 * org_isite + org_ispin];
 
   origin = MP::myrank ^ mask2; // XOR
   state2 = origin & mask2;
@@ -1214,11 +1204,11 @@ void mltply::Hubbard::C::X_Ajt_MPI(
   else return;
 
 #pragma omp parallel for default(none) private(j, ioff) \
-shared(idim_max_buf, trans, _irght, _ilft, _ihfbit, List::c2_1, List::c2_2, \
+shared(idim_max_buf, trans, Large::irght, Large::ilft, Large::ihfbit, List::c2_1, List::c2_2, \
 Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::c1buf_org)
   for (j = 0; j < idim_max_buf; j++) {
     GetOffComp(List::c2_1, List::c2_2, List::c1buf_org[j],
-      _irght, _ilft, _ihfbit, &ioff);
+      Large::irght, Large::ilft, Large::ihfbit, &ioff);
     zaxpy_(&nstate, &trans, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
   }
 }/*std::complex<double> mltply::Hubbard::C::X_Ajt_MPI*/

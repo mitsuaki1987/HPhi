@@ -290,11 +290,8 @@ namespace Def {
 */
 namespace Check {
   long int idim_max = 0;/**<@brief The dimension of the Hilbert space of this process.*/
-  long int idim_maxMPI = 0;/**<@brief The total dimension across process.*/
   long int idim_maxOrg = 0;/**<@brief The local Hilbert-space dimention of original state for the spectrum.*/
-  long int idim_maxMPIOrg = 0;/**<@brief The global Hilbert-space dimention of original state for the spectrum.*/
   long int sdim = 0;/**<@brief Dimension for Ogata-Lin ???*/
-  double max_mem;/**<@brief Estimated memory size.*/
 };/*namespace Check*/
 /**
 @brief For Matrix-Vector product

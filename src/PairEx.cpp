@@ -55,24 +55,8 @@ int GetPairExcitedState
 )
 {
   int iret;
-  long int irght, ilft, ihfbit;
-
-  //  i_max = Check::idim_max;
-  if (Def::iFlgGeneralSpin == FALSE) {
-    if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit) != 0) {
-      return -1;
-    }
-  }
-  else {
-    if (GetSplitBitForGeneralSpin(Def::Nsite, &ihfbit, Def::SiteToBit) != 0) {
-      return -1;
-    }
-  }
 
   Large::i_max = Check::idim_maxOrg;
-  Large::irght = irght;
-  Large::ilft = ilft;
-  Large::ihfbit = ihfbit;
   Large::mode = M_CALCSPEC;
 
   switch (Def::iCalcModel) {

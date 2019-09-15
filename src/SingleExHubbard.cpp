@@ -61,18 +61,14 @@ int GetExcitedState::Single::Hubbard::C(
     is1_spin = Def::Tpow[2 * org_isite + ispin];
     if (itype == 1) {
       if (org_isite >= Def::Nsite) {
-        mltply::Hubbard::C::X_Cis_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, idim_max, 
-          Def::Tpow, 
-          Large::irght, Large::ilft, Large::ihfbit);
+        mltply::Hubbard::C::X_Cis_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, idim_max);
       }
       else {
 #pragma omp parallel for default(none) private(j,  isgn,tmp_off,dmv) \
 shared(Large::irght, Large::ilft, Large::ihfbit,nstate,tmp_v0, tmp_v1, List::c1_org,one, \
 idim_max, tmpphi, org_isite, ispin, List::c2_1, List::c2_2, is1_spin)
         for (j = 0; j < idim_max; j++) {//idim_max -> original dimension
-          isgn = mltply::Hubbard::C::X_Cis(j, is1_spin, &tmp_off, 
-            List::c1_org, List::c2_1, List::c2_2,
-            Large::irght, Large::ilft, Large::ihfbit);
+          isgn = mltply::Hubbard::C::X_Cis(j, is1_spin, &tmp_off, List::c1_org, List::c2_1, List::c2_2);
           dmv = (std::complex<double>)isgn * tmpphi;
           zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[tmp_off], &one);
         }
@@ -81,15 +77,14 @@ idim_max, tmpphi, org_isite, ispin, List::c2_1, List::c2_2, is1_spin)
     else if (itype == 0) {
       if (org_isite >= Def::Nsite) {
         mltply::Hubbard::C::X_Ajt_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, 
-          idim_max, Def::Tpow, Large::irght, Large::ilft, Large::ihfbit);
+          idim_max);
       }
       else {
 #pragma omp parallel for default(none) private(j, isgn, tmp_off,dmv) \
 shared(tmp_v0,tmp_v1,List::c1_org,List::c1,one,nstate,idim_max,tmpphi,org_isite,ispin, \
 List::c2_1,List::c2_2,is1_spin,MP::myrank, Large::irght, Large::ilft, Large::ihfbit)
         for (j = 0; j < idim_max; j++) {//idim_max -> original dimension
-          isgn = mltply::Hubbard::C::X_Ajt(j, is1_spin, &tmp_off, List::c1_org, List::c2_1, List::c2_2,
-            Large::irght, Large::ilft, Large::ihfbit);
+          isgn = mltply::Hubbard::C::X_Ajt(j, is1_spin, &tmp_off, List::c1_org, List::c2_1, List::c2_2);
           dmv = (std::complex<double>)isgn * tmpphi;
           zaxpy_(&nstate, &dmv, tmp_v1[j], &one, tmp_v0[tmp_off], &one);
         }
@@ -133,8 +128,7 @@ int GetExcitedState::Single::Hubbard::GC(
     tmpphi = Def::ParaSingleExcitationOperator[iEx][i];
     if (itype == 1) {
       if (org_isite >= Def::Nsite) {
-        mltply::Hubbard::GC::X_Cis_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, 
-          idim_max, Def::Tpow);
+        mltply::Hubbard::GC::X_Cis_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, idim_max);
       }
       else {
 #pragma omp parallel for default(none) private(j, is1_spin, tmp_off) \
@@ -147,8 +141,7 @@ shared(tmp_v0,tmp_v1,nstate,idim_max, tmpphi, org_isite, ispin,Def::Tpow)
     }
     else if (itype == 0) {
       if (org_isite >= Def::Nsite) {
-        mltply::Hubbard::GC::X_Ajt_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, 
-          idim_max, Def::Tpow);
+        mltply::Hubbard::GC::X_Ajt_MPI(org_isite, ispin, tmpphi, nstate, tmp_v0, tmp_v1, idim_max);
       }
       else {
 #pragma omp parallel for default(none) private(j, is1_spin, tmp_off) \

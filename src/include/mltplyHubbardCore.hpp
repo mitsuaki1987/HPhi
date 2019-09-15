@@ -52,11 +52,9 @@ namespace mltply {
         long int is1_spin, long int is2_spin,
         long int sum_spin, long int diff_spin, long int* tmp_off);
       int X_Cis(long int j, long int is1_spin, long int* tmp_off,
-        long int* list_1_org, long int* list_2_1_target, long int* list_2_2_target,
-        long int _irght, long int _ilft, long int _ihfbit);
+        long int* list_1_org, long int* list_2_1_target, long int* list_2_2_target);
       int X_Ajt(long int j, long int is1_spin, long int* tmp_off,
-        long int* list_1_org, long int* list_2_1_target, long int* list_2_2_target,
-        long int _irght, long int _ilft, long int _ihfbit);
+        long int* list_1_org, long int* list_2_1_target, long int* list_2_2_target);
     }
     namespace GC {
       void exchange_element(long int j, int nstate, std::complex<double>** tmp_v0,

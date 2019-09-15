@@ -132,7 +132,6 @@ int GetExcitedState::Pair::Hubbard::C(
   int iEx
 ) {
   long int i, j;
-  long int irght, ilft, ihfbit;
   long int org_isite1, org_isite2, org_sigma1, org_sigma2;
   long int tmp_off = 0;
 
@@ -145,13 +144,7 @@ int GetExcitedState::Pair::Hubbard::C(
 
   //  i_max = Check::idim_max;
   i_max = Check::idim_maxOrg;
-  if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit) != 0) {
-    return -1;
-  }
   Large::i_max = i_max;
-  Large::irght = irght;
-  Large::ilft = ilft;
-  Large::ihfbit = ihfbit;
   Large::mode = M_CALCSPEC;
 
   for (i = 0; i < Def::NPairExcitationOperator[iEx]; i++) {

@@ -238,7 +238,8 @@ void mltply::Hubbard::GC::CisAis(
 */
 void mltply::Hubbard::GC::AisCis(
   long int j,//!<[in] Index of element of wavefunction
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Result vector
   std::complex<double> **tmp_v1,//!<[in] Input producted vector
   long int is1_spin,//!<[in] Mask for occupation of @f$(i \sigma)@f$
   std::complex<double> tmp_trans//!<[in] Transfer integral
@@ -315,7 +316,8 @@ void mltply::Hubbard::C::CisAjt(
 */
 void mltply::Hubbard::GC::CisAjt(
   long int j,//!<[in] Index of wavefunction
-  int nstate, std::complex<double> **tmp_v0,//!<[in] @f$v_0 = H v_1@f$
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[in] @f$v_0 = H v_1@f$
   std::complex<double> **tmp_v1,//!<[in]Vector to be producted
   long int is1_spin,//!<[in] Mask for occupation of (is)
   long int is2_spin,//!<[in] Mask for occupation of (jt)
@@ -426,9 +428,9 @@ int mltply::Hubbard::GC::X_CisAjt(
 */
 void mltply::Hubbard::C::exchange_element(
   long int j,//!<[in] Index of initial wavefunction
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] @f$v_0 = H v_1@f$
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] @f$v_0 = H v_1@f$
   std::complex<double> **tmp_v1,//!<[in] Vector to be producted
-  //!<[inout]
   long int *tmp_off//!<[off] Index of wavefunction of final state
 ) {
   long int off;
@@ -478,7 +480,8 @@ void mltply::Hubbard::C::exchange_element(
 */
 void mltply::Hubbard::C::pairhopp_element(
   long int j,//!<[in] Index of initial wavefunction
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
@@ -569,9 +572,9 @@ void mltply::Hubbard::GC::exchange_element(
 */
 void mltply::Hubbard::GC::pairhopp_element(
   long int j,//!<[in] Index of initial wavefunction
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  //!<[inout]
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
   long int ibit1_up, ibit2_up, ibit1_down, ibit2_down;
@@ -708,9 +711,9 @@ void mltply::Hubbard::C::CisAjtCkuAlv_element(
   long int Bsum,//!<[in] Bit mask for hopping
   long int Bdiff,//!<[in] Bit mask for Fermion sign
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
+  int nstate,
+  std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
-  //!<[inout]
   long int *tmp_off_2//!<[out] Index of final wavefunction
 ) {
   int tmp_sgn;
@@ -799,7 +802,8 @@ void mltply::Hubbard::GC::CisAjtCkuAku_element(
   long int Asum,//!<[in] Bit mask for hopping
   long int Adiff,//!<[in] Bit mask for Fermion sign
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   long int *tmp_off//!<[out] Index of final wavefunction
 ) {
@@ -861,7 +865,8 @@ term of grandcanonical Hubbard system
 */
 void mltply::Hubbard::GC::Cis(
   long int j,//!<[in] Index of initial wavefunction
-  int nstate, std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
+  int nstate,
+  std::complex<double> **tmp_v0,//!<[in] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[in] Wavefunction to be multiplied
   long int is1_spin,//!<[in] Bit mask 
   std::complex<double> tmp_V,//!<[in] Coupling constant
@@ -960,10 +965,7 @@ int mltply::Hubbard::C::X_Cis(
   long int *tmp_off,//!<[out] Index of final wavefunction
   long int *list_1_org,//!<[in] Similar to ::List::c1
   long int *list_2_1_target,//!<[in] Similar to ::List::c2_1
-  long int *list_2_2_target,//!<[in] Similar to ::List::c2_2
-  long int _irght,//!<[in] Similar to LargeList::irght
-  long int _ilft,//!<[in] Similar to LargeList::ilft
-  long int _ihfbit//!<[in] Similar to LargeList::ihfbit
+  long int *list_2_2_target//!<[in] Similar to ::List::c2_2
 ) {
   long int list_1_j, list_1_off;
   long int ibit_tmp_1;
@@ -988,7 +990,8 @@ int mltply::Hubbard::C::X_Cis(
 #endif
     list_1_off = list_1_j | is1_spin; // OR
 
-    if(GetOffComp(list_2_1_target, list_2_2_target, list_1_off, _irght, _ilft, _ihfbit, tmp_off)!=TRUE){
+    if(GetOffComp(list_2_1_target, list_2_2_target, list_1_off, 
+      Large::irght, Large::ilft, Large::ihfbit, tmp_off)!=TRUE){
       *tmp_off=0;
       return 0;
     }
@@ -1014,10 +1017,7 @@ int mltply::Hubbard::C::X_Ajt(
   long int *tmp_off,//!<[out] Index of final wavefunction
   long int *list_1_org,//!<[in] Similar to ::List::c1
   long int *list_2_1_target,//!<[in] Similar to ::List::c2_1
-  long int *list_2_2_target,//!<[in] Similar to ::List::c2_2
-  long int _irght,//!<[in] Similar to LargeList::irght
-  long int _ilft,//!<[in] Similar to LargeList::ilft
-  long int _ihfbit//!<[in] Similar to LargeList::ihfbit
+  long int *list_2_2_target//!<[in] Similar to ::List::c2_2
 ) {
   long int list_1_j, list_1_off;
   long int ibit_tmp_1;
@@ -1040,7 +1040,8 @@ int mltply::Hubbard::C::X_Ajt(
     SgnBit(MP::myrank, &ipsgn); // Fermion sign
 #endif
     list_1_off = list_1_j ^ is1_spin;
-    if(GetOffComp(list_2_1_target, list_2_2_target, list_1_off, _irght, _ilft, _ihfbit, tmp_off)!=TRUE){
+    if(GetOffComp(list_2_1_target, list_2_2_target, list_1_off, 
+      Large::irght, Large::ilft, Large::ihfbit, tmp_off)!=TRUE){
       *tmp_off=0;
       return 0;
     }

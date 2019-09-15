@@ -143,7 +143,6 @@ int MakeExcitedList(
   }
 
   Check::idim_maxOrg = Check::idim_max;
-  Check::idim_maxMPIOrg = Check::idim_maxMPI;
 
   if (Def::NNSingleExcitationOperator > 0) {
     switch (Def::iCalcModel) {

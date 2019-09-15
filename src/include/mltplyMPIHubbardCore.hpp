@@ -46,13 +46,11 @@ namespace mltply {
       void X_Cis_MPI(int org_isite, int org_ispin,
         std::complex<double> tmp_trans, int nstate,
         std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
-        long int idim_max, long int* Tpow,
-        long int _irght, long int _ilft, long int _ihfbit);
+        long int idim_max);
       void X_Ajt_MPI(int org_isite, int org_ispin,
         std::complex<double> tmp_trans, int nstate,
         std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
-        long int idim_max, long int* Tpow,
-        long int _irght, long int _ilft, long int _ihfbit);
+        long int idim_max);
     }
     namespace GC {
       void X_CisAisCjtAjt_MPI(int org_isite1, int org_ispin1,
@@ -83,11 +81,11 @@ namespace mltply {
       void X_Cis_MPI(int org_isite, int org_ispin,
         std::complex<double> tmp_trans, int nstate,
         std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
-        long int idim_max, long int* Tpow);
+        long int idim_max);
       void X_Ajt_MPI(int org_isite, int org_ispin,
         std::complex<double> tmp_trans, int nstate,
         std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
-        long int idim_max, long int* Tpow);
+        long int idim_max);
     }
   }
 }

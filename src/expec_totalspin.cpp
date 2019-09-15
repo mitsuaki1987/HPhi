@@ -50,7 +50,6 @@ void totalspin_Hubbard(
   std::complex<double> **vec
 ) {
   long int j;
-  long int irght, ilft, ihfbit;
   long int isite1, isite2;
   long int is1_up, is2_up, is1_down, is2_down;
   long int iexchg, off;
@@ -61,7 +60,6 @@ void totalspin_Hubbard(
   long i_max;
   i_max = Check::idim_max;
 
-  GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit);
   for (istate = 0; istate < nstate; istate++) {
     Phys::s2[istate] = 0.0;
     Phys::Sz[istate] = 0.0;
@@ -99,14 +97,14 @@ void totalspin_Hubbard(
           if (ibit1_up != 0 && ibit1_down == 0 && ibit2_up == 0 && ibit2_down != 0) {
             iexchg = List::c1[j] - (is1_up + is2_down);
             iexchg += (is2_up + is1_down);
-            GetOffComp(List::c2_1, List::c2_2, iexchg, irght, ilft, ihfbit, &off);
+            GetOffComp(List::c2_1, List::c2_2, iexchg, Large::irght, Large::ilft, Large::ihfbit, &off);
             for (istate = 0; istate < nstate; istate++)
               Phys::s2[istate] += real(conj(vec[j][istate]) * vec[off][istate]) / 2.0;
           }
           else if (ibit1_up == 0 && ibit1_down != 0 && ibit2_up != 0 && ibit2_down == 0) {
             iexchg = List::c1[j] - (is1_down + is2_up);
             iexchg += (is2_down + is1_up);
-            GetOffComp(List::c2_1, List::c2_2, iexchg, irght, ilft, ihfbit, &off);
+            GetOffComp(List::c2_1, List::c2_2, iexchg, Large::irght, Large::ilft, Large::ihfbit, &off);
             for (istate = 0; istate < nstate; istate++)
               Phys::s2[istate] += real(conj(vec[j][istate]) * vec[off][istate]) / 2.0;
           }
@@ -212,7 +210,6 @@ void totalspin_Spin(
   std::complex<double> **vec
 ) {
   long int j;
-  long int irght, ilft, ihfbit;
   long int isite1, isite2;
   long int tmp_isite1, tmp_isite2;
 
@@ -233,7 +230,6 @@ void totalspin_Spin(
     Phys::Sz[istate] = 0.0;
   }
   if (Def::iFlgGeneralSpin == FALSE) {
-    GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit);
     for (isite1 = 0; isite1 < Def::NsiteMPI; isite1++) {
       for (isite2 = 0; isite2 < Def::NsiteMPI; isite2++) {
 
@@ -321,7 +317,7 @@ void totalspin_Spin(
               ibit_tmp = (num1_up) ^ (num2_up);
               if (ibit_tmp != 0) {
                 iexchg = List::c1[j] ^ (is_up);
-                GetOffComp(List::c2_1, List::c2_2, iexchg, irght, ilft, ihfbit, &off);
+                GetOffComp(List::c2_1, List::c2_2, iexchg, Large::irght, Large::ilft, Large::ihfbit, &off);
                 for (istate = 0; istate < nstate; istate++)
                   Phys::s2[istate] += real(conj(vec[j][istate]) * vec[off][istate]) / 2.0;
               }

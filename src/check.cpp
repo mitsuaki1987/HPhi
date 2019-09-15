@@ -66,6 +66,7 @@ int check(){
   long int isite=0;
   int tmp_sz=0;
   int iMinup=0;
+  double max_mem;
   if (Def::iCalcModel == DC::Spin || Def::iCalcModel == DC::SpinGC)
   {
     Def::Ne=Def::Nup;
@@ -205,11 +206,11 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
         case DC::Kondo:
         case DC::KondoGC:
         case DC::Spin:
-          Check::max_mem = (7 * Def::k_exct + 1.5) * Check::idim_max * 16.0 / (pow(10, 9));
+          max_mem = (7 * Def::k_exct + 1.5) * Check::idim_max * 16.0 / (pow(10, 9));
           break;
         case DC::HubbardGC:
         case DC::SpinGC:
-          Check::max_mem = (7 * Def::k_exct + 1.0) * Check::idim_max * 16.0 / (pow(10, 9));
+          max_mem = (7 * Def::k_exct + 1.0) * Check::idim_max * 16.0 / (pow(10, 9));
           break;
       }
       break;
@@ -221,26 +222,26 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
         case DC::KondoGC:
         case DC::Spin:
           if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
-            Check::max_mem = Step::NumAve * 3 * Check::idim_max * 16.0 / (pow(10, 9));
+            max_mem = Step::NumAve * 3 * Check::idim_max * 16.0 / (pow(10, 9));
           } else {
-            Check::max_mem = 4.5 * Check::idim_max * 16.0 / (pow(10, 9));
+            max_mem = 4.5 * Check::idim_max * 16.0 / (pow(10, 9));
           }
           break;
         case DC::HubbardGC:
         case DC::SpinGC:
           if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
-            Check::max_mem = Step::NumAve * 3 * Check::idim_max * 16.0 / (pow(10, 9));
+            max_mem = Step::NumAve * 3 * Check::idim_max * 16.0 / (pow(10, 9));
           } else {
-            Check::max_mem = 3.5 * Check::idim_max * 16.0 / (pow(10, 9));
+            max_mem = 3.5 * Check::idim_max * 16.0 / (pow(10, 9));
           }
           break;
       }
       break;
     case DC::FullDiag:
-      Check::max_mem = Check::idim_max * 8.0 * Check::idim_max * 8.0 / (pow(10, 9));
+      max_mem = Check::idim_max * 8.0 * Check::idim_max * 8.0 / (pow(10, 9));
       break;
     case DC::TimeEvolution:
-      Check::max_mem = (4 + 2 + 1) * Check::idim_max * 16.0 / (pow(10, 9));
+      max_mem = (4 + 2 + 1) * Check::idim_max * 16.0 / (pow(10, 9));
       break;
     default:
       return FALSE;
@@ -248,10 +249,10 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
   }
 
   //fprintf(MP::STDOUT, "  MAX DIMENSION idim_max=%ld \n",Check::idim_max);
-  //fprintf(MP::STDOUT, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",Check::max_mem);
+  //fprintf(MP::STDOUT, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",max_mem);
   long int li_dim_max=wrapperMPI::Max_li(Check::idim_max);
   fprintf(MP::STDOUT, "  MAX DIMENSION idim_max=%ld \n",li_dim_max);
-  double dmax_mem=wrapperMPI::Max_d(Check::max_mem);
+  double dmax_mem=wrapperMPI::Max_d(max_mem);
   fprintf(MP::STDOUT, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",dmax_mem);
   if(childfopenMPI("CHECK_Memory.dat","w", &fp)!=0){
     free_li_2d_allocate(comb);
@@ -263,7 +264,7 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
   
   /*
   fprintf(fp,"  MAX DIMENSION idim_max=%ld \n",Check::idim_max);
-  fprintf(fp,"  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",Check::max_mem);
+  fprintf(fp,"  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",max_mem);
   */
   fclose(fp);
 

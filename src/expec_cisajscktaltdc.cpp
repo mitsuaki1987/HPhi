@@ -883,17 +883,13 @@ int expec::cisajscktalt::main(
 ) {
   FILE *fp;
   char sdt[D_FileNameMax];
-  long int irght, ilft, ihfbit, icaca;
+  long int icaca;
   std::complex<double> **prod;
   //For TPQ
   int step = 0, rand_i = 0, istate;
 
   if (Def::NCisAjtCkuAlvDC < 1) return 0;
   Large::mode = M_CORR;
-
-  if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, &irght, &ilft, &ihfbit) != 0) {
-    return -1;
-  }
 
   //Make File Name for output
   prod = cd_2d_allocate(Def::NCisAjtCkuAlvDC, nstate);
