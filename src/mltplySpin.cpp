@@ -172,14 +172,19 @@ General on-site term
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int mltply::Spin::C::main(
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
-  std::complex<double> **tmp_v1//!<[in] Input producted vector
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Result vector
+  std::complex<double> **tmp_v1,//!<[in] Input producted vector
+  long int i_max, 
+  long int *list_1, 
+  long int *list_2_1, 
+  long int *list_2_2
 ) {
   int iret=0;
   if (Def::iFlgGeneralSpin == FALSE)
-    iret = mltply::Spin::C::Half::main(nstate, tmp_v0, tmp_v1);
+    iret = mltply::Spin::C::Half::main(nstate, tmp_v0, tmp_v1, i_max, list_1, list_2_1, list_2_2);
   else
-    iret = mltply::Spin::C::General::main(nstate, tmp_v0, tmp_v1);
+    iret = mltply::Spin::C::General::main(nstate, tmp_v0, tmp_v1, i_max, list_1, list_2_1, list_2_2);
   return iret;
 }/*int mltplySpin*/
 /**
@@ -188,8 +193,13 @@ int mltply::Spin::C::main(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int mltply::Spin::C::Half::main(
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
-  std::complex<double> **tmp_v1//!<[in] Input producted vector
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Result vector
+  std::complex<double> **tmp_v1,//!<[in] Input producted vector
+  long int i_max,
+  long int* list_1,
+  long int* list_2_1,
+  long int* list_2_2
 ) {
   long int i;
   long int isite1, isite2, sigma1, sigma2;
@@ -211,17 +221,20 @@ int mltply::Spin::C::Half::main(
     if (Def::InterAll_OffDiagonal[i][0] >= Def::Nsite &&
         Def::InterAll_OffDiagonal[i][4] >= Def::Nsite) {
       StartTimer(411);
-      mltply::Spin::C::Half::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::C::Half::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1, 
+                                                   i_max, list_1, list_2_1,list_2_2);
       StopTimer(411);
     }
     else if (Def::InterAll_OffDiagonal[i][4] >= Def::Nsite) {
       StartTimer(412);
-      mltply::Spin::C::Half::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::C::Half::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1,
+                                                   i_max, list_1, list_2_1, list_2_2);
       StopTimer(412);
     }
     else if (Def::InterAll_OffDiagonal[i][0] >= Def::Nsite) {
       StartTimer(413);
-      mltply::Spin::C::Half::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::C::Half::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1,
+                                                   i_max, list_1, list_2_1, list_2_2);
       StopTimer(413);
     }
     else {
@@ -236,7 +249,7 @@ int mltply::Spin::C::Half::main(
         sigma4 = Def::InterAll_OffDiagonal[idx][7];
         tmp_V = Def::ParaInterAll_OffDiagonal[idx];
         mltply::Spin::general_int_GetInfo(isite1, isite2, sigma1, sigma2, sigma3, sigma4, tmp_V);
-        mltply::Spin::C::Half::general_int(nstate, tmp_v0, tmp_v1);
+        mltply::Spin::C::Half::general_int(nstate, tmp_v0, tmp_v1, i_max, list_1, list_2_1, list_2_2);
       }/*for (ihermite = 0; ihermite<2; ihermite++)*/
       StopTimer(414);
     }
@@ -254,7 +267,8 @@ int mltply::Spin::C::Half::main(
       mltply::Spin::C::Half::X_general_int_MPIdouble(
         Def::ExchangeCoupling[i][0], sigma1, sigma2, 
         Def::ExchangeCoupling[i][1], sigma2, sigma1, 
-        Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
+        Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1,
+        i_max, list_1, list_2_1, list_2_2);
       StopTimer(421);
     }
     else if (Def::ExchangeCoupling[i][1] >= Def::Nsite) {
@@ -262,7 +276,8 @@ int mltply::Spin::C::Half::main(
       mltply::Spin::C::Half::X_general_int_MPIsingle(
         Def::ExchangeCoupling[i][0], sigma1, sigma2, 
         Def::ExchangeCoupling[i][1], sigma2, sigma1,
-        Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
+        Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1,
+        i_max, list_1, list_2_1, list_2_2);
       StopTimer(422);
     }
     else if (Def::ExchangeCoupling[i][0] >= Def::Nsite) {
@@ -270,13 +285,15 @@ int mltply::Spin::C::Half::main(
       mltply::Spin::C::Half::X_general_int_MPIsingle(
         Def::ExchangeCoupling[i][1], sigma2, sigma1, 
         Def::ExchangeCoupling[i][0], sigma1, sigma2, 
-        Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1);
+        Def::ParaExchangeCoupling[i], nstate, tmp_v0, tmp_v1,
+        i_max, list_1, list_2_1, list_2_2);
       StopTimer(423);
     }
     else {
       StartTimer(424);
       mltply::Spin::exchange_GetInfo(i);
-      mltply::Spin::C::Half::exchange(nstate, tmp_v0, tmp_v1);
+      mltply::Spin::C::Half::exchange(nstate, tmp_v0, tmp_v1,
+        i_max, list_1, list_2_1, list_2_2);
       StopTimer(424);
     }
   }/*for (i = 0; i < Def::NExchangeCoupling; i += 2)*/
@@ -291,8 +308,13 @@ int mltply::Spin::C::Half::main(
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 int mltply::Spin::C::General::main(
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
-  std::complex<double> **tmp_v1//!<[in] Input producted vector
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Result vector
+  std::complex<double> **tmp_v1,//!<[in] Input producted vector
+  long int i_max,
+  long int* list_1,
+  long int* list_2_1,
+  long int* list_2_2
 ){
   long int j;
   long int i;
@@ -309,8 +331,6 @@ int mltply::Spin::C::General::main(
   int one = 1;
   /*[e] For InterAll */
 
-  long int i_max;
-  i_max = Check::idim_max;
   int ihermite=0;
   int idx=0;
 
@@ -325,17 +345,20 @@ int mltply::Spin::C::General::main(
     if (Def::InterAll_OffDiagonal[i][0] >= Def::Nsite &&
         Def::InterAll_OffDiagonal[i][4] >= Def::Nsite) {
       StartTimer(411);
-      mltply::Spin::C::General::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::C::General::general_int_MPIdouble(i, nstate, tmp_v0, tmp_v1,
+                                                      i_max, list_1, list_2_1, list_2_2);
       StopTimer(411);
     }
     else if (Def::InterAll_OffDiagonal[i][4] >= Def::Nsite) {
       StartTimer(412);
-      mltply::Spin::C::General::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::C::General::general_int_MPIsingle(i, nstate, tmp_v0, tmp_v1,
+                                                      i_max, list_1, list_2_1, list_2_2);
       StopTimer(412);
     }
     else if (Def::InterAll_OffDiagonal[i][0] >= Def::Nsite) {
       StartTimer(412);
-      mltply::Spin::C::General::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1);
+      mltply::Spin::C::General::general_int_MPIsingle(i + 1, nstate, tmp_v0, tmp_v1,
+                                                      i_max, list_1, list_2_1, list_2_2);
       StopTimer(412);
     }
     else {
@@ -351,13 +374,13 @@ int mltply::Spin::C::General::main(
         tmp_V = Def::ParaInterAll_OffDiagonal[idx];
 #pragma omp parallel for default(none) private(j,tmp_sgn,off,tmp_off,tmp_off2) \
 shared(i_max,isite1,isite2,sigma1,sigma2,sigma3,sigma4,tmp_V,ihfbit, tmp_v0,tmp_v1, \
-List::c1,one,nstate, Def::SiteToBit, Def::Tpow)
+list_1, list_2_1, list_2_2,one,nstate, Def::SiteToBit, Def::Tpow)
         for (j = 0; j < i_max; j++) {
-          tmp_sgn = GetOffCompGeneralSpin(List::c1[j], isite2, sigma4, sigma3, &tmp_off, Def::SiteToBit, Def::Tpow);
+          tmp_sgn = GetOffCompGeneralSpin(list_1[j], isite2, sigma4, sigma3, &tmp_off, Def::SiteToBit, Def::Tpow);
           if (tmp_sgn == TRUE) {
             tmp_sgn = GetOffCompGeneralSpin(tmp_off, isite1, sigma2, sigma1, &tmp_off2, Def::SiteToBit, Def::Tpow);
             if (tmp_sgn == TRUE) {
-              ConvertToList1GeneralSpin(tmp_off2, ihfbit, &off);
+              ConvertToList1GeneralSpin(tmp_off2, ihfbit, &off, list_2_1, list_2_2);
               zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[off][0], &one);
             }
           }/*if (tmp_sgn == TRUE)*/
@@ -774,16 +797,20 @@ tmp_v0, tmp_v1,one,nstate, Def::SiteToBit, Def::Tpow)
 void mltply::Spin::C::Half::exchange(
   int nstate, 
   std::complex<double> **tmp_v0,//!<[inout] Result vector
-  std::complex<double> **tmp_v1//!<[in] Input producted vector
+  std::complex<double> **tmp_v1,//!<[in] Input producted vector
+  long int i_max, 
+  long int* list_1, 
+  long int* list_2_1,
+  long int* list_2_2
 ) {
   long int j;
-  long int i_max = Large::i_max;
   long int off = 0;
 
 #pragma omp parallel for default(none) private(j, off) \
-shared(i_max, tmp_v0, tmp_v1,nstate)
+shared(i_max, tmp_v0, tmp_v1,nstate,list_1, list_2_1, list_2_2)
   for (j = 0; j < i_max; j++) 
-    mltply::Spin::C::Half::exchange_element(j, nstate, tmp_v0, tmp_v1, &off);
+    mltply::Spin::C::Half::exchange_element(j, nstate, tmp_v0, tmp_v1, &off,
+      list_1, list_2_1, list_2_2);
 }/*std::complex<double> child_exchange_spin*/
 /**
 @brief Compute exchange term of spin Hamiltonian (grandcanonical)
@@ -828,18 +855,22 @@ shared(i_max, tmp_v0, tmp_v1,nstate)
 @author Kazuyoshi Yoshimi (The University of Tokyo)
 */
 void mltply::Spin::C::Half::general_int(
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Result vector
-  std::complex<double> **tmp_v1//!<[in] Input producted vector
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Result vector
+  std::complex<double> **tmp_v1,//!<[in] Input producted vector
+  long int i_max,
+  long int* list_1, 
+  long int* list_2_1,
+  long int* list_2_2
 ) {
   std::complex<double> tmp_V, dmv;
-  long int j, i_max;
+  long int j;
   long int org_sigma2, org_sigma4;
   long int isA_up, isB_up;
   long int tmp_off = 0;
   int tmp_sgn;
   int one = 1;
 
-  i_max = Large::i_max;
   org_sigma2 = Large::is2_spin;
   org_sigma4 = Large::is4_spin;
   tmp_V = Large::tmp_V;
@@ -847,10 +878,11 @@ void mltply::Spin::C::Half::general_int(
   isB_up = Large::is2_up;
 
 #pragma omp parallel for default(none) private(j, tmp_sgn, dmv,tmp_off) \
-shared(i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V,tmp_v1, tmp_v0,one,nstate)
+shared(i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V,tmp_v1, tmp_v0, \
+one,nstate, list_1, list_2_1, list_2_2)
   for (j = 0; j < i_max; j++) {
     tmp_sgn = mltply::Spin::C::Half::X_exchange_element(j, 
-      isA_up, isB_up, org_sigma2, org_sigma4, &tmp_off);
+      isA_up, isB_up, org_sigma2, org_sigma4, &tmp_off, list_1, list_2_1, list_2_2);
     if (tmp_sgn != 0) {
       dmv = (std::complex<double>)tmp_sgn * tmp_V;
       zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[tmp_off][0], &one);

@@ -20,21 +20,27 @@ namespace mltply {
   namespace Hubbard {
     namespace C {
       void general_hopp_MPIdouble(long int itrans, int nstate,
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+        long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
       void X_general_hopp_MPIdouble(int org_isite1, int org_ispin1,
         int org_isite2, int org_ispin2, std::complex<double> tmp_trans, int nstate,
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+        long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
       void general_hopp_MPIsingle(long int itrans,
-        int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+        long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
       void X_general_hopp_MPIsingle(int org_isite1, int org_ispin1,
         int org_isite2, int org_ispin2, std::complex<double> tmp_trans, int nstate,
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+        long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
       void X_CisAjt_MPIsingle(int org_isite1, int org_ispin1,
         int org_isite2, int org_ispin2, std::complex<double> tmp_trans, int nstate,
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+        long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
       void X_CisAjt_MPIdouble(int org_isite1, int org_ispin1,
         int org_isite2, int org_ispin2, std::complex<double> tmp_trans, int nstate,
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+        long int i_max, long int *list_1, long int *list_2_1, long int *list_2_2);
     }
     namespace GC {
       void general_hopp_MPIdouble(long int itrans,

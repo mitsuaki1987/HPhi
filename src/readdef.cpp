@@ -483,8 +483,6 @@ int ReadDefFileNInt(
   /*=======================================================================*/
   int iKWidx = 0;
   //Check the existence of Essensial Files.
-  Def::READ = 0;
-  Def::WRITE = 0;
 
   for (iKWidx = 0; iKWidx < D_iKWNumDef; iKWidx++) {
     strcpy(defname, cFileNameListFile[iKWidx]);
@@ -545,17 +543,17 @@ int ReadDefFileNInt(
         if (*ctmp2 == '\n') continue;
         sscanf(ctmp2, "%s %lf %lf\n", ctmp, &dtmp, &dtmp2);
         if (CheckWords(ctmp, "Nsite") == 0) {
-          Def::Nsite = (int)dtmp;
+          Def::NsiteMPI = (int)dtmp;
         }
         else if (CheckWords(ctmp, "Nup") == 0) {
-          Def::Nup = (int)dtmp;
+          Def::NupMPI = (int)dtmp;
         }
         else if (CheckWords(ctmp, "Ndown") == 0) {
-          Def::Ndown = (int)dtmp;
-          Def::Total2Sz = Def::Nup - Def::Ndown;
+          Def::NdownMPI = (int)dtmp;
+          Def::Total2SzMPI = Def::NupMPI - Def::NdownMPI;
         }
         else if (CheckWords(ctmp, "2Sz") == 0) {
-          Def::Total2Sz = (int)dtmp;
+          Def::Total2SzMPI = (int)dtmp;
           Def::iFlgSzConserved = TRUE;
         }
         else if (CheckWords(ctmp, "Ncond") == 0) {
@@ -825,30 +823,30 @@ int ReadDefFileNInt(
         if (Def::iFlgSzConserved == TRUE) {
           if (Def::iCalcModel == DC::SpinlessFermion) {
             fprintf(MP::STDOUT, "  Warning: For Spinless fermion, 2Sz should not be defined.\n");
-            Def::Ne = Def::NCond;
-            Def::Nup = Def::NCond;
-            Def::Ndown = 0;
+            Def::NeMPI = Def::NCond;
+            Def::NupMPI = Def::NCond;
+            Def::NdownMPI = 0;
             break;
           }
-          Def::Nup = Def::NLocSpn + Def::NCond + Def::Total2Sz;
-          Def::Ndown = Def::NLocSpn + Def::NCond - Def::Total2Sz;
-          Def::Nup /= 2;
-          Def::Ndown /= 2;
-          Def::Ne = Def::Nup + Def::Ndown;
+          Def::NupMPI = Def::NLocSpn + Def::NCond + Def::Total2SzMPI;
+          Def::NdownMPI = Def::NLocSpn + Def::NCond - Def::Total2SzMPI;
+          Def::NupMPI /= 2;
+          Def::NdownMPI /= 2;
+          Def::NeMPI = Def::NupMPI + Def::NdownMPI;
         }
         else {
           if (Def::iCalcModel == DC::Hubbard) {
-            Def::Ne = Def::NCond;
-            if (Def::Ne < 1) {
+            Def::NeMPI = Def::NCond;
+            if (Def::NeMPI < 1) {
               fprintf(MP::STDOUT, "Ncond is incorrect.\n");
               return(-1);
             }
             Def::iCalcModel = DC::HubbardNConserved;
           }
           else if (Def::iCalcModel == DC::SpinlessFermion) {
-            Def::Ne = Def::NCond;
-            Def::Nup = Def::NCond;
-            Def::Ndown = 0;
+            Def::NeMPI = Def::NCond;
+            Def::NupMPI = Def::NCond;
+            Def::NdownMPI = 0;
           }
           else {
             fprintf(MP::STDOUT, " 2Sz is not defined.\n");
@@ -862,13 +860,13 @@ int ReadDefFileNInt(
         fprintf(MP::STDOUT, " NCond is not defined.\n");
         return(-1);
       }
-      Def::Nup = Def::NLocSpn + Def::Total2Sz;
-      Def::Ndown = Def::NLocSpn - Def::Total2Sz;
-      Def::Nup /= 2;
-      Def::Ndown /= 2;
+      Def::NupMPI = Def::NLocSpn + Def::Total2SzMPI;
+      Def::NdownMPI = Def::NLocSpn - Def::Total2SzMPI;
+      Def::NupMPI /= 2;
+      Def::NdownMPI /= 2;
     }
     else {
-      if (Def::Nup == 0 && Def::Ndown == 0) {
+      if (Def::NupMPI == 0 && Def::NdownMPI == 0) {
         if (Def::iCalcModel == DC::Spin) {
           fprintf(MP::STDOUT, " 2Sz is not defined.\n");
           return(-1);
@@ -881,15 +879,15 @@ int ReadDefFileNInt(
     }
 
     if (Def::iCalcModel == DC::Spin) {
-      Def::Ne = Def::Nup;
+      Def::NeMPI = Def::NupMPI;
     }
     else {
-      if (Def::Ne == 0) {
-        Def::Ne = Def::Nup + Def::Ndown;
+      if (Def::NeMPI == 0) {
+        Def::NeMPI = Def::NupMPI + Def::NdownMPI;
       }
-      if (Def::NLocSpn > Def::Ne) {
+      if (Def::NLocSpn > Def::NeMPI) {
         fprintf(MP::STDOUT, "%s", "Error: Ne=Nup+Ndown must be (Ne >= NLocalSpin).\n");
-        fprintf(MP::STDOUT, "NLocalSpin=%d, Ne=%d\n", Def::NLocSpn, Def::Ne);
+        fprintf(MP::STDOUT, "NLocalSpin=%d, Ne=%d\n", Def::NLocSpn, Def::NeMPI);
         return(-1);
       }
     }
@@ -908,7 +906,7 @@ int ReadDefFileNInt(
   }
 
   /* Check values (Positive)*/
-  if (Def::Nsite <= 0) {// Nsite must be positve
+  if (Def::NsiteMPI <= 0) {// Nsite must be positve
     fprintf(MP::STDOUT, "Error in %s\n Nsite must be positive value.\n", defname);
     return (-1);
   }
@@ -949,11 +947,6 @@ int ReadDefFileNInt(
   }
 
   Def::fidx = 0;
-  Def::NeMPI = Def::Ne;
-  Def::NupMPI = Def::Nup;
-  Def::NdownMPI = Def::Ndown;
-  Def::NupOrg = Def::Nup;
-  Def::NdownOrg = Def::Ndown;
   return 0;
 }
 ///
@@ -1433,7 +1426,7 @@ int ReadDefFileIdxPara()
     case KWLocSpin:
       /* Read locspn.def----------------------------------------*/
       while (wrapperMPI::Fgets(ctmp2, 256, fp) != NULL) {
-        if (idx == Def::Nsite) {
+        if (idx == Def::NsiteMPI) {
           fclose(fp);
           return ReadDefFileError(defname);
         }
@@ -1441,7 +1434,7 @@ int ReadDefFileIdxPara()
         sscanf(ctmp2, "%d %d\n", &(xitmp[0]), &(xitmp[1]));
         Def::LocSpn[xitmp[0]] = xitmp[1];
         Def::SiteToBit[xitmp[0]] = (Def::LocSpn[xitmp[0]] + 1);//2S+1
-        if (CheckSite(xitmp[0], Def::Nsite) != 0) {
+        if (CheckSite(xitmp[0], Def::NsiteMPI) != 0) {
           fclose(fp);
           return ReadDefFileError(defname);
         }
@@ -1474,7 +1467,7 @@ int ReadDefFileIdxPara()
             &dvalue_im
           );
 
-          if (CheckPairSite(isite1, isite2, Def::Nsite) != 0) {
+          if (CheckPairSite(isite1, isite2, Def::NsiteMPI) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1571,7 +1564,7 @@ int ReadDefFileIdxPara()
             &(Def::ParaCoulombIntra[idx])
           );
 
-          if (CheckSite(Def::CoulombIntra[idx][0], Def::Nsite) != 0) {
+          if (CheckSite(Def::CoulombIntra[idx][0], Def::NsiteMPI) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1595,7 +1588,7 @@ int ReadDefFileIdxPara()
             &(Def::ParaCoulombInter[idx])
           );
 
-          if (CheckPairSite(Def::CoulombInter[idx][0], Def::CoulombInter[idx][1], Def::Nsite) != 0) {
+          if (CheckPairSite(Def::CoulombInter[idx][0], Def::CoulombInter[idx][1], Def::NsiteMPI) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1621,7 +1614,7 @@ int ReadDefFileIdxPara()
             &(Def::ParaHundCoupling[idx])
           );
 
-          if (CheckPairSite(Def::HundCoupling[idx][0], Def::HundCoupling[idx][1], Def::Nsite) != 0) {
+          if (CheckPairSite(Def::HundCoupling[idx][0], Def::HundCoupling[idx][1], Def::NsiteMPI) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1649,7 +1642,7 @@ int ReadDefFileIdxPara()
             &(Def::ParaPairHopping[2 * idx])
           );
 
-          if (CheckPairSite(Def::PairHopping[2 * idx][0], Def::PairHopping[2 * idx][1], Def::Nsite) != 0) {
+          if (CheckPairSite(Def::PairHopping[2 * idx][0], Def::PairHopping[2 * idx][1], Def::NsiteMPI) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1676,7 +1669,7 @@ int ReadDefFileIdxPara()
             &(Def::ParaExchangeCoupling[idx])
           );
 
-          if (CheckPairSite(Def::ExchangeCoupling[idx][0], Def::ExchangeCoupling[idx][1], Def::Nsite) != 0) {
+          if (CheckPairSite(Def::ExchangeCoupling[idx][0], Def::ExchangeCoupling[idx][1], Def::NsiteMPI) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1701,7 +1694,7 @@ int ReadDefFileIdxPara()
             &dvalue_re
           );
 
-          if (CheckPairSite(isite1, isite2, Def::Nsite) != 0) {
+          if (CheckPairSite(isite1, isite2, Def::NsiteMPI) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1739,7 +1732,7 @@ int ReadDefFileIdxPara()
             &(Def::ParaPairLiftCoupling[idx])
           );
 
-          if (CheckPairSite(Def::PairLiftCoupling[idx][0], Def::PairLiftCoupling[idx][1], Def::Nsite) != 0) {
+          if (CheckPairSite(Def::PairLiftCoupling[idx][0], Def::PairLiftCoupling[idx][1], Def::NsiteMPI) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1774,7 +1767,7 @@ int ReadDefFileIdxPara()
             &dvalue_im
           );
 
-          if (CheckInterAllCondition(Def::iCalcModel, Def::Nsite, Def::iFlgGeneralSpin, Def::LocSpn,
+          if (CheckInterAllCondition(Def::iCalcModel, Def::NsiteMPI, Def::iFlgGeneralSpin, Def::LocSpn,
             isite1, isigma1, isite2, isigma2,
             isite3, isigma3, isite4, isigma4) != 0) {
             fclose(fp);
@@ -1850,7 +1843,7 @@ int ReadDefFileIdxPara()
           Def::CisAjt[idx][2] = isite2;
           Def::CisAjt[idx][3] = isigma2;
 
-          if (CheckPairSite(isite1, isite2, Def::Nsite) != 0) {
+          if (CheckPairSite(isite1, isite2, Def::NsiteMPI) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1898,7 +1891,7 @@ int ReadDefFileIdxPara()
           Def::CisAjtCkuAlvDC[idx][6] = isite4;
           Def::CisAjtCkuAlvDC[idx][7] = isigma4;
 
-          if (CheckQuadSite(isite1, isite2, isite3, isite4, Def::Nsite) != 0) {
+          if (CheckQuadSite(isite1, isite2, isite3, isite4, Def::NsiteMPI) != 0) {
             fclose(fp);
             return ReadDefFileError(defname);
           }
@@ -1980,7 +1973,7 @@ int ReadDefFileIdxPara()
               &dvalue_re,
               &dvalue_im
             );
-            if (CheckInterAllCondition(Def::iCalcModel, Def::Nsite, Def::iFlgGeneralSpin, Def::LocSpn,
+            if (CheckInterAllCondition(Def::iCalcModel, Def::NsiteMPI, Def::iFlgGeneralSpin, Def::LocSpn,
               isite1, isigma1, isite2, isigma2,
               isite3, isigma3, isite4, isigma4) != 0) {
               fclose(fp);
@@ -2142,7 +2135,7 @@ int ReadDefFileIdxPara()
               &dvalue_im
             );
 
-            if (CheckSite(isite1, Def::Nsite) != 0) {
+            if (CheckSite(isite1, Def::NsiteMPI) != 0) {
               fclose(fp);
               return ReadDefFileError(defname);
             }
@@ -2182,7 +2175,7 @@ int ReadDefFileIdxPara()
               &dvalue_re,
               &dvalue_im
             );
-            if (CheckPairSite(isite1, isite2, Def::Nsite) != 0) {
+            if (CheckPairSite(isite1, isite2, Def::NsiteMPI) != 0) {
               fclose(fp);
               return ReadDefFileError(defname);
             }
@@ -2596,7 +2589,7 @@ int CheckLocSpin()
   case DC::HubbardGC:
   case DC::SpinlessFermion:
   case DC::SpinlessFermionGC:
-    for(i=0; i<Def::Nsite; i++){
+    for(i=0; i<Def::NsiteMPI; i++){
       if(Def::LocSpn[i]!=ITINERANT){
         return FALSE;
       }
@@ -2605,7 +2598,7 @@ int CheckLocSpin()
 
   case DC::Kondo:
   case DC::KondoGC:
-    for(i=0; i<Def::Nsite; i++){
+    for(i=0; i<Def::NsiteMPI; i++){
       if(Def::LocSpn[i]>LOCSPIN){
         Def::iFlgGeneralSpin=TRUE;
       }
@@ -2617,7 +2610,7 @@ int CheckLocSpin()
 
   case DC::Spin:
   case DC::SpinGC:
-    for(i=0; i<Def::Nsite; i++){
+    for(i=0; i<Def::NsiteMPI; i++){
       if(Def::LocSpn[i]>LOCSPIN){
         Def::iFlgGeneralSpin=TRUE;
       }
@@ -2683,10 +2676,7 @@ void InitializeInteractionNum()
   Def::NTEInterAll=0;
   Def::NTETransfer=0;
   //[e] Time Evolution
-
 }
-
-
 ///
 /// \brief function of checking spin index for all interactions
 /// \param isite1 a site number on site1
@@ -2762,17 +2752,16 @@ int CheckSpinIndexForTrans()
 int CheckTotal2Sz()
 {
   if(Def::iFlgSzConserved==TRUE && Def::iFlgGeneralSpin==FALSE){
-    int tmp_Nup=Def::NLocSpn+Def::NCond+Def::Total2Sz;
-    int tmp_Ndown=Def::NLocSpn+Def::NCond-Def::Total2Sz;
-    if(tmp_Nup%2 != 0 && tmp_Ndown%2 !=0){
-      printf("Nup=%d, Ndown=%d\n",Def::Nup,Def::Ndown);
+    int tmp_Nup=Def::NLocSpn+Def::NCond+Def::Total2SzMPI;
+    int tmp_Ndown=Def::NLocSpn+Def::NCond-Def::Total2SzMPI;
+    if (tmp_Nup % 2 != 0 && tmp_Ndown % 2 != 0) {
+      printf("Nup=%d, Ndown=%d\n", Def::NupMPI, Def::NdownMPI);
       fprintf(MP::STDOUT, "2Sz is incorrect.\n");
       return FALSE;
     }
   }
   return TRUE;
 }
-
 /**
  *
  * @brief function of checking whether ctmp is same as cKeyWord or not

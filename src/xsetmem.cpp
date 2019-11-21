@@ -47,13 +47,13 @@ void xsetmem::HEAD()
 */
 void xsetmem::def()
 {
-  Def::Tpow = li_1d_allocate(2 * Def::Nsite + 2);
-  Def::OrgTpow = li_1d_allocate(2 * Def::Nsite + 2);
-  Def::SiteToBit = li_1d_allocate(Def::Nsite + 1);
-  Def::LocSpn = i_1d_allocate(Def::Nsite);
-  Phys::spin_real_cor = d_1d_allocate(Def::Nsite * Def::Nsite);
-  Phys::charge_real_cor = d_1d_allocate(Def::Nsite * Def::Nsite);
-  Phys::loc_spin_z = d_1d_allocate(Def::Nsite * Def::Nsite);
+  Def::Tpow = li_1d_allocate(2 * Def::NsiteMPI + 2);
+  Def::OrgTpow = li_1d_allocate(2 * Def::NsiteMPI + 2);
+  Def::SiteToBit = li_1d_allocate(Def::NsiteMPI + 1);
+  Def::LocSpn = i_1d_allocate(Def::NsiteMPI);
+  Phys::spin_real_cor = d_1d_allocate(Def::NsiteMPI * Def::NsiteMPI);
+  Phys::charge_real_cor = d_1d_allocate(Def::NsiteMPI * Def::NsiteMPI);
+  Phys::loc_spin_z = d_1d_allocate(Def::NsiteMPI * Def::NsiteMPI);
   Def::EDChemi = i_1d_allocate(Def::NInterAll + Def::NTransfer);
   Def::EDSpinChemi = i_1d_allocate(Def::NInterAll + Def::NTransfer);
   Def::EDParaChemi = d_1d_allocate(Def::NInterAll + Def::NTransfer);
@@ -146,12 +146,12 @@ void xsetmem::large()
   int nstate;
 
   if (GetlistSize() == TRUE) {
-    List::c1 = li_1d_allocate(Check::idim_max);
-    List::c2_1 = li_1d_allocate(Large::SizeOflist_2_1);
-    List::c2_2 = li_1d_allocate(Large::SizeOflist_2_2);
-    if (List::c1 == NULL
-      || List::c2_1 == NULL
-      || List::c2_2 == NULL
+    List::a1 = li_1d_allocate(Check::idim_max);
+    List::a2_1 = li_1d_allocate(Large::SizeOflist_2_1);
+    List::a2_2 = li_1d_allocate(Large::SizeOflist_2_2);
+    if (List::a1 == NULL
+      || List::a2_1 == NULL
+      || List::a2_2 == NULL
       ) {
       fprintf(MP::STDOUT, "Error: Fail for memory allocation.\n");
       wrapperMPI::Exit(-1);
@@ -177,7 +177,7 @@ void xsetmem::large()
 #ifdef __MPI
   long int MAXidim_max;
   MAXidim_max = wrapperMPI::Max_li(Check::idim_max);
-  if (GetlistSize() == TRUE) List::c1buf = li_1d_allocate(MAXidim_max);
+  if (GetlistSize() == TRUE) List::buf = li_1d_allocate(MAXidim_max);
   Wave::v1buf = cd_2d_allocate(MAXidim_max + 1, nstate);
 #else
   if (Def::iCalcType == DC::CG)  Wave::v1buf = cd_2d_allocate(Check::idim_max, nstate);

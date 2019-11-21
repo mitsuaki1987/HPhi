@@ -22,13 +22,13 @@ namespace mltply {
         void X_CisAit_MPIdouble(int org_isite1, int org_ispin2,
           std::complex<double> tmp_trans, int nstate,
           std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
-          long int idim_max);
+          long int idim_max, long int* list_1, long int *list_2_1, long int *list_2_2);
       }
       namespace General {
         void X_CisAit_MPIdouble(int org_isite1, int org_ispin1, int org_ispin2,
           std::complex<double> tmp_trans, int nstate,
           std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
-          long int idim_max);
+          long int idim_max, long int *list_1, long int *list_2_1, long int *list_2_2);
         void X_CisAisCjuAju_MPIdouble(
           int org_isite1, int org_ispin1, int org_isite3, int org_ispin3,
           std::complex<double> tmp_J, int nstate,
@@ -36,15 +36,17 @@ namespace mltply {
         void X_CisAitCjuAjv_MPIdouble(int org_isite1, int org_ispin1,
           int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4,
           std::complex<double> tmp_J, int nstate,
-          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+          long int i_max, long int *list_1, long int *list_2_1, long int *list_2_2);
         void X_CisAisCjuAju_MPIsingle(
           int org_isite1, int org_ispin1, int org_isite3, int org_ispin3,
           std::complex<double> tmp_J, int nstate,
-          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int *list_1);
         void X_CisAitCjuAjv_MPIsingle(int org_isite1, int org_ispin1,
           int org_ispin2, int org_isite3, int org_ispin3, int org_ispin4,
           std::complex<double> tmp_J, int nstate,
-          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, 
+          long int i_max, long int *list_1, long int *list_2_1, long int *list_2_2);
       }
     }
     namespace GC {

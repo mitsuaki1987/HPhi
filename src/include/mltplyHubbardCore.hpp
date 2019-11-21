@@ -23,38 +23,42 @@ namespace mltply {
     void exchange_GetInfo(int iExchange);
     namespace C {
       void pairhopp_element(long int j, int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1, long int* tmp_off);
+        std::complex<double>** tmp_v1, long int* tmp_off,
+        long int* list_1, long int* list_2_1, long int* list_2_2);
       void exchange_element(long int j, int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1, long int* tmp_off);
+        std::complex<double>** tmp_v1, long int* tmp_off, long int* list_1,
+        long int* list_2_1, long int* list_2_2);
       void CisAisCisAis_element(long int j, long int isite1, long int isite3,
         std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1);
+        std::complex<double>** tmp_v1, long int* list_1);
       void CisAisCjtAku_element(long int j, long int isite1, long int isite3, long int isite4,
         long int Bsum, long int Bdiff, std::complex<double> tmp_V, int nstate,
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int* tmp_off);
+        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int* tmp_off, 
+        long int* list_1, long int *list_2_1, long int *list_2_2);
       void CisAjtCkuAku_element(
         long int j, long int isite1, long int isite2, long int isite3,
         long int Asum, long int Adiff, std::complex<double> tmp_V,
         int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
-        long int* tmp_off);
+        long int* tmp_off, long int *list_1, long int *list_2_1, long int *list_2_2);
       void CisAjtCkuAlv_element(
         long int j, long int isite1, long int isite2, long int isite3, long int isite4,
         long int Asum, long int Adiff, long int Bsum, long int Bdiff,
-        std::complex<double> tmp_V, int nstate,
-        std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int* tmp_off_2);
+        std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0,
+        std::complex<double>** tmp_v1, long int* tmp_off_2, 
+        long int* list_1, long int* list_2_1, long int* list_2_2);
       void CisAjt(long int j, int nstate,
         std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
         long int is1_spin, long int is2_spin, long int sum_spin, long int diff_spin,
-        std::complex<double> tmp_V);
+        std::complex<double> tmp_V, long int* list_1, long int* list_2_1, long int* list_2_2);
 
       int X_CisAis(long int list_1_j, long int is1_spin);
       int X_CisAjt(long int list_1_j,
         long int is1_spin, long int is2_spin,
-        long int sum_spin, long int diff_spin, long int* tmp_off);
+        long int sum_spin, long int diff_spin, long int* tmp_off, long int* list_2_1, long int* list_2_2);
       int X_Cis(long int j, long int is1_spin, long int* tmp_off,
-        long int* list_1_org, long int* list_2_1_target, long int* list_2_2_target);
+        long int* list_1, long int* list_2_1, long int* list_2_2);
       int X_Ajt(long int j, long int is1_spin, long int* tmp_off,
-        long int* list_1_org, long int* list_2_1_target, long int* list_2_2_target);
+        long int* list_1, long int* list_2_1, long int* list_2_2);
     }
     namespace GC {
       void exchange_element(long int j, int nstate, std::complex<double>** tmp_v0,

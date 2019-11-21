@@ -37,7 +37,7 @@ int output() {
       case DC::Spin:
       case DC::Hubbard:
       case DC::Kondo:
-        sprintf(sdt, "%s_phys_Nup%d_Ndown%d.dat", Def::CDataFileHead, Def::Nup, Def::Ndown);
+        sprintf(sdt, "%s_phys_Nup%d_Ndown%d.dat", Def::CDataFileHead, Def::NupMPI, Def::NdownMPI);
         break;
       case DC::SpinGC:
       case DC::HubbardGC:

@@ -287,21 +287,24 @@ void expec::cisajscktalt::Hubbard::C(
       isite4 = Def::OrgTpow[2 * org_isite4 + org_sigma4];
       if (isite1 == isite2 && isite3 == isite4) {
         mltply::Hubbard::C::X_CisAisCjtAjt_MPI(org_isite1, org_sigma1,
-          org_isite3, org_sigma3, 1.0, nstate, Xvec, vec);
+          org_isite3, org_sigma3, 1.0, nstate, Xvec, vec, Check::idim_max, List::a1);
       }
       else if (isite1 == isite2 && isite3 != isite4) {
         //printf("org_isite1=%d, org_isite2=%d, org_isite3=%d, org_isite4=%d\n", org_isite1, org_isite2, org_isite3, org_isite4);
         mltply::Hubbard::C::X_CisAisCjtAku_MPI(org_isite1, org_sigma1,
-          org_isite3, org_sigma3, org_isite4, org_sigma4, 1.0, nstate, Xvec, vec);
+          org_isite3, org_sigma3, org_isite4, org_sigma4, 1.0, nstate, Xvec, vec, 
+          Check::idim_max, List::a1, List::a2_1, List::a2_2);
       }
       else if (isite1 != isite2 && isite3 == isite4) {
         mltply::Hubbard::C::X_CisAjtCkuAku_MPI(org_isite1, org_sigma1, org_isite2, org_sigma2,
-          org_isite3, org_sigma3, 1.0, nstate, Xvec, vec);
+          org_isite3, org_sigma3, 1.0, nstate, Xvec, vec,
+          Check::idim_max, List::a1, List::a2_1, List::a2_2);
 
       }
       else if (isite1 != isite2 && isite3 != isite4) {
         mltply::Hubbard::C::X_CisAjtCkuAlv_MPI(org_isite1, org_sigma1, org_isite2, org_sigma2,
-          org_isite3, org_sigma3, org_isite4, org_sigma4, 1.0, nstate, Xvec, vec);
+          org_isite3, org_sigma3, org_isite4, org_sigma4, 1.0, nstate, Xvec, vec,
+          Check::idim_max, List::a1, List::a2_1, List::a2_2);
       }
     }//InterPE
     else {
@@ -324,33 +327,37 @@ void expec::cisajscktalt::Hubbard::C(
       tmp_V = 1.0;
       if (isite1 == isite2 && isite3 == isite4) {
 #pragma omp parallel for default(none) private(j) shared(vec,tmp_V,Xvec,nstate, \
-i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff)
+i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff,List::a1)
         for (j = 0; j < i_max; j++) {
-          mltply::Hubbard::C::CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, Xvec, vec);
+          mltply::Hubbard::C::CisAisCisAis_element(j, isite1, isite3, tmp_V, nstate, Xvec, vec, List::a1);
         }
       }
       else if (isite1 == isite2 && isite3 != isite4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
-shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff)
+shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff, \
+List::a1, List::a2_1, List::a2_2)
         for (j = 0; j < i_max; j++) {
           mltply::Hubbard::C::CisAisCjtAku_element(j, isite1, isite3, isite4, Bsum, Bdiff,
-            tmp_V, nstate, Xvec, vec, &tmp_off);
+            tmp_V, nstate, Xvec, vec, &tmp_off, List::a1, List::a2_1, List::a2_2);
         }
       }
       else if (isite1 != isite2 && isite3 == isite4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
-shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff)
+shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff, \
+List::a1, List::a2_1, List::a2_2)
         for (j = 0; j < i_max; j++) {
           mltply::Hubbard::C::CisAjtCkuAku_element(j, isite1, isite2, isite3, Asum, Adiff,
-            tmp_V, nstate, Xvec, vec, &tmp_off);
+            tmp_V, nstate, Xvec, vec, &tmp_off, List::a1, List::a2_1, List::a2_2);
         }
       }
       else if (isite1 != isite2 && isite3 != isite4) {
 #pragma omp parallel for default(none) private(j,tmp_off) \
-shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff)
+shared(vec,tmp_V,Xvec,nstate,i_max,isite1,isite2,isite4,isite3,Asum,Bsum,Adiff,Bdiff, \
+List::a1, List::a2_1, List::a2_2)
         for (j = 0; j < i_max; j++) {
-          mltply::Hubbard::C::CisAjtCkuAlv_element(j, isite1, isite2, isite3, isite4, Asum, Adiff, Bsum, Bdiff,
-            tmp_V, nstate, Xvec, vec, &tmp_off);
+          mltply::Hubbard::C::CisAjtCkuAlv_element(j, isite1, isite2, isite3, isite4,
+            Asum, Adiff, Bsum, Bdiff,
+            tmp_V, nstate, Xvec, vec, &tmp_off, List::a1, List::a2_1, List::a2_2);
         }
       }
     }
@@ -413,7 +420,7 @@ void expec::cisajscktalt::Spin::C::Half(
       else if (org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) {//exchange
         mltply::Spin::C::Half::X_general_int_MPIdouble(
           org_isite1, org_sigma1, org_sigma2, org_isite3, org_sigma3, org_sigma4, 
-          tmp_V, nstate, Xvec, vec);
+          tmp_V, nstate, Xvec, vec, i_max, List::a1, List::a2_1, List::a2_2);
       }
       else {  // other process is not allowed
                 // error message will be added
@@ -425,9 +432,9 @@ void expec::cisajscktalt::Spin::C::Half(
         is2_up = Def::Tpow[org_isite3];
         num2 = mltply::Spin::GC::Half::X_CisAis((long int)MP::myrank, is2_up, org_sigma3);
 #pragma omp parallel for default(none)shared(vec,Xvec,nstate,one, \
-i_max, tmp_V, is1_up, org_sigma1, num2) private(j, num1,dmv)
+i_max, tmp_V, is1_up, org_sigma1, num2, List::a1) private(j, num1,dmv)
         for (j = 0; j < i_max; j++) {
-          num1 = mltply::Spin::C::Half::X_CisAis(j, is1_up, org_sigma1);
+          num1 = mltply::Spin::C::Half::X_CisAis(j, is1_up, org_sigma1, List::a1);
           dmv = tmp_V * (std::complex<double>)(num1*num2);
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
         }
@@ -435,7 +442,7 @@ i_max, tmp_V, is1_up, org_sigma1, num2) private(j, num1,dmv)
       else if (org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) {//exchange
         mltply::Spin::C::Half::X_general_int_MPIsingle(
           org_isite1, org_sigma1, org_sigma2, org_isite3, org_sigma3, org_sigma4, 
-          tmp_V, nstate, Xvec, vec);
+          tmp_V, nstate, Xvec, vec, i_max, List::a1, List::a2_1, List::a2_2);
       }
       else {  // other process is not allowed
                 // error message will be added
@@ -446,26 +453,28 @@ i_max, tmp_V, is1_up, org_sigma1, num2) private(j, num1,dmv)
       isB_up = Def::Tpow[org_isite3];
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
 #pragma omp parallel for default(none) private(j,tmp_off) \
-shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4, tmp_V)
+shared(vec,Xvec,nstate,i_max,isA_up,isB_up,org_sigma2,org_sigma4, tmp_V, List::a1)
         for (j = 0; j < i_max; j++) {
           mltply::Spin::C::Half::CisAisCisAis_element(j, isA_up, isB_up, org_sigma2, org_sigma4,
-            tmp_V, nstate, Xvec, vec);
+            tmp_V, nstate, Xvec, vec, List::a1);
         }
       }
       else if (org_isite1 == org_isite3 && org_sigma1 == org_sigma4 && org_sigma3 == org_sigma2) {
 #pragma omp parallel for default(none) private(j, dmv) \
-shared(i_max,isA_up,org_sigma1, tmp_V,vec,Xvec,nstate,one)
+shared(i_max,isA_up,org_sigma1, tmp_V,vec,Xvec,nstate,one, List::a1)
         for (j = 0; j < i_max; j++) {
           dmv = tmp_V * (std::complex<double>)mltply::Spin::C::Half::X_CisAis(j, 
-            isA_up, org_sigma1);
+            isA_up, org_sigma1, List::a1);
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[j][0], &one);
         }
       }
       else if (org_sigma1 == org_sigma4 && org_sigma2 == org_sigma3) { // exchange
 #pragma omp parallel for default(none) private(j, tmp_sgn, dmv,tmp_off) \
-shared(vec,Xvec,nstate,one, i_max,isA_up,isB_up,org_sigma2,org_sigma4,tmp_V)
+shared(vec,Xvec,nstate,one, i_max,isA_up,isB_up,org_sigma2,org_sigma4, \
+tmp_V, List::a1, List::a2_1, List::a2_2)
         for (j = 0; j < i_max; j++) {
-          tmp_sgn = mltply::Spin::C::Half::X_exchange_element(j, isA_up, isB_up, org_sigma2, org_sigma4, &tmp_off);
+          tmp_sgn = mltply::Spin::C::Half::X_exchange_element(j, isA_up, isB_up, org_sigma2, org_sigma4,
+            &tmp_off, List::a1, List::a2_1, List::a2_2);
           dmv = tmp_sgn;
           zaxpy_(&nstate, &dmv, &vec[j][0], &one, &Xvec[tmp_off][0], &one);
         }
@@ -537,7 +546,7 @@ void expec::cisajscktalt::Spin::C::General(
       else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
         mltply::Spin::C::General::X_CisAitCjuAjv_MPIdouble(
           org_isite1, org_sigma1, org_sigma2, org_isite3, org_sigma3, org_sigma4,
-          tmp_V, nstate, Xvec, vec);
+          tmp_V, nstate, Xvec, vec, i_max, List::a1, List::a2_1, List::a2_2);
       }
       else {
       }
@@ -545,12 +554,12 @@ void expec::cisajscktalt::Spin::C::General(
     else if (org_isite3 >= Def::Nsite || org_isite1 >= Def::Nsite) {
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
         mltply::Spin::C::General::X_CisAisCjuAju_MPIsingle(
-          org_isite1, org_sigma1, org_isite3, org_sigma3, tmp_V, nstate, Xvec, vec);
+          org_isite1, org_sigma1, org_isite3, org_sigma3, tmp_V, nstate, Xvec, vec, List::a1);
       }
       else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
         mltply::Spin::C::General::X_CisAitCjuAjv_MPIsingle(
           org_isite1, org_sigma1, org_sigma2, org_isite3, org_sigma3, org_sigma4,
-          tmp_V, nstate, Xvec, vec);
+          tmp_V, nstate, Xvec, vec, i_max, List::a1, List::a2_1, List::a2_2);
       }
       else {
       }
@@ -558,12 +567,12 @@ void expec::cisajscktalt::Spin::C::General(
     else {
       if (org_sigma1 == org_sigma2 && org_sigma3 == org_sigma4) { //diagonal
 #pragma omp parallel for default(none) private(j, num1) \
-shared(vec,List::c1,Xvec,nstate,one, i_max,org_isite1, org_sigma1,org_isite3, org_sigma3, \
+shared(vec,List::a1,Xvec,nstate,one, i_max,org_isite1, org_sigma1,org_isite3, org_sigma3, \
 tmp_V, Def::SiteToBit, Def::Tpow)
         for (j = 0; j < i_max; j++) {
-          num1 = BitCheckGeneral(List::c1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
+          num1 = BitCheckGeneral(List::a1[j], org_isite1, org_sigma1, Def::SiteToBit, Def::Tpow);
           if (num1 != FALSE) {
-            num1 = BitCheckGeneral(List::c1[j], org_isite3, org_sigma3, Def::SiteToBit, Def::Tpow);
+            num1 = BitCheckGeneral(List::a1[j], org_isite3, org_sigma3, Def::SiteToBit, Def::Tpow);
             if (num1 != FALSE) {
               zaxpy_(&nstate, &tmp_V, &vec[j][0], &one, &Xvec[j][0], &one);
             }
@@ -572,15 +581,16 @@ tmp_V, Def::SiteToBit, Def::Tpow)
       }
       else if (org_sigma1 != org_sigma2 && org_sigma3 != org_sigma4) {
 #pragma omp parallel for default(none) private(list1_off,j,num1,tmp_off,tmp_off_2) \
-shared(i_max,org_isite1,org_isite3,org_sigma1,org_sigma2,org_sigma3,org_sigma4, \
-MP::myrank,tmp_V,vec,List::c1,Xvec,nstate,one,Def::SiteToBit, Def::Tpow, Check::sdim)
+shared(i_max,org_isite1,org_isite3,org_sigma1,org_sigma2,org_sigma3,org_sigma4,List::a2_1, List::a2_2, \
+MP::myrank,tmp_V,vec,List::a1,Xvec,nstate,one,Def::SiteToBit, Def::Tpow, Check::sdim)
         for (j = 0; j < i_max; j++) {
-          num1 = GetOffCompGeneralSpin(List::c1[j], org_isite3, org_sigma4, org_sigma3, &tmp_off, Def::SiteToBit, Def::Tpow);
+          num1 = GetOffCompGeneralSpin(List::a1[j], org_isite3, org_sigma4, org_sigma3,
+            &tmp_off, Def::SiteToBit, Def::Tpow);
           if (num1 != FALSE) {
             num1 = GetOffCompGeneralSpin(tmp_off, org_isite1, org_sigma2, org_sigma1, &tmp_off_2,
               Def::SiteToBit, Def::Tpow);
             if (num1 != FALSE) {
-              ConvertToList1GeneralSpin(tmp_off_2, Check::sdim, &list1_off);
+              ConvertToList1GeneralSpin(tmp_off_2, Check::sdim, &list1_off,List::a2_1, List::a2_2);
               zaxpy_(&nstate, &tmp_V, &vec[j][0], &one, &Xvec[list1_off][0], &one);
             }
           }

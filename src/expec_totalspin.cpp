@@ -74,14 +74,14 @@ void totalspin_Hubbard(
 
       for (j = 0; j < i_max; j++) {
 
-        ibit1_up = List::c1[j] & is1_up;
+        ibit1_up = List::a1[j] & is1_up;
         num1_up = ibit1_up / is1_up;
-        ibit2_up = List::c1[j] & is2_up;
+        ibit2_up = List::a1[j] & is2_up;
         num2_up = ibit2_up / is2_up;
 
-        ibit2_down = List::c1[j] & is2_down;
+        ibit2_down = List::a1[j] & is2_down;
         num2_down = ibit2_down / is2_down;
-        ibit1_down = List::c1[j] & is1_down;
+        ibit1_down = List::a1[j] & is1_down;
         num1_down = ibit1_down / is1_down;
 
         tmp_spn_z = (num1_up - num1_down) * (num2_up - num2_down);
@@ -95,16 +95,16 @@ void totalspin_Hubbard(
         }
         else {
           if (ibit1_up != 0 && ibit1_down == 0 && ibit2_up == 0 && ibit2_down != 0) {
-            iexchg = List::c1[j] - (is1_up + is2_down);
+            iexchg = List::a1[j] - (is1_up + is2_down);
             iexchg += (is2_up + is1_down);
-            GetOffComp(List::c2_1, List::c2_2, iexchg, Large::irght, Large::ilft, Large::ihfbit, &off);
+            GetOffComp(List::a2_1, List::a2_2, iexchg, Large::irght, Large::ilft, Large::ihfbit, &off);
             for (istate = 0; istate < nstate; istate++)
               Phys::s2[istate] += real(conj(vec[j][istate]) * vec[off][istate]) / 2.0;
           }
           else if (ibit1_up == 0 && ibit1_down != 0 && ibit2_up != 0 && ibit2_down == 0) {
-            iexchg = List::c1[j] - (is1_down + is2_up);
+            iexchg = List::a1[j] - (is1_down + is2_up);
             iexchg += (is2_down + is1_up);
-            GetOffComp(List::c2_1, List::c2_2, iexchg, Large::irght, Large::ilft, Large::ihfbit, &off);
+            GetOffComp(List::a2_1, List::a2_2, iexchg, Large::irght, Large::ilft, Large::ihfbit, &off);
             for (istate = 0; istate < nstate; istate++)
               Phys::s2[istate] += real(conj(vec[j][istate]) * vec[off][istate]) / 2.0;
           }
@@ -277,7 +277,7 @@ void totalspin_Spin(
 
           //diagonal
           for (j = 0; j < i_max; j++) {
-            ibit1_up = List::c1[j] & is1_up;
+            ibit1_up = List::a1[j] & is1_up;
             num1_up = ibit1_up / is1_up;
             num1_down = 1 - num1_up;
             spn_z = (num1_up - num1_down) * (num2_up - num2_down);
@@ -298,10 +298,10 @@ void totalspin_Spin(
           is_up = is1_up + is2_up;
 
           for (j = 0; j < i_max; j++) {
-            ibit1_up = List::c1[j] & is1_up;
+            ibit1_up = List::a1[j] & is1_up;
             num1_up = ibit1_up / is1_up;
             num1_down = 1 - num1_up;
-            ibit2_up = List::c1[j] & is2_up;
+            ibit2_up = List::a1[j] & is2_up;
             num2_up = ibit2_up / is2_up;
             num2_down = 1 - num2_up;
 
@@ -316,8 +316,8 @@ void totalspin_Spin(
             else {
               ibit_tmp = (num1_up) ^ (num2_up);
               if (ibit_tmp != 0) {
-                iexchg = List::c1[j] ^ (is_up);
-                GetOffComp(List::c2_1, List::c2_2, iexchg, Large::irght, Large::ilft, Large::ihfbit, &off);
+                iexchg = List::a1[j] ^ (is_up);
+                GetOffComp(List::a2_1, List::a2_2, iexchg, Large::irght, Large::ilft, Large::ihfbit, &off);
                 for (istate = 0; istate < nstate; istate++)
                   Phys::s2[istate] += real(conj(vec[j][istate]) * vec[off][istate]) / 2.0;
               }
@@ -336,7 +336,7 @@ void totalspin_Spin(
         S2 = 0.5 * (Def::SiteToBit[isite2] - 1);
         if (isite1 == isite2) {
           for (j = 0; j < i_max; j++) {
-            spn_z1 = 0.5 * GetLocal2Sz(isite1, List::c1[j], Def::SiteToBit, Def::Tpow);
+            spn_z1 = 0.5 * GetLocal2Sz(isite1, List::a1[j], Def::SiteToBit, Def::Tpow);
             for (istate = 0; istate < nstate; istate++) {
               Phys::s2[istate] += real(conj(vec[j][istate]) * vec[j][istate]) * S1 * (S1 + 1.0);
               Phys::Sz[istate] += real(conj(vec[j][istate]) * vec[j][istate] * spn_z1);
@@ -345,21 +345,21 @@ void totalspin_Spin(
         }
         else {
           for (j = 0; j < i_max; j++) {
-            spn_z1 = 0.5 * GetLocal2Sz(isite1, List::c1[j], Def::SiteToBit, Def::Tpow);
-            spn_z2 = 0.5 * GetLocal2Sz(isite2, List::c1[j], Def::SiteToBit, Def::Tpow);
+            spn_z1 = 0.5 * GetLocal2Sz(isite1, List::a1[j], Def::SiteToBit, Def::Tpow);
+            spn_z2 = 0.5 * GetLocal2Sz(isite2, List::a1[j], Def::SiteToBit, Def::Tpow);
             for (istate = 0; istate < nstate; istate++)
               Phys::s2[istate] += real(conj(vec[j][istate]) * vec[j][istate] * spn_z1 * spn_z2);
 
-            sigma_1 = GetBitGeneral(isite1, List::c1[j], Def::SiteToBit, Def::Tpow);
-            sigma_2 = GetBitGeneral(isite2, List::c1[j], Def::SiteToBit, Def::Tpow);
+            sigma_1 = GetBitGeneral(isite1, List::a1[j], Def::SiteToBit, Def::Tpow);
+            sigma_2 = GetBitGeneral(isite2, List::a1[j], Def::SiteToBit, Def::Tpow);
 
-            ibit_tmp = GetOffCompGeneralSpin(List::c1[j], isite2, sigma_2, sigma_2 + 1, &off, Def::SiteToBit,
+            ibit_tmp = GetOffCompGeneralSpin(List::a1[j], isite2, sigma_2, sigma_2 + 1, &off, Def::SiteToBit,
               Def::Tpow);
             if (ibit_tmp == TRUE) {
               ibit_tmp = GetOffCompGeneralSpin(off, isite1, sigma_1, sigma_1 - 1, &off_2, Def::SiteToBit,
                 Def::Tpow);
               if (ibit_tmp == TRUE) {
-                ConvertToList1GeneralSpin(off_2, Check::sdim, &off);
+                ConvertToList1GeneralSpin(off_2, Check::sdim, &off, List::a2_1, List::a2_2);
                 for (istate = 0; istate < nstate; istate++)
                   Phys::s2[istate] += real(conj(vec[j][istate]) * vec[off][istate])
                   * sqrt(S2 * (S2 + 1) - real(spn_z2) * (real(spn_z2) + 1)) 
@@ -367,13 +367,13 @@ void totalspin_Spin(
               }
             }
 
-            ibit_tmp = GetOffCompGeneralSpin(List::c1[j], isite2, sigma_2, sigma_2 - 1, &off, Def::SiteToBit,
+            ibit_tmp = GetOffCompGeneralSpin(List::a1[j], isite2, sigma_2, sigma_2 - 1, &off, Def::SiteToBit,
               Def::Tpow);
             if (ibit_tmp == TRUE) {
               ibit_tmp = GetOffCompGeneralSpin(off, isite1, sigma_1, sigma_1 + 1, &off_2, Def::SiteToBit,
                 Def::Tpow);
               if (ibit_tmp == TRUE) {
-                ConvertToList1GeneralSpin(off_2, Check::sdim, &off);
+                ConvertToList1GeneralSpin(off_2, Check::sdim, &off, List::a2_1, List::a2_2);
                 for (istate = 0; istate < nstate; istate++)
                   Phys::s2[istate] += real(conj(vec[j][istate]) * vec[off][istate])
                   * sqrt(S2 * (S2 + 1) - real(spn_z2) * (real(spn_z2) - 1.0)) 

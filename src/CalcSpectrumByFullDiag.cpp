@@ -48,16 +48,16 @@ void CalcSpectrumByFullDiag(
   <li>Generate fully stored Hamiltonian. Because Wave::v0 & Wave::v1 are overwritten,
   copy ::Wave::v0 into ::vg.</li>
   */
-  idim_max_int = (int)Check::idim_max;
+  idim_max_int = (int)Check::idim_maxs;
   vR = cd_2d_allocate(idim_max_int, 1);
   vL = cd_2d_allocate(idim_max_int, 1);
   vLvvRv = cd_1d_allocate(idim_max_int);
 
   StartTimer(6301);
-  zclear(Check::idim_max*Check::idim_max, &Wave::v0[0][0]);
-  zclear(Check::idim_max*Check::idim_max, &Wave::v1[0][0]);
-  for (idim = 0; idim < Check::idim_max; idim++) Wave::v1[idim][idim] = 1.0;
-  mltply::main(Check::idim_max, Wave::v0, Wave::v1);
+  zclear(Check::idim_maxs*Check::idim_maxs, &Wave::v0[0][0]);
+  zclear(Check::idim_maxs*Check::idim_maxs, &Wave::v1[0][0]);
+  for (idim = 0; idim < Check::idim_maxs; idim++) Wave::v1[idim][idim] = 1.0;
+  mltply::main(Check::idim_maxs, Wave::v0, Wave::v1, Check::idim_maxs, List::b1, List::b2_1, List::b2_2, List::Diagonals);
   StopTimer(6301);
   /**
   <li>::Wave::v0 becomes eigenvalues in lapack_diag(), and
@@ -70,11 +70,11 @@ void CalcSpectrumByFullDiag(
   <li>Compute @f$|\langle n|c|0\rangle|^2@f$ for all @f$n@f$ and store them into ::Wave::v1,
   where @f$c|0\rangle@f$ is ::vg.</li>
   */
-  zclear(Check::idim_max, &vR[0][0]);
+  zclear(Check::idim_maxs, &vR[0][0]);
   GetExcitedState(1, vR, v1Org, 0);
   for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
     StartTimer(6303);
-    zclear(Check::idim_max, &vL[0][0]);
+    zclear(Check::idim_maxs, &vL[0][0]);
     GetExcitedState(1, vL, v1Org, idcSpectrum + 1);
     for (idim = 0; idim < idim_max_int; idim++) {
       vRv = 0.0;

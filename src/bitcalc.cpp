@@ -214,17 +214,19 @@ int GetOffCompGeneralSpin(
 int ConvertToList1GeneralSpin(
   const long int org_ibit,  //!<[in] original bit
   const long int ihlfbit,    //!<[in] split bit for general spin
-  long int* _ilist1Comp     //!<[out] component converted to list_1
+  long int* _ilist1Comp,     //!<[out] component converted to list_1
+  long int *list_2_1,
+  long int *list_2_2
 )
 {
   long int ia, ib;
   ia = org_ibit % ihlfbit;
   ib = org_ibit / ihlfbit;
-  if (List::c2_1[ia] * List::c2_2[ib] == 0) {
+  if (list_2_1[ia] * list_2_2[ib] == 0) {
     *_ilist1Comp = 0;
     return FALSE;
   }
-  *_ilist1Comp = List::c2_1[ia] + List::c2_2[ib] - 2;
+  *_ilist1Comp = list_2_1[ia] + list_2_2[ib] - 2;
   return TRUE;
 }
 /**

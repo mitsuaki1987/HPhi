@@ -143,7 +143,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/myscript.sh DESTINATION bin
 
 #include "sz.hpp"
 #include "HPhiTrans.hpp"
-#include "output_list.hpp"
 #include "diagonalcalc.hpp"
 #include "CalcByLOBPCG.hpp"
 #include "CalcByFullDiag.hpp"
@@ -182,6 +181,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/myscript.sh DESTINATION bin
 int main(int argc, char* argv[]){
 
   int mode=0;
+  int Ne, Nup, Ndown, Total2Sz;
   char cFileListName[D_FileNameMax];
 
   MP::STDOUT = stdout;
@@ -259,7 +259,11 @@ int main(int argc, char* argv[]){
   //Start Calculation
   if (Def::iFlgCalcSpec == DC::CALCSPEC_NOT || Def::iFlgCalcSpec == DC::CALCSPEC_SCRATCH) {
     
-    if (check() == MPIFALSE) {
+    Ne = Def::NeMPI;
+    Nup = Def::NupMPI;
+    Ndown = Def::NdownMPI;
+    Total2Sz = Def::Total2SzMPI;
+    if (check(&Ne, &Nup, &Ndown, &Total2Sz, &Check::idim_max) == MPIFALSE) {
      wrapperMPI::Exit(-1);
     }
     
@@ -267,17 +271,14 @@ int main(int argc, char* argv[]){
     xsetmem::large();
     
     StartTimer(1000);
-    if(sz(List::c1, List::c2_1, List::c2_2)!=0){
+    if(sz(List::a1, List::a2_1, List::a2_2, Ne, Nup, Ndown, Total2Sz, Check::idim_max)!=0){
       wrapperMPI::Exit(-1);
     }
 
     StopTimer(1000);
-    if(Def::WRITE==1){
-      output_list();
-      wrapperMPI::Exit(-2);
-    }
+
     StartTimer(2000);
-    diagonalcalc();
+    diagonalcalc(Check::idim_max, List::Diagonal, List::a1);
     StopTimer(2000);
       
     switch (Def::iCalcType) {

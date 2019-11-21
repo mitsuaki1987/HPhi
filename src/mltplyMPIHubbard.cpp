@@ -77,9 +77,10 @@ void mltply::Hubbard::GC::X_general_hopp_MPIdouble(
   }/*if (state1 == mask1 && state2 == 0)*/
   else return;
 
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
+  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max *nstate, &tmp_v1[0][0], 
+    &Wave::v1buf[0][0]);
 
-  zaxpy_long(Check::idim_max*nstate, trans, &Wave::v1buf[0][0], &tmp_v0[0][0]);
+  zaxpy_long(Check::idim_max *nstate, trans, &Wave::v1buf[0][0], &tmp_v0[0][0]);
 }/*void mltply::Hubbard::GC::general_hopp_MPIdouble*/
 /**
 @brief Hopping term in Hubbard + MPI
@@ -95,7 +96,11 @@ void mltply::Hubbard::C::X_CisAjt_MPIdouble(
   std::complex<double> tmp_trans,//!<[in] Transfer @f$t@f$
   int nstate,
   std::complex<double> **tmp_v0,//!< [out] Result v0 = H v1
-  std::complex<double> **tmp_v1//!< [in] v0 = H v1
+  std::complex<double> **tmp_v1,//!< [in] v0 = H v1
+  long int i_max,
+  long int* list_1, 
+  long int* list_2_1,
+  long int* list_2_2
 ) {
   int mask1, mask2, state1, state2, origin, bitdiff, Fsgn;
   long int idim_max_buf, j, ioff;
@@ -124,15 +129,15 @@ void mltply::Hubbard::C::X_CisAjt_MPIdouble(
   }/*if (state1 == mask1 && state2 == 0)*/
   else return;
 
-  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_maxOrg);
-  wrapperMPI::SendRecv_iv(origin, Check::idim_maxOrg, idim_max_buf, List::c1_org, List::c1buf_org);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_maxOrg*nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
+  idim_max_buf = wrapperMPI::SendRecv_i(origin, i_max);
+  wrapperMPI::SendRecv_iv(origin, i_max, idim_max_buf, list_1, List::buf);
+  wrapperMPI::SendRecv_cv(origin, i_max *nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
   
 #pragma omp parallel for default(none) private(j, ioff) \
-shared(idim_max_buf, trans,List::c2_1,List::c2_2,List::c1buf_org,Wave::v1buf, tmp_v0, \
+shared(idim_max_buf, trans,list_2_1,list_2_2,List::buf,Wave::v1buf, tmp_v0, \
 nstate,one,Large::irght, Large::ilft, Large::ihfbit)
   for (j = 0; j < idim_max_buf; j++) {
-    GetOffComp(List::c2_1, List::c2_2, List::c1buf_org[j],
+    GetOffComp(list_2_1, list_2_2, List::buf[j],
                Large::irght, Large::ilft, Large::ihfbit, &ioff);
     zaxpy_(&nstate, &trans, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
   }/*for (j = 0; j < idim_max_buf; j++)*/
@@ -233,12 +238,17 @@ void mltply::Hubbard::C::general_hopp_MPIdouble(
   long int itrans,//!<[in] Transfer ID
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
-  std::complex<double> **tmp_v1//!<[in] v0 = H v1
+  std::complex<double> **tmp_v1,//!<[in] v0 = H v1
+  long int i_max,
+  long int* list_1, 
+  long int* list_2_1,
+  long int* list_2_2
 ){
   mltply::Hubbard::C::X_general_hopp_MPIdouble( 
     Def::EDGeneralTransfer[itrans][0], Def::EDGeneralTransfer[itrans][1],
     Def::EDGeneralTransfer[itrans][2], Def::EDGeneralTransfer[itrans][3],
-    Def::EDParaGeneralTransfer[itrans], nstate, tmp_v0, tmp_v1);
+    Def::EDParaGeneralTransfer[itrans], nstate, tmp_v0, tmp_v1, 
+    i_max, list_1, list_2_1, list_2_2);
 }/*void mltply::Hubbard::C::general_hopp_MPIdouble*/
 /**
 @brief Hopping term in Hubbard (Kondo) + Canonical ensemble
@@ -253,7 +263,11 @@ void mltply::Hubbard::C::X_general_hopp_MPIdouble(
   std::complex<double> tmp_trans,//!<[in] Hopping integral
   int nstate,
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
-  std::complex<double> **tmp_v1//!<[in] v0 = H v1
+  std::complex<double> **tmp_v1,//!<[in] v0 = H v1
+  long int i_max, 
+  long int* list_1, 
+  long int* list_2_1,
+  long int* list_2_2
 ) {
   int mask1, mask2, state1, state2, origin, bitdiff, Fsgn;
   long int idim_max_buf, j, ioff;
@@ -281,18 +295,18 @@ void mltply::Hubbard::C::X_general_hopp_MPIdouble(
   }
   else return;
 
-  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-  wrapperMPI::SendRecv_iv(origin, Check::idim_max, idim_max_buf, List::c1, List::c1buf);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate,
+  idim_max_buf = wrapperMPI::SendRecv_i(origin, i_max);
+  wrapperMPI::SendRecv_iv(origin, i_max, idim_max_buf, list_1, List::buf);
+  wrapperMPI::SendRecv_cv(origin, i_max*nstate, idim_max_buf*nstate,
     &tmp_v1[0][0], &Wave::v1buf[0][0]);
 
 #pragma omp parallel default(none) private(j,ioff) \
 shared(idim_max_buf,trans,Large::irght, Large::ilft, Large::ihfbit, \
-List::c2_1,List::c2_2,List::c1buf,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
+list_2_1,list_2_2,List::buf,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
   {
 #pragma omp for
     for (j = 0; j < idim_max_buf; j++) {
-      GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
+      GetOffComp(list_2_1, list_2_2, List::buf[j],
                  Large::irght, Large::ilft, Large::ihfbit, &ioff);
       zaxpy_(&nstate, &trans, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
     }/*for (j = 0; j < idim_max_buf; j++)*/
@@ -307,12 +321,17 @@ void mltply::Hubbard::C::general_hopp_MPIsingle(
   long int itrans,//!<[in] Transfer ID
   int nstate,
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
-  std::complex<double> **tmp_v1//!<[in] v0 = H v1
+  std::complex<double> **tmp_v1,//!<[in] v0 = H v1
+  long int i_max,
+  long int* list_1, 
+  long int* list_2_1, 
+  long int* list_2_2
 ){
   mltply::Hubbard::C::X_general_hopp_MPIsingle(
     Def::EDGeneralTransfer[itrans][0], Def::EDGeneralTransfer[itrans][1],
     Def::EDGeneralTransfer[itrans][2], Def::EDGeneralTransfer[itrans][3],
-    Def::EDParaGeneralTransfer[itrans], nstate, tmp_v0, tmp_v1);
+    Def::EDParaGeneralTransfer[itrans], nstate, tmp_v0, tmp_v1, 
+    i_max, list_1, list_2_1, list_2_2);
 }/*void mltply::Hubbard::C::general_hopp_MPIsingle*/
 /**
 @brief Hopping term in Hubbard (Kondo) + Canonical ensemble
@@ -327,7 +346,11 @@ void mltply::Hubbard::C::X_general_hopp_MPIsingle(
   std::complex<double> tmp_trans,//!<[in] Hopping integral
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
-  std::complex<double> **tmp_v1//!<[in] v0 = H v1
+  std::complex<double> **tmp_v1,//!<[in] v0 = H v1
+  long int i_max,
+  long int* list_1, 
+  long int* list_2_1, 
+  long int* list_2_2
 ) {
   int mask2, state2, origin, bit2diff, Fsgn;
   long int mask1, state1, idim_max_buf, j, state1check, bit1diff, ioff, jreal;
@@ -344,9 +367,9 @@ void mltply::Hubbard::C::X_general_hopp_MPIsingle(
 
   SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
 
-  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-  wrapperMPI::SendRecv_iv(origin, Check::idim_max, idim_max_buf, List::c1, List::c1buf);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
+  idim_max_buf = wrapperMPI::SendRecv_i(origin, i_max);
+  wrapperMPI::SendRecv_iv(origin, i_max, idim_max_buf, list_1, List::buf);
+  wrapperMPI::SendRecv_cv(origin, i_max *nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
   /*
     Index in the intra PE
   */
@@ -368,17 +391,17 @@ void mltply::Hubbard::C::X_general_hopp_MPIsingle(
 
 #pragma omp parallel default(none) private(j,dmv,Fsgn,ioff,jreal,state1) \
 shared(idim_max_buf,trans,mask1,state1check,bit1diff,MP::myrank,Large::irght, Large::ilft, Large::ihfbit, \
-List::c1,List::c2_1,List::c2_2,List::c1buf,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
+List::buf,list_2_1,list_2_2,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
   {
 #pragma omp for
     for (j = 0; j < idim_max_buf; j++) {
 
-      jreal = List::c1buf[j];
+      jreal = List::buf[j];
       state1 = jreal & mask1;
 
       if (state1 == state1check) {
         SgnBit(jreal & bit1diff,&Fsgn);
-        GetOffComp(List::c2_1, List::c2_2, jreal ^ mask1,
+        GetOffComp(list_2_1, list_2_2, jreal ^ mask1,
             Large::irght, Large::ilft, Large::ihfbit, &ioff);
 
         dmv = (double)Fsgn * trans;
@@ -400,7 +423,11 @@ void mltply::Hubbard::C::X_CisAjt_MPIsingle(
   std::complex<double> tmp_trans,//!<[in] Hopping integral
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
-  std::complex<double> **tmp_v1//!<[in] v0 = H v1
+  std::complex<double> **tmp_v1,//!<[in] v0 = H v1
+  long int i_max, 
+  long int* list_1, 
+  long int* list_2_1, 
+  long int* list_2_2
 ){
   int mask2, state2, origin, bit2diff, Fsgn;
   long int mask1, state1, idim_max_buf, j, state1check, bit1diff, ioff, jreal;
@@ -417,9 +444,9 @@ void mltply::Hubbard::C::X_CisAjt_MPIsingle(
 
   SgnBit((long int) (origin & bit2diff), &Fsgn); // Fermion sign
 
-  idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_maxOrg);
-  wrapperMPI::SendRecv_iv(origin, Check::idim_maxOrg, idim_max_buf, List::c1_org, List::c1buf_org);
-  wrapperMPI::SendRecv_cv(origin, Check::idim_maxOrg*nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
+  idim_max_buf = wrapperMPI::SendRecv_i(origin, i_max);
+  wrapperMPI::SendRecv_iv(origin, i_max, idim_max_buf, list_1, List::buf);
+  wrapperMPI::SendRecv_cv(origin, i_max *nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
   /*
     Index in the intra PE
   */
@@ -437,14 +464,14 @@ void mltply::Hubbard::C::X_CisAjt_MPIsingle(
   bit1diff = Def::Tpow[2 * Def::Nsite - 1] * 2 - mask1 * 2;
 
 #pragma omp parallel for default(none) private(j,dmv,Fsgn,ioff,jreal,state1) \
-shared(idim_max_buf,trans,mask1,state1check,bit1diff,List::c2_1,List::c2_2,List::c1buf_org, \
-List::c1,Wave::v1buf, tmp_v0,nstate,one,Large::irght, Large::ilft, Large::ihfbit)
+shared(idim_max_buf,trans,mask1,state1check,bit1diff,list_2_1,list_2_2, \
+List::buf,Wave::v1buf, tmp_v0,nstate,one,Large::irght, Large::ilft, Large::ihfbit)
   for (j = 0; j < idim_max_buf; j++) {
-    jreal = List::c1buf_org[j];
+    jreal = List::buf[j];
     state1 = jreal & mask1;
     if (state1 == state1check) {
       SgnBit(jreal & bit1diff, &Fsgn);
-      GetOffComp(List::c2_1, List::c2_2, jreal ^ mask1,
+      GetOffComp(list_2_1, list_2_2, jreal ^ mask1,
         Large::irght, Large::ilft, Large::ihfbit, &ioff);
       if (ioff != 0) {
         dmv = (double)Fsgn * trans;

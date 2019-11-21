@@ -393,7 +393,7 @@ int CalcByLOBPCG::LOBPCG_Main()
   TimeKeeper("%s_TimeKeeper.dat", "Lanczos Eigen Value start:    %s", "a");
 
   zclear(i_max*Def::k_exct, &hwxp[1][0][0]);
-  mltply::main (Def::k_exct, hwxp[1], wxp[1]);
+  mltply::main (Def::k_exct, hwxp[1], wxp[1], i_max, List::a1, List::a2_1, List::a2_2, List::Diagonal);
   stp = 1;
   TimeKeeperWithStep("%s_TimeKeeper.dat", "%3d th Lanczos step: %s", "a", 0);
 
@@ -500,7 +500,7 @@ shared(i_max,wxp,dnorm,Def::k_exct)
     <li>@f${\bf W}={\hat H}{\bf w}@f$</li>
     */
     zclear(i_max*Def::k_exct, &hwxp[0][0][0]);
-    mltply::main(Def::k_exct, hwxp[0], wxp[0]);
+    mltply::main(Def::k_exct, hwxp[0], wxp[0], i_max, List::a1, List::a2_1, List::a2_2, List::Diagonal);
 
     TimeKeeperWithStep("%s_TimeKeeper.dat", "%3d th Lanczos step: %s", "a", stp);
     /**@brief

@@ -124,7 +124,7 @@ int SetOmega()
   return TRUE;
 }
 /**
-@brief Make the lists for the excited state; List::c1, List::c2_1 and List::c2_2 (for canonical ensemble).
+@brief Make the lists for the excited state; List::a1, List::a2_1 and List::a2_2 (for canonical ensemble).
 The original lists before the excitation are given by List::cxxx_org
 Output: iCalcModel (From HubbardNConserved to Hubbard), {Ne, Nup, Ndown, Nsite, Total2Sz} (update for MPI)
 @param iFlgListModifed [out] If the list is modified due to the excitation, the value becomes TRUE(1), otherwise FALSE(0).
@@ -134,15 +134,10 @@ Output: iCalcModel (From HubbardNConserved to Hubbard), {Ne, Nup, Ndown, Nsite, 
 int MakeExcitedList(
   int *iFlgListModifed
 ) {
+  int Ne, Nup, Ndown, Total2Sz;
   long int j;
   *iFlgListModifed = FALSE;
   //To Get Original space
-  if (check() == MPIFALSE) {
-    wrapperMPI::Finalize();
-    return -1;
-  }
-
-  Check::idim_maxOrg = Check::idim_max;
 
   if (Def::NNSingleExcitationOperator > 0) {
     switch (Def::iCalcModel) {
@@ -180,71 +175,47 @@ int MakeExcitedList(
   }
 
   if (*iFlgListModifed == TRUE) {
-    if (GetlistSize() == TRUE) {
-      List::c1_org = li_1d_allocate(Check::idim_max);
-#ifdef __MPI
-      long int MAXidim_max;
-      MAXidim_max = wrapperMPI::Max_li(Check::idim_max);
-      List::c1buf_org = li_1d_allocate(MAXidim_max + 1);
-#endif // MPI
-      List::c2_1_org = li_1d_allocate(Large::SizeOflist_2_1);
-      List::c2_2_org = li_1d_allocate(Large::SizeOflist_2_2);
-      if (List::c1_org == NULL
-        || List::c2_1_org == NULL
-        || List::c2_2_org == NULL
-        )
-      {
-        return -1;
-      }
-      for (j = 0; j < Large::SizeOflist_2_1; j++) {
-        List::c2_1_org[j] = 0;
-      }
-      for (j = 0; j < Large::SizeOflist_2_2; j++) {
-        List::c2_2_org[j] = 0;
-      }
 
-    }
-
-    if (sz(List::c1_org, List::c2_1_org, List::c2_2_org) != 0) {
-      return FALSE;
-    }
-
+    Ne = Def::NeMPI;
+    Nup = Def::NupMPI;
+    Ndown = Def::NdownMPI;
+    Total2Sz = Def::Total2SzMPI;
     if (Def::NNSingleExcitationOperator > 0) {
       switch (Def::iCalcModel) {
       case DC::HubbardGC:
         break;
       case DC::HubbardNConserved:
         if (Def::SingleExcitationOperator[0][0][2] == 1) { //cis
-          Def::Ne = Def::NeMPI + 1;
+          Ne = Def::NeMPI + 1;
         }
         else {
-          Def::Ne = Def::NeMPI - 1;
+          Ne = Def::NeMPI - 1;
         }
         break;
       case DC::KondoGC:
       case DC::Hubbard:
       case DC::Kondo:
         if (Def::SingleExcitationOperator[0][0][2] == 1) { //cis
-          Def::Ne = Def::NeMPI + 1;
+          Ne = Def::NeMPI + 1;
           if (Def::SingleExcitationOperator[0][0][1] == 0) {//up
-            Def::Nup = Def::NupOrg + 1;
-            Def::Ndown = Def::NdownOrg;
+            Nup = Def::NupMPI + 1;
+            Ndown = Def::NdownMPI;
           }
           else {//down
-            Def::Nup = Def::NupOrg;
-            Def::Ndown = Def::NdownOrg + 1;
+            Nup = Def::NupMPI;
+            Ndown = Def::NdownMPI + 1;
           }
         }
         else {//ajt
-          Def::Ne = Def::NeMPI - 1;
+          Ne = Def::NeMPI - 1;
           if (Def::SingleExcitationOperator[0][0][1] == 0) {//up
-            Def::Nup = Def::NupOrg - 1;
-            Def::Ndown = Def::NdownOrg;
+            Nup = Def::NupMPI - 1;
+            Ndown = Def::NdownMPI;
 
           }
           else {//down
-            Def::Nup = Def::NupOrg;
-            Def::Ndown = Def::NdownOrg - 1;
+            Nup = Def::NupMPI;
+            Ndown = Def::NdownMPI - 1;
           }
         }
         break;
@@ -254,7 +225,7 @@ int MakeExcitedList(
       }
     }
     else if (Def::NNPairExcitationOperator > 0) {
-      Def::Ne = Def::NeMPI;
+      Ne = Def::NeMPI;
       switch (Def::iCalcModel) {
       case DC::HubbardGC:
       case DC::SpinGC:
@@ -265,12 +236,12 @@ int MakeExcitedList(
       case DC::Kondo:
         if (Def::PairExcitationOperator[0][0][1] != Def::PairExcitationOperator[0][0][3]) {
           if (Def::PairExcitationOperator[0][0][1] == 0) {//up
-            Def::Nup = Def::NupOrg + 1;
-            Def::Ndown = Def::NdownOrg - 1;
+            Nup = Def::NupMPI + 1;
+            Ndown = Def::NdownMPI - 1;
           }
           else {//down
-            Def::Nup = Def::NupOrg - 1;
-            Def::Ndown = Def::NdownOrg + 1;
+            Nup = Def::NupMPI - 1;
+            Ndown = Def::NdownMPI + 1;
           }
         }
         break;
@@ -278,16 +249,16 @@ int MakeExcitedList(
         if (Def::PairExcitationOperator[0][0][1] != Def::PairExcitationOperator[0][0][3]) {
           if (Def::iFlgGeneralSpin == FALSE) {
             if (Def::PairExcitationOperator[0][0][1] == 0) {//down
-              Def::Nup = Def::NupOrg - 1;
-              Def::Ndown = Def::NdownOrg + 1;
+              Nup = Def::NupMPI - 1;
+              Ndown = Def::NdownMPI + 1;
             }
             else {//up
-              Def::Nup = Def::NupOrg + 1;
-              Def::Ndown = Def::NdownOrg - 1;
+              Nup = Def::NupMPI + 1;
+              Ndown = Def::NdownMPI - 1;
             }
           }
           else {//for general spin
-            Def::Total2Sz = Def::Total2SzMPI + 2 * (Def::PairExcitationOperator[0][0][1] - Def::PairExcitationOperator[0][0][3]);
+            Total2Sz = Def::Total2SzMPI + 2 * (Def::PairExcitationOperator[0][0][1] - Def::PairExcitationOperator[0][0][3]);
           }
         }
         break;
@@ -299,43 +270,61 @@ int MakeExcitedList(
     //Update Infomation
     Def::Nsite = Def::NsiteMPI;
 
-    if (check() == MPIFALSE) {
+    if (check(&Ne, &Nup, &Ndown, &Total2Sz, &Check::idim_maxs) == MPIFALSE) {
       wrapperMPI::Finalize();
       return FALSE;
     }
-  }
-
-  //set memory
-  xsetmem::large();
-  if (sz(List::c1, List::c2_1, List::c2_2) != 0) {
-    return FALSE;
-  }
+    if (GetlistSize() == TRUE) {
+      List::b1 = li_1d_allocate(Check::idim_maxs);
+      List::b2_1 = li_1d_allocate(Large::SizeOflist_2_1);
+      List::b2_2 = li_1d_allocate(Large::SizeOflist_2_2);
+      if (List::b1 == NULL
+        || List::b2_1 == NULL
+        || List::b2_2 == NULL
+        )
+      {
+        return -1;
+      }
+      for (j = 0; j < Large::SizeOflist_2_1; j++) {
+        List::b2_1[j] = 0;
+      }
+      for (j = 0; j < Large::SizeOflist_2_2; j++) {
+        List::b2_2[j] = 0;
+      }
+    }/*if (GetlistSize() == TRUE)*/
+    List::Diagonals = d_1d_allocate(Check::idim_maxs);
+    if (sz(List::b1, List::b2_1, List::b2_2, Ne, Nup, Ndown, Total2Sz, Check::idim_maxs) != 0) {
+      return FALSE;
+    }
+    /*
+     MPI buffer is common for list_a and list_b
+    */
 #ifdef __MPI
-  long int MAXidim_max, MAXidim_maxOrg;
-  MAXidim_max = wrapperMPI::Max_li(Check::idim_max);
-  MAXidim_maxOrg = wrapperMPI::Max_li(Check::idim_maxOrg);
-  if (MAXidim_max < MAXidim_maxOrg) {
-    free_cd_2d_allocate(Wave::v1buf);
-    Wave::v1buf = cd_2d_allocate(MAXidim_maxOrg, 1);
-  }
+    long int MAXidim_max, MAXidim_maxs;
+    MAXidim_max = wrapperMPI::Max_li(Check::idim_max);
+    MAXidim_maxs = wrapperMPI::Max_li(Check::idim_maxs);
+    if (MAXidim_max < MAXidim_maxs) {
+      free_cd_2d_allocate(Wave::v1buf);
+      free_li_1d_allocate(List::buf);
+      Wave::v1buf = cd_2d_allocate(MAXidim_maxs, Def::k_exct);
+      List::buf = li_1d_allocate(MAXidim_maxs);
+    }
 #endif // MPI
+  }
+  else {
+    Check::idim_maxs = Check::idim_max;
+    List::b1 = List::a1;
+    List::b2_1 = List::a2_1;
+    List::b2_2 = List::a2_2;
+    List::Diagonals = List::Diagonal;
+  }
+  Wave::v0 = cd_2d_allocate(Check::idim_maxs, Def::k_exct);
+  Wave::v1 = cd_2d_allocate(Check::idim_maxs, Def::k_exct);
 
   if (Def::iCalcModel == DC::HubbardNConserved) {
     Def::iCalcModel = DC::Hubbard;
   }
 
-#ifdef _DEBUG
-  if (*iFlgListModifed == TRUE) {
-    for (j = 0; j < Check::idim_maxOrg; j++) {
-      fprintf(stdout, "Debug1: MP::myrank=%d, list_1_org[ %ld] = %ld\n",
-        MP::myrank, j, List::c1_org[j] + MP::myrank * Def::OrgTpow[2 * Def::NsiteMPI - 1]);
-    }
-
-    for (j = 0; j < Check::idim_max; j++) {
-      fprintf(stdout, "Debug2: MP::myrank=%d, list_1[ %ld] = %ld\n", MP::myrank, j, List::c1[j] + MP::myrank * 64);
-    }
-  }
-#endif
   return TRUE;
 }
 /**
@@ -419,7 +408,7 @@ void CalcSpectrum()
   char *defname;
   long int i;
   long int i_max = 0;
-  int i_stp, NdcSpectrum;
+  int i_stp, NdcSpectrum, istate;
   int iFlagListModified = FALSE;
   FILE *fp;
   std::complex<double> **v1Org; /**< Input vector to calculate spectrum function.*/
@@ -431,38 +420,12 @@ void CalcSpectrum()
   std::complex<double> *dcomega;
   size_t byte_size;
 
-  if (Def::iFlgCalcSpec == DC::CALCSPEC_SCRATCH) {
-    Def::Nsite = Def::NsiteMPI;
-    Def::Total2Sz = Def::Total2SzMPI;
-    Def::Ne = Def::NeMPI;
-    Def::Nup = Def::NupMPI;
-    Def::Ndown = Def::NdownMPI;
-    if (GetlistSize() == TRUE) {
-      free_li_1d_allocate(List::c1);
-      free_li_1d_allocate(List::c2_1);
-      free_li_1d_allocate(List::c2_2);
-    }
-    free_d_1d_allocate(List::Diagonal);
-    free_cd_2d_allocate(Wave::v0);
-    v1Org = cd_2d_allocate(Check::idim_max, 1);
-    for (i = 0; i < Check::idim_max; i++) v1Org[i][0] = Wave::v1[i][0];
-    free_cd_2d_allocate(Wave::v1);
-#ifdef __MPI
-    free_li_1d_allocate(List::c1buf);
-    free_cd_2d_allocate(Wave::v1buf);
-#endif // MPI
-    free_d_1d_allocate(Phys::num_down);
-    free_d_1d_allocate(Phys::num_up);
-    free_d_1d_allocate(Phys::num);
-    free_d_1d_allocate(Phys::num2);
-    free_d_1d_allocate(Phys::energy);
-    free_d_1d_allocate(Phys::var);
-    free_d_1d_allocate(Phys::doublon);
-    free_d_1d_allocate(Phys::doublon2);
-    free_d_1d_allocate(Phys::Sz);
-    free_d_1d_allocate(Phys::Sz2);
-    free_d_1d_allocate(Phys::s2);
-  }/*if (Def::iFlgCalcSpec == DC::CALCSPEC_SCRATCH)*/
+  v1Org = cd_2d_allocate(Check::idim_max, Def::k_exct);
+  for (i = 0; i < Check::idim_max; i++) 
+    for (istate = 0; istate < Def::k_exct; istate++)
+      v1Org[i][istate] = Wave::v1[i][istate];
+  free_cd_2d_allocate(Wave::v0);
+  free_cd_2d_allocate(Wave::v1);
 
   //set omega
   if (SetOmega() != TRUE) {
@@ -514,13 +477,15 @@ void CalcSpectrum()
     wrapperMPI::Exit(-1);
   }
   Def::iFlagListModified = iFlagListModified;
+  Wave::v0 = cd_2d_allocate(Check::idim_maxs, Def::k_exct);
+  Wave::v1 = cd_2d_allocate(Check::idim_maxs, Def::k_exct);
 
   //Make excited state
   StartTimer(6100);
   if (Def::iFlgCalcSpec == DC::RECALC_NOT ||
     Def::iFlgCalcSpec == DC::RECALC_OUTPUT_TMComponents_VEC ||
     (Def::iFlgCalcSpec == DC::RECALC_INOUT_TMComponents_VEC && Def::iCalcType == DC::CG)) {
-    v1Org = cd_2d_allocate(Check::idim_maxOrg, 1);
+    v1Org = cd_2d_allocate(Check::idim_max, 1);
     //input eigen vector
     StartTimer(6101);
     fprintf(MP::STDOUT, "  Start: An Eigenvector is inputted in CalcSpectrum.\n");
@@ -539,7 +504,7 @@ void CalcSpectrum()
     byte_size = fread(&i_stp, sizeof(i_stp), 1, fp);
     Large::itr = i_stp; //For TPQ
     byte_size = fread(&i_max, sizeof(i_max), 1, fp);
-    if (i_max != Check::idim_maxOrg) {
+    if (i_max != Check::idim_max) {
       fprintf(stderr, "Error: MP::myrank=%d, i_max=%ld\n", MP::myrank, i_max);
       fprintf(stderr, "Error: A file of Input vector is incorrect.\n");
       wrapperMPI::Exit(-1);
@@ -551,7 +516,7 @@ void CalcSpectrum()
   }
   StopTimer(6100);
 
-  diagonalcalc();
+  diagonalcalc(Check::idim_maxs, List::Diagonals, List::b1);
 
   fprintf(MP::STDOUT, "  Start: Calculating a spectrum.\n\n");
   TimeKeeper("%s_TimeKeeper.dat", "Calculating a spectrum starts: %s", "a");

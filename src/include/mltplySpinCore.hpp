@@ -26,11 +26,14 @@ namespace mltply {
     int pairlift_GetInfo(int iPairLift);
     namespace C {
       namespace Half {
-        void exchange_element(long int j, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int* tmp_off);
-        int X_exchange_element(long int j, long int isA_up, long int isB_up, long int sigmaA, long int sigmaB, long int* tmp_off);
-        void CisAisCisAis_element(long int j, long int isA_up, long int isB_up, long int org_sigma2, long int org_sigma4, std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-        int X_CisAit(long int j, long int is1_spin, long int sigma2, long int* tmp_off);
-        int X_CisAis(long int j, long int is1_spin, long int sigma1);
+        void exchange_element(long int j, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int* tmp_off,
+          long int* list_1, long int* list_2_1, long int* list_2_2);
+        int X_exchange_element(long int j, long int isA_up, long int isB_up, long int sigmaA, long int sigmaB, long int* tmp_off,
+          long int* list_1, long int* list_2_1, long int* list_2_2);
+        void CisAisCisAis_element(long int j, long int isA_up, long int isB_up, long int org_sigma2, long int org_sigma4,
+          std::complex<double> tmp_V, int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, long int *list_1);
+        int X_CisAit(long int j, long int is1_spin, long int sigma2, long int* tmp_off, long int *list_1, long int *list_2_1, long int *list_2_2);
+        int X_CisAis(long int j, long int is1_spin, long int sigma1, long int *list_1);
       }
     }
     namespace GC {

@@ -39,25 +39,15 @@ namespace Def {
   int LanczosTarget = 0;/**<@brief Which eigenstate is used to check convergence.
                     Read from Calcmod in readdef.h.*/
   int read_hacker = 0;/**<@brief Whether use an efficient method (=1) in sz.c or not (=0)*/
-  int READ = 0;/**<@brief It is ALWAYS 0 ???*/
-  int WRITE = 0;/**<@brief It is ALWAYS 0 ???*/
 
   int Nsite = 0;/**<@brief Number of sites in the INTRA process region*/
   int NsiteMPI = 0;/**<@brief Total number of sites, differ from DefineList::Nsite*/
-  int Nup = 0;/**<@brief Number of spin-up electrons in this process. */
-  int Ndown = 0;/**<@brief Number of spin-down electrons in this process. */
   int NupMPI = 0;/**<@brief Total number of spin-up electrons across processes.
                       Deffer from DefineList::Nup. Read from modpara in readdef.h*/
   int NdownMPI = 0;/**<@brief Total number of spin-down electrons across processes.
                       Deffer from DefineList::Ndown. Read from modpara in readdef.h*/
-  int NupOrg = 0;/**<@brief Number of spin-up electrons before exitation. Used only in
-                      the spectrum calculation. Read from modpara in readdef.h*/
-  int NdownOrg = 0;/**<@brief Number of spin-down electrons before exitation. Used only in
-                      the spectrum calculation. Read from modpara in readdef.h*/
 
-  int Total2Sz = 0;/**<@brief Total @f$2S_z@f$ in this process.*/
   int Total2SzMPI = 0;/**<@brief Total @f$2S_z@f$ across processes.*/
-  int Ne = 0;/**<@brief Number of electrons in this process.*/
   int NeMPI = 0;/**<@brief Total number of electrons across process.
                      Differ from DefineList::Ne .*/
   int Lanczos_max = 0;/**<@brief Maximum number of iterations.*/
@@ -290,7 +280,7 @@ namespace Def {
 */
 namespace Check {
   long int idim_max = 0;/**<@brief The dimension of the Hilbert space of this process.*/
-  long int idim_maxOrg = 0;/**<@brief The local Hilbert-space dimention of original state for the spectrum.*/
+  long int idim_maxs = 0;/**<@brief The local Hilbert-space dimention of original state for the spectrum.*/
   long int sdim = 0;/**<@brief Dimension for Ogata-Lin ???*/
 };/*namespace Check*/
 /**
@@ -381,16 +371,17 @@ namespace Wave {
 
 namespace List {
   double* Diagonal; /**< list for diagonal components.*/
-  long int* c1; /**< list of getting real-space configuration for canonical state*/
-  long int* c1buf;/**< list of getting real-space configuration for canonical state across processes*/
-  long int* c2_1;/**< list to get index of list_1*/
-  long int* c2_2;/**< list to get index of list_1*/
+  double* Diagonals; /**< list for diagonal components.*/
+  long int* buf;/**< list of getting real-space configuration for canonical state across processes*/
+
+  long int* a1; /**< list of getting real-space configuration for canonical state*/
+  long int* a2_1;/**< list to get index of list_1*/
+  long int* a2_2;/**< list to get index of list_1*/
 
   /*[s] For Spectrum */
-  long int* c1_org; /**< list of getting real-space configuration for canonical state before excitation*/
-  long int* c1buf_org;/**< list of getting real-space configuration for canonical state before excitation across processes*/
-  long int* c2_1_org;/**< list to get index of list_1_org*/
-  long int* c2_2_org;/**< list to get index of list_1_org*/
+  long int* b1; /**< list of getting real-space configuration for canonical state before excitation*/
+  long int* b2_1;/**< list to get index of list_1_org*/
+  long int* b2_2;/**< list to get index of list_1_org*/
   /*[e] For Spectrum */
 }
 

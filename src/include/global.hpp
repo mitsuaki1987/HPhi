@@ -49,19 +49,11 @@ namespace Def {
   extern int LanczosEps;
   extern int LanczosTarget;
   extern int read_hacker;
-  extern int READ;
-  extern int WRITE;
   extern int Nsite;/**<@brief Number of sites in the INTRA process region*/
   extern int NsiteMPI;/**<@brief Total number of sites, differ from DefineList::Nsite*/
-  extern int Nup;/**<@brief Number of spin-up electrons in this process. */
-  extern int Ndown;/**<@brief Number of spin-down electrons in this process. */
   extern int NupMPI;
   extern int NdownMPI;
-  extern int NupOrg;
-  extern int NdownOrg;
-  extern int Total2Sz;/**<@brief Total @f$2S_z@f$ in this process.*/
   extern int Total2SzMPI;/**<@brief Total @f$2S_z@f$ across processes.*/
-  extern int Ne;/**<@brief Number of electrons in this process.*/
   extern int NeMPI;
   extern int Lanczos_max;
   extern double eps_Lanczos;
@@ -185,7 +177,7 @@ namespace Def {
 */
 namespace Check {
   extern long int idim_max;/**<@brief The dimension of the Hilbert space of this process.*/
-  extern long int idim_maxOrg;/**<@brief The local Hilbert-space dimention of original state for the spectrum.*/
+  extern long int idim_maxs;/**<@brief The local Hilbert-space dimention of original state for the spectrum.*/
   extern long int sdim;/**<@brief Dimension for Ogata-Lin ???*/
 };/*namespace Check*/
 /**
@@ -276,16 +268,17 @@ namespace Wave {
 
 namespace List {
   extern double* Diagonal; /**< list for diagonal components.*/
-  extern long int* c1; /**< list of getting real-space configuration for canonical state*/
-  extern long int* c1buf;/**< list of getting real-space configuration for canonical state across processes*/
-  extern long int* c2_1;/**< list to get index of list_1*/
-  extern long int* c2_2;/**< list to get index of list_1*/
+  extern double* Diagonals; /**< list for diagonal components.*/
+  extern long int* buf;/**< list of getting real-space configuration for canonical state across processes*/
+
+  extern long int* a1; /**< list of getting real-space configuration for canonical state*/
+  extern long int* a2_1;/**< list to get index of list_1*/
+  extern long int* a2_2;/**< list to get index of list_1*/
 
   /*[s] For Spectrum */
-  extern long int* c1_org; /**< list of getting real-space configuration for canonical state before excitation*/
-  extern long int* c1buf_org;/**< list of getting real-space configuration for canonical state before excitation across processes*/
-  extern long int* c2_1_org;/**< list to get index of list_1_org*/
-  extern long int* c2_2_org;/**< list to get index of list_1_org*/
+  extern long int* b1; /**< list of getting real-space configuration for canonical state before excitation*/
+  extern long int* b2_1;/**< list to get index of list_1_org*/
+  extern long int* b2_2;/**< list to get index of list_1_org*/
   /*[e] For Spectrum */
 }
 

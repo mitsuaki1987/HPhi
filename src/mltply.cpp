@@ -50,26 +50,27 @@
 int mltply::main(
   int nstate, /**<[in]*/
   std::complex<double> **tmp_v0, /**<[in, out]*/
-  std::complex<double> **tmp_v1 /**<[in]*/
+  std::complex<double> **tmp_v1, /**<[in]*/
+  long int i_max,
+  long int* list_1, 
+  long int* list_2_1, 
+  long int* list_2_2,
+  double *diagonal
 ) {
   int one = 1;
   long int j = 0;
   std::complex<double> dmv;
 
-
-  long int i_max;
-
   StartTimer(1);
-  i_max = Check::idim_max;
 
   Large::i_max = i_max;
   Large::mode = M_MLTPLY;
 
   StartTimer(100);
 #pragma omp parallel for default(none) private(dmv) \
-shared(tmp_v0, tmp_v1, List::Diagonal,one,nstate,i_max)
+shared(tmp_v0, tmp_v1, diagonal,one,nstate,i_max)
   for (j = 0; j < i_max; j++) {
-    dmv = List::Diagonal[j];
+    dmv = diagonal[j];
     zaxpy_(&nstate, &dmv, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
   }
   StopTimer(100);
@@ -83,11 +84,11 @@ shared(tmp_v0, tmp_v1, List::Diagonal,one,nstate,i_max)
   case DC::KondoGC:
   case DC::Hubbard:
   case DC::Kondo:
-    mltply::Hubbard::C::main(nstate, tmp_v0, tmp_v1);
+    mltply::Hubbard::C::main(nstate, tmp_v0, tmp_v1, i_max, list_1, list_2_1, list_2_2);
     break;
       
   case DC::Spin:
-    mltply::Spin::C::main(nstate, tmp_v0, tmp_v1);
+    mltply::Spin::C::main(nstate, tmp_v0, tmp_v1, i_max, list_1, list_2_1, list_2_2);
     break;
       
   case DC::SpinGC:

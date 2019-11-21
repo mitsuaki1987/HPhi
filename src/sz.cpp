@@ -62,7 +62,9 @@ int child_omp_sz_Kondo_hacker(
   long int *list_1_,
   long int *list_2_1_,
   long int *list_2_2_,
-  long int *list_jb_
+  long int *list_jb_,
+  int Nup,
+  int Ndown
 )
 {
   long int j;
@@ -106,7 +108,7 @@ int child_omp_sz_Kondo_hacker(
   tmp_num_down = num_down;
   if (icheck_loc == 1) {
     //for(ia=0;ia<Check::sdim;ia++){
-    ia = Def::Tpow[Def::Nup + Def::Ndown - tmp_num_up - tmp_num_down] - 1;
+    ia = Def::Tpow[Nup + Ndown - tmp_num_up - tmp_num_down] - 1;
     //ia = 1;
     //if(ia < Check::sdim && ia!=0){
     //ia = snoob(ia);
@@ -147,8 +149,8 @@ int child_omp_sz_Kondo_hacker(
         icheck_loc = icheck_loc * (div_up^div_down);
       }
 
-      if (num_up == (unsigned long)Def::Nup 
-        && num_down == (unsigned long)Def::Ndown && icheck_loc == 1) {
+      if (num_up == (unsigned long)Nup 
+        && num_down == (unsigned long)Ndown && icheck_loc == 1) {
         //printf("ia=%ud ja=%ud \n",ia,ja);
         list_1_[ja + jb] = ia + ib * ihfbit;
         list_2_1_[ia] = ja + 1;
@@ -232,7 +234,10 @@ int child_omp_sz(
   long int* list_1_, //!<[out]
   long int* list_2_1_,//!<[out]
   long int* list_2_2_,//!<[out]
-  long int* list_jb_ //!<[in]
+  long int* list_jb_, //!<[in]
+  int Ne,
+  int Nup,
+  int Ndown
 )
 {
   long int i,j; 
@@ -273,7 +278,7 @@ int child_omp_sz(
         num_up += div_up;
         num_down += div_down;
       }
-      if(num_up == Def::Nup && num_down == Def::Ndown){
+      if(num_up == Nup && num_down == Ndown){
         list_1_[ja+jb]=ia+ib*ihfbit;
         list_2_1_[ia]=ja+1;
         list_2_2_[ib]=jb+1;
@@ -295,7 +300,7 @@ int child_omp_sz(
         num_up += div_up;
         num_down += div_down;
       }
-      if( (num_up+num_down) == Def::Ne){
+      if( (num_up+num_down) == Ne){
         list_1_[ja+jb]=ia+ib*ihfbit;
         list_2_1_[ia]=ja+1;
         list_2_2_[ib]=jb+1;
@@ -325,7 +330,10 @@ int child_omp_sz_hacker(long int ib,
   long int *list_1_,
   long int *list_2_1_,
   long int *list_2_2_,
-  long int *list_jb_
+  long int *list_jb_,
+  int Ne,
+  int Nup,
+  int Ndown
 )
 {
   long int j;
@@ -354,9 +362,9 @@ int child_omp_sz_hacker(long int ib,
   tmp_num_down = num_down;
 
   if (Def::iCalcModel == DC::Hubbard) {
-    if (tmp_num_up <= (unsigned long)Def::Nup
-      && tmp_num_down <= (unsigned long)Def::Ndown) { //do not exceed Nup and Ndown
-      ia = Def::Tpow[Def::Nup + Def::Ndown - tmp_num_up - tmp_num_down] - 1;
+    if (tmp_num_up <= (unsigned long)Nup
+      && tmp_num_down <= (unsigned long)Ndown) { //do not exceed Nup and Ndown
+      ia = Def::Tpow[Nup + Ndown - tmp_num_up - tmp_num_down] - 1;
       if (ia < (unsigned long)Check::sdim) {
         num_up = tmp_num_up;
         num_down = tmp_num_down;
@@ -368,7 +376,7 @@ int child_omp_sz_hacker(long int ib,
           num_up += div_up;
           num_down += div_down;
         }
-        if (num_up == (unsigned long)Def::Nup && num_down == (unsigned long)Def::Ndown) {
+        if (num_up == (unsigned long)Nup && num_down == (unsigned long)Ndown) {
           list_1_[ja + jb] = ia + ib * ihfbit;
           list_2_1_[ia] = ja + 1;
           list_2_2_[ib] = jb + 1;
@@ -387,7 +395,7 @@ int child_omp_sz_hacker(long int ib,
               num_up += div_up;
               num_down += div_down;
             }
-            if (num_up == (unsigned long)Def::Nup && num_down == (unsigned long)Def::Ndown) {
+            if (num_up == (unsigned long)Nup && num_down == (unsigned long)Ndown) {
               list_1_[ja + jb] = ia + ib * ihfbit;
               list_2_1_[ia] = ja + 1;
               list_2_2_[ib] = jb + 1;
@@ -400,8 +408,8 @@ int child_omp_sz_hacker(long int ib,
     }
   }
   else if (Def::iCalcModel == DC::HubbardNConserved) {
-    if (tmp_num_up + tmp_num_down <= (unsigned long)Def::Ne) { //do not exceed Ne
-      ia = Def::Tpow[Def::Ne - tmp_num_up - tmp_num_down] - 1;
+    if (tmp_num_up + tmp_num_down <= (unsigned long)Ne) { //do not exceed Ne
+      ia = Def::Tpow[Ne - tmp_num_up - tmp_num_down] - 1;
       if (ia < (unsigned long)Check::sdim) {
         list_1_[ja + jb] = ia + ib * ihfbit;
         list_2_1_[ia] = ja + 1;
@@ -441,7 +449,9 @@ int child_omp_sz_Kondo(
   long int* list_1_,  //[out]
   long int* list_2_1_,//[out]
   long int* list_2_2_,//[out]
-  long int* list_jb_  //[in]
+  long int* list_jb_,  //[in]
+  int Nup,
+  int Ndown
 )
 {
   long int i,j; 
@@ -516,7 +526,7 @@ int child_omp_sz_Kondo(
         icheck_loc= icheck_loc*(div_up^div_down);
       }
       
-      if(num_up == Def::Nup && num_down == Def::Ndown && icheck_loc==1){
+      if(num_up == Nup && num_down == Ndown && icheck_loc==1){
         list_1_[ja+jb]=ia+ib*ihfbit;
         /*
         list_2_1_[ia]=ja;
@@ -629,7 +639,8 @@ int child_omp_sz_spin(
   long int *list_1_,
   long int *list_2_1_,
   long int *list_2_2_,
-  long int *list_jb_
+  long int *list_jb_,
+  int Ne
 )
 {
   long int i, j, div;
@@ -657,7 +668,7 @@ int child_omp_sz_spin(
       num_up += div;
     }
 
-    if (num_up == Def::Ne) {
+    if (num_up == Ne) {
       list_1_[ja + jb] = ia + ib * ihfbit;
       list_2_1_[ia] = ja + 1;
       list_2_2_[ib] = jb + 1;
@@ -688,7 +699,8 @@ int child_omp_sz_spin_hacker(
   long int *list_1_,
   long int *list_2_1_,
   long int *list_2_2_,
-  long int *list_jb_
+  long int *list_jb_,
+  int Ne
 )
 {
   long int j;
@@ -709,9 +721,9 @@ int child_omp_sz_spin_hacker(
   tmp_num_up = num_up;
 
   // using hacker's delight
-  if (tmp_num_up <= (unsigned long)Def::Ne
-    && ((unsigned long)Def::Ne - tmp_num_up) <= (unsigned long)Def::Nsite - 1) { // do not exceed Ne
-    ia = Def::Tpow[Def::Ne - tmp_num_up] - 1;
+  if (tmp_num_up <= (unsigned long)Ne
+    && ((unsigned long)Ne - tmp_num_up) <= (unsigned long)Def::Nsite - 1) { // do not exceed Ne
+    ia = Def::Tpow[Ne - tmp_num_up] - 1;
     if (ia < (unsigned long)ihfbit) {          // do not exceed Ne
       list_1_[ja + jb] = ia + ib * ihfbit;
       list_2_1_[ia] = ja + 1;
@@ -756,7 +768,8 @@ int child_omp_sz_GeneralSpin(
   long int* list_2_2_,
   long int* list_2_1_Sz_,
   long int* list_2_2_Sz_,
-  long int* list_jb_
+  long int* list_jb_,
+  int Total2Sz
 )
 {
   long int ia,ja,jb;  
@@ -767,7 +780,7 @@ int child_omp_sz_GeneralSpin(
   ja = 0;
   for(ia=0;ia<ihfbit;ia++){
     tmp_2Sz=list_2_1_Sz_[ia]+list_2_2_Sz_ib;
-    if(tmp_2Sz == Def::Total2Sz){
+    if(tmp_2Sz == Total2Sz){
       list_1_[ja+jb]=ia+ib*ihfbit;
       list_2_1_[ia]=ja+1;
       list_2_2_[ib]=jb+1;
@@ -775,96 +788,6 @@ int child_omp_sz_GeneralSpin(
     } 
   }
   return ja; 
-}
-
-/** 
- * @brief reading the list of the restricted Hilbert space
- * 
- * @param[in] irght 
- * @param[in] ilft 
- * @param[in] ihfbit 
- * @param[in] i_max 
- * 
- * @return 
- * @author Takahiro Misawa (The University of Tokyo)
- * @author Kazuyoshi Yoshimi (The University of Tokyo)
- */
-int Read_sz
-(
- const long int irght,
- const long int ilft,
- const long int ihfbit,
- long int *i_max
- )
-{
-  FILE *fp,*fp_err;
-  char sdt[D_FileNameMax];
-  char buf[D_FileNameMax];
-    
-  long int icnt=0; 
-  long int ia,ib;
-  long int ja=0;
-  long int jb=0;
-  long int ibpatn=0;
-  long int dam; 
-
-  TimeKeeper("%s_sz_TimeKeeper.dat","READ = 1: read starts: %s", "a");
-  TimeKeeper("%s_TimeKeeper.dat","READ = 1: read starts: %s", "a");
-
-  switch(Def::iCalcModel){
-  case DC::Hubbard:
-  case DC::HubbardGC:
-  case DC::Spin:
-  case DC::SpinGC:
-    sprintf(sdt,"ListForModel_Ns%d_Nup%dNdown%d.dat", Def::Nsite, Def::Nup, Def::Ndown);
-    break;
-  case DC::Kondo:
-    sprintf(sdt,"ListForKondo_Ns%d_Ncond%d.dat",Def::Nsite,Def::Ne);
-    break;
-  }
-  if(childfopenMPI(sdt,"r", &fp)!=0){
-    wrapperMPI::Exit(-1);
-  }  
-
-  if(fp == NULL){
-    if(childfopenMPI("Err_sz.dat","a",&fp_err)!=0){
-      wrapperMPI::Exit(-1);
-    }
-    fprintf(fp_err, "%s", "No file. Please set READ=0.\n");
-    fprintf(stderr, "%s", "No file. Please set READ=0.\n");
-    fprintf(fp_err, " %s does not exist. \n",sdt);
-    fprintf(stderr, " %s does not exist. \n", sdt);
-    fclose(fp_err);
-  }else{
-    while(NULL != wrapperMPI::Fgets(buf,sizeof(buf),fp)){  
-      dam=atol(buf);  
-      List::c1[icnt]=dam;
-            
-      ia= dam & irght;
-      ib= dam & ilft;
-      ib=ib/ihfbit; 
-            
-      if(ib==ibpatn){
-        ja=ja+1;
-      }else{
-        ibpatn=ib;
-        ja=1;
-        jb=icnt-1;
-      }
-            
-      List::c2_1[ia]=ja;
-      List::c2_2[ib]=jb;
-      icnt+=1;
-                
-    }
-    fclose(fp);
-    *i_max=icnt-1;
-  }
-
-  TimeKeeper("%s_sz_TimeKeeper.dat", "READ = 1: read finishes: %s", "a");
-  TimeKeeper("%s_TimeKeeper.dat", "READ = 1: read finishes: %s", "a");
-
-  return 0;
 }
 /**
  *
@@ -880,14 +803,19 @@ int Read_sz
  */
 int sz
 (
-  long int *list_1_,
-  long int *list_2_1_,
-  long int *list_2_2_
+  long int* list_1_,
+  long int* list_2_1_,
+  long int* list_2_2_,
+  int Ne,
+  int Nup,
+  int Ndown,
+  int Total2Sz,
+  long int idim_max
 )
 {
-  FILE *fp, *fp_err;
+  FILE* fp, * fp_err;
   char sdt[D_FileNameMax], sdt_err[D_FileNameMax];
-  long int *HilbertNumToSz;
+  long int* HilbertNumToSz;
   long int i, icnt;
   long int ib, jb;
 
@@ -898,7 +826,7 @@ int sz
   //*[s] for omp parall
   int  all_up, all_down, tmp_res, num_threads;
   long int tmp_1, tmp_2, tmp_3;
-  long int **comb;
+  long int** comb;
   //*[e] for omp parall
 
   // [s] for Kondo
@@ -915,8 +843,8 @@ int sz
   long int div_up;
 
   // [s] for general spin
-  long int *list_2_1_Sz;
-  long int *list_2_2_Sz;
+  long int* list_2_1_Sz;
+  long int* list_2_2_Sz;
   if (Def::iFlgGeneralSpin == TRUE) {
     list_2_1_Sz = li_1d_allocate(Check::sdim + 2);
     list_2_2_Sz = li_1d_allocate((Def::Tpow[Def::Nsite - 1] * Def::SiteToBit[Def::Nsite - 1] / Check::sdim) + 2);
@@ -929,7 +857,7 @@ int sz
   }
   // [e] for general spin
 
-  long int *list_jb;
+  long int* list_jb;
   list_jb = li_1d_allocate(Large::SizeOflistjb);
   for (i = 0; i < Large::SizeOflistjb; i++) {
     list_jb[i] = 0;
@@ -949,7 +877,7 @@ int sz
   TimeKeeper("%s_sz_TimeKeeper.dat", "initial sz : %s", "w");
   TimeKeeper("%s_TimeKeeper.dat", "initial sz : %s", "a");
 
-  if (Check::idim_max != 0) {
+  if (idim_max != 0) {
     switch (Def::iCalcModel) {
     case DC::HubbardGC:
     case DC::HubbardNConserved:
@@ -981,7 +909,7 @@ int sz
       break;
     }
     comb = li_2d_allocate(Def::Nsite + 1, Def::Nsite + 1);
-    i_max = Check::idim_max;
+    i_max = idim_max;
 
     switch (Def::iCalcModel) {
     case DC::HubbardNConserved:
@@ -990,7 +918,7 @@ int sz
     case DC::Kondo:
     case DC::Spin:
       if (Def::iFlgGeneralSpin == FALSE) {
-        if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel, 
+        if (GetSplitBitByModel(Def::Nsite, Def::iCalcModel,
           &Large::irght, &Large::ilft, &Large::ihfbit) != 0) {
           wrapperMPI::Exit(-1);
         }
@@ -1008,546 +936,544 @@ int sz
     icnt = 1;
     jb = 0;
 
-    if (Def::READ == 1) {
-      if (Read_sz(Large::irght, Large::ilft, Large::ihfbit, &i_max) != 0) {
-        wrapperMPI::Exit(-1);
-      }
-    }
-    else {
-      sprintf(sdt, "%s_sz_TimeKeeper.dat", Def::CDataFileHead);
+    sprintf(sdt, "%s_sz_TimeKeeper.dat", Def::CDataFileHead);
 #ifdef _OPENMP
-      num_threads = omp_get_max_threads();
+    num_threads = omp_get_max_threads();
 #else
-      num_threads = 1;
+    num_threads = 1;
 #endif
-      childfopenMPI(sdt, "a", &fp);
-      fprintf(fp, "num_threads==%d\n", num_threads);
-      fclose(fp);
+    childfopenMPI(sdt, "a", &fp);
+    fprintf(fp, "num_threads==%d\n", num_threads);
+    fclose(fp);
 
-      //*[s] omp parallel
+    //*[s] omp parallel
 
-      TimeKeeper("%s_sz_TimeKeeper.dat", "omp parallel sz starts: %s", "a");
-      TimeKeeper("%s_TimeKeeper.dat", "omp parallel sz starts: %s", "a");
-      switch (Def::iCalcModel) {
-      case DC::HubbardGC:
-        icnt = Def::Tpow[2 * Def::Nsite - 1] * 2 + 0;/*Tpow[2*Def::Nsit]=1*/
-        break;
+    TimeKeeper("%s_sz_TimeKeeper.dat", "omp parallel sz starts: %s", "a");
+    TimeKeeper("%s_TimeKeeper.dat", "omp parallel sz starts: %s", "a");
+    switch (Def::iCalcModel) {
+    case DC::HubbardGC:
+      icnt = Def::Tpow[2 * Def::Nsite - 1] * 2 + 0;/*Tpow[2*Def::Nsit]=1*/
+      break;
 
-      case DC::SpinGC:
-        if (Def::iFlgGeneralSpin == FALSE) {
-          icnt = Def::Tpow[Def::Nsite - 1] * 2 + 0;/*Tpow[Def::Nsit]=1*/
+    case DC::SpinGC:
+      if (Def::iFlgGeneralSpin == FALSE) {
+        icnt = Def::Tpow[Def::Nsite - 1] * 2 + 0;/*Tpow[Def::Nsit]=1*/
+      }
+      else {
+        icnt = Def::Tpow[Def::Nsite - 1] * Def::SiteToBit[Def::Nsite - 1];
+      }
+      break;
+
+    case DC::KondoGC:
+      // this part can not be parallelized
+      jb = 0;
+      num_loc = 0;
+      for (j = Def::Nsite / 2; j < Def::Nsite; j++) { // counting # of localized spins
+        if (Def::LocSpn[j] != ITINERANT) { // //ITINERANT ==0 -> itinerant
+          num_loc += 1;
         }
-        else {
-          icnt = Def::Tpow[Def::Nsite - 1] * Def::SiteToBit[Def::Nsite - 1];
-        }
-        break;
+      }
 
-      case DC::KondoGC:
-        // this part can not be parallelized
-        jb = 0;
-        num_loc = 0;
-        for (j = Def::Nsite / 2; j < Def::Nsite; j++) { // counting # of localized spins
-          if (Def::LocSpn[j] != ITINERANT) { // //ITINERANT ==0 -> itinerant
-            num_loc += 1;
+      for (ib = 0; ib < Check::sdim; ib++) {
+        list_jb[ib] = jb;
+        i = ib * Large::ihfbit;
+        icheck_loc = 1;
+        for (j = (Def::Nsite + 1) / 2; j < Def::Nsite; j++) {
+          div_up = i & Def::Tpow[2 * j];
+          div_up = div_up / Def::Tpow[2 * j];
+          div_down = i & Def::Tpow[2 * j + 1];
+          div_down = div_down / Def::Tpow[2 * j + 1];
+          if (Def::LocSpn[j] != ITINERANT) {
+            if (Def::Nsite % 2 == 1 && j == (Def::Nsite / 2)) {
+              icheck_loc = icheck_loc;
+            }
+            else {
+              icheck_loc = icheck_loc * (div_up ^ div_down);// exclude doubllly ocupited site
+            }
           }
         }
+        if (icheck_loc == 1) {
+          if (Def::Nsite % 2 == 1 && Def::LocSpn[Def::Nsite / 2] != ITINERANT) {
+            jb += Def::Tpow[Def::Nsite - 1 - (Def::NLocSpn - num_loc)];
+          }
+          else {
+            jb += Def::Tpow[Def::Nsite - (Def::NLocSpn - num_loc)];
+          }
+        }
+      }
+
+      icnt = 0;
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim)
+      for (ib = 0; ib < Check::sdim; ib++) {
+        icnt += child_omp_sz_KondoGC(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
+      }
+      break;
+
+    case DC::Hubbard:
+      hacker = Def::read_hacker;
+      if (hacker == 0) {
+        // this part can not be parallelized
+        jb = 0;
+        for (ib = 0; ib < Check::sdim; ib++) { // sdim = 2^(N/2)
+          list_jb[ib] = jb;
+          i = ib * Large::ihfbit;
+          //[s] counting # of up and down electrons
+          num_up = 0;
+          for (j = 0; j <= N2 - 2; j += 2) { // even -> up spin
+            div = i & Def::Tpow[j];
+            div = div / Def::Tpow[j];
+            num_up += div;
+          }
+          num_down = 0;
+          for (j = 1; j <= N2 - 1; j += 2) { // odd -> down spin
+            div = i & Def::Tpow[j];
+            div = div / Def::Tpow[j];
+            num_down += div;
+          }
+          //[e] counting # of up and down electrons
+          tmp_res = Def::Nsite % 2; // even Ns-> 0, odd Ns -> 1
+          all_up = (Def::Nsite + tmp_res) / 2;
+          all_down = (Def::Nsite - tmp_res) / 2;
+
+          tmp_1 = Binomial(all_up, Nup - num_up, comb, all_up);
+          tmp_2 = Binomial(all_down, Ndown - num_down, comb, all_down);
+          jb += tmp_1 * tmp_2;
+        }
+
+        //#pragma omp barrier
+        TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+        TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+
+        icnt = 0;
+        for (ib = 0; ib < Check::sdim; ib++) {
+          icnt += child_omp_sz(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb, Ne, Nup, Ndown);
+        }
+        break;
+      }
+      else if (hacker == 1) {
+        // this part can not be parallelized
+        jb = 0;
 
         for (ib = 0; ib < Check::sdim; ib++) {
           list_jb[ib] = jb;
+
           i = ib * Large::ihfbit;
-          icheck_loc = 1;
-          for (j = (Def::Nsite + 1) / 2; j < Def::Nsite; j++) {
-            div_up = i & Def::Tpow[2 * j];
-            div_up = div_up / Def::Tpow[2 * j];
-            div_down = i & Def::Tpow[2 * j + 1];
-            div_down = div_down / Def::Tpow[2 * j + 1];
-            if (Def::LocSpn[j] != ITINERANT) {
-              if (Def::Nsite % 2 == 1 && j == (Def::Nsite / 2)) {
-                icheck_loc = icheck_loc;
-              }
-              else {
-                icheck_loc = icheck_loc * (div_up^div_down);// exclude doubllly ocupited site
-              }
-            }
+          num_up = 0;
+          for (j = 0; j <= N2 - 2; j += 2) {
+            div = i & Def::Tpow[j];
+            div = div / Def::Tpow[j];
+            num_up += div;
           }
-          if (icheck_loc == 1) {
-            if (Def::Nsite % 2 == 1 && Def::LocSpn[Def::Nsite / 2] != ITINERANT) {
-              jb += Def::Tpow[Def::Nsite - 1 - (Def::NLocSpn - num_loc)];
-            }
-            else {
-              jb += Def::Tpow[Def::Nsite - (Def::NLocSpn - num_loc)];
-            }
+          num_down = 0;
+          for (j = 1; j <= N2 - 1; j += 2) {
+            div = i & Def::Tpow[j];
+            div = div / Def::Tpow[j];
+            num_down += div;
           }
+
+          tmp_res = Def::Nsite % 2; // even Ns-> 0, odd Ns -> 1
+          all_up = (Def::Nsite + tmp_res) / 2;
+          all_down = (Def::Nsite - tmp_res) / 2;
+
+          tmp_1 = Binomial(all_up, Nup - num_up, comb, all_up);
+          tmp_2 = Binomial(all_down, Ndown - num_down, comb, all_down);
+          jb += tmp_1 * tmp_2;
         }
+
+        //#pragma omp barrier
+        TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+        TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
         icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim)
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, Check::sdim,Ne, Nup, Ndown)
         for (ib = 0; ib < Check::sdim; ib++) {
-          icnt += child_omp_sz_KondoGC(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
+          icnt += child_omp_sz_hacker(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb, 
+            Ne, Nup, Ndown);
         }
         break;
+      }
+      else {
+        fprintf(stderr, "Error: CalcHS in ModPara file must be 0 or 1 for Hubbard model.");
+        return -1;
+      }
 
-      case DC::Hubbard:
-        hacker = Def::read_hacker;
-        if (hacker == 0) {
-          // this part can not be parallelized
-          jb = 0;
-          for (ib = 0; ib < Check::sdim; ib++) { // sdim = 2^(N/2)
-            list_jb[ib] = jb;
-            i = ib * Large::ihfbit;
-            //[s] counting # of up and down electrons
-            num_up = 0;
-            for (j = 0; j <= N2 - 2; j += 2) { // even -> up spin
-              div = i & Def::Tpow[j];
-              div = div / Def::Tpow[j];
-              num_up += div;
-            }
-            num_down = 0;
-            for (j = 1; j <= N2 - 1; j += 2) { // odd -> down spin
-              div = i & Def::Tpow[j];
-              div = div / Def::Tpow[j];
-              num_down += div;
-            }
-            //[e] counting # of up and down electrons
-            tmp_res = Def::Nsite % 2; // even Ns-> 0, odd Ns -> 1
-            all_up = (Def::Nsite + tmp_res) / 2;
-            all_down = (Def::Nsite - tmp_res) / 2;
-
-            tmp_1 = Binomial(all_up, Def::Nup - num_up, comb, all_up);
-            tmp_2 = Binomial(all_down, Def::Ndown - num_down, comb, all_down);
-            jb += tmp_1 * tmp_2;
-          }
-
-          //#pragma omp barrier
-          TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
-          TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
-
-          icnt = 0;
-          for (ib = 0; ib < Check::sdim; ib++) {
-            icnt += child_omp_sz(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
-          }
-          break;
-        }
-        else if (hacker == 1) {
-          // this part can not be parallelized
-          jb = 0;
-
-          for (ib = 0; ib < Check::sdim; ib++) {
-            list_jb[ib] = jb;
-
-            i = ib * Large::ihfbit;
-            num_up = 0;
-            for (j = 0; j <= N2 - 2; j += 2) {
-              div = i & Def::Tpow[j];
-              div = div / Def::Tpow[j];
-              num_up += div;
-            }
-            num_down = 0;
-            for (j = 1; j <= N2 - 1; j += 2) {
-              div = i & Def::Tpow[j];
-              div = div / Def::Tpow[j];
-              num_down += div;
-            }
-
-            tmp_res = Def::Nsite % 2; // even Ns-> 0, odd Ns -> 1
-            all_up = (Def::Nsite + tmp_res) / 2;
-            all_down = (Def::Nsite - tmp_res) / 2;
-
-            tmp_1 = Binomial(all_up, Def::Nup - num_up, comb, all_up);
-            tmp_2 = Binomial(all_down, Def::Ndown - num_down, comb, all_down);
-            jb += tmp_1 * tmp_2;
-          }
-
-          //#pragma omp barrier
-          TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
-          TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
-
-          icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, Check::sdim)
-          for (ib = 0; ib < Check::sdim; ib++) {
-            icnt += child_omp_sz_hacker(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
-          }
-          break;
-        }
-        else {
-          fprintf(stderr, "Error: CalcHS in ModPara file must be 0 or 1 for Hubbard model.");
-          return -1;
-        }
-
-      case DC::HubbardNConserved:
-        hacker = Def::read_hacker;
-        if (hacker == 0) {
-          // this part can not be parallelized
-          jb = 0;
-          iSpnup = 0;
-          iMinup = 0;
-          iAllup = Def::Ne;
-          if (Def::Ne > Def::Nsite) {
-            iMinup = Def::Ne - Def::Nsite;
-            iAllup = Def::Nsite;
-          }
-          for (ib = 0; ib < Check::sdim; ib++) {
-            list_jb[ib] = jb;
-            i = ib * Large::ihfbit;
-            num_up = 0;
-            for (j = 0; j <= N2 - 2; j += 2) {
-              div = i & Def::Tpow[j];
-              div = div / Def::Tpow[j];
-              num_up += div;
-            }
-            num_down = 0;
-            for (j = 1; j <= N2 - 1; j += 2) {
-              div = i & Def::Tpow[j];
-              div = div / Def::Tpow[j];
-              num_down += div;
-            }
-            tmp_res = Def::Nsite % 2; // even Ns-> 0, odd Ns -> 1
-            all_up = (Def::Nsite + tmp_res) / 2;
-            all_down = (Def::Nsite - tmp_res) / 2;
-
-            for (iSpnup = iMinup; iSpnup <= iAllup; iSpnup++) {
-              tmp_1 = Binomial(all_up, iSpnup - num_up, comb, all_up);
-              tmp_2 = Binomial(all_down, Def::Ne - iSpnup - num_down, comb, all_down);
-              jb += tmp_1 * tmp_2;
-            }
-          }
-          //#pragma omp barrier
-          TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
-          TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
-
-          icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim) 
-          for (ib = 0; ib < Check::sdim; ib++) {
-            icnt += child_omp_sz(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
-          }
-          break;
-        }
-        else if (hacker == 1) {
-          // this part can not be parallelized
-          jb = 0;
-          iSpnup = 0;
-          iMinup = 0;
-          iAllup = Def::Ne;
-          if (Def::Ne > Def::Nsite) {
-            iMinup = Def::Ne - Def::Nsite;
-            iAllup = Def::Nsite;
-          }
-          for (ib = 0; ib < Check::sdim; ib++) {
-            list_jb[ib] = jb;
-            i = ib * Large::ihfbit;
-            num_up = 0;
-            for (j = 0; j <= N2 - 2; j += 2) {
-              div = i & Def::Tpow[j];
-              div = div / Def::Tpow[j];
-              num_up += div;
-            }
-            num_down = 0;
-            for (j = 1; j <= N2 - 1; j += 2) {
-              div = i & Def::Tpow[j];
-              div = div / Def::Tpow[j];
-              num_down += div;
-            }
-            tmp_res = Def::Nsite % 2; // even Ns-> 0, odd Ns -> 1
-            all_up = (Def::Nsite + tmp_res) / 2;
-            all_down = (Def::Nsite - tmp_res) / 2;
-
-            for (iSpnup = iMinup; iSpnup <= iAllup; iSpnup++) {
-              tmp_1 = Binomial(all_up, iSpnup - num_up, comb, all_up);
-              tmp_2 = Binomial(all_down, Def::Ne - iSpnup - num_down, comb, all_down);
-              jb += tmp_1 * tmp_2;
-            }
-          }
-          //#pragma omp barrier
-          TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
-          TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
-
-          icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim) 
-          for (ib = 0; ib < Check::sdim; ib++) {
-            icnt += child_omp_sz_hacker(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
-          }
-
-          break;
-        }
-        else {
-          fprintf(stderr, "Error: CalcHS in ModPara file must be 0 or 1 for Hubbard model.");
-          return -1;
-        }
-
-      case DC::Kondo:
+    case DC::HubbardNConserved:
+      hacker = Def::read_hacker;
+      if (hacker == 0) {
         // this part can not be parallelized
-        N_all_up = Def::Nup;
-        N_all_down = Def::Ndown;
-        fprintf(MP::STDOUT, "  N_all_up = %d N_all_down = %d \n", N_all_up, N_all_down);
-
         jb = 0;
-        num_loc = 0;
-        for (j = Def::Nsite / 2; j < Def::Nsite; j++) {// counting localized # of spins
-          if (Def::LocSpn[j] != ITINERANT) {
-            num_loc += 1;
-          }
+        iSpnup = 0;
+        iMinup = 0;
+        iAllup = Ne;
+        if (Ne > Def::Nsite) {
+          iMinup = Ne - Def::Nsite;
+          iAllup = Def::Nsite;
         }
-
-        for (ib = 0; ib < Check::sdim; ib++) { //sdim = 2^(N/2)
+        for (ib = 0; ib < Check::sdim; ib++) {
           list_jb[ib] = jb;
-          i = ib * Large::ihfbit; // Large::ihfbit=pow(2,((Nsite+1)/2))
+          i = ib * Large::ihfbit;
           num_up = 0;
+          for (j = 0; j <= N2 - 2; j += 2) {
+            div = i & Def::Tpow[j];
+            div = div / Def::Tpow[j];
+            num_up += div;
+          }
           num_down = 0;
-          icheck_loc = 1;
-
-          for (j = Def::Nsite / 2; j < Def::Nsite; j++) {
-            div_up = i & Def::Tpow[2 * j];
-            div_up = div_up / Def::Tpow[2 * j];
-            div_down = i & Def::Tpow[2 * j + 1];
-            div_down = div_down / Def::Tpow[2 * j + 1];
-            if (Def::LocSpn[j] == ITINERANT) {
-              num_up += div_up;
-              num_down += div_down;
-            }
-            else {
-              num_up += div_up;
-              num_down += div_down;
-              if (Def::Nsite % 2 == 1 && j == (Def::Nsite / 2)) { // odd site
-                icheck_loc = icheck_loc;
-                ihfSpinDown = div_down;
-                if (div_down == 0) {
-                  num_up += 1;
-                }
-              }
-              else {
-                icheck_loc = icheck_loc * (div_up^div_down);// exclude empty or doubly occupied site
-              }
-            }
+          for (j = 1; j <= N2 - 1; j += 2) {
+            div = i & Def::Tpow[j];
+            div = div / Def::Tpow[j];
+            num_down += div;
           }
+          tmp_res = Def::Nsite % 2; // even Ns-> 0, odd Ns -> 1
+          all_up = (Def::Nsite + tmp_res) / 2;
+          all_down = (Def::Nsite - tmp_res) / 2;
 
-          if (icheck_loc == 1) { // itinerant of local spins without holon or doublon
-            tmp_res = Def::Nsite % 2; // even Ns-> 0, odd Ns -> 1
-            all_loc = Def::NLocSpn - num_loc; // # of local spins
-            all_up = (Def::Nsite + tmp_res) / 2 - all_loc;
-            all_down = (Def::Nsite - tmp_res) / 2 - all_loc;
-            if (Def::Nsite % 2 == 1 && Def::LocSpn[Def::Nsite / 2] != ITINERANT) {
-              all_up = (Def::Nsite) / 2 - all_loc;
-              all_down = (Def::Nsite) / 2 - all_loc;
-            }
-
-            for (num_loc_up = 0; num_loc_up <= all_loc; num_loc_up++) {
-              tmp_1 = Binomial(all_loc, num_loc_up, comb, all_loc);
-              if (Def::Nsite % 2 == 1 && Def::LocSpn[Def::Nsite / 2] != ITINERANT) {
-                if (ihfSpinDown != 0) {
-                  tmp_2 = Binomial(all_up, Def::Nup - num_up - num_loc_up, comb, all_up);
-                  tmp_3 = Binomial(all_down, Def::Ndown - num_down - (all_loc - num_loc_up), comb, all_down);
-                }
-                else {
-                  tmp_2 = Binomial(all_up, Def::Nup - num_up - num_loc_up, comb, all_up);
-                  tmp_3 = Binomial(all_down, Def::Ndown - num_down - (all_loc - num_loc_up), comb, all_down);
-                }
-              }
-              else {
-                tmp_2 = Binomial(all_up, Def::Nup - num_up - num_loc_up, comb, all_up);
-                tmp_3 = Binomial(all_down, Def::Ndown - num_down - (all_loc - num_loc_up), comb, all_down);
-              }
-              jb += tmp_1 * tmp_2*tmp_3;
-            }
+          for (iSpnup = iMinup; iSpnup <= iAllup; iSpnup++) {
+            tmp_1 = Binomial(all_up, iSpnup - num_up, comb, all_up);
+            tmp_2 = Binomial(all_down, Ne - iSpnup - num_down, comb, all_down);
+            jb += tmp_1 * tmp_2;
           }
-
         }
         //#pragma omp barrier
         TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
         TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
-        hacker = Def::read_hacker;
-        if (hacker == 0) {
-          icnt = 0;
+        icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim)
-          for (ib = 0; ib < Check::sdim; ib++) {
-            icnt += child_omp_sz_Kondo(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
-          }
-        }
-        else if (hacker == 1) {
-          icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim)
-          for (ib = 0; ib < Check::sdim; ib++) {
-            icnt += child_omp_sz_Kondo_hacker(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb);
-          }
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim,Ne, Nup, Ndown) 
+        for (ib = 0; ib < Check::sdim; ib++) {
+          icnt += child_omp_sz(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb,Ne, Nup, Ndown);
         }
         break;
-
-      case DC::Spin:
+      }
+      else if (hacker == 1) {
         // this part can not be parallelized
-        if (Def::iFlgGeneralSpin == FALSE) {
-          hacker = Def::read_hacker;
-          //printf(" rank=%d:Ne=%ld Large::ihfbit=%ld sdim=%ld\n", MP::myrank,Def::Ne,Large::ihfbit,Check::sdim);
-          // using hacker's delight only + no open mp 
-          if (hacker == -1) {
-            icnt = 1;
-            tmp_pow = 1;
-            tmp_i = 0;
-            jb = 0;
-            ja = 0;
-            while (tmp_pow < Def::Tpow[Def::Ne]) {
-              tmp_i += tmp_pow;
-              tmp_pow = tmp_pow * 2;
-            }
-            //printf("DEBUG: %ld %ld %ld %ld\n",tmp_i,Check::sdim,Def::Tpow[Def::Ne],Def::Nsite);
-            if (Def::Nsite % 2 == 0) {
-              max_tmp_i = Check::sdim*Check::sdim;
-            }
-            else {
-              max_tmp_i = Check::sdim*Check::sdim * 2 - 1;
-            }
-            while (tmp_i < max_tmp_i) {
-              list_1_[icnt] = tmp_i;
-
-              ia = tmp_i & Large::irght;
-              ib = tmp_i & Large::ilft;
-              ib = ib / Large::ihfbit;
-              if (ib == ibpatn) {
-                ja = ja + 1;
-              }
-              else {
-                ibpatn = ib;
-                ja = 1;
-                jb = icnt - 1;
-              }
-
-              list_2_1_[ia] = ja + 1;
-              list_2_2_[ib] = jb + 1;
-              tmp_j = snoob(tmp_i);
-              tmp_i = tmp_j;
-              icnt += 1;
-            }
-            icnt = icnt - 1;
-            // old version + hacker's delight
+        jb = 0;
+        iSpnup = 0;
+        iMinup = 0;
+        iAllup = Ne;
+        if (Ne > Def::Nsite) {
+          iMinup = Ne - Def::Nsite;
+          iAllup = Def::Nsite;
+        }
+        for (ib = 0; ib < Check::sdim; ib++) {
+          list_jb[ib] = jb;
+          i = ib * Large::ihfbit;
+          num_up = 0;
+          for (j = 0; j <= N2 - 2; j += 2) {
+            div = i & Def::Tpow[j];
+            div = div / Def::Tpow[j];
+            num_up += div;
           }
-          else if (hacker == 1) {
-            jb = 0;
-            for (ib = 0; ib < Check::sdim; ib++) {
-              list_jb[ib] = jb;
-              i = ib * Large::ihfbit;
-              num_up = 0;
-              for (j = 0; j < N; j++) {
-                div_up = i & Def::Tpow[j];
-                div_up = div_up / Def::Tpow[j];
-                num_up += div_up;
-              }
-              all_up = (Def::Nsite + 1) / 2;
-              tmp_1 = Binomial(all_up, Def::Ne - num_up, comb, all_up);
-              jb += tmp_1;
-            }
-            //#pragma omp barrier
-            TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
-            TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
-
-            icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(Large::ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb, Check::sdim)
-            for (ib = 0; ib < Check::sdim; ib++) {
-              icnt += child_omp_sz_spin_hacker(ib, Large::ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb);
-            }
-            //printf(" rank=%d ib=%ld:Ne=%d icnt=%ld :idim_max=%ld N=%d\n", MP::myrank,ib,Def::Ne,icnt,Check::idim_max,N);
-            // old version
+          num_down = 0;
+          for (j = 1; j <= N2 - 1; j += 2) {
+            div = i & Def::Tpow[j];
+            div = div / Def::Tpow[j];
+            num_down += div;
           }
-          else if (hacker == 0) {
-            jb = 0;
-            for (ib = 0; ib < Check::sdim; ib++) {
-              list_jb[ib] = jb;
-              i = ib * Large::ihfbit;
-              num_up = 0;
-              for (j = 0; j < N; j++) {
-                div_up = i & Def::Tpow[j];
-                div_up = div_up / Def::Tpow[j];
-                num_up += div_up;
-              }
-              all_up = (Def::Nsite + 1) / 2;
-              tmp_1 = Binomial(all_up, Def::Ne - num_up, comb, all_up);
-              jb += tmp_1;
-            }
-            //#pragma omp barrier
-            TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
-            TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+          tmp_res = Def::Nsite % 2; // even Ns-> 0, odd Ns -> 1
+          all_up = (Def::Nsite + tmp_res) / 2;
+          all_down = (Def::Nsite - tmp_res) / 2;
 
-            icnt = 0;
-#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N, Check::sdim)
-            for (ib = 0; ib < Check::sdim; ib++) {
-              icnt += child_omp_sz_spin(ib, Large::ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb);
-            }
-          }
-          else {
-            fprintf(stderr, "Error: CalcHS in ModPara file must be -1 or 0 or 1 for Spin model.");
-            return -1;
+          for (iSpnup = iMinup; iSpnup <= iAllup; iSpnup++) {
+            tmp_1 = Binomial(all_up, iSpnup - num_up, comb, all_up);
+            tmp_2 = Binomial(all_down, Ne - iSpnup - num_down, comb, all_down);
+            jb += tmp_1 * tmp_2;
           }
         }
-        else {
-          int Max2Sz = 0;
-          int irghtsite = 1;
-          long int itmpSize = 1;
-          int i2Sz = 0;
-          for (j = 0; j < Def::Nsite; j++) {
-            itmpSize *= Def::SiteToBit[j];
-            if (itmpSize == Large::ihfbit) {
-              break;
-            }
-            irghtsite++;
+        //#pragma omp barrier
+        TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+        TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+
+        icnt = 0;
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim, Ne, Nup, Ndown) 
+        for (ib = 0; ib < Check::sdim; ib++) {
+          icnt += child_omp_sz_hacker(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb,
+            Ne, Nup, Ndown);
+        }
+
+        break;
+      }
+      else {
+        fprintf(stderr, "Error: CalcHS in ModPara file must be 0 or 1 for Hubbard model.");
+        return -1;
+      }
+
+    case DC::Kondo:
+      // this part can not be parallelized
+      N_all_up = Nup;
+      N_all_down = Nup;
+      fprintf(MP::STDOUT, "  N_all_up = %d N_all_down = %d \n", N_all_up, N_all_down);
+
+      jb = 0;
+      num_loc = 0;
+      for (j = Def::Nsite / 2; j < Def::Nsite; j++) {// counting localized # of spins
+        if (Def::LocSpn[j] != ITINERANT) {
+          num_loc += 1;
+        }
+      }
+
+      for (ib = 0; ib < Check::sdim; ib++) { //sdim = 2^(N/2)
+        list_jb[ib] = jb;
+        i = ib * Large::ihfbit; // Large::ihfbit=pow(2,((Nsite+1)/2))
+        num_up = 0;
+        num_down = 0;
+        icheck_loc = 1;
+
+        for (j = Def::Nsite / 2; j < Def::Nsite; j++) {
+          div_up = i & Def::Tpow[2 * j];
+          div_up = div_up / Def::Tpow[2 * j];
+          div_down = i & Def::Tpow[2 * j + 1];
+          div_down = div_down / Def::Tpow[2 * j + 1];
+          if (Def::LocSpn[j] == ITINERANT) {
+            num_up += div_up;
+            num_down += div_down;
           }
-          for (j = 0; j < Def::Nsite; j++) {
-            Max2Sz += Def::LocSpn[j];
+          else {
+            num_up += div_up;
+            num_down += div_down;
+            if (Def::Nsite % 2 == 1 && j == (Def::Nsite / 2)) { // odd site
+              icheck_loc = icheck_loc;
+              ihfSpinDown = div_down;
+              if (div_down == 0) {
+                num_up += 1;
+              }
+            }
+            else {
+              icheck_loc = icheck_loc * (div_up ^ div_down);// exclude empty or doubly occupied site
+            }
+          }
+        }
+
+        if (icheck_loc == 1) { // itinerant of local spins without holon or doublon
+          tmp_res = Def::Nsite % 2; // even Ns-> 0, odd Ns -> 1
+          all_loc = Def::NLocSpn - num_loc; // # of local spins
+          all_up = (Def::Nsite + tmp_res) / 2 - all_loc;
+          all_down = (Def::Nsite - tmp_res) / 2 - all_loc;
+          if (Def::Nsite % 2 == 1 && Def::LocSpn[Def::Nsite / 2] != ITINERANT) {
+            all_up = (Def::Nsite) / 2 - all_loc;
+            all_down = (Def::Nsite) / 2 - all_loc;
           }
 
-          HilbertNumToSz = li_1d_allocate(2 * Max2Sz + 1);
-          for (ib = 0; ib < 2 * Max2Sz + 1; ib++) {
-            HilbertNumToSz[ib] = 0;
-          }
-
-          for (ib = 0; ib < Large::ihfbit; ib++) {
-            i2Sz = 0;
-            for (j = 0; j < irghtsite; j++) {
-              i2Sz += GetLocal2Sz(j, ib, Def::SiteToBit, Def::Tpow);
+          for (num_loc_up = 0; num_loc_up <= all_loc; num_loc_up++) {
+            tmp_1 = Binomial(all_loc, num_loc_up, comb, all_loc);
+            if (Def::Nsite % 2 == 1 && Def::LocSpn[Def::Nsite / 2] != ITINERANT) {
+              if (ihfSpinDown != 0) {
+                tmp_2 = Binomial(all_up, Nup - num_up - num_loc_up, comb, all_up);
+                tmp_3 = Binomial(all_down, Ndown - num_down - (all_loc - num_loc_up), comb, all_down);
+              }
+              else {
+                tmp_2 = Binomial(all_up, Nup - num_up - num_loc_up, comb, all_up);
+                tmp_3 = Binomial(all_down, Ndown - num_down - (all_loc - num_loc_up), comb, all_down);
+              }
             }
-            list_2_1_Sz[ib] = i2Sz;
-            HilbertNumToSz[i2Sz + Max2Sz]++;
+            else {
+              tmp_2 = Binomial(all_up, Nup - num_up - num_loc_up, comb, all_up);
+              tmp_3 = Binomial(all_down, Ndown - num_down - (all_loc - num_loc_up), comb, all_down);
+            }
+            jb += tmp_1 * tmp_2 * tmp_3;
           }
+        }
+
+      }
+      //#pragma omp barrier
+      TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+      TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+
+      hacker = Def::read_hacker;
+      if (hacker == 0) {
+        icnt = 0;
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim, Nup, Ndown)
+        for (ib = 0; ib < Check::sdim; ib++) {
+          icnt += child_omp_sz_Kondo(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb, Nup, Ndown);
+        }
+      }
+      else if (hacker == 1) {
+        icnt = 0;
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N2, Check::sdim, Nup, Ndown)
+        for (ib = 0; ib < Check::sdim; ib++) {
+          icnt += child_omp_sz_Kondo_hacker(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_jb,
+            Nup, Ndown);
+        }
+      }
+      break;
+
+    case DC::Spin:
+      // this part can not be parallelized
+      if (Def::iFlgGeneralSpin == FALSE) {
+        hacker = Def::read_hacker;
+        //printf(" rank=%d:Ne=%ld Large::ihfbit=%ld sdim=%ld\n", MP::myrank,Ne,Large::ihfbit,Check::sdim);
+        // using hacker's delight only + no open mp 
+        if (hacker == -1) {
+          icnt = 1;
+          tmp_pow = 1;
+          tmp_i = 0;
           jb = 0;
-          long int ilftdim = (Def::Tpow[Def::Nsite - 1] * Def::SiteToBit[Def::Nsite - 1]) / Large::ihfbit;
-          for (ib = 0; ib < ilftdim; ib++) {
-            list_jb[ib] = jb;
-            i2Sz = 0;
-            for (j = irghtsite; j < N; j++) {
-              i2Sz += GetLocal2Sz(j, ib*Large::ihfbit, Def::SiteToBit, Def::Tpow);
-            }
-            list_2_2_Sz[ib] = i2Sz;
-            if ((Def::Total2Sz - i2Sz + (int)Max2Sz) >= 0 && (Def::Total2Sz - i2Sz) <= (int)Max2Sz) {
-              jb += HilbertNumToSz[Def::Total2Sz - i2Sz + Max2Sz];
-            }
+          ja = 0;
+          while (tmp_pow < Def::Tpow[Ne]) {
+            tmp_i += tmp_pow;
+            tmp_pow = tmp_pow * 2;
           }
+          //printf("DEBUG: %ld %ld %ld %ld\n",tmp_i,Check::sdim,Def::Tpow[Ne],Def::Nsite);
+          if (Def::Nsite % 2 == 0) {
+            max_tmp_i = Check::sdim * Check::sdim;
+          }
+          else {
+            max_tmp_i = Check::sdim * Check::sdim * 2 - 1;
+          }
+          while (tmp_i < max_tmp_i) {
+            list_1_[icnt] = tmp_i;
 
+            ia = tmp_i & Large::irght;
+            ib = tmp_i & Large::ilft;
+            ib = ib / Large::ihfbit;
+            if (ib == ibpatn) {
+              ja = ja + 1;
+            }
+            else {
+              ibpatn = ib;
+              ja = 1;
+              jb = icnt - 1;
+            }
+
+            list_2_1_[ia] = ja + 1;
+            list_2_2_[ib] = jb + 1;
+            tmp_j = snoob(tmp_i);
+            tmp_i = tmp_j;
+            icnt += 1;
+          }
+          icnt = icnt - 1;
+          // old version + hacker's delight
+        }
+        else if (hacker == 1) {
+          jb = 0;
+          for (ib = 0; ib < Check::sdim; ib++) {
+            list_jb[ib] = jb;
+            i = ib * Large::ihfbit;
+            num_up = 0;
+            for (j = 0; j < N; j++) {
+              div_up = i & Def::Tpow[j];
+              div_up = div_up / Def::Tpow[j];
+              num_up += div_up;
+            }
+            all_up = (Def::Nsite + 1) / 2;
+            tmp_1 = Binomial(all_up, Ne - num_up, comb, all_up);
+            jb += tmp_1;
+          }
+          //#pragma omp barrier
           TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
           TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
 
           icnt = 0;
 #pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
-shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb, ilftdim, Large::ihfbit)
-          for (ib = 0; ib < ilftdim; ib++) {
-            icnt += child_omp_sz_GeneralSpin(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz, list_jb);
+shared(Large::ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb, Check::sdim,Ne)
+          for (ib = 0; ib < Check::sdim; ib++) {
+            icnt += child_omp_sz_spin_hacker(ib, Large::ihfbit, N, list_1_, list_2_1_, list_2_2_, 
+                                             list_jb,Ne);
           }
-          free_li_1d_allocate(HilbertNumToSz);
+        }
+        else if (hacker == 0) {
+          jb = 0;
+          for (ib = 0; ib < Check::sdim; ib++) {
+            list_jb[ib] = jb;
+            i = ib * Large::ihfbit;
+            num_up = 0;
+            for (j = 0; j < N; j++) {
+              div_up = i & Def::Tpow[j];
+              div_up = div_up / Def::Tpow[j];
+              num_up += div_up;
+            }
+            all_up = (Def::Nsite + 1) / 2;
+            tmp_1 = Binomial(all_up, Ne - num_up, comb, all_up);
+            jb += tmp_1;
+          }
+          //#pragma omp barrier
+          TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+          TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+
+          icnt = 0;
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_jb, Large::ihfbit, N, Check::sdim, Ne)
+          for (ib = 0; ib < Check::sdim; ib++) {
+            icnt += child_omp_sz_spin(ib, Large::ihfbit, N, list_1_, list_2_1_, list_2_2_, list_jb, Ne);
+          }
+        }
+        else {
+          fprintf(stderr, "Error: CalcHS in ModPara file must be -1 or 0 or 1 for Spin model.");
+          return -1;
+        }
+      }
+      else {
+        int Max2Sz = 0;
+        int irghtsite = 1;
+        long int itmpSize = 1;
+        int i2Sz = 0;
+        for (j = 0; j < Def::Nsite; j++) {
+          itmpSize *= Def::SiteToBit[j];
+          if (itmpSize == Large::ihfbit) {
+            break;
+          }
+          irghtsite++;
+        }
+        for (j = 0; j < Def::Nsite; j++) {
+          Max2Sz += Def::LocSpn[j];
         }
 
-        break;
-      default:
-        wrapperMPI::Exit(-1);
+        HilbertNumToSz = li_1d_allocate(2 * Max2Sz + 1);
+        for (ib = 0; ib < 2 * Max2Sz + 1; ib++) {
+          HilbertNumToSz[ib] = 0;
+        }
+
+        for (ib = 0; ib < Large::ihfbit; ib++) {
+          i2Sz = 0;
+          for (j = 0; j < irghtsite; j++) {
+            i2Sz += GetLocal2Sz(j, ib, Def::SiteToBit, Def::Tpow);
+          }
+          list_2_1_Sz[ib] = i2Sz;
+          HilbertNumToSz[i2Sz + Max2Sz]++;
+        }
+        jb = 0;
+        long int ilftdim = (Def::Tpow[Def::Nsite - 1] * Def::SiteToBit[Def::Nsite - 1]) / Large::ihfbit;
+        for (ib = 0; ib < ilftdim; ib++) {
+          list_jb[ib] = jb;
+          i2Sz = 0;
+          for (j = irghtsite; j < N; j++) {
+            i2Sz += GetLocal2Sz(j, ib * Large::ihfbit, Def::SiteToBit, Def::Tpow);
+          }
+          list_2_2_Sz[ib] = i2Sz;
+          if ((Total2Sz - i2Sz + (int)Max2Sz) >= 0 && (Total2Sz - i2Sz) <= (int)Max2Sz) {
+            jb += HilbertNumToSz[Total2Sz - i2Sz + Max2Sz];
+          }
+        }
+
+        TimeKeeper("%s_sz_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+        TimeKeeper("%s_TimeKeeper.dat", "mid omp parallel sz : %s", "a");
+
+        printf("2 %ld \n", comb[0][0]);
+        icnt = 0;
+#pragma omp parallel for default(none) reduction(+:icnt) private(ib) \
+shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb, \
+ilftdim, Large::ihfbit, Total2Sz)
+        for (ib = 0; ib < ilftdim; ib++) {
+          icnt += child_omp_sz_GeneralSpin(ib, Large::ihfbit, list_1_, list_2_1_, list_2_2_, 
+                                           list_2_1_Sz, list_2_2_Sz, list_jb, Total2Sz);
+        }
+        free_li_1d_allocate(HilbertNumToSz);
       }
-      i_max = icnt;
-      //fprintf(MP::STDOUT, "Debug: Xicnt=%ld \n",icnt);
-      TimeKeeper("%s_sz_TimeKeeper.dat", "omp parallel sz finishes: %s", "a");
-      TimeKeeper("%s_TimeKeeper.dat", "omp parallel sz finishes: %s", "a");
+
+      break;
+    default:
+      wrapperMPI::Exit(-1);
     }
+    i_max = icnt;
+    //fprintf(MP::STDOUT, "Debug: Xicnt=%ld \n",icnt);
+    TimeKeeper("%s_sz_TimeKeeper.dat", "omp parallel sz finishes: %s", "a");
+    TimeKeeper("%s_TimeKeeper.dat", "omp parallel sz finishes: %s", "a");
 
     if (Def::iFlgCalcSpec == DC::CALCSPEC_NOT) {
       if (Def::iCalcModel == DC::HubbardNConserved) {
@@ -1557,9 +1483,9 @@ shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb, ilftdim,
 
     //Error message
     //i_max=i_max+1;
-    if (i_max != Check::idim_max) {
+    if (i_max != idim_max) {
       fprintf(stderr, "%s", "Error: in sz. \n");
-      fprintf(stderr, "imax = %ld, Check.idim_max=%ld \n", i_max, Check::idim_max);
+      fprintf(stderr, "imax = %ld, Check.idim_max=%ld \n", i_max, idim_max);
       strcpy(sdt_err, "Err_sz.dat");
       if (childfopenMPI(sdt_err, "a", &fp_err) != 0) {
         wrapperMPI::Exit(-1);
@@ -1568,7 +1494,7 @@ shared(list_1_, list_2_1_, list_2_2_, list_2_1_Sz, list_2_2_Sz,list_jb, ilftdim,
       fclose(fp_err);
       wrapperMPI::Exit(-1);
     }
-
+    
     free_li_2d_allocate(comb);
   }
   fprintf(MP::STDOUT, "%s", "  End  : Calculate HilbertNum for fixed Sz. \n\n");

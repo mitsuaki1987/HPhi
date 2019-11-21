@@ -40,7 +40,7 @@ int CalcByFullDiag::main()
     zclear(Check::idim_max * Check::idim_max, &Wave::v0[0][0]);
     zclear(Check::idim_max * Check::idim_max, &Wave::v1[0][0]);
     for (idim = 0; idim < Check::idim_max; idim++) Wave::v1[idim][idim] = 1.0;
-    mltply::main(Check::idim_max, Wave::v0, Wave::v1);
+    mltply::main(Check::idim_max, Wave::v0, Wave::v1, Check::idim_max, List::a1, List::a2_1, List::a2_2, List::Diagonal);
   }
   else if (Def::iInputHam == TRUE) {
     fprintf(MP::STDOUT, "%s", "######  Start: Input Hamiltonian.  ######\n\n");

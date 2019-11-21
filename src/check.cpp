@@ -50,107 +50,112 @@
  * @author Takahiro Misawa (The University of Tokyo)
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  */
-int check(){
-    
-  FILE *fp;
-  long int i,tmp_sdim;
+int check(
+  int* Ne,
+  int* Nup,
+  int* Ndown,
+  int* Total2Sz,
+  long int* idim_max
+) {
+
+  FILE* fp;
+  long int i, tmp_sdim;
   int NLocSpn, NCond;
-  int Nup, Ndown;
   long int u_tmp;
   long int tmp;
-  long int Ns,comb_1,comb_2,comb_3,comb_sum, comb_up, comb_down;
+  long int Ns, comb_1, comb_2, comb_3, comb_sum, comb_up, comb_down;
   int u_loc;
-  long int **comb;    
-  long int idimmax=0;
-  long int idim=0;
-  long int isite=0;
-  int tmp_sz=0;
-  int iMinup=0;
+  long int** comb;
+  long int idimmax = 0;
+  long int idim = 0;
+  long int isite = 0;
+  int tmp_sz = 0;
+  int iMinup = 0;
   double max_mem;
   if (Def::iCalcModel == DC::Spin || Def::iCalcModel == DC::SpinGC)
   {
-    Def::Ne=Def::Nup;
+    *Ne = *Nup;
   }
 
-  int iAllup=Def::Ne;
+  int iAllup = *Ne;
 
-  if(Def::iFlgScaLAPACK == 0) {
+  if (Def::iFlgScaLAPACK == 0) {
     /*
       Set Site number per MPI process
     */
-    if (CheckMPI() != TRUE) {
+    if (CheckMPI(Ne, Nup, Ndown, Total2Sz) != TRUE) {
       return MPIFALSE;
     }
   }
-  else{
+  else {
     Def::NsiteMPI = Def::Nsite;
-    Def::Total2SzMPI = Def::Total2Sz;
+    Def::Total2SzMPI = *Total2Sz;
   }
 
   Ns = Def::Nsite;
 
-  comb = li_2d_allocate(Ns+1,Ns+1);
+  comb = li_2d_allocate(Ns + 1, Ns + 1);
 
   //idim_max
-  switch(Def::iCalcModel){
+  switch (Def::iCalcModel) {
   case DC::HubbardGC:
     //comb_sum = 2^(2*Ns)=4^Ns
     comb_sum = 1;
-    for(i=0;i<2*Def::Nsite;i++){
-      comb_sum= 2*comb_sum;     
+    for (i = 0; i < 2 * Def::Nsite; i++) {
+      comb_sum = 2 * comb_sum;
     }
     break;
   case DC::SpinGC:
     //comb_sum = 2^(Ns)
     comb_sum = 1;
-    if(Def::iFlgGeneralSpin ==FALSE){
-      for(i=0;i<Def::Nsite;i++){
-        comb_sum= 2*comb_sum;     
+    if (Def::iFlgGeneralSpin == FALSE) {
+      for (i = 0; i < Def::Nsite; i++) {
+        comb_sum = 2 * comb_sum;
       }
     }
-    else{
-      for(i=0; i<Def::Nsite;i++){
-        comb_sum=comb_sum*Def::SiteToBit[i];
+    else {
+      for (i = 0; i < Def::Nsite; i++) {
+        comb_sum = comb_sum * Def::SiteToBit[i];
       }
     }
     break;
 
   case DC::Hubbard:
-    comb_up= Binomial(Ns, Def::Nup, comb, Ns);
-    comb_down= Binomial(Ns, Def::Ndown, comb, Ns);
-    comb_sum=comb_up*comb_down;
+    comb_up = Binomial(Ns, *Nup, comb, Ns);
+    comb_down = Binomial(Ns, *Ndown, comb, Ns);
+    comb_sum = comb_up * comb_down;
     break;
 
   case DC::HubbardNConserved:
-    comb_sum=0;
-    if(Def::Ne > Def::Nsite){
-      iMinup = Def::Ne-Def::Nsite;
+    comb_sum = 0;
+    if (*Ne > Def::Nsite) {
+      iMinup = *Ne - Def::Nsite;
       iAllup = Def::Nsite;
     }
 
-    for(i=iMinup; i<= iAllup; i++){
-      comb_up= Binomial(Ns, i, comb, Ns);
-      comb_down= Binomial(Ns, Def::Ne-i, comb, Ns);
-      comb_sum +=comb_up*comb_down;
+    for (i = iMinup; i <= iAllup; i++) {
+      comb_up = Binomial(Ns, i, comb, Ns);
+      comb_down = Binomial(Ns, *Ne - i, comb, Ns);
+      comb_sum += comb_up * comb_down;
     }
     break;
-    
+
   case DC::Kondo:
-    Nup     = Def::Nup;
-    Ndown   = Def::Ndown;
-    NCond   = Def::Nsite-Def::NLocSpn;
+    *Nup = *Nup;
+    *Ndown = *Ndown;
+    NCond = Def::Nsite - Def::NLocSpn;
     NLocSpn = Def::NLocSpn;
     comb_sum = 0;
-    for(u_loc=0;u_loc<=Def::Nup;u_loc++){
-      comb_1     = Binomial(NLocSpn,u_loc,comb,Ns);
-      comb_2     = Binomial(NCond,Nup-u_loc,comb,Ns);
-      comb_3     = Binomial(NCond,Ndown+u_loc-NLocSpn,comb,Ns);
-      comb_sum  += comb_1*comb_2*comb_3;
+    for (u_loc = 0; u_loc <= *Nup; u_loc++) {
+      comb_1 = Binomial(NLocSpn, u_loc, comb, Ns);
+      comb_2 = Binomial(NCond, *Nup - u_loc, comb, Ns);
+      comb_3 = Binomial(NCond, *Ndown + u_loc - NLocSpn, comb, Ns);
+      comb_sum += comb_1 * comb_2 * comb_3;
     }
     break;
   case DC::KondoGC:
     comb_sum = 1;
-    NCond   = Def::Nsite-Def::NLocSpn;
+    NCond = Def::Nsite - Def::NLocSpn;
     NLocSpn = Def::NLocSpn;
     //4^Nc*2^Ns
     for (u_loc = 0; u_loc < (2 * NCond + NLocSpn); u_loc++) {
@@ -159,139 +164,136 @@ int check(){
     break;
   case DC::Spin:
 
-    if(Def::iFlgGeneralSpin ==FALSE){
-      if(Def::Nup+Def::Ndown != Def::Nsite){
+    if (Def::iFlgGeneralSpin == FALSE) {
+      if (*Nup + *Ndown != Def::Nsite) {
         fprintf(stderr, " 2Sz is incorrect.\n");
         return FALSE;
       }
-      //comb_sum= Binomial(Ns, Def::Ne, comb, Ns);
-      comb_sum = Binomial(Ns, Def::Nup, comb, Ns);
+      //comb_sum= Binomial(Ns, *Ne, comb, Ns);
+      comb_sum = Binomial(Ns, *Nup, comb, Ns);
     }
-    else{
+    else {
       idimmax = 1;
-      Def::Tpow[0]=idimmax;
+      Def::Tpow[0] = idimmax;
       for (isite = 0; isite < Def::Nsite; isite++) {
         idimmax = idimmax * Def::SiteToBit[isite];
         Def::Tpow[isite + 1] = idimmax;
       }
-      comb_sum=0;
+      comb_sum = 0;
 #pragma omp parallel for default(none) reduction(+:comb_sum) private(tmp_sz, isite) \
-shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz) 
+shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Total2Sz) 
       for (idim = 0; idim < idimmax; idim++) {
         tmp_sz = 0;
         for (isite = 0; isite < Def::Nsite; isite++) {
           tmp_sz += GetLocal2Sz(isite, idim, Def::SiteToBit, Def::Tpow);
         }
-        if(tmp_sz == Def::Total2Sz){
-          comb_sum +=1;
+        if (tmp_sz == *Total2Sz) {
+          comb_sum += 1;
         }
       }
     }
-    
+
     break;
   default:
     fprintf(stderr, "Error: CalcModel %d is incorrect.\n", Def::iCalcModel);
     free_li_2d_allocate(comb);
     return FALSE;
-  }  
+  }
 
   //fprintf(MP::STDOUT, "Debug: comb_sum= %ld \n",comb_sum);
 
-  Check::idim_max = comb_sum;
-  switch(Def::iCalcType) {
-    case DC::CG:
-      switch (Def::iCalcModel) {
-        case DC::Hubbard:
-        case DC::HubbardNConserved:
-        case DC::Kondo:
-        case DC::KondoGC:
-        case DC::Spin:
-          max_mem = (7 * Def::k_exct + 1.5) * Check::idim_max * 16.0 / (pow(10, 9));
-          break;
-        case DC::HubbardGC:
-        case DC::SpinGC:
-          max_mem = (7 * Def::k_exct + 1.0) * Check::idim_max * 16.0 / (pow(10, 9));
-          break;
+  *idim_max = comb_sum;
+  switch (Def::iCalcType) {
+  case DC::CG:
+    switch (Def::iCalcModel) {
+    case DC::Hubbard:
+    case DC::HubbardNConserved:
+    case DC::Kondo:
+    case DC::KondoGC:
+    case DC::Spin:
+      max_mem = (7 * Def::k_exct + 1.5) * *idim_max * 16.0 / (pow(10, 9));
+      break;
+    case DC::HubbardGC:
+    case DC::SpinGC:
+      max_mem = (7 * Def::k_exct + 1.0) * *idim_max * 16.0 / (pow(10, 9));
+      break;
+    }
+    break;
+  case DC::TPQCalc:
+    switch (Def::iCalcModel) {
+    case DC::Hubbard:
+    case DC::HubbardNConserved:
+    case DC::Kondo:
+    case DC::KondoGC:
+    case DC::Spin:
+      if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
+        max_mem = Step::NumAve * 3 * *idim_max * 16.0 / (pow(10, 9));
+      }
+      else {
+        max_mem = 4.5 * *idim_max * 16.0 / (pow(10, 9));
       }
       break;
-    case DC::TPQCalc:
-      switch (Def::iCalcModel) {
-        case DC::Hubbard:
-        case DC::HubbardNConserved:
-        case DC::Kondo:
-        case DC::KondoGC:
-        case DC::Spin:
-          if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
-            max_mem = Step::NumAve * 3 * Check::idim_max * 16.0 / (pow(10, 9));
-          } else {
-            max_mem = 4.5 * Check::idim_max * 16.0 / (pow(10, 9));
-          }
-          break;
-        case DC::HubbardGC:
-        case DC::SpinGC:
-          if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
-            max_mem = Step::NumAve * 3 * Check::idim_max * 16.0 / (pow(10, 9));
-          } else {
-            max_mem = 3.5 * Check::idim_max * 16.0 / (pow(10, 9));
-          }
-          break;
+    case DC::HubbardGC:
+    case DC::SpinGC:
+      if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
+        max_mem = Step::NumAve * 3 * *idim_max * 16.0 / (pow(10, 9));
+      }
+      else {
+        max_mem = 3.5 * *idim_max * 16.0 / (pow(10, 9));
       }
       break;
-    case DC::FullDiag:
-      max_mem = Check::idim_max * 8.0 * Check::idim_max * 8.0 / (pow(10, 9));
-      break;
-    case DC::TimeEvolution:
-      max_mem = (4 + 2 + 1) * Check::idim_max * 16.0 / (pow(10, 9));
-      break;
-    default:
-      return FALSE;
-      //break;
+    }
+    break;
+  case DC::FullDiag:
+    max_mem = *idim_max * 8.0 * *idim_max * 8.0 / (pow(10, 9));
+    break;
+  case DC::TimeEvolution:
+    max_mem = (4 + 2 + 1) * *idim_max * 16.0 / (pow(10, 9));
+    break;
+  default:
+    return FALSE;
+    //break;
   }
 
-  //fprintf(MP::STDOUT, "  MAX DIMENSION idim_max=%ld \n",Check::idim_max);
+  //fprintf(MP::STDOUT, "  MAX DIMENSION idim_max=%ld \n",*idim_max);
   //fprintf(MP::STDOUT, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",max_mem);
-  long int li_dim_max=wrapperMPI::Max_li(Check::idim_max);
-  fprintf(MP::STDOUT, "  MAX DIMENSION idim_max=%ld \n",li_dim_max);
-  double dmax_mem=wrapperMPI::Max_d(max_mem);
-  fprintf(MP::STDOUT, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",dmax_mem);
-  if(childfopenMPI("CHECK_Memory.dat","w", &fp)!=0){
+  long int li_dim_max = wrapperMPI::Max_li(*idim_max);
+  fprintf(MP::STDOUT, "  MAX DIMENSION idim_max=%ld \n", li_dim_max);
+  double dmax_mem = wrapperMPI::Max_d(max_mem);
+  fprintf(MP::STDOUT, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n", dmax_mem);
+  if (childfopenMPI("CHECK_Memory.dat", "w", &fp) != 0) {
     free_li_2d_allocate(comb);
     return FALSE;
   }
-  fprintf(fp,"  MAX DIMENSION idim_max=%ld \n", li_dim_max);
-  fprintf(fp,"  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n", dmax_mem);
+  fprintf(fp, "  MAX DIMENSION idim_max=%ld \n", li_dim_max);
+  fprintf(fp, "  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n", dmax_mem);
 
-  
-  /*
-  fprintf(fp,"  MAX DIMENSION idim_max=%ld \n",Check::idim_max);
-  fprintf(fp,"  APPROXIMATE REQUIRED MEMORY  max_mem=%lf GB \n",max_mem);
-  */
   fclose(fp);
 
   //sdim 
-  tmp=1;
-  tmp_sdim=1;
+  tmp = 1;
+  tmp_sdim = 1;
 
-  switch(Def::iCalcModel){
+  switch (Def::iCalcModel) {
   case DC::HubbardGC:
   case DC::KondoGC:
   case DC::HubbardNConserved:
   case DC::Hubbard:
   case DC::Kondo:
-    while(tmp <= Def::Nsite){
-      tmp_sdim=tmp_sdim*2;
-      tmp+=1;
+    while (tmp <= Def::Nsite) {
+      tmp_sdim = tmp_sdim * 2;
+      tmp += 1;
     }
     break;
   case DC::Spin:
   case DC::SpinGC:
-    if(Def::iFlgGeneralSpin==FALSE){ 
-      while(tmp <= Def::Nsite/2){
-        tmp_sdim=tmp_sdim*2;
-        tmp+=1;
+    if (Def::iFlgGeneralSpin == FALSE) {
+      while (tmp <= Def::Nsite / 2) {
+        tmp_sdim = tmp_sdim * 2;
+        tmp += 1;
       }
     }
-    else{
+    else {
       GetSplitBitForGeneralSpin(Def::Nsite, &tmp_sdim, Def::SiteToBit);
     }
     break;
@@ -299,28 +301,28 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
     fprintf(MP::STDOUT, "Error: CalcModel %d is incorrect.\n", Def::iCalcModel);
     free_li_2d_allocate(comb);
     return FALSE;
-  }  
-  Check::sdim=tmp_sdim;
-  
-  if(childfopenMPI("CHECK_Sdim.dat","w", &fp)!=0){
+  }
+  Check::sdim = tmp_sdim;
+
+  if (childfopenMPI("CHECK_Sdim.dat", "w", &fp) != 0) {
     free_li_2d_allocate(comb);
     return FALSE;
   }
 
-  switch(Def::iCalcModel){
+  switch (Def::iCalcModel) {
   case DC::HubbardGC:
   case DC::KondoGC:
   case DC::HubbardNConserved:
   case DC::Hubbard:
   case DC::Kondo:
     //fprintf(MP::STDOUT, "sdim=%ld =2^%d\n",Check::sdim,Def::Nsite);
-    fprintf(fp,"sdim=%ld =2^%d\n",Check::sdim,Def::Nsite);
+    fprintf(fp, "sdim=%ld =2^%d\n", Check::sdim, Def::Nsite);
     break;
   case DC::Spin:
   case DC::SpinGC:
-    if(Def::iFlgGeneralSpin==FALSE){
+    if (Def::iFlgGeneralSpin == FALSE) {
       //fprintf(MP::STDOUT, "sdim=%ld =2^%d\n",Check::sdim,Def::Nsite/2);
-      fprintf(fp,"sdim=%ld =2^%d\n",Check::sdim,Def::Nsite/2);
+      fprintf(fp, "sdim=%ld =2^%d\n", Check::sdim, Def::Nsite / 2);
     }
     break;
   default:
@@ -329,69 +331,69 @@ shared(idimmax, Def::Nsite, Def::Tpow, Def::SiteToBit, Def::Total2Sz)
 
   free_li_2d_allocate(comb);
 
-  u_tmp=1;
-  Def::Tpow[0]=u_tmp;
-  switch(Def::iCalcModel){
+  u_tmp = 1;
+  Def::Tpow[0] = u_tmp;
+  switch (Def::iCalcModel) {
   case DC::HubbardGC:
   case DC::KondoGC:
-    for(i=1;i<=2*Def::Nsite;i++){
-      u_tmp=u_tmp*2;
-      Def::Tpow[i]=u_tmp;
-      fprintf(fp,"%ld %ld \n",i,u_tmp);
+    for (i = 1; i <= 2 * Def::Nsite; i++) {
+      u_tmp = u_tmp * 2;
+      Def::Tpow[i] = u_tmp;
+      fprintf(fp, "%ld %ld \n", i, u_tmp);
     }
     break;
   case DC::HubbardNConserved:
   case DC::Hubbard:
   case DC::Kondo:
-    for(i=1;i<=2*Def::Nsite-1;i++){
-      u_tmp=u_tmp*2;
-      Def::Tpow[i]=u_tmp;
-      fprintf(fp,"%ld %ld \n",i,u_tmp);
+    for (i = 1; i <= 2 * Def::Nsite - 1; i++) {
+      u_tmp = u_tmp * 2;
+      Def::Tpow[i] = u_tmp;
+      fprintf(fp, "%ld %ld \n", i, u_tmp);
     }
     break;
- case DC::SpinGC:
-   if(Def::iFlgGeneralSpin==FALSE){
-     for(i=1;i<=Def::Nsite;i++){
-       u_tmp=u_tmp*2;
-       Def::Tpow[i]=u_tmp;
-       fprintf(fp,"%ld %ld \n",i,u_tmp);
-     }
-   }
-   else{
-     Def::Tpow[0]=u_tmp;
-     fprintf(fp,"%d %ld \n", 0, u_tmp);
-     for(i=1;i<Def::Nsite;i++){
-       u_tmp=u_tmp*Def::SiteToBit[i-1];
-       Def::Tpow[i]=u_tmp;
-       fprintf(fp,"%ld %ld \n",i,u_tmp);
-     }
-   }
-   break;
- case DC::Spin:
-   if(Def::iFlgGeneralSpin==FALSE){
-     for(i=1;i<=Def::Nsite-1;i++){
-       u_tmp=u_tmp*2;
-       Def::Tpow[i]=u_tmp;
-       fprintf(fp,"%ld %ld \n",i,u_tmp);
-     }
-   }
-   else{
-     for(i=0;i<Def::Nsite;i++){
-       fprintf(fp,"%ld %ld \n",i,Def::Tpow[i]);
-     }
-   }     
+  case DC::SpinGC:
+    if (Def::iFlgGeneralSpin == FALSE) {
+      for (i = 1; i <= Def::Nsite; i++) {
+        u_tmp = u_tmp * 2;
+        Def::Tpow[i] = u_tmp;
+        fprintf(fp, "%ld %ld \n", i, u_tmp);
+      }
+    }
+    else {
+      Def::Tpow[0] = u_tmp;
+      fprintf(fp, "%d %ld \n", 0, u_tmp);
+      for (i = 1; i < Def::Nsite; i++) {
+        u_tmp = u_tmp * Def::SiteToBit[i - 1];
+        Def::Tpow[i] = u_tmp;
+        fprintf(fp, "%ld %ld \n", i, u_tmp);
+      }
+    }
+    break;
+  case DC::Spin:
+    if (Def::iFlgGeneralSpin == FALSE) {
+      for (i = 1; i <= Def::Nsite - 1; i++) {
+        u_tmp = u_tmp * 2;
+        Def::Tpow[i] = u_tmp;
+        fprintf(fp, "%ld %ld \n", i, u_tmp);
+      }
+    }
+    else {
+      for (i = 0; i < Def::Nsite; i++) {
+        fprintf(fp, "%ld %ld \n", i, Def::Tpow[i]);
+      }
+    }
     break;
   default:
     fprintf(MP::STDOUT, "Error: CalcModel %d is incorrect.\n", Def::iCalcModel);
     free_li_2d_allocate(comb);
     return FALSE;
-  }  
+  }
   fclose(fp);
   /*
-    Print MPI-site information and Modify Tpow 
+    Print MPI-site information and Modify Tpow
     in the inter process region.
   */
-  CheckMPI_Summary();
-  
+  CheckMPI_Summary(*Ne, *Nup, *Ndown, *Total2Sz, *idim_max);
+
   return TRUE;
-}    
+}

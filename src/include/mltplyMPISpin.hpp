@@ -25,30 +25,37 @@ namespace mltply {
     namespace C {
       namespace Half {
         void general_int_MPIsingle(long int i_int, int nstate,
-          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+          long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
         void general_int_MPIdouble(long int i_int, int nstate,
-          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+          long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
         void X_general_int_MPIsingle(
           int org_isite1, int org_ispin1, int org_ispin2, int org_isite3,
           int org_ispin3, int org_ispin4,
           std::complex<double> tmp_J, int nstate,
-          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+          long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
         void X_general_int_MPIdouble(
           int org_isite1, int org_ispin1, int org_ispin2, int org_isite3,
           int org_ispin3, int org_ispin4,
           std::complex<double> tmp_J, int nstate,
-          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+          long int i_max, long int *list_1, long int *list_2_1, long int *list_2_2);
         void X_general_int_TotalS_MPIdouble(
           int org_isite1, int org_isite3, int nstate,
-          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+          long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
       }
       namespace General {
         void general_int_MPIdouble(
           long int i_int, int nstate,
-          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+          long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
         void general_int_MPIsingle(
           long int i_int, int nstate,
-          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+          std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+          long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
       }
     }
     namespace GC {

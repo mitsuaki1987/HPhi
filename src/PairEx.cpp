@@ -56,7 +56,6 @@ int GetPairExcitedState
 {
   int iret;
 
-  Large::i_max = Check::idim_maxOrg;
   Large::mode = M_CALCSPEC;
 
   switch (Def::iCalcModel) {

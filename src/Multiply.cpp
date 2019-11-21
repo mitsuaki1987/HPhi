@@ -97,7 +97,7 @@ shared(Wave::v0, Wave::v1, v2,i_max, dt)
       Wave::v1[i][0] = tmp2;
       v2[i][0] = 0.0;
     }
-    mltply::main(1, v2, Wave::v1);
+    mltply::main(1, v2, Wave::v1, Check::idim_max, List::a1, List::a2_1, List::a2_2, List::Diagonal);
   }
   else {
     tmp1 *= std::complex<double>(0.0, -dt);
@@ -112,7 +112,7 @@ shared(Wave::v0, Wave::v1, v2,i_max, dt, tmp1)
     for (coef = 2; coef <= Param::ExpandCoef; coef++) {
       tmp1 *= std::complex<double>(0.0, -dt) / (std::complex<double>)coef;
       //v2 = H*Wave::v1 = H^coef |psi(t)>
-      mltply::main(1, v2, Wave::v1);
+      mltply::main(1, v2, Wave::v1, Check::idim_max, List::a1, List::a2_1, List::a2_2, List::Diagonal);
 
 #pragma omp parallel for default(none) private(i) \
 shared(Wave::v0, Wave::v1, v2,i_max, tmp1, MP::myrank)

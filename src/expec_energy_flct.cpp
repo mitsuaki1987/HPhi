@@ -77,7 +77,7 @@ void expec::energy_flct::Hubbard::GC(
 #pragma omp parallel default(none) \
 private(j,tmp_v02,D,N,Sz,isite1,bit_up,bit_down,bit_D, \
         u_ibit1,l_ibit1, ibit_up,ibit_down,ibit_D,mythread,istate) \
-shared(tmp_v0,List::c1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
+shared(tmp_v0,List::a1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
        i_max,MP::myrank,is1_up_a,is1_down_a,is1_up_b,is1_down_b,i_32) \
 
   {
@@ -233,7 +233,7 @@ void expec::energy_flct::Hubbard::C(
   }
   //[e]
 #pragma omp parallel default(none) \
-shared(tmp_v0,List::c1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
+shared(tmp_v0,List::a1,doublon_t,doublon2_t,num_t,num2_t,Sz_t,Sz2_t,nstate, \
        i_max, MP::myrank,is1_up_a,is1_down_a,is1_up_b,is1_down_b,i_32) \
 private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
         l_ibit1,ibit_up,ibit_down,ibit_D,mythread,istate)
@@ -251,7 +251,7 @@ private(j,tmp_v02,D,N,Sz,isite1,tmp_list_1,bit_up,bit_down,bit_D,u_ibit1, \
       bit_up = 0;
       bit_down = 0;
       bit_D = 0;
-      tmp_list_1 = List::c1[j];
+      tmp_list_1 = List::a1[j];
       // isite1 >= Def::Nsite
       ibit_up = (long int) MP::myrank & is1_up_a;
       u_ibit1 = ibit_up >> 32;
@@ -629,7 +629,7 @@ shared(tmp_v1,tmp_v0,nstate,i_max)
     nCalcExpec = 5302;
   }
   StartTimer(nCalcExpec);
-  mltply::main(nstate, tmp_v0, tmp_v1); // v0+=H*v1
+  mltply::main(nstate, tmp_v0, tmp_v1, Check::idim_max, List::a1, List::a2_1, List::a2_2, List::Diagonal); // v0+=H*v1
   StopTimer(nCalcExpec);
   /* switch -> SpinGCBoost */
 

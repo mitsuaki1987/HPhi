@@ -15,25 +15,6 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #pragma once
 
-long int Binomial(
-         int n,
-         int k,
-         long int **comb,
-         int Nsite
-         );
-
-int sz(
-       
-       long int *list_1_,
-       long int *list_2_1_,
-       long int *list_2_2_
-       );
-
-int Read_sz
-(
- 
- const long int irght,
- const long int ilft,
- const long int ihfbit,
- long int *i_max
- );
+long int Binomial(int n, int k, long int** comb, int Nsite);
+int sz(long int* list_1_, long int* list_2_1_, long int* list_2_2_,
+       int Ne,  int Nup, int Ndown, int Total2Sz, long int idim_max);

@@ -25,7 +25,12 @@
  total Sz (DefineList.Total2Sz) by them in the inter process region 
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-int CheckMPI()
+int CheckMPI(
+int *Ne,
+int *Nup,
+int *Ndown,
+int *Total2Sz
+)
 {
   int isite;
   int NDimInterPE, SmallDim, SpinNum, ishift;
@@ -35,8 +40,6 @@ int CheckMPI()
   Branch for each model
   <ul>
   */
-  Def::NsiteMPI = Def::Nsite;
-  Def::Total2SzMPI = Def::Total2Sz;
   switch (Def::iCalcModel) {
   case DC::HubbardGC: /****************************************************/
   case DC::Hubbard:
@@ -91,17 +94,17 @@ int CheckMPI()
         SpinNum = SmallDim % 4;
         SmallDim /= 4;
         if (SpinNum == 1 /*01*/) {
-          Def::Nup -= 1;
-          Def::Ne -= 1;
+          *Nup -= 1;
+          *Ne -= 1;
         }
         else if (SpinNum == 2 /*10*/) {
-          Def::Ndown -= 1;
-          Def::Ne -= 1;
+          *Ndown -= 1;
+          *Ne -= 1;
         }
         else if (SpinNum == 3 /*11*/) {
-          Def::Nup -= 1;
-          Def::Ndown -= 1;
-          Def::Ne -= 2;
+          *Nup -= 1;
+          *Ndown -= 1;
+          *Ne -= 2;
         }
       } /*for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++)*/
 
@@ -116,8 +119,8 @@ int CheckMPI()
       for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++) {
         SpinNum = SmallDim % 4;
         SmallDim /= 4;
-        if (SpinNum == 1 /*01*/ || SpinNum == 2 /*10*/) Def::Ne -= 1;
-        else if (SpinNum == 3 /*11*/) Def::Ne -= 2;
+        if (SpinNum == 1 /*01*/ || SpinNum == 2 /*10*/) *Ne -= 1;
+        else if (SpinNum == 3 /*11*/) *Ne -= 2;
       } /*for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++)*/
 
       break; /*case HubbardNConserved:*/
@@ -139,17 +142,17 @@ int CheckMPI()
           SmallDim /= 4;
           if (Def::LocSpn[isite] == ITINERANT) {
             if (SpinNum == 1 /*01*/) {
-              Def::Nup -= 1;
-              Def::Ne -= 1;
+              *Nup -= 1;
+              *Ne -= 1;
             }
             else if (SpinNum == 2 /*10*/) {
-              Def::Ndown -= 1;
-              Def::Ne -= 1;
+              *Ndown -= 1;
+              *Ne -= 1;
             }
             else if (SpinNum == 3 /*11*/) {
-              Def::Nup -= 1;
-              Def::Ndown -= 1;
-              Def::Ne -= 2;
+              *Nup -= 1;
+              *Ndown -= 1;
+              *Ne -= 2;
             }
           }
           else {
@@ -159,18 +162,18 @@ int CheckMPI()
         }/*for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++)*/
       } /*if (Def::iCalcModel == DC::Kondo)*/
       else {
-        Def::Nup = 0;
-        Def::Ndown = 0;
-        Def::Ne = 0;
+        *Nup = 0;
+        *Ndown = 0;
+        *Ne = 0;
       }
 
       break; /*case KondoGC, Kondo*/
 
     case DC::HubbardGC:
-      Def::Nup = 0;
-      Def::Ndown = 0;
-      Def::Ne = 0;
-      Def::Total2Sz = 0;
+      *Nup = 0;
+      *Ndown = 0;
+      *Ne = 0;
+      *Total2Sz = 0;
       break;
     } /*switch (Def::iCalcModel) 2(inner)*/
 
@@ -213,7 +216,6 @@ int CheckMPI()
       }/*if (isite == 0)*/
 
       if (Def::iCalcModel == DC::Spin) {
-        /*Def::NeMPI = Def::Ne;*/
 
         /* Ne should be different in each PE */
         SmallDim = MP::myrank;
@@ -221,11 +223,11 @@ int CheckMPI()
           SpinNum = SmallDim % 2;
           SmallDim /= 2;
           if (SpinNum == 0) {
-            Def::Ndown -= 1;
+            *Ndown -= 1;
           }
           else {
-            Def::Ne -= 1;
-            Def::Nup -= 1;
+            *Ne -= 1;
+            *Nup -= 1;
           }
         }/*for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++)*/
       }/*if (Def::iCalcModel == DC::Spin)*/
@@ -265,7 +267,6 @@ int CheckMPI()
       }/*if (isite == 0)*/
 
       if (Def::iCalcModel == DC::Spin) {
-        Def::Total2SzMPI = Def::Total2Sz;
 
         /* Ne should be different in each PE */
         SmallDim = MP::myrank;
@@ -273,7 +274,7 @@ int CheckMPI()
           SpinNum = SmallDim % Def::SiteToBit[isite];
           SmallDim /= Def::SiteToBit[isite];
 
-          Def::Total2Sz += Def::SiteToBit[isite] - 1 - 2 * SpinNum;
+          *Total2Sz += Def::SiteToBit[isite] - 1 - 2 * SpinNum;
         }/*for (isite = Def::Nsite; isite < Def::NsiteMPI; isite++)*/
       }/*if (Def::iCalcModel == DC::Spin)*/
     }/*if (Def::iFlgGeneralSpin == TRUE)*/
@@ -321,7 +322,13 @@ int CheckMPI()
 Modify Definelist::Tpow in the inter process region
 @author Mitsuaki Kawamura (The University of Tokyo)
 */
-void CheckMPI_Summary()
+void CheckMPI_Summary(
+int Ne,
+int Nup,
+int Ndown,
+int Total2Sz,
+long int i_max
+)
 {
   int iproc, SmallDim, SpinNum, Nelec;
   int isite;
@@ -392,27 +399,27 @@ void CheckMPI_Summary()
 
       fprintf(MP::STDOUT, "    %7d", iproc);
 
-      if (MP::myrank == iproc) idimMPI = Check::idim_max;
+      if (MP::myrank == iproc) idimMPI = i_max;
       else idimMPI = 0;
       fprintf(MP::STDOUT, " %15ld", wrapperMPI::Sum_li(idimMPI));
 
-      if (MP::myrank == iproc) Nelec = Def::Nup;
+      if (MP::myrank == iproc) Nelec = Nup;
       else Nelec = 0;
       fprintf(MP::STDOUT, "  %4d", wrapperMPI::Sum_i(Nelec));
 
-      if (MP::myrank == iproc) Nelec = Def::Ndown;
+      if (MP::myrank == iproc) Nelec = Ndown;
       else Nelec = 0;
       fprintf(MP::STDOUT, "  %5d", wrapperMPI::Sum_i(Nelec));
 
       if (MP::myrank == iproc) {
-        Nelec = Def::Ne; //Def::Nup
-        if (Def::iCalcModel == DC::Spin || Def::iCalcModel == DC::SpinGC) Nelec += Def::Ndown;
+        Nelec = Ne; //*Nup
+        if (Def::iCalcModel == DC::Spin || Def::iCalcModel == DC::SpinGC) Nelec += Ndown;
       }
       else Nelec = 0;
 
       fprintf(MP::STDOUT, "  %5d", wrapperMPI::Sum_i(Nelec));
 
-      if (MP::myrank == iproc) Nelec = Def::Total2Sz;
+      if (MP::myrank == iproc) Nelec = Total2Sz;
       else Nelec = 0;
       fprintf(MP::STDOUT, "  %8d   ", wrapperMPI::Sum_i(Nelec));
       /**@brief
@@ -464,7 +471,7 @@ void CheckMPI_Summary()
       fprintf(MP::STDOUT, "\n");
     }/*for (iproc = 0; iproc < MP::nproc; iproc++)*/
 
-    idimMPI = wrapperMPI::Sum_li(Check::idim_max);
+    idimMPI = wrapperMPI::Sum_li(i_max);
     fprintf(MP::STDOUT, "\n   Total dimension : %ld\n\n", idimMPI);
     if (idimMPI < 1) {
       fprintf(MP::STDOUT, "ERROR! Total dimension < 1\n");

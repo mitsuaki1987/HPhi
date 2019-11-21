@@ -15,5 +15,5 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #include<complex>
 
-int diagonalcalc();
+int diagonalcalc(long int i_max, double* Diagonal, long int* list_1);
 int diagonalcalcForTE(const int _istep, std::complex<double>* tmp_v0, std::complex<double>* tmp_v1);

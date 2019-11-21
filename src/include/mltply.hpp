@@ -17,5 +17,7 @@
 #include <complex>
 
 namespace mltply {
-  int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+  int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+    long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2,
+    double *diagonal);
 }

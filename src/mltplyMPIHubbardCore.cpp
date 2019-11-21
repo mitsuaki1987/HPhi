@@ -266,7 +266,6 @@ void mltply::Hubbard::GC::X_CisAisCjtAjt_MPI(
 ) {
   int iCheck;
   long int tmp_ispin1;
-  long int i_max = Check::idim_max;
   long int tmp_off, j;
   int one = 1;
 
@@ -276,15 +275,16 @@ void mltply::Hubbard::GC::X_CisAisCjtAjt_MPI(
   }
 
   if (org_isite1 >= Def::Nsite && org_isite3 >= Def::Nsite) {
-    zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[0][0], &tmp_v0[0][0]);
+    zaxpy_long(Check::idim_max *nstate, tmp_V, &tmp_v1[0][0], &tmp_v0[0][0]);
   }/*if (org_isite1 >= Def::Nsite && org_isite3 >= Def::Nsite)*/
   else if (org_isite1 >= Def::Nsite || org_isite3 >= Def::Nsite) {
     if (org_isite1 > org_isite3) tmp_ispin1 = Def::Tpow[2 * org_isite3 + org_ispin3];
     else                         tmp_ispin1 = Def::Tpow[2 * org_isite1 + org_ispin1];
 
 #pragma omp parallel for default(none) private(j,tmp_off) \
-shared(org_isite1,org_ispin1,org_isite3,org_ispin3,nstate,one,tmp_v0,tmp_v1,tmp_ispin1, i_max,tmp_V)
-    for (j = 0; j < i_max; j++) {
+shared(org_isite1,org_ispin1,org_isite3,org_ispin3,nstate,one,tmp_v0,tmp_v1, \
+tmp_ispin1, Check::idim_max,tmp_V)
+    for (j = 0; j < Check::idim_max; j++) {
       if (mltply::Hubbard::CheckBit_Ajt(tmp_ispin1, j, &tmp_off) == TRUE) {
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
       }
@@ -307,7 +307,6 @@ void mltply::Hubbard::GC::X_CisAjtCkuAku_MPI(
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  long int i_max = Check::idim_max;
   int iCheck, Fsgn;
   long int isite1, isite2, isite3;
   long int tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4;
@@ -356,16 +355,16 @@ void mltply::Hubbard::GC::X_CisAjtCkuAku_MPI(
     if (mltply::Hubbard::CheckBit_Ajt(isite3, MP::myrank, &tmp_off) == FALSE) return;
 
 #pragma omp parallel default(none) private(j,tmp_off) \
-shared(i_max,Asum,Adiff,isite1,isite2, tmp_V,tmp_v0, tmp_v1,nstate,Large::mode)
+shared(Check::idim_max,Asum,Adiff,isite1,isite2, tmp_V,tmp_v0, tmp_v1,nstate,Large::mode)
     {
 #pragma omp for
-      for (j = 0; j < i_max; j++) 
+      for (j = 0; j < Check::idim_max; j++)
         mltply::Hubbard::GC::CisAjt(j, nstate, tmp_v0, tmp_v1, isite2, isite1, Asum, Adiff, 
           tmp_V, &tmp_off);
 
       if (Large::mode != M_CORR) {
 #pragma omp for
-        for (j = 0; j < i_max; j++) 
+        for (j = 0; j < Check::idim_max; j++)
           mltply::Hubbard::GC::CisAjt(j, nstate, tmp_v0, tmp_v1, isite1, isite2, Asum, Adiff, 
             tmp_V, &tmp_off);
       }/*if (Large::mode != M_CORR)*/
@@ -373,7 +372,8 @@ shared(i_max,Asum,Adiff,isite1,isite2, tmp_V,tmp_v0, tmp_v1,nstate,Large::mode)
     return;
   }//MP::myrank =origin
   else {
-    wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
+    wrapperMPI::SendRecv_cv(origin, Check::idim_max *nstate, Check::idim_max *nstate,
+      &tmp_v1[0][0], &Wave::v1buf[0][0]);
 
 #pragma omp parallel default(none) private(j,dmv,tmp_off,Fsgn,org_rankbit,Adiff) \
 shared(Wave::v1buf,tmp_v1,nstate,one,tmp_v0,MP::myrank,origin,isite3,org_isite3,isite1,isite2, Def::OrgTpow, \
@@ -451,7 +451,6 @@ void mltply::Hubbard::GC::X_CisAjtCkuAlv_MPI(
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  long int i_max = Check::idim_max;
   int iCheck, Fsgn;
   long int isite1, isite2, isite3, isite4;
   long int tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4;
@@ -509,8 +508,8 @@ void mltply::Hubbard::GC::X_CisAjtCkuAlv_MPI(
       else Adiff = isite1 - isite4 * 2;
 
 #pragma omp parallel for default(none) private(j, tmp_off) \
-shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
-      for (j = 0; j < i_max; j++) 
+shared(Check::idim_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
+      for (j = 0; j < Check::idim_max; j++)
         mltply::Hubbard::GC::CisAjt(j, nstate, tmp_v0, tmp_v1, 
           isite1, isite4, (isite1 + isite4), Adiff, tmp_V, &tmp_off);
       
@@ -519,8 +518,8 @@ shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
                                           org_isite2, org_ispin2, -tmp_V, nstate, tmp_v0, tmp_v1);
       if (Large::mode != M_CORR) { //for hermite
 #pragma omp parallel for default(none) private(j, tmp_off) \
-shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
-        for (j = 0; j < i_max; j++) 
+shared(Check::idim_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
+        for (j = 0; j < Check::idim_max; j++)
           mltply::Hubbard::GC::CisAjt(j, nstate, tmp_v0, tmp_v1, 
             isite4, isite1, (isite1 + isite4), Adiff, tmp_V, &tmp_off);
         
@@ -540,7 +539,8 @@ shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
     return;
   }//MP::myrank =origin
   else {
-    wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, Check::idim_max*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
+    wrapperMPI::SendRecv_cv(origin, Check::idim_max *nstate, Check::idim_max *nstate, 
+                            &tmp_v1[0][0], &Wave::v1buf[0][0]);
 
     if (org_isite1 >= Def::Nsite && org_isite2 >= Def::Nsite
      && org_isite3 >= Def::Nsite && org_isite4 >= Def::Nsite) {
@@ -564,12 +564,13 @@ shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, tmp_v0,nstate)
         tmp_V *= Fsgn;
       }/*if (iFlgHermite == TRUE)*/
 
-      zaxpy_long(i_max*nstate, tmp_V, &Wave::v1buf[0][0], &tmp_v0[0][0]);
+      zaxpy_long(Check::idim_max *nstate, tmp_V, &Wave::v1buf[0][0], &tmp_v0[0][0]);
     }
     else {
       org_rankbit = Def::OrgTpow[2 * Def::Nsite] * origin;
 #pragma omp parallel for default(none) private(j,dmv,tmp_off,Fsgn) \
-shared(Check::idim_max,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,org_rankbit,Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
+shared(Check::idim_max,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,org_rankbit, \
+Wave::v1buf,tmp_v1,tmp_v0,nstate,one)
       for (j = 0; j < Check::idim_max; j++) {
         if (mltply::Hubbard::GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, j + org_rankbit, &tmp_off) == TRUE) {
           dmv = tmp_V * (std::complex<double>)Fsgn;
@@ -591,7 +592,6 @@ void mltply::Hubbard::GC::X_CisAis_MPI(
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
 ) {
-  long int i_max = Check::idim_max;
   long int j, isite1, tmp_off;
   int one = 1;
 
@@ -599,12 +599,12 @@ void mltply::Hubbard::GC::X_CisAis_MPI(
   if (org_isite1 >= Def::Nsite) {
     if (mltply::Hubbard::CheckBit_Ajt(isite1, (long int) MP::myrank, &tmp_off) == FALSE) return;
 
-    zaxpy_long(i_max*nstate, tmp_V, &tmp_v1[0][0], &tmp_v0[0][0]);
+    zaxpy_long(Check::idim_max *nstate, tmp_V, &tmp_v1[0][0], &tmp_v0[0][0]);
   }/*if (org_isite1 >= Def::Nsite)*/
   else {
 #pragma omp parallel for default(none) private(j, tmp_off) \
-shared(tmp_v0, tmp_v1,nstate,one, i_max, tmp_V, isite1)
-    for (j = 0; j < i_max; j++) {
+shared(tmp_v0, tmp_v1,nstate,one, Check::idim_max, tmp_V, isite1)
+    for (j = 0; j < Check::idim_max; j++) {
       if (mltply::Hubbard::CheckBit_Ajt(isite1, j, &tmp_off) == TRUE) {
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
       }/*if (mltply::Hubbard::CheckBit_Ajt(isite1, j, &tmp_off) == TRUE)*/
@@ -647,13 +647,14 @@ void mltply::Hubbard::C::X_CisAisCjtAjt_MPI(
   int org_isite3,//!<[in] Site 3
   int org_ispin3,//!<[in] Spin 3
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  //!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
-  std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
+  std::complex<double> **tmp_v1,//!<[inout] Initial wavefunction
+  long int i_max,
+  long int* list_1
 ) {
   int iCheck;
   long int tmp_ispin1;
-  long int i_max = Check::idim_max;
   long int tmp_off, j;
   int one = 1;
 
@@ -668,9 +669,9 @@ void mltply::Hubbard::C::X_CisAisCjtAjt_MPI(
     else                         tmp_ispin1 = Def::Tpow[2 * org_isite1 + org_ispin1];
 
 #pragma omp parallel for default(none) private(j,tmp_off) \
-shared(tmp_v0,tmp_v1,List::c1,org_isite1,org_ispin1,org_isite3,org_ispin3,nstate,one, i_max,tmp_V,tmp_ispin1)
+shared(tmp_v0,tmp_v1,list_1,org_isite1,org_ispin1,org_isite3,org_ispin3,nstate,one, i_max,tmp_V,tmp_ispin1)
     for (j = 0; j < i_max; j++) {
-      if (mltply::Hubbard::CheckBit_Ajt(tmp_ispin1, List::c1[j], &tmp_off) == TRUE) {
+      if (mltply::Hubbard::CheckBit_Ajt(tmp_ispin1, list_1[j], &tmp_off) == TRUE) {
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
       }
     }/*for (j = 0; j < i_max; j++)*/
@@ -690,11 +691,14 @@ void mltply::Hubbard::C::X_CisAjtCkuAlv_MPI(
   int org_isite4,//!<[in] Site 4
   int org_ispin4,//!<[in] Spin 4
   std::complex<double> tmp_V,//!<[in] Coupling constant
-  //!<[inout]
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
-  std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
+  std::complex<double> **tmp_v1,//!<[inout] Initial wavefunction
+  long int i_max,
+  long int *list_1, 
+  long int *list_2_1,
+  long int *list_2_2
 ) {
-  long int i_max = Check::idim_max;
   long int idim_max_buf;
   int iCheck, Fsgn;
   long int isite1, isite2, isite3, isite4;
@@ -740,9 +744,10 @@ void mltply::Hubbard::C::X_CisAjtCkuAlv_MPI(
   if (MP::myrank == origin) {
     if (isite1 == isite4 && isite2 == isite3) { // CisAjvCjvAis =Cis(1-njv)Ais=nis-nisnjv
             //calc nis
-      mltply::Hubbard::C::X_CisAis_MPI(org_isite1, org_ispin1, tmp_V, nstate, tmp_v0, tmp_v1);
+      mltply::Hubbard::C::X_CisAis_MPI(org_isite1, org_ispin1, tmp_V, nstate, tmp_v0, tmp_v1, i_max, list_1);
       //calc -nisniv
-      mltply::Hubbard::C::X_CisAisCjtAjt_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1);
+      mltply::Hubbard::C::X_CisAisCjtAjt_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3,
+        -tmp_V, nstate, tmp_v0, tmp_v1, i_max, list_1);
     }/* if (isite1 == isite4 && isite2 == isite3)*/
     else if (isite2 == isite3) { // CisAjvCjvAku= Cis(1-njv)Aku=-CisAkunjv+CisAku: j is in PE
       if (isite4 > isite1) Adiff = isite4 - isite1 * 2;
@@ -750,42 +755,46 @@ void mltply::Hubbard::C::X_CisAjtCkuAlv_MPI(
 
       //calc CisAku
 #pragma omp parallel for default(none) private(j, tmp_off) \
-shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, nstate, tmp_v0, List::c1)
+shared(i_max, tmp_V, isite1, isite4, Adiff, tmp_v1, nstate, tmp_v0,list_1, list_2_1, list_2_2)
       for (j = 0; j < i_max; j++)
         mltply::Hubbard::C::CisAjt(j, nstate, tmp_v0, tmp_v1,
-          isite1, isite4, (isite1 + isite4), Adiff, tmp_V);
+          isite1, isite4, (isite1 + isite4), Adiff, tmp_V, list_1, list_2_1, list_2_2);
       
       //calc -CisAku njv
       mltply::Hubbard::C::X_CisAjtCkuAku_MPI(org_isite1, org_ispin1, org_isite4, org_ispin4,
-                                       org_isite2, org_ispin2, -tmp_V, nstate, tmp_v0, tmp_v1);
+                                             org_isite2, org_ispin2, -tmp_V, nstate, tmp_v0, tmp_v1,
+                                             i_max, list_1, list_2_1, list_2_2);
 
       if (Large::mode != M_CORR) {  //for hermite
 #pragma omp parallel for default(none) private(j, tmp_off) \
-shared(i_max, tmp_V, isite1, isite4, Adiff,tmp_v1, tmp_v0,nstate)
+shared(i_max, tmp_V, isite1, isite4, Adiff,tmp_v1, tmp_v0,nstate,list_1,list_2_1,list_2_2)
         for (j = 0; j < i_max; j++) 
           mltply::Hubbard::C::CisAjt(j, nstate, tmp_v0, tmp_v1,
-            isite4, isite1, (isite1 + isite4), Adiff, tmp_V);
+            isite4, isite1, (isite1 + isite4), Adiff, tmp_V, list_1, list_2_1, list_2_2);
                 
         //calc -njvCkuAis
         mltply::Hubbard::C::X_CisAisCjtAku_MPI(org_isite2, org_ispin2, org_isite4, org_ispin4, 
-                                         org_isite1, org_ispin1, -tmp_V, nstate, tmp_v0, tmp_v1);
+                                               org_isite1, org_ispin1, -tmp_V, nstate, tmp_v0, tmp_v1,
+                                               i_max, list_1, list_2_1, list_2_2);
       }/*if (Large::mode != M_CORR)*/
     }/*if (isite2 == isite3)*/
     else {// CisAjtCkuAis = -CisAisCkuAjt: i is in PE
       mltply::Hubbard::C::X_CisAisCjtAku_MPI(org_isite1, org_ispin1, org_isite3, org_ispin3, 
-                                       org_isite2, org_ispin2, -tmp_V, nstate, tmp_v0, tmp_v1);
+                                             org_isite2, org_ispin2, -tmp_V, nstate, tmp_v0, tmp_v1,
+                                            i_max,  list_1, list_2_1, list_2_2);
 
       if (Large::mode != M_CORR) //for hermite: CisAkuCjtAis=-CisAisCjtAku
         mltply::Hubbard::C::X_CisAisCjtAku_MPI(org_isite1, org_ispin1, org_isite2, org_ispin2,
-                                         org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1);    
+                                               org_isite3, org_ispin3, -tmp_V, nstate, tmp_v0, tmp_v1,
+                                               i_max, list_1, list_2_1, list_2_2);
     }/*if (isite2 != isite3)*/
     return;
   }//MP::myrank =origin
   else {
-    idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-    wrapperMPI::SendRecv_iv(origin, Check::idim_max, idim_max_buf, List::c1, List::c1buf);
+    idim_max_buf = wrapperMPI::SendRecv_i(origin, i_max);
+    wrapperMPI::SendRecv_iv(origin, i_max, idim_max_buf, list_1, List::buf);
 
-    wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
+    wrapperMPI::SendRecv_cv(origin, i_max*nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
     if (org_isite1 >= Def::Nsite && org_isite2 >= Def::Nsite
      && org_isite3 >= Def::Nsite && org_isite4 >= Def::Nsite)
     {
@@ -806,11 +815,11 @@ shared(i_max, tmp_V, isite1, isite4, Adiff,tmp_v1, tmp_v0,nstate)
       }/*if (iFlgHermite == TRUE)*/
 #pragma omp parallel default(none) private(j,ioff) \
 shared(idim_max_buf,tmp_V,Large::irght, Large::ilft, Large::ihfbit, \
-Wave::v1buf,tmp_v1,nstate,tmp_v0,List::c2_1,List::c2_2,List::c1buf,one)
+Wave::v1buf,tmp_v1,nstate,tmp_v0,list_2_1,list_2_2,List::buf,one)
       {
 #pragma omp for
         for (j = 0; j < idim_max_buf; j++) {
-          if (GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
+          if (GetOffComp(list_2_1, list_2_2, List::buf[j],
             Large::irght, Large::ilft, Large::ihfbit, &ioff) == TRUE)
           {
             zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
@@ -825,14 +834,15 @@ Wave::v1buf,tmp_v1,nstate,tmp_v0,List::c2_1,List::c2_2,List::c1buf,one)
 #pragma omp parallel default(none) private(j, dmv, tmp_off, Fsgn, ioff) \
 shared(MP::myrank, idim_max_buf, tmp_V, tmp_isite1, tmp_isite2, tmp_isite3, tmp_isite4, org_rankbit, \
 org_isite1, org_ispin1, org_isite2, org_ispin2, org_isite3, org_ispin3, org_isite4, org_ispin4, \
-Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::c1buf, List::c2_1, List::c2_2, Large::irght, Large::ilft, Large::ihfbit)
+Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::buf, list_2_1, list_2_2, \
+Large::irght, Large::ilft, Large::ihfbit)
       {
 #pragma omp for
         for (j = 0; j < idim_max_buf; j++) {
           if (mltply::Hubbard::GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, 
-            List::c1buf[j] + org_rankbit, &tmp_off) == TRUE)
+            List::buf[j] + org_rankbit, &tmp_off) == TRUE)
           {
-            if (GetOffComp(List::c2_1, List::c2_2, tmp_off, Large::irght, Large::ilft, Large::ihfbit, &ioff) == TRUE)
+            if (GetOffComp(list_2_1, list_2_2, tmp_off, Large::irght, Large::ilft, Large::ihfbit, &ioff) == TRUE)
             {
               dmv = tmp_V * (std::complex<double>)Fsgn;
               zaxpy_(&nstate, &dmv, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
@@ -857,9 +867,12 @@ void mltply::Hubbard::C::X_CisAjtCkuAku_MPI(
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate,
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
-  std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
+  std::complex<double> **tmp_v1,//!<[inout] Initial wavefunction
+  long int i_max,
+  long int* list_1, 
+  long int* list_2_1, 
+  long int* list_2_2
 ) {
-  long int i_max = Check::idim_max;
   long int idim_max_buf, ioff;
   int iCheck, Fsgn;
   long int isite1, isite2, isite3;
@@ -906,30 +919,31 @@ void mltply::Hubbard::C::X_CisAjtCkuAku_MPI(
   if (MP::myrank == origin) {// only k is in PE
     //for hermite
 #pragma omp parallel default(none) private(j) \
-shared(i_max, Asum, Adiff, isite1, isite2, tmp_V, Large::mode, tmp_v0, tmp_v1,nstate)
+shared(i_max, Asum, Adiff, isite1, isite2, tmp_V, Large::mode, tmp_v0, tmp_v1, \
+nstate,list_1, list_2_1, list_2_2)
     {
 #pragma omp for
       for (j = 0; j < i_max; j++)
         mltply::Hubbard::C::CisAjt(j, nstate, tmp_v0, tmp_v1, 
-          isite1, isite2, Asum, Adiff, tmp_V);
+          isite1, isite2, Asum, Adiff, tmp_V, list_1, list_2_1, list_2_2);
 
       if (Large::mode != M_CORR) {
 #pragma omp for
         for (j = 0; j < i_max; j++)
           mltply::Hubbard::C::CisAjt(j, nstate, tmp_v0, tmp_v1, 
-            isite2, isite1, Asum, Adiff, tmp_V);
+            isite2, isite1, Asum, Adiff, tmp_V, list_1, list_2_1, list_2_2);
       }/*if (Large::mode != M_CORR)*/
     }/*End of parallel region*/
     return;
   }//MP::myrank =origin
   else {
-    idim_max_buf = wrapperMPI::SendRecv_i(origin, Check::idim_max);
-    wrapperMPI::SendRecv_iv(origin, Check::idim_max, idim_max_buf, List::c1, List::c1buf);
+    idim_max_buf = wrapperMPI::SendRecv_i(origin, i_max);
+    wrapperMPI::SendRecv_iv(origin, i_max, idim_max_buf, list_1, List::buf);
     wrapperMPI::SendRecv_cv(origin, Check::idim_max*nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
 
 #pragma omp parallel default(none) private(j,dmv,ioff,tmp_off,Fsgn,Adiff,org_rankbit) \
 shared(idim_max_buf,tmp_V,tmp_isite1,tmp_isite2,tmp_isite3,tmp_isite4,isite3,Wave::v1buf,tmp_v1, \
-nstate,one,tmp_v0,List::c1buf,List::c2_1,List::c2_2,origin,org_isite3,MP::myrank,isite1,isite2, \
+nstate,one,tmp_v0,List::buf,list_2_1,list_2_2,origin,org_isite3,MP::myrank,isite1,isite2, \
 org_isite1,org_isite2,Def::Nsite,Large::irght, Large::ilft, Large::ihfbit,Def::OrgTpow)
     {
 
@@ -942,7 +956,7 @@ org_isite1,org_isite2,Def::Nsite,Large::irght, Large::ilft, Large::ihfbit,Def::O
         if (org_isite3 >= Def::Nsite) {
 #pragma omp for
           for (j = 0; j < idim_max_buf; j++) {
-            GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
+            GetOffComp(list_2_1, list_2_2, List::buf[j],
               Large::irght, Large::ilft, Large::ihfbit, &ioff);
             zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
           }/*for (j = 0; j < idim_max_buf; j++)*/
@@ -950,8 +964,8 @@ org_isite1,org_isite2,Def::Nsite,Large::irght, Large::ilft, Large::ihfbit,Def::O
         else { //org_isite3 <= Def::Nsite
 #pragma omp for
           for (j = 0; j < idim_max_buf; j++) {
-            if (mltply::Hubbard::CheckBit_Ajt(isite3, List::c1buf[j], &tmp_off) == TRUE) {
-              GetOffComp(List::c2_1, List::c2_2, List::c1buf[j],
+            if (mltply::Hubbard::CheckBit_Ajt(isite3, List::buf[j], &tmp_off) == TRUE) {
+              GetOffComp(list_2_1, list_2_2, List::buf[j],
                 Large::irght, Large::ilft, Large::ihfbit, &ioff);
               zaxpy_(&nstate, &tmp_V, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
             }
@@ -963,9 +977,9 @@ org_isite1,org_isite2,Def::Nsite,Large::irght, Large::ilft, Large::ihfbit,Def::O
 #pragma omp for
         for (j = 0; j < idim_max_buf; j++) {
           if (mltply::Hubbard::GetSgnInterAll(tmp_isite4, tmp_isite3, tmp_isite2, tmp_isite1, &Fsgn, 
-            List::c1buf[j] + org_rankbit, &tmp_off) == TRUE) {
+            List::buf[j] + org_rankbit, &tmp_off) == TRUE) {
             dmv = tmp_V * (std::complex<double>)Fsgn;
-            GetOffComp(List::c2_1, List::c2_2, tmp_off,
+            GetOffComp(list_2_1, list_2_2, tmp_off,
               Large::irght, Large::ilft, Large::ihfbit, &ioff);
             zaxpy_(&nstate, &dmv, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
           }
@@ -988,11 +1002,15 @@ void mltply::Hubbard::C::X_CisAisCjtAku_MPI(
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate, 
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
-  std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
+  std::complex<double> **tmp_v1,//!<[inout] Initial wavefunction
+  long int i_max,
+  long int* list_1, 
+  long int* list_2_1, 
+  long int* list_2_2
 ) {
   mltply::Hubbard::C::X_CisAjtCkuAku_MPI(
     org_isite4, org_ispin4, org_isite3, org_ispin3,
-    org_isite1, org_ispin1, conj(tmp_V), nstate, tmp_v0, tmp_v1);
+    org_isite1, org_ispin1, conj(tmp_V), nstate, tmp_v0, tmp_v1, i_max, list_1, list_2_1, list_2_2);
 }/*std::complex<double> mltply::Hubbard::C::X_CisAisCjtAku_MPI*/
 
 void mltply::Hubbard::C::X_CisAis_MPI(
@@ -1001,9 +1019,10 @@ void mltply::Hubbard::C::X_CisAis_MPI(
   std::complex<double> tmp_V,//!<[in] Coupling constant
   int nstate, 
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
-  std::complex<double> **tmp_v1//!<[inout] Initial wavefunction
+  std::complex<double> **tmp_v1,//!<[inout] Initial wavefunction
+  long int i_max,
+  long int *list_1
 ) {
-  long int i_max = Check::idim_max;
   long int j, isite1, tmp_off;
   int one = 1;
 
@@ -1016,11 +1035,11 @@ void mltply::Hubbard::C::X_CisAis_MPI(
   }/*if (org_isite1 >= Def::Nsite)*/
   else {
 #pragma omp parallel for default(none) private(j, tmp_off) \
-shared(tmp_v0, tmp_v1, List::c1,nstate,one, i_max, tmp_V, isite1)
+shared(tmp_v0, tmp_v1, list_1,nstate,one, i_max, tmp_V, isite1)
     for (j = 0; j < i_max; j++) {
-      if (mltply::Hubbard::C::X_CisAis(List::c1[j], isite1) != 0) {
+      if (mltply::Hubbard::C::X_CisAis(list_1[j], isite1) != 0) {
         zaxpy_(&nstate, &tmp_V, &tmp_v1[j][0], &one, &tmp_v0[j][0], &one);
-      }/*if (X_CisAis(List::c1[j], isite1) != 0)*/
+      }/*if (X_CisAis(list_1[j], isite1) != 0)*/
     }/*for (j = 0; j < i_max; j++)*/
   }/*if (org_isite1 <= Def::Nsite)*/
 }/*std::complex<double> mltply::Hubbard::C::X_CisAis_MPI*/
@@ -1121,7 +1140,10 @@ void mltply::Hubbard::C::X_Cis_MPI(
   int nstate, 
   std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[inout] Initial wavefunction
-  long int idim_max//!<[in] Similar to CheckList::idim_max
+  long int idim_max,//!<[in] Similar to CheckList::idim_max
+  long int* list_1, 
+  long int* list_2_1, 
+  long int* list_2_2
 ) {
   int mask2, state2, origin, bit2diff, Fsgn;
   long int idim_max_buf, j, ioff;
@@ -1142,7 +1164,7 @@ void mltply::Hubbard::C::X_Cis_MPI(
   SgnBit((long int) (bit2diff), &Fsgn); // Fermion sign
 
   idim_max_buf = wrapperMPI::SendRecv_i(origin, idim_max);
-  wrapperMPI::SendRecv_iv(origin, idim_max, idim_max_buf, List::c1_org, List::c1buf_org);
+  wrapperMPI::SendRecv_iv(origin, idim_max, idim_max_buf, list_1, List::buf);
   wrapperMPI::SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
 
   if (state2 == mask2) {
@@ -1154,10 +1176,10 @@ void mltply::Hubbard::C::X_Cis_MPI(
   else return;
 
 #pragma omp parallel for default(none) private(j) \
-shared(idim_max_buf, trans, ioff, Large::irght, Large::ilft, Large::ihfbit, List::c2_1, List::c2_2, \
-Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::c1buf_org)
+shared(idim_max_buf, trans, ioff, Large::irght, Large::ilft, Large::ihfbit, list_2_1, list_2_2, \
+Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::buf)
   for (j = 0; j < idim_max_buf; j++) {//idim_max_buf -> original
-    GetOffComp(List::c2_1, List::c2_2, List::c1buf_org[j],
+    GetOffComp(list_2_1, list_2_2, List::buf[j],
       Large::irght, Large::ilft, Large::ihfbit, &ioff);
     zaxpy_(&nstate, &trans, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
   }/*for (j = 0; j < idim_max_buf; j++)*/
@@ -1170,9 +1192,13 @@ void mltply::Hubbard::C::X_Ajt_MPI(
   int org_isite,//!<[in] Site j
   int org_ispin,//!<[in] Spin t
   std::complex<double> tmp_trans,//!<[in] Coupling constant
-  int nstate, std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
+  int nstate, 
+  std::complex<double> **tmp_v0,//!<[inout] Resulting wavefunction
   std::complex<double> **tmp_v1,//!<[inout] Initial wavefunction
-  long int idim_max//!<[in] Similar to CheckList::idim_max
+  long int idim_max,//!<[in] Similar to CheckList::idim_max
+  long int* list_1,
+  long int* list_2_1, 
+  long int* list_2_2
 ){
   int mask2, state2, origin, bit2diff, Fsgn;
   long int idim_max_buf, j, ioff;
@@ -1192,7 +1218,7 @@ void mltply::Hubbard::C::X_Ajt_MPI(
 
   SgnBit((long int) (bit2diff), &Fsgn); // Fermion sign
   idim_max_buf = wrapperMPI::SendRecv_i(origin, idim_max);
-  wrapperMPI::SendRecv_iv(origin, idim_max, idim_max_buf, List::c1_org, List::c1buf_org);
+  wrapperMPI::SendRecv_iv(origin, idim_max, idim_max_buf, list_1, List::buf);
   wrapperMPI::SendRecv_cv(origin, idim_max*nstate, idim_max_buf*nstate, &tmp_v1[0][0], &Wave::v1buf[0][0]);
 
   if (state2 == 0) {
@@ -1204,10 +1230,10 @@ void mltply::Hubbard::C::X_Ajt_MPI(
   else return;
 
 #pragma omp parallel for default(none) private(j, ioff) \
-shared(idim_max_buf, trans, Large::irght, Large::ilft, Large::ihfbit, List::c2_1, List::c2_2, \
-Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::c1buf_org)
+shared(idim_max_buf, trans, Large::irght, Large::ilft, Large::ihfbit, list_2_1, list_2_2, \
+Wave::v1buf, tmp_v1, nstate,one, tmp_v0, List::buf)
   for (j = 0; j < idim_max_buf; j++) {
-    GetOffComp(List::c2_1, List::c2_2, List::c1buf_org[j],
+    GetOffComp(list_2_1, list_2_2, List::buf[j],
       Large::irght, Large::ilft, Large::ihfbit, &ioff);
     zaxpy_(&nstate, &trans, &Wave::v1buf[j][0], &one, &tmp_v0[ioff][0], &one);
   }

@@ -34,6 +34,6 @@ int GetOffCompGeneralSpin(const long int org_ibit, const int org_isite, const in
 int GetLocal2Sz(const int isite, const long int org_bit, 
   const long int* SiteToBit, const long int* Tpow);
 int ConvertToList1GeneralSpin(const long int org_ibit,
-  const long int ihlfbit, long int* _ilist1Comp);
+  const long int ihlfbit, long int* _ilist1Comp, long int *list_2_1, long int *list_2_2);
 long int snoob(long int x);
 int pop(int x);

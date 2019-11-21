@@ -15,6 +15,5 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #pragma once
-int CheckMPI();
-void CheckMPI_Summary();
-
+int CheckMPI(int *Ne, int *Nup, int *Ndown, int *Total2Sz);
+void CheckMPI_Summary(int Ne, int Nup, int Ndown, int Total2Sz, long int i_max);

@@ -17,12 +17,17 @@
 namespace mltply{
   namespace Hubbard {
     namespace C{
-      int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-      void general_int(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+      int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+        long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
+      void general_int(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+        long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
       void general_hopp(int nstate, std::complex<double>** tmp_v0,
-        std::complex<double>** tmp_v1, std::complex<double> trans);
-      void exchange(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
-      void pairhopp(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
+        std::complex<double>** tmp_v1, std::complex<double> trans,
+        long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
+      void exchange(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+        long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
+      void pairhopp(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1,
+        long int i_max, long int* list_1, long int* list_2_1, long int* list_2_2);
     }
     namespace GC {
       int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1);
