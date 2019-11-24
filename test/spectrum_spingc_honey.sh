@@ -26,6 +26,8 @@ SpectrumQW = 0.5
 SpectrumQL = 0.5
 NOmega = 5
 OmegaIm = 1.0
+OmegaMax = 80.1384732749671993
+OmegaMin = -58.7615267250328007
 CalcSpec = "Scratch"
 SpectrumType = "SzSz"
 EOF
@@ -71,6 +73,8 @@ SpectrumQW = 0.5
 SpectrumQL = 0.5
 NOmega = 5
 OmegaIm = 1.0
+OmegaMax = 80.1384732749671993
+OmegaMin = -58.7615267250328007
 CalcSpec = "Scratch"
 SpectrumType = "S+S-"
 EOF
@@ -116,6 +120,8 @@ SpectrumQW = 0.5
 SpectrumQL = 0.5
 NOmega = 5
 OmegaIm = 1.0
+OmegaMax = 80.1384732749671993
+OmegaMin = -58.7615267250328007
 CalcSpec = "Scratch"
 SpectrumType = "Density"
 EOF

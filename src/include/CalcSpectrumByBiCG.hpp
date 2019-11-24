@@ -17,7 +17,8 @@
 #include <complex>
 
 void CalcSpectrumByBiCG(
+  int nstate,
   std::complex<double>** v2, std::complex<double>** v4,
   int Nomega, int NdcSpectrum,
-  std::complex<double>** dcSpectrum, std::complex<double>* dcomega,
+  std::complex<double>*** dcSpectrum, std::complex<double>** dcomega,
   std::complex<double>** v1Org);

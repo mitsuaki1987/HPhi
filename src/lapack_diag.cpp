@@ -31,7 +31,7 @@
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @return 
  */
-int lapack_diag()
+int lapack_diag(double *energy)
 {
   FILE* fp;
   char sdt[D_FileNameMax] = "";
@@ -67,13 +67,13 @@ int lapack_diag()
       nq = numroc_(&xMsize, &mb, &mycol, &i_zero, &npcol);
       Z_vec = (std::complex<double>*)malloc(mp * nq * sizeof(std::complex<double>));
   
-      diag_scalapack_cmp(xMsize, Wave::v0, Phys::energy, Z_vec, descZ_vec);
+      diag_scalapack_cmp(xMsize, Wave::v0, energy, Z_vec, descZ_vec);
     }
     else {
-      ZHEEVall(xMsize, Wave::v0, Phys::energy, Wave::v1);
+      ZHEEVall(xMsize, Wave::v0, energy, Wave::v1);
     }
 #else
-    ZHEEVall(xMsize, Wave::v0, Phys::energy, Wave::v1);
+    ZHEEVall(xMsize, Wave::v0, energy, Wave::v1);
 #endif
   }
   else {
@@ -85,7 +85,7 @@ int lapack_diag()
     }
 #else
     fprintf(MP::STDOUT, "Warning: MAGMA is not used in this calculation.");
-    ZHEEVall(xMsize, Wave::v0, Phys::energy, Wave::v1);
+    ZHEEVall(xMsize, Wave::v0, energy, Wave::v1);
 #endif
   }
   for (i = 0; i < i_max; i++) {
@@ -99,7 +99,7 @@ int lapack_diag()
     return -1;
   }
   for (i = 0; i < i_max; i++) {
-    fprintf(fp, " %ld %.10lf \n", i, Phys::energy[i]);
+    fprintf(fp, " %ld %.10lf \n", i, energy[i]);
   }
   fclose(fp);
   return 0;

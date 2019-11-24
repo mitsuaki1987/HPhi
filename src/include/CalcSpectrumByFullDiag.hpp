@@ -16,4 +16,4 @@
 
 void CalcSpectrumByFullDiag(
   int Nomega, int NdcSpectrum,
-  std::complex<double> **dcSpectrum, std::complex<double> *dcomega, std::complex<double> **v1org);
+  std::complex<double> ***dcSpectrum, std::complex<double> **dcomega, std::complex<double> **v1org);

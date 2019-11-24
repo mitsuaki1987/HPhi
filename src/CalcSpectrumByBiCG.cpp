@@ -73,6 +73,7 @@ void ShiftedEq(
 @brief Perform Seed Switch
 */
 void SeedSwitch(
+  int istate,
   int iter,
   int Nomega,
   int NdcSpectrum,
@@ -119,10 +120,10 @@ void SeedSwitch(
     *rho /= std::pow(pi[iter-1][iz_seed0], 2);
 
     for (idim = 0; idim < ndim; idim++) {
-      v2[idim][0] /= pi[iter][iz_seed0];
-      v4[idim][0] /= std::conj(pi[iter][iz_seed0]);
-      v3[idim][0] /= pi[iter-1][iz_seed0];
-      v5[idim][0] /= std::conj(pi[iter-1][iz_seed0]);
+      v2[idim][istate] /= pi[iter][iz_seed0];
+      v4[idim][istate] /= std::conj(pi[iter][iz_seed0]);
+      v3[idim][istate] /= pi[iter-1][iz_seed0];
+      v5[idim][istate] /= std::conj(pi[iter-1][iz_seed0]);
     }
     /*
     For restarting
@@ -156,12 +157,13 @@ void SeedSwitch(
  * @author Mitsuaki Kawamura (The University of Tokyo)
  */
 int CalcSpectrumByBiCG(
+  int nstate,
   std::complex<double> **v2,//!<[in] [CheckList::idim_max] Right hand side vector, excited state.
   std::complex<double> **v4,//!<[inout] [CheckList::idim_max] Work space for residual vector @f${\bf r}@f$
   int Nomega,//!<[in] Number of Frequencies
   int NdcSpectrum,//!<[in] Number of left side operator
-  std::complex<double> **dcSpectrum,//!<[out] [Nomega] Spectrum
-  std::complex<double> *dcomega,//!<[in] [Nomega] Frequency
+  std::complex<double> ***dcSpectrum,//!<[out] [Nomega] Spectrum
+  std::complex<double> **dcomega,//!<[in] [Nomega] Frequency
   std::complex<double> **v1Org//!<[in] Unexcited vector
 )
 {
@@ -170,27 +172,36 @@ int CalcSpectrumByBiCG(
   long int idim, i_max;
   FILE *fp;
   size_t byte_size;
-  int idcSpectrum;
-  std::complex<double> rho = 1.0, rho_old, z_seed, alpha_denom;
-  int iomega, iter_old;
-  int iter, iz_seed = 0, *lz_conv;
-  double resnorm, dtmp[4];
+  int idcSpectrum, nstate0;
+  std::complex<double> *rho, *rho_old, *z_seed, alpha_denom;
+  int iomega, iter_old, istate;
+  int iter, *iz_seed, **lz_conv, lz_conv_all;
+  double *resnorm, dtmp[4];
   std::complex<double> **vL, **v12, **v14, **v3, **v5,
-    *alpha, *beta, **res_proj, **pi, **pBiCG;
+    **alpha, **beta, ***res_proj, ***pi, ***pBiCG;
 
-  z_seed = dcomega[iz_seed];
+  z_seed = cd_1d_allocate(nstate);
+  iz_seed = i_1d_allocate(nstate);
+  rho = cd_1d_allocate(nstate);
+  rho_old = cd_1d_allocate(nstate);
+  resnorm = d_1d_allocate(nstate);
+  for (istate = 0; istate < nstate; istate++) {
+    iz_seed[istate] = 0;
+    z_seed[istate] = dcomega[istate][iz_seed[istate]];
+    rho[istate] = 1.0;
+  }
   fprintf(MP::STDOUT, "#####  Spectrum calculation with BiCG  #####\n\n");
   /**
   <ul>
   <li>Malloc vector for old residual vector (@f${\bf r}_{\rm old}@f$)
   and old shadow residual vector (@f${\bf {\tilde r}}_{\rm old}@f$).</li>
   */
-  v12 = cd_2d_allocate(Check::idim_maxs, 1);
-  v14 = cd_2d_allocate(Check::idim_maxs, 1);
-  v3 = cd_2d_allocate(Check::idim_maxs, 1);
-  v5 = cd_2d_allocate(Check::idim_maxs, 1);
-  vL = cd_2d_allocate(Check::idim_maxs, 1);
-  lz_conv = i_1d_allocate(Nomega);
+  v12 = cd_2d_allocate(Check::idim_maxs, nstate);
+  v14 = cd_2d_allocate(Check::idim_maxs, nstate);
+  v3 = cd_2d_allocate(Check::idim_maxs, nstate);
+  v5 = cd_2d_allocate(Check::idim_maxs, nstate);
+  vL = cd_2d_allocate(Check::idim_maxs, nstate);
+  lz_conv = i_2d_allocate(nstate, Nomega);
   /**
   <li>Set initial result vector(+shadow result vector)
   Read residual vectors if restart</li>
@@ -205,10 +216,12 @@ int CalcSpectrumByBiCG(
       fprintf(MP::STDOUT, "INFO: File for the restart is not found.\n");
       fprintf(MP::STDOUT, "      Start from SCRATCH.\n");
       zclear(Check::idim_maxs, &v2[0][0]);
-      GetExcitedState(Def::k_exct, v2, v1Org, 0);
-#pragma omp parallel for default(none) shared(v2,v4,v1Org,Check::idim_maxs) private(idim)
+      GetExcitedState(nstate, v2, v1Org, 0);
+#pragma omp parallel for default(none) shared(v2,v4,v1Org,Check::idim_maxs,nstate) \
+private(idim,istate)
       for (idim = 0; idim < Check::idim_maxs; idim++) 
-        v4[idim][0] = v2[idim][0];
+        for (istate = 0; istate < nstate; istate++)
+          v4[idim][istate] = v2[idim][istate];
     }
     else {
       byte_size = fread(&iter_old, sizeof(int), 1, fp);
@@ -218,10 +231,16 @@ int CalcSpectrumByBiCG(
         printf("%s %ld %ld %d\n", sdt, i_max, Check::idim_maxs, iter_old);
         wrapperMPI::Exit(-1);
       }
-      byte_size = fread(&v2[0][0], sizeof(std::complex<double>), Check::idim_maxs, fp);
-      byte_size = fread(&v3[0][0], sizeof(std::complex<double>), Check::idim_maxs, fp);
-      byte_size = fread(&v4[0][0], sizeof(std::complex<double>), Check::idim_maxs, fp);
-      byte_size = fread(&v5[0][0], sizeof(std::complex<double>), Check::idim_maxs, fp);
+      byte_size = fread(&nstate0, sizeof(nstate0), 1, fp);
+      if (nstate0 != nstate) {
+        fprintf(stderr, "Error: Input nstate is incorrect.\n");
+        printf("%d %d %ld %d\n", nstate, nstate0, Check::idim_maxs, iter_old);
+        wrapperMPI::Exit(-1);
+      }
+      byte_size = fread(&v2[0][0], sizeof(std::complex<double>), Check::idim_maxs * nstate, fp);
+      byte_size = fread(&v3[0][0], sizeof(std::complex<double>), Check::idim_maxs* nstate, fp);
+      byte_size = fread(&v4[0][0], sizeof(std::complex<double>), Check::idim_maxs* nstate, fp);
+      byte_size = fread(&v5[0][0], sizeof(std::complex<double>), Check::idim_maxs* nstate, fp);
       fclose(fp);
       fprintf(MP::STDOUT, "  End:   Input vectors for recalculation.\n");
       TimeKeeper("%s_TimeKeeper.dat", "Input vectors for recalculation finishes: %s", "a");
@@ -229,11 +248,13 @@ int CalcSpectrumByBiCG(
     }/*if (childfopenALL(sdt, "rb", &fp) == 0)*/
   }/*if (Def::iFlgCalcSpec > RECALC_FROM_TMComponents)*/
   else {
-    zclear(Check::idim_maxs, &v2[0][0]);
-    GetExcitedState(Def::k_exct, v2, v1Org, 0);
-#pragma omp parallel for default(none) shared(v2,v4,v1Org,Check::idim_maxs) private(idim)
+    zclear(Check::idim_maxs*nstate, &v2[0][0]);
+    GetExcitedState(nstate, v2, v1Org, 0);
+#pragma omp parallel for default(none) shared(v2,v4,v1Org,Check::idim_maxs,nstate) \
+private(idim,istate)
     for (idim = 0; idim < Check::idim_maxs; idim++)
-      v4[idim][0] = v2[idim][0];
+      for (istate = 0; istate < nstate; istate++)
+        v4[idim][istate] = v2[idim][istate];
   }
   /**
   <li>Input @f$\alpha, \beta[iter]@f$, projected residual, or start from scratch</li>
@@ -253,57 +274,61 @@ int CalcSpectrumByBiCG(
       sscanf(ctmp, "%d", &iter_old);
     }
   }
-  alpha = cd_1d_allocate(iter_old + Def::Lanczos_max + 1);
-  beta = cd_1d_allocate(iter_old + Def::Lanczos_max + 1);
-  res_proj = cd_2d_allocate(iter_old + Def::Lanczos_max + 1, NdcSpectrum);
-  pi = cd_2d_allocate(iter_old + Def::Lanczos_max + 1, Nomega);
-  pBiCG = cd_2d_allocate(Nomega, NdcSpectrum);
-  alpha[0] = std::complex<double>(1.0, 0.0);
-  beta[0] = std::complex<double>(0.0, 0.0);
-  for (iomega = 0; iomega < Nomega; iomega++) {
-    pi[0][iomega] = 1.0;
-    for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
-      pBiCG[iomega][idcSpectrum] = 0.0;
-      dcSpectrum[iomega][idcSpectrum] = 0.0;
+  alpha = cd_2d_allocate(nstate, iter_old + Def::Lanczos_max + 1);
+  beta = cd_2d_allocate(nstate, iter_old + Def::Lanczos_max + 1);
+  res_proj = cd_3d_allocate(nstate, iter_old + Def::Lanczos_max + 1, NdcSpectrum);
+  pi = cd_3d_allocate(nstate, iter_old + Def::Lanczos_max + 1, Nomega);
+  pBiCG = cd_3d_allocate(nstate, Nomega, NdcSpectrum);
+  for (istate = 0; istate < nstate; istate++) {
+    alpha[istate][0] = std::complex<double>(1.0, 0.0);
+    beta[istate][0] = std::complex<double>(0.0, 0.0);
+    for (iomega = 0; iomega < Nomega; iomega++) {
+      pi[istate][0][iomega] = 1.0;
+      for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
+        pBiCG[istate][iomega][idcSpectrum] = 0.0;
+        dcSpectrum[istate][iomega][idcSpectrum] = 0.0;
+      }
     }
   }
 
   if (fp != NULL) {
     if (Def::iFlgCalcSpec == DC::RECALC_FROM_TMComponents)
       Def::Lanczos_max = 0;
-    wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp);
-    sscanf(ctmp, "%lf %lf\n", &dtmp[0], &dtmp[1]);
-    z_seed = std::complex<double>(dtmp[0], dtmp[1]);
-
-    iter = 1;
-    while (wrapperMPI::Fgets(ctmp, sizeof(ctmp) / sizeof(char), fp) != NULL) {
-      sscanf(ctmp, "%lf %lf %lf %lf\n",
-        &dtmp[0], &dtmp[1], &dtmp[2], &dtmp[3]);
-      alpha[iter] = std::complex<double>(dtmp[0], dtmp[1]);
-      beta[iter] = std::complex<double>(dtmp[2], dtmp[3]);
-      for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++)
-        sscanf(ctmp, "%lf %lf\n", &dtmp[0], &dtmp[1]);
-      res_proj[iter][idcSpectrum] = std::complex<double>(dtmp[0], dtmp[1]);
-      iter += 1;
-    }
+    fscanf(fp, "%d%d\n", &iter_old, &nstate0);
+    for (istate = 0; istate < nstate; istate++) {
+      fscanf(fp, "%lf%lf\n", &dtmp[0], &dtmp[1]);
+      z_seed[istate] = std::complex<double>(dtmp[0], dtmp[1]);
+      for (iter = 1; iter <= iter_old; iter++) {
+        fscanf(fp, "%lf%lf%lf%lf\n", &dtmp[0], &dtmp[1], &dtmp[2], &dtmp[3]);
+        alpha[istate][iter] = std::complex<double>(dtmp[0], dtmp[1]);
+        beta[istate][iter] = std::complex<double>(dtmp[2], dtmp[3]);
+        for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
+          fscanf(fp, "%lf %lf\n", &dtmp[0], &dtmp[1]);
+          res_proj[istate][iter][idcSpectrum] = std::complex<double>(dtmp[0], dtmp[1]);
+        }/*for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++)*/
+      }/*for (iter = 0; iter < iter_old; iter++)*/
+    }/*for (istate = 0; istate < nstate; istate++)*/
     fclose(fp);
 
-    for (iter = 1; iter <= iter_old; iter++) {
-      ShiftedEq(iter, Nomega, NdcSpectrum, lz_conv, alpha, beta, dcomega,
-        z_seed, pBiCG, res_proj, pi, dcSpectrum);
-    }/*for (iter = 1; iter <= iter_old; iter++)*/
+    for (iter = 1; iter <= iter_old; iter++) 
+      for(istate=0;istate<nstate;istate++)
+        ShiftedEq(iter, Nomega, NdcSpectrum, lz_conv[istate], alpha[istate], beta[istate], dcomega[istate],
+          z_seed[istate], pBiCG[istate], res_proj[istate], pi[istate], dcSpectrum[istate]);
 
-    rho = wrapperMPI::VecProd(Check::idim_maxs, &v5[0][0], &v3[0][0]);
+    wrapperMPI::MultiVecProd(Check::idim_maxs, nstate, v5, v3, rho);
 
-    SeedSwitch(iter, Nomega, NdcSpectrum, lz_conv, &iz_seed,
-      &z_seed, &rho, dcomega, Check::idim_maxs, v2, v3, v4, v5,
-      pi, alpha, beta, res_proj);
+    for (istate = 0; istate < nstate; istate++) {
+      SeedSwitch(istate, iter, Nomega, NdcSpectrum, lz_conv[istate], &iz_seed[istate],
+        &z_seed[istate], &rho[istate], dcomega[istate], Check::idim_maxs, v2, v3, v4, v5,
+        pi[istate], alpha[istate], beta[istate], res_proj[istate]);
+    }
 
-    resnorm = wrapperMPI::Norm_dc(Check::idim_maxs, &v2[0][0]);
+    wrapperMPI::Norm_dv(Check::idim_maxs, nstate, v2, resnorm);
 
-    for (iomega = 0; iomega < Nomega; iomega++)
-      if (std::abs(resnorm / pi[iter][iomega]) < Def::eps_Lanczos)
-        lz_conv[idcSpectrum] = 1;
+    for (istate = 0; istate < nstate; istate++)
+      for (iomega = 0; iomega < Nomega; iomega++)
+        if (std::abs(resnorm[istate] / pi[istate][iter][iomega]) < Def::eps_Lanczos)
+          lz_conv[istate][idcSpectrum] = 1;
   }/*if (fp != NULL)*/
   /**
   <li>@b DO BiCG loop</li>
@@ -319,79 +344,95 @@ int CalcSpectrumByBiCG(
     <li>@f${\bf v}_{2}={\hat H}{\bf v}_{12}, {\bf v}_{4}={\hat H}{\bf v}_{14}@f$,
     where @f${\bf v}_{12}, {\bf v}_{14}@f$ are old (shadow) residual vector.</li>
     */
-    zclear(Check::idim_maxs, &v12[0][0]);
-    zclear(Check::idim_maxs, &v14[0][0]);
-    mltply::main(Def::k_exct, v12, v2, Check::idim_maxs, List::b1, List::b2_1, List::b2_2, List::Diagonals);
-    mltply::main(Def::k_exct, v14, v4, Check::idim_maxs, List::b1, List::b2_1, List::b2_2, List::Diagonals);
+    zclear(Check::idim_maxs*nstate, &v12[0][0]);
+    zclear(Check::idim_maxs*nstate, &v14[0][0]);
+    mltply::main(nstate, v12, v2, Check::idim_maxs,
+                 List::b1, List::b2_1, List::b2_2, List::Diagonals);
+    mltply::main(nstate, v14, v4, Check::idim_maxs,
+                 List::b1, List::b2_1, List::b2_2, List::Diagonals);
     
     for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
-      zclear(Check::idim_maxs, &vL[0][0]);
-      GetExcitedState(Def::k_exct, vL, v1Org, idcSpectrum + 1);
-      res_proj[iter][idcSpectrum] = wrapperMPI::VecProd(Check::idim_maxs, &vL[0][0], &v2[0][0]);
+      zclear(Check::idim_maxs*nstate, &vL[0][0]);
+      GetExcitedState(nstate, vL, v1Org, idcSpectrum + 1);
+      wrapperMPI::MultiVecProd(Check::idim_maxs, nstate, vL, v2, rho_old);
+      for (istate = 0; istate < nstate; istate++)res_proj[istate][iter][idcSpectrum] = rho_old[istate];
     }
     /**
     <li>Update projected result vector dcSpectrum.</li>
     */
-    rho_old = rho;
-    rho = wrapperMPI::VecProd(Check::idim_maxs, &v4[0][0], &v2[0][0]);
-    if (iter == 1)
-      beta[iter] = std::complex<double>(0.0, 0.0);
-    else
-      beta[iter] = rho / rho_old;
+    for (istate = 0; istate < nstate; istate++)rho_old[istate] = rho[istate];
+    wrapperMPI::MultiVecProd(Check::idim_maxs, nstate, v4, v2, rho);
+    for (istate = 0; istate < nstate; istate++) {
+      if (iter == 1)
+        beta[istate][iter] = std::complex<double>(0.0, 0.0);
+      else
+        beta[istate][iter] = rho[istate] / rho_old[istate];
 
-    for (idim = 0; idim < Check::idim_maxs; idim++) {
-      v12[idim][0] = z_seed * v2[idim][0] - v12[idim][0];
-      v14[idim][0] = std::conj(z_seed) * v4[idim][0] - v14[idim][0];
-    }
-    alpha_denom = wrapperMPI::VecProd(Check::idim_maxs, &v4[0][0], &v12[0][0]) 
-      - beta[iter] * rho / alpha[iter - 1];
+      for (idim = 0; idim < Check::idim_maxs; idim++) {
+        v12[idim][istate] = z_seed[istate] * v2[idim][istate] - v12[idim][istate];
+        v14[idim][istate] = std::conj(z_seed[istate]) * v4[idim][istate] - v14[idim][istate];
+      }
+    }/*for (istate = 0; istate < nstate; istate++)*/
 
-    if (std::abs(alpha_denom) < 1.0e-50) {
-      printf("Error : The denominator of alpha is zero.\n");
-      wrapperMPI::Exit(-1);
-    }
-    else if (std::abs(rho) < 1.0e-50) {
-      printf("Error : rho is zero.\n");
-      wrapperMPI::Exit(-1);
-    }    
-    alpha[iter] = rho / alpha_denom;
-    /*
-    Shifted equation
-    */
-    ShiftedEq(iter, Nomega, NdcSpectrum, lz_conv, alpha, beta, dcomega,
-      z_seed, pBiCG, res_proj, pi, dcSpectrum);
-    /*
-    Update residual
-    */
-    for (idim = 0; idim < Check::idim_maxs; idim++) {
-      v12[idim][0] = (1.0 + alpha[iter] * beta[iter] / alpha[iter-1]) * v2[idim][0]
-        - alpha[iter] * v12[idim][0]
-        - alpha[iter] * beta[iter] / alpha[iter-1] * v3[idim][0];
-      v3[idim][0] = v2[idim][0];
-      v2[idim][0] = v12[idim][0];
-      v14[idim][0] = (1.0 + std::conj(alpha[iter] * beta[iter] / alpha[iter-1])) * v4[idim][0]
-        - std::conj(alpha[iter]) * v14[idim][0]
-        - std::conj(alpha[iter] * beta[iter] / alpha[iter-1]) * v5[idim][0];
-      v5[idim][0] = v4[idim][0];
-      v4[idim][0] = v14[idim][0];
-    }/*for (idim = 0; idim < Check::idim_maxs; idim++)*/
-    /*
-    Seed Switching
-    */
-    SeedSwitch(iter, Nomega, NdcSpectrum, lz_conv, &iz_seed,
-      &z_seed, &rho, dcomega, Check::idim_maxs, v2, v3, v4, v5, 
-      pi, alpha, beta, res_proj);
+    wrapperMPI::MultiVecProd(Check::idim_maxs, nstate, v4, v12, rho_old);
+
+    for (istate = 0; istate < nstate; istate++) {
+      alpha_denom = rho_old[istate] - beta[istate][iter] * rho[istate] / alpha[istate][iter - 1];
+
+      if (std::abs(alpha_denom) < 1.0e-50) {
+        printf("Error : The denominator of alpha is zero.\n");
+        wrapperMPI::Exit(-1);
+      }
+      else if (std::abs(rho[istate]) < 1.0e-50) {
+        printf("Error : rho is zero.\n");
+        wrapperMPI::Exit(-1);
+      }
+      alpha[istate][iter] = rho[istate] / alpha_denom;
+      /*
+      Shifted equation
+      */
+      ShiftedEq(iter, Nomega, NdcSpectrum, lz_conv[istate], alpha[istate], beta[istate], dcomega[istate],
+        z_seed[istate], pBiCG[istate], res_proj[istate], pi[istate], dcSpectrum[istate]);
+      /*
+      Update residual
+      */
+      for (idim = 0; idim < Check::idim_maxs; idim++) {
+        v12[idim][istate] = (1.0 + alpha[istate][iter] * beta[istate][iter] / alpha[istate][iter - 1]) * v2[idim][istate]
+          - alpha[istate][iter] * v12[idim][istate]
+          - alpha[istate][iter] * beta[istate][iter] / alpha[istate][iter - 1] * v3[idim][istate];
+        v3[idim][istate] = v2[idim][istate];
+        v2[idim][istate] = v12[idim][istate];
+        v14[idim][istate] = (1.0 + std::conj(alpha[istate][iter] * beta[istate][iter] / alpha[istate][iter - 1])) * v4[idim][istate]
+          - std::conj(alpha[istate][iter]) * v14[idim][istate]
+          - std::conj(alpha[istate][iter] * beta[istate][iter] / alpha[istate][iter - 1]) * v5[idim][istate];
+        v5[idim][istate] = v4[idim][istate];
+        v4[idim][0] = v14[idim][istate];
+      }/*for (idim = 0; idim < Check::idim_maxs; idim++)*/
+      /*
+      Seed Switching
+      */
+      SeedSwitch(istate, iter, Nomega, NdcSpectrum, lz_conv[istate], &iz_seed[istate],
+        &z_seed[istate], &rho[istate], dcomega[istate], Check::idim_maxs, v2, v3, v4, v5,
+        pi[istate], alpha[istate], beta[istate], res_proj[istate]);
+    }/*for (istate = 0; istaet < nstate; istate++)*/
     /*
     Convergence check
     */
-    resnorm = std::sqrt(wrapperMPI::Norm_dc(Check::idim_maxs, &v2[0][0]));
+    wrapperMPI::Norm_dv(Check::idim_maxs, nstate, v2, resnorm);
     
-    for (iomega = 0; iomega < Nomega; iomega++) 
-      if (std::abs(resnorm / pi[iter][iomega]) < Def::eps_Lanczos)
-        lz_conv[idcSpectrum] = 1;
-    
-    fprintf(MP::STDOUT, "  %9d  %9d %25.15e\n", iter, iz_seed, resnorm);
-    if (resnorm < Def::eps_Lanczos) break;
+    lz_conv_all = 1;
+    fprintf(MP::STDOUT, "  %9d  ", iter);
+    for (istate = 0; istate < nstate; istate++) {
+      for (iomega = 0; iomega < Nomega; iomega++)
+        if (std::abs(resnorm[istate] / pi[istate][iter][iomega]) < Def::eps_Lanczos)
+          lz_conv[istate][idcSpectrum] = 1;
+
+      if (resnorm[istate] > Def::eps_Lanczos) lz_conv_all *= 0;
+      fprintf(MP::STDOUT, "%9d %25.15e", iz_seed[istate], resnorm[istate]);
+    }/*for (istate = 0; istate < nstate; istate++)*/
+    fprintf(MP::STDOUT, "\n");
+
+    if (lz_conv_all == 1) break;
   }/*for (iter = 0; iter <= Def::Lanczos_max; iter++)*/
 
   if (iter >= iter_old + Def::Lanczos_max) 
@@ -409,19 +450,21 @@ int CalcSpectrumByBiCG(
   if (Def::iFlgCalcSpec != DC::RECALC_FROM_TMComponents) {
     sprintf(sdt, "%s_TMComponents.dat", Def::CDataFileHead);
     childfopenMPI(sdt, "w", &fp);
-    fprintf(fp, "%d \n", iter_old);
-    fprintf(fp, "%.10lf %.10lf\n", std::real(z_seed), std::imag(z_seed));
-    for (iter = 1; iter <= iter_old; iter++) {
-      fprintf(fp, "%25.16le %25.16le %25.16le %25.16le\n",
-        std::real(alpha[iter]), std::imag(alpha[iter]),
-        std::real(beta[iter]), std::imag(beta[iter]));
-      for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++)
-        fprintf(fp, "%25.16le %25.16le\n",
-          std::real(res_proj[iter][idcSpectrum]),
-          std::imag(res_proj[iter][idcSpectrum]));
-    }/*for (iter = 0; iter < iter_old; iter++)*/
+    fprintf(fp, "%d %d\n", iter_old, nstate);
+    for (istate = 0; istate < nstate; istate++) {
+      fprintf(fp, "%.10lf %.10lf\n", std::real(z_seed[istate]), std::imag(z_seed[istate]));
+      for (iter = 1; iter <= iter_old; iter++) {
+        fprintf(fp, "%25.16le %25.16le %25.16le %25.16le\n",
+          std::real(alpha[istate][iter]), std::imag(alpha[istate][iter]),
+          std::real(beta[istate][iter]), std::imag(beta[istate][iter]));
+        for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++)
+          fprintf(fp, "%25.16le %25.16le\n",
+            std::real(res_proj[istate][iter][idcSpectrum]),
+            std::imag(res_proj[istate][iter][idcSpectrum]));
+      }/*for (iter = 0; iter < iter_old; iter++)*/
+    }/*for (istate = 0; istate < nstate; istate++)*/
     fclose(fp);
-  }
+  }/*if (Def::iFlgCalcSpec != DC::RECALC_FROM_TMComponents)*/
   /**
   <li>output vectors for recalculation</li>
   </ul>
@@ -436,25 +479,31 @@ int CalcSpectrumByBiCG(
     }
     byte_size = fwrite(&iter, sizeof(iter), 1, fp);
     byte_size = fwrite(&Check::idim_maxs, sizeof(Check::idim_maxs), 1, fp);
-    byte_size = fwrite(&v2[0][0], sizeof(std::complex<double>), Check::idim_maxs, fp);
-    byte_size = fwrite(&v3[0][0], sizeof(std::complex<double>), Check::idim_maxs, fp);
-    byte_size = fwrite(&v4[0][0], sizeof(std::complex<double>), Check::idim_maxs, fp);
-    byte_size = fwrite(&v5[0][0], sizeof(std::complex<double>), Check::idim_maxs, fp);
+    byte_size = fwrite(&nstate, sizeof(nstate), 1, fp);
+    byte_size = fwrite(&v2[0][0], sizeof(std::complex<double>), Check::idim_maxs * nstate, fp);
+    byte_size = fwrite(&v3[0][0], sizeof(std::complex<double>), Check::idim_maxs * nstate, fp);
+    byte_size = fwrite(&v4[0][0], sizeof(std::complex<double>), Check::idim_maxs * nstate, fp);
+    byte_size = fwrite(&v5[0][0], sizeof(std::complex<double>), Check::idim_maxs * nstate, fp);
     fclose(fp);
 
     fprintf(MP::STDOUT, "    End:   Output vectors for recalculation.\n");
     TimeKeeper("%s_TimeKeeper.dat", "Output vectors for recalculation finishes: %s", "a");
   }/*if (Def::iFlgCalcSpec > RECALC_FROM_TMComponents)*/
 
-  free_cd_1d_allocate(alpha);
-  free_cd_1d_allocate(beta);
-  free_cd_2d_allocate(res_proj);  
-  free_cd_2d_allocate(pi);
-  free_cd_2d_allocate(pBiCG);
+  free_cd_2d_allocate(alpha);
+  free_cd_2d_allocate(beta);
+  free_cd_3d_allocate(res_proj);  
+  free_cd_3d_allocate(pi);
+  free_cd_3d_allocate(pBiCG);
   free_cd_2d_allocate(v3);
   free_cd_2d_allocate(v5);
   free_cd_2d_allocate(v12);
   free_cd_2d_allocate(v14);
   free_cd_2d_allocate(vL);
+  free_cd_1d_allocate(z_seed);
+  free_i_1d_allocate(iz_seed);
+  free_cd_1d_allocate(rho);
+  free_cd_1d_allocate(rho_old);
+  free_d_1d_allocate(resnorm);
   return TRUE;
 }/*int CalcSpectrumByBiCG*/

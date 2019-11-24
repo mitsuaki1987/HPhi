@@ -336,29 +336,32 @@ int MakeExcitedList(
 \retval TRUE Success to output the spectrum.
 */
 void OutputSpectrum(
+  int nstate,
   int Nomega,
   int NdcSpectrum,
-  std::complex<double> **dcSpectrum,
-  std::complex<double> *dcomega)
+  std::complex<double> ***dcSpectrum,
+  std::complex<double> **dcomega)
 {
   FILE *fp;
   char sdt[D_FileNameMax];
-  int iomega, idcSpectrum;
+  int iomega, idcSpectrum, istate;
 
-  //output spectrum
-  sprintf(sdt, "%s_DynamicalGreen.dat", Def::CDataFileHead);
-  if (childfopenMPI(sdt, "w", &fp) != 0) wrapperMPI::Exit(-1);
+  for (istate = 0; istate < nstate; istate++) {
+    sprintf(sdt, "%s_DynamicalGreen.dat", Def::CDataFileHead);
+    if (childfopenMPI(sdt, "w", &fp) != 0) wrapperMPI::Exit(-1);
 
-  for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
-    for (iomega = 0; iomega < Nomega; iomega++) {
-      fprintf(fp, "%.10lf %.10lf %.10lf %.10lf \n",
-        real(dcomega[iomega] - Def::dcOmegaOrg), imag(dcomega[iomega] - Def::dcOmegaOrg),
-        real(dcSpectrum[iomega][idcSpectrum]), imag(dcSpectrum[iomega][idcSpectrum]));
-    }/*for (i = 0; i < Nomega; i++)*/
-    fprintf(fp, "\n");
-  }
-
-  fclose(fp);
+    for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
+      for (iomega = 0; iomega < Nomega; iomega++) {
+        fprintf(fp, "%.10lf %.10lf %.10lf %.10lf \n",
+          real(dcomega[istate][iomega] - Def::dcOmegaOrg - Phys::energy[istate]),
+          imag(dcomega[istate][iomega] - Def::dcOmegaOrg - Phys::energy[istate]),
+          real(dcSpectrum[istate][iomega][idcSpectrum]),
+          imag(dcSpectrum[istate][iomega][idcSpectrum]));
+      }/*for (i = 0; i < Nomega; i++)*/
+      fprintf(fp, "\n");
+    }
+    fclose(fp);
+  }/*for (istate = 0; istate < nstate; istate++)*/
 }/*int OutputSpectrum*/
 /**
 \brief Parent function to calculate the excited state.
@@ -416,8 +419,8 @@ void CalcSpectrum()
   //ToDo: Nomega should be given as a parameter
   int Nomega;
   std::complex<double> OmegaMax, OmegaMin;
-  std::complex<double> **dcSpectrum;
-  std::complex<double> *dcomega;
+  std::complex<double> ***dcSpectrum;
+  std::complex<double> **dcomega;
   size_t byte_size;
 
   v1Org = cd_2d_allocate(Check::idim_max, Def::k_exct);
@@ -441,12 +444,14 @@ void CalcSpectrum()
    Set & malloc omega grid
   */
   Nomega = Def::iNOmega;
-  dcomega = cd_1d_allocate(Nomega);
+  dcomega = cd_2d_allocate(Def::k_exct, Nomega);
   OmegaMax = Def::dcOmegaMax + Def::dcOmegaOrg;
   OmegaMin = Def::dcOmegaMin + Def::dcOmegaOrg;
-  for (i = 0; i < Nomega; i++) {
-    dcomega[i] = OmegaMin
-     + (OmegaMax - OmegaMin) / (std::complex<double>)Nomega * (std::complex<double>)i;
+  for (istate = 0; istate < Def::k_exct; istate++) {
+    for (i = 0; i < Nomega; i++) {
+      dcomega[istate][i] = Phys::energy[istate] + OmegaMin
+        + (OmegaMax - OmegaMin) / (std::complex<double>)Nomega * (std::complex<double>)i;
+    }
   }
 
   fprintf(MP::STDOUT, "\nFrequency range:\n");
@@ -470,7 +475,7 @@ void CalcSpectrum()
     fprintf(stderr, "Error: Both single and pair excitation operators exist.\n");
     wrapperMPI::Exit(-1);
   }
-  dcSpectrum = cd_2d_allocate(Nomega, NdcSpectrum);
+  dcSpectrum = cd_3d_allocate(Def::k_exct, Nomega, NdcSpectrum);
 
   //Make New Lists
   if (MakeExcitedList(&iFlagListModified) == FALSE) {
@@ -523,10 +528,12 @@ void CalcSpectrum()
   StartTimer(6200);
   switch (Def::iCalcType) {
   case DC::CG:
-    CalcSpectrumByBiCG(Wave::v0, Wave::v1, Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
+    CalcSpectrumByBiCG(Def::k_exct, Wave::v0, Wave::v1, Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
+    OutputSpectrum(Def::k_exct, Nomega, NdcSpectrum, dcSpectrum, dcomega);
     break;
   case DC::FullDiag:
     CalcSpectrumByFullDiag(Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
+    OutputSpectrum(Check::idim_max, Nomega, NdcSpectrum, dcSpectrum, dcomega);
     break;
   default:
     break;
@@ -535,7 +542,6 @@ void CalcSpectrum()
 
   fprintf(MP::STDOUT, "  End:  Calculating a spectrum.\n\n");
   TimeKeeper("%s_TimeKeeper.dat", "Calculating a spectrum finishes: %s", "a");
-  OutputSpectrum(Nomega, NdcSpectrum, dcSpectrum, dcomega);
-  free_cd_2d_allocate(dcSpectrum);
-  free_cd_1d_allocate(dcomega);
+  free_cd_3d_allocate(dcSpectrum);
+  free_cd_2d_allocate(dcomega);
 }/*int CalcSpectrum*/
