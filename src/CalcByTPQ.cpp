@@ -27,6 +27,8 @@
 #include "global.hpp"
 #include "DefCommon.hpp"
 #include "log.hpp"
+#include "CalcSpectrum.hpp"
+#include "CalcSpectrumByBiCG.hpp"
 /**
  * @file
  * @version 0.1, 0.2
@@ -50,18 +52,25 @@
  */
 int CalcByTPQ(
   const int NumAve,
-  const int ExpecInterval
+  const int ExpecInterval,
+  int NdcSpectrum
 ) {
   char sdt[D_FileNameMax];
   char **sdt_phys, **sdt_norm, **sdt_flct;
-  int rand_i, iret;
+  int rand_i, iret, iomega;
   long int i_max;
   int step_iO = 0;
   FILE *fp;
   double *inv_temp, Ns;
   size_t byte_size;
+  std::complex<double>*** dcSpectrum;
+  std::complex<double>** dcomega;
 
   inv_temp = d_1d_allocate(NumAve);
+  if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
+    dcomega = cd_2d_allocate(Def::k_exct, Def::iNOmega);
+    dcSpectrum = cd_3d_allocate(Def::k_exct, Def::iNOmega, NdcSpectrum);
+  }/*if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT)*/
 
   Step::step_spin = ExpecInterval;
   Def::St = 0;
@@ -236,13 +245,25 @@ int CalcByTPQ(
       iret = expec::cisajscktalt::main(NumAve, Wave::v1, Wave::v0);
       StopTimer(3400);
       if (iret != 0) return -1;
-    }
+    }/*if (Step::step_i%Step::step_spin == 0)*/
 
     StartTimer(3200);
     iret = expec::energy_flct::main(NumAve, Wave::v0, Wave::v1);
     StopTimer(3200);
     if (iret != 0) return -1;
-
+    /*
+     For spectrum calculation with mTPQ+sBiCG
+    */
+    if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT && Step::step_i % Step::step_spin == 0) {
+      for (rand_i = 0; rand_i < NumAve; rand_i++) {
+        for (iomega = 0; iomega < Def::iNOmega; iomega++) {
+          dcomega[rand_i][iomega] = Phys::energy[rand_i] + Def::dcOmegaMin
+            + (Def::dcOmegaMax - Def::dcOmegaMin) / (std::complex<double>)Def::iNOmega * (std::complex<double>)iomega;
+        }
+      }/*for (rand_i = 0; rand_i < NumAve; rand_i++)*/
+      Spectrum::BiCG(NumAve, Def::iNOmega, NdcSpectrum, dcSpectrum, dcomega, Wave::v1);
+      Spectrum::OutputSpectrum(NumAve, Def::iNOmega, NdcSpectrum, dcSpectrum, dcomega);
+    }/*if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT)*/
     StartTimer(3600);
     for (rand_i = 0; rand_i < NumAve; rand_i++) {
       inv_temp[rand_i] = (2.0*Step::step_i / Ns) / (Step::LargeValue - Phys::energy[rand_i] / Ns);
@@ -303,6 +324,11 @@ int CalcByTPQ(
   free(sdt_phys);
   free(sdt_norm);
   free(sdt_flct);
+
+  if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
+    free_cd_3d_allocate(dcSpectrum);
+    free_cd_2d_allocate(dcomega);
+  }/*if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT)*/
 
   return TRUE;
 }

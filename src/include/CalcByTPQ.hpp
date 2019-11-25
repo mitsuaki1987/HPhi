@@ -15,4 +15,4 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #pragma once
 
-int CalcByTPQ(const int NumAve, const int ExpecInterval);
+int CalcByTPQ(const int NumAve, const int ExpecInterval, int NdcSpectrum);

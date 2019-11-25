@@ -185,7 +185,6 @@ int main(int argc, char* argv[]) {
 
   int mode = 0;
   int Ne, Nup, Ndown, Total2Sz, NdcSpectrum, istate, iomega;
-  std::complex<double> OmegaMax, OmegaMin;
   char cFileListName[D_FileNameMax];
   std::complex<double>*** dcSpectrum;
   std::complex<double>** dcomega;
@@ -310,12 +309,12 @@ int main(int argc, char* argv[]) {
      Set & malloc omega grid
     */
     //Nomega = Def::iNOmega;
-    OmegaMax = Def::dcOmegaMax + Def::dcOmegaOrg;
-    OmegaMin = Def::dcOmegaMin + Def::dcOmegaOrg;
+    Def::dcOmegaMax += Def::dcOmegaOrg;
+    Def::dcOmegaMin += Def::dcOmegaOrg;
 
     fprintf(MP::STDOUT, "\nFrequency range:\n");
-    fprintf(MP::STDOUT, "  Omega Max. : %15.5e %15.5e\n", real(OmegaMax), imag(OmegaMax));
-    fprintf(MP::STDOUT, "  Omega Min. : %15.5e %15.5e\n", real(OmegaMin), imag(OmegaMin));
+    fprintf(MP::STDOUT, "  Omega Max. : %15.5e %15.5e\n", real(Def::dcOmegaMax), imag(Def::dcOmegaMax));
+    fprintf(MP::STDOUT, "  Omega Min. : %15.5e %15.5e\n", real(Def::dcOmegaMin), imag(Def::dcOmegaMin));
     fprintf(MP::STDOUT, "  Num. of Omega : %d\n", Def::iNOmega);
 
     if (Def::NNSingleExcitationOperator == 0) {
@@ -347,8 +346,8 @@ int main(int argc, char* argv[]) {
       dcSpectrum = cd_3d_allocate(Def::k_exct, Def::iNOmega, NdcSpectrum);
       for (istate = 0; istate < Def::k_exct; istate++) {
         for (iomega = 0; iomega < Def::iNOmega; iomega++) {
-          dcomega[istate][iomega] = Phys::energy[istate] + OmegaMin
-            + (OmegaMax - OmegaMin) / (std::complex<double>)Def::iNOmega * (std::complex<double>)iomega;
+          dcomega[istate][iomega] = Phys::energy[istate] + Def::dcOmegaMin
+            + (Def::dcOmegaMax - Def::dcOmegaMin) / (std::complex<double>)Def::iNOmega * (std::complex<double>)iomega;
         }
       }
       /*
@@ -409,8 +408,8 @@ int main(int argc, char* argv[]) {
       dcSpectrum = cd_3d_allocate(Check::idim_max, Def::iNOmega, NdcSpectrum);
       for (istate = 0; istate < Check::idim_max; istate++) {
         for (iomega = 0; iomega < Def::iNOmega; iomega++) {
-          dcomega[istate][iomega] = Phys::energy[istate] + OmegaMin
-            + (OmegaMax - OmegaMin) / (std::complex<double>)Def::iNOmega * (std::complex<double>)iomega;
+          dcomega[istate][iomega] = Phys::energy[istate] + Def::dcOmegaMin
+            + (Def::dcOmegaMax - Def::dcOmegaMin) / (std::complex<double>)Def::iNOmega * (std::complex<double>)iomega;
         }
       }
       CalcSpectrumByFullDiag(Def::iNOmega, NdcSpectrum, dcSpectrum, dcomega, Wave::v1);
@@ -423,7 +422,7 @@ int main(int argc, char* argv[]) {
 
   case DC::TPQCalc:
     StartTimer(3000);
-    if (CalcByTPQ(Step::NumAve, Param::ExpecInterval) != TRUE) {
+    if (CalcByTPQ(Step::NumAve, Param::ExpecInterval, NdcSpectrum) != TRUE) {
       StopTimer(3000);
       wrapperMPI::Exit(-3);
     }
