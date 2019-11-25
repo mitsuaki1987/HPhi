@@ -68,8 +68,8 @@ int CalcByTPQ(
 
   inv_temp = d_1d_allocate(NumAve);
   if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
-    dcomega = cd_2d_allocate(Def::k_exct, Def::iNOmega);
-    dcSpectrum = cd_3d_allocate(Def::k_exct, Def::iNOmega, NdcSpectrum);
+    dcomega = cd_2d_allocate(NumAve, Def::iNOmega);
+    dcSpectrum = cd_3d_allocate(NumAve, Def::iNOmega, NdcSpectrum);
   }/*if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT)*/
 
   Step::step_spin = ExpecInterval;

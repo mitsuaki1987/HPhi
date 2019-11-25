@@ -347,7 +347,7 @@ void Spectrum::OutputSpectrum(
 
   for (istate = 0; istate < nstate; istate++) {
     if (Def::iCalcType == DC::TPQCalc)
-      sprintf(sdt, "%s_DynamicalGreen_set%dstep%d.dat", Def::CDataFileHead, Def::istep, istate);
+      sprintf(sdt, "%s_DynamicalGreen_set%dstep%d.dat", Def::CDataFileHead, istate, Def::istep);
     else
       sprintf(sdt, "%s_DynamicalGreen_eigen%d.dat", Def::CDataFileHead, istate);
     if (childfopenMPI(sdt, "w", &fp) != 0) wrapperMPI::Exit(-1);
