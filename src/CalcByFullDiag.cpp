@@ -64,7 +64,7 @@ int CalcByFullDiag::main()
 
   fprintf(MP::STDOUT, "%s", "######  Start: Diagonalization.  ######\n\n");
   StartTimer(5200);
-  iret = lapack_diag(Phys::energy);
+  iret = lapack_diag(Wave::v0, Phys::energy, Wave::v1);
   StopTimer(5200);
   fprintf(MP::STDOUT, "%s", "######  End  : Diagonalization.  ######\n\n");
   if (iret != 0) return FALSE;

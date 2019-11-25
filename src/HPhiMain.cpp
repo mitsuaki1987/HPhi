@@ -148,6 +148,8 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/myscript.sh DESTINATION bin
 #include "CalcByFullDiag.hpp"
 #include "CalcByTPQ.hpp"
 #include "CalcSpectrum.hpp"
+#include "CalcSpectrumByBiCG.hpp"
+#include "CalcSpectrumByFullDiag.hpp"
 #include "check.hpp"
 #include "CalcByTEM.hpp"
 #include "readdef.hpp"
@@ -160,6 +162,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/myscript.sh DESTINATION bin
 #include "log.hpp"
 #include "DefCommon.hpp"
 #include "global.hpp"
+#include "FileIO.hpp"
 #include <sys/stat.h>
 #include <cstdlib>
 
@@ -178,11 +181,20 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/myscript.sh DESTINATION bin
  * @retval -1 fail the calculation.
  * @retval 0 succeed the calculation.
  */
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
 
-  int mode=0;
-  int Ne, Nup, Ndown, Total2Sz;
+  int mode = 0;
+  int Ne, Nup, Ndown, Total2Sz, NdcSpectrum, istate, iomega;
+  std::complex<double> OmegaMax, OmegaMin;
   char cFileListName[D_FileNameMax];
+  std::complex<double>*** dcSpectrum;
+  std::complex<double>** dcomega;
+  size_t byte_size;
+  FILE* fp;
+  char* defname;
+  char sdt[D_FileNameMax];
+  long int i_max = 0;
+  int i_stp;
 
   MP::STDOUT = stdout;
   JudgeDefType(argc, argv, &mode);
@@ -198,7 +210,7 @@ int main(int argc, char* argv[]){
   //Timer
   InitTimer();
   if (mode != STANDARD_DRY_MODE) StartTimer(0);
- 
+
   //MakeDirectory for output
   struct stat tmpst;
   if (MP::myrank == 0) {
@@ -211,29 +223,29 @@ int main(int argc, char* argv[]){
   }/*if (MP::myrank == 0)*/
 
   strcpy(cFileListName, argv[2]);
-  
-  if(mode==STANDARD_MODE || mode == STANDARD_DRY_MODE){
+
+  if (mode == STANDARD_MODE || mode == STANDARD_DRY_MODE) {
     if (MP::myrank == 0) StdFace::main(argv[2]);
     strcpy(cFileListName, "namelist.def");
-    if (mode == STANDARD_DRY_MODE){
+    if (mode == STANDARD_DRY_MODE) {
       fprintf(stdout, "Dry run is Finished. \n\n");
       return 0;
     }
   }
 
   xsetmem::HEAD();
-  if(ReadDefFileNInt(cFileListName)!=0){
+  if (ReadDefFileNInt(cFileListName) != 0) {
     fprintf(MP::STDOUT, "%s", "Error: Definition files(*.def) are incomplete.\n");
     wrapperMPI::Exit(-1);
   }
 
-  if (Def::nvec < Def::k_exct){
+  if (Def::nvec < Def::k_exct) {
     fprintf(MP::STDOUT, "%s", "Error: nvec should be smaller than exct are incorrect.\n");
     fprintf(MP::STDOUT, "Error: nvec = %d, exct=%d.\n", Def::nvec, Def::k_exct);
     wrapperMPI::Exit(-1);
   }
   fprintf(MP::STDOUT, "%s", "\n######  Definition files are correct.  ######\n\n");
-  
+
   /*ALLOCATE-------------------------------------------*/
   xsetmem::def();
   /*-----------------------------------------------------*/
@@ -242,7 +254,7 @@ int main(int argc, char* argv[]){
   TimeKeeper("%s_TimeKeeper.dat", "Read File starts:   %s", "w");
   if (ReadDefFileIdxPara() != 0) {
     fprintf(MP::STDOUT,
-            "Error: Indices and Parameters of Definition files(*.def) are incomplete.\n");
+      "Error: Indices and Parameters of Definition files(*.def) are incomplete.\n");
     wrapperMPI::Exit(-1);
   }
   TimeKeeper("%s_TimeKeeper.dat", "Read File finishes: %s", "a");
@@ -257,76 +269,178 @@ int main(int argc, char* argv[]){
   }
 
   //Start Calculation
-  if (Def::iFlgCalcSpec == DC::CALCSPEC_NOT || Def::iFlgCalcSpec == DC::CALCSPEC_SCRATCH) {
-    
-    Ne = Def::NeMPI;
-    Nup = Def::NupMPI;
-    Ndown = Def::NdownMPI;
-    Total2Sz = Def::Total2SzMPI;
-    if (check(&Ne, &Nup, &Ndown, &Total2Sz, &Check::idim_max) == MPIFALSE) {
-     wrapperMPI::Exit(-1);
+
+  Ne = Def::NeMPI;
+  Nup = Def::NupMPI;
+  Ndown = Def::NdownMPI;
+  Total2Sz = Def::Total2SzMPI;
+  if (check(&Ne, &Nup, &Ndown, &Total2Sz, &Check::idim_max) == MPIFALSE) {
+    wrapperMPI::Exit(-1);
+  }
+
+  /*LARGE VECTORS ARE ALLOCATED*/
+  xsetmem::large();
+
+  StartTimer(1000);
+  if (sz(List::a1, List::a2_1, List::a2_2, Ne, Nup, Ndown, Total2Sz, Check::idim_max) != 0) {
+    wrapperMPI::Exit(-1);
+  }
+
+  StopTimer(1000);
+
+  StartTimer(2000);
+  diagonalcalc(Check::idim_max, List::Diagonal, List::a1);
+  StopTimer(2000);
+  /*
+   For spectrum calculation
+  */
+  if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
+    Spectrum::MakeExcitedList(&Def::iFlagListModified);
+    //set omega
+    if (Spectrum::SetOmega() != TRUE) {
+      fprintf(stderr, "Error: Fail to set Omega.\n");
+      wrapperMPI::Exit(-1);
     }
-    
-    /*LARGE VECTORS ARE ALLOCATED*/
-    xsetmem::large();
-    
-    StartTimer(1000);
-    if(sz(List::a1, List::a2_1, List::a2_2, Ne, Nup, Ndown, Total2Sz, Check::idim_max)!=0){
+    else {
+      if (Def::iFlgSpecOmegaOrg == FALSE) {
+        Def::dcOmegaOrg = std::complex<double>(0.0, 1.0) * (Def::dcOmegaMax - Def::dcOmegaMin) / (double)Def::iNOmega;
+      }
+    }
+    /*
+     Set & malloc omega grid
+    */
+    //Nomega = Def::iNOmega;
+    OmegaMax = Def::dcOmegaMax + Def::dcOmegaOrg;
+    OmegaMin = Def::dcOmegaMin + Def::dcOmegaOrg;
+
+    fprintf(MP::STDOUT, "\nFrequency range:\n");
+    fprintf(MP::STDOUT, "  Omega Max. : %15.5e %15.5e\n", real(OmegaMax), imag(OmegaMax));
+    fprintf(MP::STDOUT, "  Omega Min. : %15.5e %15.5e\n", real(OmegaMin), imag(OmegaMin));
+    fprintf(MP::STDOUT, "  Num. of Omega : %d\n", Def::iNOmega);
+
+    if (Def::NNSingleExcitationOperator == 0) {
+      if (Def::NNPairExcitationOperator == 0) {
+        fprintf(stderr, "Error: Any excitation operators are not defined.\n");
+        wrapperMPI::Exit(-1);
+      }
+      else {
+        NdcSpectrum = Def::NNPairExcitationOperator - 1;
+      }
+    }
+    else if (Def::NNPairExcitationOperator == 0) {
+      NdcSpectrum = Def::NNSingleExcitationOperator - 1;
+    }
+    else {
+      fprintf(stderr, "Error: Both single and pair excitation operators exist.\n");
       wrapperMPI::Exit(-1);
     }
 
-    StopTimer(1000);
+  }
 
-    StartTimer(2000);
-    diagonalcalc(Check::idim_max, List::Diagonal, List::a1);
-    StopTimer(2000);
-      
-    switch (Def::iCalcType) {
-    case DC::CG:
-      if (CalcByLOBPCG::main() != TRUE) {
-          wrapperMPI::Exit(-3);
-      }
-      break;
-
-    case DC::FullDiag:
-      StartTimer(5000);
-      if (Def::iFlgScaLAPACK == 0 && MP::nproc != 1) {
-        fprintf(MP::STDOUT, "Error: Full Diagonalization by LAPACK is only allowed for one process.\n");
-        wrapperMPI::Finalize();
-      }
-      if (CalcByFullDiag::main() != TRUE) {
-        wrapperMPI::Finalize();
-      }
-      StopTimer(5000);
-      break;
-
-    case DC::TPQCalc:
-      StartTimer(3000);
-      if (CalcByTPQ(Step::NumAve, Param::ExpecInterval) != TRUE) {
-        StopTimer(3000);
-        wrapperMPI::Exit(-3);
-      }
-      StopTimer(3000);
-      break;
-
-    case DC::TimeEvolution:
-      if (CalcByTEM(Param::ExpecInterval) != 0) {
-        wrapperMPI::Exit(-3);
-      }
-      break;
-
-    default:
-      StopTimer(0);
+  switch (Def::iCalcType) {
+  case DC::CG:
+    if (CalcByLOBPCG::main() != TRUE) {
       wrapperMPI::Exit(-3);
     }
+    if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
+      dcomega = cd_2d_allocate(Def::k_exct, Def::iNOmega);
+      dcSpectrum = cd_3d_allocate(Def::k_exct, Def::iNOmega, NdcSpectrum);
+      for (istate = 0; istate < Def::k_exct; istate++) {
+        for (iomega = 0; iomega < Def::iNOmega; iomega++) {
+          dcomega[istate][iomega] = Phys::energy[istate] + OmegaMin
+            + (OmegaMax - OmegaMin) / (std::complex<double>)Def::iNOmega * (std::complex<double>)iomega;
+        }
+      }
+      /*
+       Read the eigenstate which is to be excited.
+       This file name is written in CalcMod file.
+      */
+      StartTimer(6100);
+      if (Def::iFlgCalcSpec == DC::RECALC_NOT ||
+        Def::iFlgCalcSpec == DC::RECALC_OUTPUT_TMComponents_VEC ||
+        (Def::iFlgCalcSpec == DC::RECALC_INOUT_TMComponents_VEC && Def::iCalcType == DC::CG)) {
+        //input eigen vector
+        StartTimer(6101);
+        fprintf(MP::STDOUT, "  Start: Eigenvector is inputted in CalcSpectrum.\n");
+        TimeKeeper("%s_TimeKeeper.dat", "Reading an input Eigenvector starts: %s", "a");
+        GetFileNameByKW(KWSpectrumVec, &defname);
+        strcat(defname, "_rank_%d.dat");
+        sprintf(sdt, defname, MP::myrank);
+        childfopenALL(sdt, "rb", &fp);
+
+        if (fp == NULL) {
+          fprintf(stderr, "Error: File InputVector for spectrum does not exist.\n");
+          wrapperMPI::Exit(-1);
+        }
+
+        byte_size = fread(&i_stp, sizeof(i_stp), 1, fp);
+        Large::itr = i_stp; //For TPQ
+        byte_size = fread(&i_max, sizeof(i_max), 1, fp);
+        if (i_max != Check::idim_max) {
+          fprintf(stderr, "Error: MP::myrank=%d, i_max=%ld\n", MP::myrank, i_max);
+          fprintf(stderr, "Error: File InputVector for spectrum is incorrect.\n");
+          wrapperMPI::Exit(-1);
+        }
+        byte_size = fread(&Wave::v1[0][0], sizeof(std::complex<double>), i_max, fp);
+        fclose(fp);
+        StopTimer(6101);
+        if (byte_size == 0) printf("byte_size: %d \n", (int)byte_size);
+      }
+      StopTimer(6100);
+
+      Spectrum::BiCG(Def::k_exct, Def::iNOmega, NdcSpectrum, dcSpectrum, dcomega, Wave::v1);
+      Spectrum::OutputSpectrum(Def::k_exct, Def::iNOmega, NdcSpectrum, dcSpectrum, dcomega);
+      free_cd_3d_allocate(dcSpectrum);
+      free_cd_2d_allocate(dcomega);
+    }/*if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT)*/
+    break;
+
+  case DC::FullDiag:
+    StartTimer(5000);
+    if (Def::iFlgScaLAPACK == 0 && MP::nproc != 1) {
+      fprintf(MP::STDOUT, "Error: Full Diagonalization by LAPACK is only allowed for one process.\n");
+      wrapperMPI::Finalize();
+    }
+    if (CalcByFullDiag::main() != TRUE) {
+      wrapperMPI::Finalize();
+    }
+    if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT) {
+      dcomega = cd_2d_allocate(Check::idim_max, Def::iNOmega);
+      dcSpectrum = cd_3d_allocate(Check::idim_max, Def::iNOmega, NdcSpectrum);
+      for (istate = 0; istate < Check::idim_max; istate++) {
+        for (iomega = 0; iomega < Def::iNOmega; iomega++) {
+          dcomega[istate][iomega] = Phys::energy[istate] + OmegaMin
+            + (OmegaMax - OmegaMin) / (std::complex<double>)Def::iNOmega * (std::complex<double>)iomega;
+        }
+      }
+      CalcSpectrumByFullDiag(Def::iNOmega, NdcSpectrum, dcSpectrum, dcomega, Wave::v1);
+      Spectrum::OutputSpectrum(Check::idim_max, Def::iNOmega, NdcSpectrum, dcSpectrum, dcomega);
+      free_cd_3d_allocate(dcSpectrum);
+      free_cd_2d_allocate(dcomega);
+    }/*if (Def::iFlgCalcSpec != DC::CALCSPEC_NOT)*/
+    StopTimer(5000);
+    break;
+
+  case DC::TPQCalc:
+    StartTimer(3000);
+    if (CalcByTPQ(Step::NumAve, Param::ExpecInterval) != TRUE) {
+      StopTimer(3000);
+      wrapperMPI::Exit(-3);
+    }
+    StopTimer(3000);
+    break;
+
+  case DC::TimeEvolution:
+    if (CalcByTEM(Param::ExpecInterval) != 0) {
+      wrapperMPI::Exit(-3);
+    }
+    break;
+
+  default:
+    StopTimer(0);
+    wrapperMPI::Exit(-3);
   }
 
-  if(Def::iFlgCalcSpec != DC::CALCSPEC_NOT){
-    StartTimer(6000);
-    CalcSpectrum();
-    StopTimer(6000);
-  }
-  
   StopTimer(0);
   OutputTimer();
   wrapperMPI::Finalize();

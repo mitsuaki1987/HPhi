@@ -16,6 +16,8 @@
 
 #include <complex>
 
-int GetPairExcitedState(
- int nstate, std::complex<double> **tmp_v0, 
-  std::complex<double>** tmp_v1, int iEx);
+namespace GetExcitedState{
+  namespace Pair {
+    int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, int iEx);
+  }
+}

@@ -24,6 +24,7 @@
 #endif
 #include "global.hpp"
 #include <cstring>
+#include <complex>
 
 /** 
  * @brief performing full diagonalization using lapack
@@ -31,7 +32,11 @@
  * @author Kazuyoshi Yoshimi (The University of Tokyo)
  * @return 
  */
-int lapack_diag(double *energy)
+int lapack_diag(
+  std::complex<double> **matrix,
+  double *energy,
+  std::complex<double> **vector
+)
 {
   FILE* fp;
   char sdt[D_FileNameMax] = "";
@@ -67,30 +72,30 @@ int lapack_diag(double *energy)
       nq = numroc_(&xMsize, &mb, &mycol, &i_zero, &npcol);
       Z_vec = (std::complex<double>*)malloc(mp * nq * sizeof(std::complex<double>));
   
-      diag_scalapack_cmp(xMsize, Wave::v0, energy, Z_vec, descZ_vec);
+      diag_scalapack_cmp(xMsize, matrix, energy, Z_vec, descZ_vec);
     }
     else {
-      ZHEEVall(xMsize, Wave::v0, energy, Wave::v1);
+      ZHEEVall(xMsize, matrix, energy, vector);
     }
 #else
-    ZHEEVall(xMsize, Wave::v0, energy, Wave::v1);
+    ZHEEVall(xMsize, matrix, energy, vector);
 #endif
   }
   else {
 #ifdef _MAGMA
     if (MP::myrank == 0) {
-      if (diag_magma_cmp(xMsize, Wave::v0, v0, v1, Def::iNGPU) != 0) {
+      if (diag_magma_cmp(xMsize, matrix, v0, v1, Def::iNGPU) != 0) {
         return -1;
       }
     }
 #else
     fprintf(MP::STDOUT, "Warning: MAGMA is not used in this calculation.");
-    ZHEEVall(xMsize, Wave::v0, energy, Wave::v1);
+    ZHEEVall(xMsize, matrix, energy, vector);
 #endif
   }
   for (i = 0; i < i_max; i++) {
     for (j = 0; j < i_max; j++) {
-      Wave::v0[i][j] = Wave::v1[i][j];
+      matrix[i][j] = vector[i][j];
     }
   }
 

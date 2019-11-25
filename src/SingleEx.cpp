@@ -17,6 +17,7 @@
 @brief Functions to compute singly excited state
 */
 #include "bitcalc.hpp"
+#include "SingleEx.hpp"
 #include "SingleExHubbard.hpp"
 #include "global.hpp"
 #include "DefCommon.hpp"
@@ -28,8 +29,7 @@ Target System: Hubbard, Kondo
 @author Kazuyoshi Yoshimi
 @version 1.2
 */
-int GetSingleExcitedState(
-  //!<define list to get and put information of calcuation
+int GetExcitedState::Single::main(
   int nstate, 
   std::complex<double> **tmp_v0,//!<[out] Result v0 = H v1
   std::complex<double> **tmp_v1,//!<[in] v0 = H v1

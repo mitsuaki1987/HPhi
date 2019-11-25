@@ -46,8 +46,7 @@
 /// \returns FALSE: Unnormally finished
 /// \author Kazuyoshi Yoshimi (The University of Tokyo)
 /// \version 1.2
-int GetPairExcitedState
-(
+int GetExcitedState::Pair::main(
   int nstate,
   std::complex<double> **tmp_v0,
   std::complex<double> **tmp_v1,

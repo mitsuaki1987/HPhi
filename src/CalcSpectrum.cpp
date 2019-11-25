@@ -50,7 +50,7 @@ Output: dcOmegaMax, dcOmegaMin
 @retval FALSE Fail to set frequencies.
 retval TRUE Success to set frequencies.
 */
-int SetOmega()
+int Spectrum::SetOmega()
 {
   FILE *fp;
   char sdt[D_FileNameMax], ctmp[256];
@@ -131,7 +131,7 @@ Output: iCalcModel (From HubbardNConserved to Hubbard), {Ne, Nup, Ndown, Nsite, 
 @retval -1 fail to make lists.
 @retval 0  sucsess to make lists.
 */
-int MakeExcitedList(
+int Spectrum::MakeExcitedList(
   int *iFlgListModifed
 ) {
   int Ne, Nup, Ndown, Total2Sz;
@@ -296,6 +296,7 @@ int MakeExcitedList(
     if (sz(List::b1, List::b2_1, List::b2_2, Ne, Nup, Ndown, Total2Sz, Check::idim_maxs) != 0) {
       return FALSE;
     }
+    diagonalcalc(Check::idim_maxs, List::Diagonals, List::b1);
     /*
      MPI buffer is common for list_a and list_b
     */
@@ -318,8 +319,6 @@ int MakeExcitedList(
     List::b2_2 = List::a2_2;
     List::Diagonals = List::Diagonal;
   }
-  Wave::v0 = cd_2d_allocate(Check::idim_maxs, Def::k_exct);
-  Wave::v1 = cd_2d_allocate(Check::idim_maxs, Def::k_exct);
 
   if (Def::iCalcModel == DC::HubbardNConserved) {
     Def::iCalcModel = DC::Hubbard;
@@ -335,19 +334,19 @@ int MakeExcitedList(
 \retval FALSE Fail to open the output file.
 \retval TRUE Success to output the spectrum.
 */
-void OutputSpectrum(
+void Spectrum::OutputSpectrum(
   int nstate,
   int Nomega,
   int NdcSpectrum,
   std::complex<double> ***dcSpectrum,
-  std::complex<double> **dcomega)
-{
+  std::complex<double> **dcomega
+){
   FILE *fp;
   char sdt[D_FileNameMax];
   int iomega, idcSpectrum, istate;
 
   for (istate = 0; istate < nstate; istate++) {
-    sprintf(sdt, "%s_DynamicalGreen.dat", Def::CDataFileHead);
+    sprintf(sdt, "%s_DynamicalGreen_eigen%d.dat", Def::CDataFileHead, istate);
     if (childfopenMPI(sdt, "w", &fp) != 0) wrapperMPI::Exit(-1);
 
     for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
@@ -370,9 +369,7 @@ void OutputSpectrum(
 \retval FALSE Fail to calculate the excited state.
 \retval TRUE Success to calculate the excited state.
 */
-int GetExcitedState
-(
-  
+int GetExcitedState::main(
   int nstate,
   std::complex<double> **tmp_v0,
   std::complex<double> **tmp_v1,
@@ -380,168 +377,14 @@ int GetExcitedState
 )
 {
   if (Def::NNSingleExcitationOperator > 0) {
-    if (GetSingleExcitedState(nstate, tmp_v0, tmp_v1, iEx) != TRUE) {
+    if (GetExcitedState::Single::main(nstate, tmp_v0, tmp_v1, iEx) != TRUE) {
       return FALSE;
     }
   }
   else if (Def::NNPairExcitationOperator > 0) {
-    if (GetPairExcitedState(nstate, tmp_v0, tmp_v1, iEx) != TRUE) {
+    if (GetExcitedState::Pair::main(nstate, tmp_v0, tmp_v1, iEx) != TRUE) {
       return FALSE;
     }
   }
   return TRUE;
 }
-/**
- * @brief A main function to calculate spectrum.
- *
- * input: iFlgSpecOmegaOrg, dcOmegaMax, dcOmegaMin, iNOmega etc.\n
- * output: dcOmegaOrg, iFlagListModified.
- *
- * @retval 0 normally finished
- * @retval -1 unnormally finished
- *
- * @version 1.1
- * @author Kazuyoshi Yoshimi (The University of Tokyo)
- * @author Youhei Yamaji (The University of Tokyo)
- *
- */
-void CalcSpectrum()
-{
-  char sdt[D_FileNameMax];
-  char *defname;
-  long int i;
-  long int i_max = 0;
-  int i_stp, NdcSpectrum, istate;
-  int iFlagListModified = FALSE;
-  FILE *fp;
-  std::complex<double> **v1Org; /**< Input vector to calculate spectrum function.*/
-
-  //ToDo: Nomega should be given as a parameter
-  int Nomega;
-  std::complex<double> OmegaMax, OmegaMin;
-  std::complex<double> ***dcSpectrum;
-  std::complex<double> **dcomega;
-  size_t byte_size;
-
-  v1Org = cd_2d_allocate(Check::idim_max, Def::k_exct);
-  for (i = 0; i < Check::idim_max; i++) 
-    for (istate = 0; istate < Def::k_exct; istate++)
-      v1Org[i][istate] = Wave::v1[i][istate];
-  free_cd_2d_allocate(Wave::v0);
-  free_cd_2d_allocate(Wave::v1);
-
-  //set omega
-  if (SetOmega() != TRUE) {
-    fprintf(stderr, "Error: Fail to set Omega.\n");
-    wrapperMPI::Exit(-1);
-  }
-  else {
-    if (Def::iFlgSpecOmegaOrg == FALSE) {
-      Def::dcOmegaOrg = std::complex<double>(0.0,1.0) * (Def::dcOmegaMax - Def::dcOmegaMin) / (double)Def::iNOmega;
-    }
-  }
-  /*
-   Set & malloc omega grid
-  */
-  Nomega = Def::iNOmega;
-  dcomega = cd_2d_allocate(Def::k_exct, Nomega);
-  OmegaMax = Def::dcOmegaMax + Def::dcOmegaOrg;
-  OmegaMin = Def::dcOmegaMin + Def::dcOmegaOrg;
-  for (istate = 0; istate < Def::k_exct; istate++) {
-    for (i = 0; i < Nomega; i++) {
-      dcomega[istate][i] = Phys::energy[istate] + OmegaMin
-        + (OmegaMax - OmegaMin) / (std::complex<double>)Nomega * (std::complex<double>)i;
-    }
-  }
-
-  fprintf(MP::STDOUT, "\nFrequency range:\n");
-  fprintf(MP::STDOUT, "  Omega Max. : %15.5e %15.5e\n", real(OmegaMax), imag(OmegaMax));
-  fprintf(MP::STDOUT, "  Omega Min. : %15.5e %15.5e\n", real(OmegaMin), imag(OmegaMin));
-  fprintf(MP::STDOUT, "  Num. of Omega : %d\n", Nomega);
-
-  if (Def::NNSingleExcitationOperator == 0) {
-    if (Def::NNPairExcitationOperator == 0) {
-      fprintf(stderr, "Error: Any excitation operators are not defined.\n");
-      wrapperMPI::Exit(-1);
-    }
-    else {
-      NdcSpectrum = Def::NNPairExcitationOperator - 1;
-    }
-  }
-  else if (Def::NNPairExcitationOperator == 0) {
-    NdcSpectrum = Def::NNSingleExcitationOperator - 1;
-  }
-  else {
-    fprintf(stderr, "Error: Both single and pair excitation operators exist.\n");
-    wrapperMPI::Exit(-1);
-  }
-  dcSpectrum = cd_3d_allocate(Def::k_exct, Nomega, NdcSpectrum);
-
-  //Make New Lists
-  if (MakeExcitedList(&iFlagListModified) == FALSE) {
-    wrapperMPI::Exit(-1);
-  }
-  Def::iFlagListModified = iFlagListModified;
-  Wave::v0 = cd_2d_allocate(Check::idim_maxs, Def::k_exct);
-  Wave::v1 = cd_2d_allocate(Check::idim_maxs, Def::k_exct);
-
-  //Make excited state
-  StartTimer(6100);
-  if (Def::iFlgCalcSpec == DC::RECALC_NOT ||
-    Def::iFlgCalcSpec == DC::RECALC_OUTPUT_TMComponents_VEC ||
-    (Def::iFlgCalcSpec == DC::RECALC_INOUT_TMComponents_VEC && Def::iCalcType == DC::CG)) {
-    v1Org = cd_2d_allocate(Check::idim_max, 1);
-    //input eigen vector
-    StartTimer(6101);
-    fprintf(MP::STDOUT, "  Start: An Eigenvector is inputted in CalcSpectrum.\n");
-    TimeKeeper("%s_TimeKeeper.dat", "Reading an input Eigenvector starts: %s", "a");
-    GetFileNameByKW(KWSpectrumVec, &defname);
-    strcat(defname, "_rank_%d.dat");
-    //    sprintf(sdt, "%s_eigenvec_%d_rank_%d.dat", Def::CDataFileHead, Def::k_exct - 1, MP::myrank);
-    sprintf(sdt, defname, MP::myrank);
-    childfopenALL(sdt, "rb", &fp);
-
-    if (fp == NULL) {
-      fprintf(stderr, "Error: A file of Inputvector does not exist.\n");
-      wrapperMPI::Exit(-1);
-    }
-
-    byte_size = fread(&i_stp, sizeof(i_stp), 1, fp);
-    Large::itr = i_stp; //For TPQ
-    byte_size = fread(&i_max, sizeof(i_max), 1, fp);
-    if (i_max != Check::idim_max) {
-      fprintf(stderr, "Error: MP::myrank=%d, i_max=%ld\n", MP::myrank, i_max);
-      fprintf(stderr, "Error: A file of Input vector is incorrect.\n");
-      wrapperMPI::Exit(-1);
-    }
-    byte_size = fread(&v1Org[0][0], sizeof(std::complex<double>), i_max + 1, fp);
-    fclose(fp);
-    StopTimer(6101);
-    if (byte_size == 0) printf("byte_size: %d \n", (int)byte_size);
-  }
-  StopTimer(6100);
-
-  diagonalcalc(Check::idim_maxs, List::Diagonals, List::b1);
-
-  fprintf(MP::STDOUT, "  Start: Calculating a spectrum.\n\n");
-  TimeKeeper("%s_TimeKeeper.dat", "Calculating a spectrum starts: %s", "a");
-  StartTimer(6200);
-  switch (Def::iCalcType) {
-  case DC::CG:
-    CalcSpectrumByBiCG(Def::k_exct, Wave::v0, Wave::v1, Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
-    OutputSpectrum(Def::k_exct, Nomega, NdcSpectrum, dcSpectrum, dcomega);
-    break;
-  case DC::FullDiag:
-    CalcSpectrumByFullDiag(Nomega, NdcSpectrum, dcSpectrum, dcomega, v1Org);
-    OutputSpectrum(Check::idim_max, Nomega, NdcSpectrum, dcSpectrum, dcomega);
-    break;
-  default:
-    break;
-  }
-  StopTimer(6200);
-
-  fprintf(MP::STDOUT, "  End:  Calculating a spectrum.\n\n");
-  TimeKeeper("%s_TimeKeeper.dat", "Calculating a spectrum finishes: %s", "a");
-  free_cd_3d_allocate(dcSpectrum);
-  free_cd_2d_allocate(dcomega);
-}/*int CalcSpectrum*/

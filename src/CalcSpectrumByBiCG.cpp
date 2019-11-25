@@ -26,6 +26,7 @@
 #include "global.hpp"
 #include "DefCommon.hpp"
 #include "log.hpp"
+#include "CalcSpectrumByBiCG.hpp"
 #ifdef __MPI
 #include <mpi.h>
 #endif
@@ -156,10 +157,8 @@ void SeedSwitch(
  *
  * @author Mitsuaki Kawamura (The University of Tokyo)
  */
-int CalcSpectrumByBiCG(
+int Spectrum::BiCG(
   int nstate,
-  std::complex<double> **v2,//!<[in] [CheckList::idim_max] Right hand side vector, excited state.
-  std::complex<double> **v4,//!<[inout] [CheckList::idim_max] Work space for residual vector @f${\bf r}@f$
   int Nomega,//!<[in] Number of Frequencies
   int NdcSpectrum,//!<[in] Number of left side operator
   std::complex<double> ***dcSpectrum,//!<[out] [Nomega] Spectrum
@@ -177,7 +176,7 @@ int CalcSpectrumByBiCG(
   int iomega, iter_old, istate;
   int iter, *iz_seed, **lz_conv, lz_conv_all;
   double *resnorm, dtmp[4];
-  std::complex<double> **vL, **v12, **v14, **v3, **v5,
+  std::complex<double> **vL, **v12, **v14, **v2, **v3, **v4, **v5,
     **alpha, **beta, ***res_proj, ***pi, ***pBiCG;
 
   z_seed = cd_1d_allocate(nstate);
@@ -198,7 +197,9 @@ int CalcSpectrumByBiCG(
   */
   v12 = cd_2d_allocate(Check::idim_maxs, nstate);
   v14 = cd_2d_allocate(Check::idim_maxs, nstate);
+  v2 = cd_2d_allocate(Check::idim_maxs, nstate);
   v3 = cd_2d_allocate(Check::idim_maxs, nstate);
+  v4 = cd_2d_allocate(Check::idim_maxs, nstate);
   v5 = cd_2d_allocate(Check::idim_maxs, nstate);
   vL = cd_2d_allocate(Check::idim_maxs, nstate);
   lz_conv = i_2d_allocate(nstate, Nomega);
@@ -216,7 +217,7 @@ int CalcSpectrumByBiCG(
       fprintf(MP::STDOUT, "INFO: File for the restart is not found.\n");
       fprintf(MP::STDOUT, "      Start from SCRATCH.\n");
       zclear(Check::idim_maxs, &v2[0][0]);
-      GetExcitedState(nstate, v2, v1Org, 0);
+      GetExcitedState::main(nstate, v2, v1Org, 0);
 #pragma omp parallel for default(none) shared(v2,v4,v1Org,Check::idim_maxs,nstate) \
 private(idim,istate)
       for (idim = 0; idim < Check::idim_maxs; idim++) 
@@ -249,7 +250,7 @@ private(idim,istate)
   }/*if (Def::iFlgCalcSpec > RECALC_FROM_TMComponents)*/
   else {
     zclear(Check::idim_maxs*nstate, &v2[0][0]);
-    GetExcitedState(nstate, v2, v1Org, 0);
+    GetExcitedState::main(nstate, v2, v1Org, 0);
 #pragma omp parallel for default(none) shared(v2,v4,v1Org,Check::idim_maxs,nstate) \
 private(idim,istate)
     for (idim = 0; idim < Check::idim_maxs; idim++)
@@ -353,7 +354,7 @@ private(idim,istate)
     
     for (idcSpectrum = 0; idcSpectrum < NdcSpectrum; idcSpectrum++) {
       zclear(Check::idim_maxs*nstate, &vL[0][0]);
-      GetExcitedState(nstate, vL, v1Org, idcSpectrum + 1);
+      GetExcitedState::main(nstate, vL, v1Org, idcSpectrum + 1);
       wrapperMPI::MultiVecProd(Check::idim_maxs, nstate, vL, v2, rho_old);
       for (istate = 0; istate < nstate; istate++)res_proj[istate][iter][idcSpectrum] = rho_old[istate];
     }

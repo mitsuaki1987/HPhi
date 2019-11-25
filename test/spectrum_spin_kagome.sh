@@ -37,7 +37,7 @@ cat > reference.dat <<EOF
   7.5600000000 1.0000000000 0.1482108549 -0.0152643621
   22.6800000000 1.0000000000 0.0585967259 -0.0023538947
 EOF
-paste output/zvo_DynamicalGreen.dat reference.dat > paste1.dat
+paste output/zvo_DynamicalGreen_eigen0.dat reference.dat > paste1.dat
 diff=`awk '
 BEGIN{diff=0.0} 
 {diff+=sqrt(($3-$7)*($3-$7))+sqrt(($4-$8)*($4-$8))} 
@@ -80,7 +80,7 @@ cat > reference.dat <<EOF
 7.5600000000 1.0000000000 0.3362206176 -0.0334858069
 22.6800000000 1.0000000000 0.1355123494 -0.0053744750
 EOF
-paste output/zvo_DynamicalGreen.dat reference.dat > paste2.dat
+paste output/zvo_DynamicalGreen_eigen0.dat reference.dat > paste2.dat
 diff=`awk '
 BEGIN{diff=0.0} 
 {diff+=sqrt(($3-$7)*($3-$7))+sqrt(($4-$8)*($4-$8))} 
@@ -123,7 +123,7 @@ cat > reference.dat <<EOF
   7.5600000000 1.0000000000 0.4424175519 -0.0394580455
   22.6800000000 1.0000000000 0.1896070353 -0.0072005351
 EOF
-paste output/zvo_DynamicalGreen.dat reference.dat > paste3.dat
+paste output/zvo_DynamicalGreen_eigen0.dat reference.dat > paste3.dat
 diff=`awk '
 BEGIN{diff=0.0} 
 {diff+=sqrt(($3-$7)*($3-$7))+sqrt(($4-$8)*($4-$8))} 

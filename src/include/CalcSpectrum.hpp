@@ -13,8 +13,15 @@
 
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
-#pragma once
+#include <complex>
 
-void CalcSpectrum();
-int GetExcitedState(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, int iEx);
+namespace Spectrum {
+  int SetOmega();
+  int MakeExcitedList(int* iFlgListModifed);
+  void OutputSpectrum(int nstate, int Nomega, int NdcSpectrum, std::complex<double>*** dcSpectrum,
+    std::complex<double>** dcomega);
+}
 
+namespace GetExcitedState {
+  int main(int nstate, std::complex<double>** tmp_v0, std::complex<double>** tmp_v1, int iEx);
+}
