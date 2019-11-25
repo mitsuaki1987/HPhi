@@ -216,7 +216,7 @@ int Spectrum::BiCG(
     if (childfopenALL(sdt, "rb", &fp) != 0) {
       fprintf(MP::STDOUT, "INFO: File for the restart is not found.\n");
       fprintf(MP::STDOUT, "      Start from SCRATCH.\n");
-      zclear(Check::idim_maxs, &v2[0][0]);
+      zclear(Check::idim_maxs * nstate, &v2[0][0]);
       GetExcitedState::main(nstate, v2, v1Org, 0);
 #pragma omp parallel for default(none) shared(v2,v4,v1Org,Check::idim_maxs,nstate) \
 private(idim,istate)
@@ -289,8 +289,8 @@ private(idim,istate)
         pBiCG[istate][iomega][idcSpectrum] = 0.0;
         dcSpectrum[istate][iomega][idcSpectrum] = 0.0;
       }
-    }
-  }
+    }/*for (iomega = 0; iomega < Nomega; iomega++)*/
+  }/*for (istate = 0; istate < nstate; istate++)*/
 
   if (fp != NULL) {
     if (Def::iFlgCalcSpec == DC::RECALC_FROM_TMComponents)
@@ -407,7 +407,7 @@ private(idim,istate)
           - std::conj(alpha[istate][iter]) * v14[idim][istate]
           - std::conj(alpha[istate][iter] * beta[istate][iter] / alpha[istate][iter - 1]) * v5[idim][istate];
         v5[idim][istate] = v4[idim][istate];
-        v4[idim][0] = v14[idim][istate];
+        v4[idim][istate] = v14[idim][istate];
       }/*for (idim = 0; idim < Check::idim_maxs; idim++)*/
       /*
       Seed Switching
@@ -424,11 +424,12 @@ private(idim,istate)
     lz_conv_all = 1;
     fprintf(MP::STDOUT, "  %9d  ", iter);
     for (istate = 0; istate < nstate; istate++) {
-      for (iomega = 0; iomega < Nomega; iomega++)
+      for (iomega = 0; iomega < Nomega; iomega++) {
         if (std::abs(resnorm[istate] / pi[istate][iter][iomega]) < Def::eps_Lanczos)
           lz_conv[istate][idcSpectrum] = 1;
+        lz_conv_all *= lz_conv[istate][idcSpectrum];
+      }
 
-      if (resnorm[istate] > Def::eps_Lanczos) lz_conv_all *= 0;
       fprintf(MP::STDOUT, "%9d %25.15e", iz_seed[istate], resnorm[istate]);
     }/*for (istate = 0; istate < nstate; istate++)*/
     fprintf(MP::STDOUT, "\n");
