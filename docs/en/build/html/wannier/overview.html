@@ -4,30 +4,24 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>8.1. Overview &#8212; HPhi++ 3.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '3.2.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="8.2. Tutorial" href="tutorial.html" />
     <link rel="prev" title="8. Downfolding with Wannier functions" href="index.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -55,33 +49,45 @@
 <p>In this document, we introduce how we compute downfolded models
 with mVMC or HPhi++ in conjunction to
 <a class="reference external" href="https://sites.google.com/view/kazuma7k6r">RESPACK</a>.</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
 {\cal H} &amp;=
-\sum_{i, j, \alpha, \beta, \sigma}
-t_{i \alpha j \beta} c_{i \alpha \sigma}^{\dagger} c_{j \beta \sigma}
+\sum_{R, R', i, j, \sigma}
+\left(t_{(R'-R) i j} - t_{(R'-R) i j}^{\rm DC}\right)
+c_{R' j \sigma}^{\dagger} c_{R i \sigma}
 \nonumber \\
-&amp;+ \sum_{i, \alpha}
-U_{i \alpha i \alpha} n_{i \alpha \uparrow} n_{j \alpha \downarrow}
-+ \sum_{(i, \alpha) &lt; (j, \beta)}
-U_{i \alpha j \beta} n_{i \alpha} n_{j \beta}
-- \sum_{(i, \alpha) &lt; (j, \beta)}
-J_{i \alpha j \beta} (n_{i \alpha \uparrow} n_{j \beta \uparrow}
-+ n_{i \alpha \downarrow} n_{j \beta \downarrow})
+&amp;+ \sum_{R, i}
+U_{0 i j} n_{R i \uparrow} n_{R i \downarrow}
++ \sum_{(R, i) &lt; (R', j)}
+U_{(R'-R) i j} n_{R i} n_{R' j}
+- \sum_{(R, i) &lt; (R', j)}
+J_{(R'-R) i j} (n_{R i \uparrow} n_{R' j \uparrow}
++ n_{R i \downarrow} n_{R' j \downarrow})
 \nonumber \\
-&amp;+ \sum_{(i, \alpha) &lt; (j, \beta)}
-J_{i \alpha j \beta} (
-c_{i \alpha \uparrow}^{\dagger} c_{j \beta \downarrow}^{\dagger}
-c_{i \alpha \downarrow} c_{j \beta \uparrow} +
-c_{j \beta \uparrow}^{\dagger} c_{i \alpha \downarrow}^{\dagger}
-c_{j \beta \downarrow} c_{j \alpha \uparrow} )
+&amp;+ \sum_{(R, i) &lt; (R', j)}
+J_{(R'-R) i j} (
+c_{R i \uparrow}^{\dagger} c_{R' j \downarrow}^{\dagger}
+c_{R i \downarrow} c_{R' j \uparrow} +
+c_{R' j \uparrow}^{\dagger} c_{R i \downarrow}^{\dagger}
+c_{R' j \downarrow} c_{R i \uparrow} )
 \nonumber \\
-&amp;+ \sum_{(i, \alpha) &lt; (j, \beta)}
-J_{i \alpha j \beta} (
-c_{i \alpha \uparrow}^{\dagger} c_{i \alpha \downarrow}^{\dagger}
-c_{j \beta \downarrow} c_{j \beta \uparrow} +
-c_{j \beta \uparrow}^{\dagger} c_{j \beta \downarrow}^{\dagger}
-c_{i \alpha \downarrow} c_{i \alpha \uparrow} )
+&amp;+ \sum_{(R, i) &lt; (R', j)}
+J_{(R'-R) i j} (
+c_{R i \uparrow}^{\dagger} c_{R i \downarrow}^{\dagger}
+c_{R' j \downarrow} c_{R' j \uparrow} +
+c_{R' j \uparrow}^{\dagger} c_{R' j \downarrow}^{\dagger}
+c_{R i \downarrow} c_{R i \uparrow} ),
+\\
+t_{0 i i}^{\rm DC} &amp;\equiv \frac{1}{2}U_{0 i i} D_{0 i i}
++ \sum_{(R, j) (\neq 0, i)} U_{R i j} D_{0 j j}
+- \frac{1}{2} \sum_{(R, j) (\neq 0, i)} J_{R i j} D_{0 j j},
+\\
+t_{R i j}^{\rm DC} &amp;\equiv \frac{1}{2} J_{R i j} (D_{R i j} + 2 {\rm Re} [D_{R i j}])
+-\frac{1}{2}  U_{R i j} D_{R i j},
+\quad (R, j) \neq (0, i),
+\\
+D_{R i j} &amp;\equiv \sum_{\sigma}
+\left\langle c_{R j \sigma}^{\dagger} c_{0 i \sigma}\right\rangle_{\rm KS}.
 \end{aligned}\end{split}\]</div>
 <div class="section" id="prerequisite">
 <h2>8.1.1. Prerequisite<a class="headerlink" href="#prerequisite" title="Permalink to this headline">¶</a></h2>
@@ -106,7 +112,7 @@ Therefore, these programs must be available in our machine.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/HPhi++.png" alt="Logo"/>
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">8.1. Overview</a><ul>
 <li><a class="reference internal" href="#prerequisite">8.1.1. Prerequisite</a></li>
@@ -129,12 +135,14 @@ Therefore, these programs must be available in our machine.</p>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -159,7 +167,7 @@ Therefore, these programs must be available in our machine.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, HPhi++ team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

@@ -4,30 +4,24 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>4.1. Input files for Standard mode &#8212; HPhi++ 3.2.0 documentation</title>
     <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '3.2.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="4.1.1. Parameters for the type of calculation" href="calc_type.html" />
     <link rel="prev" title="4. File specification" href="../index.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -53,7 +47,7 @@
   <div class="section" id="input-files-for-standard-mode">
 <h1>4.1. Input files for <em>Standard</em> mode<a class="headerlink" href="#input-files-for-standard-mode" title="Permalink to this headline">¶</a></h1>
 <p>An example of an input file for the standard mode is as follows:</p>
-<div class="highlight-none"><div class="highlight"><pre><span></span>W = 2
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>W = 2
  L = 4
  model = &quot;spin&quot;
  method = &quot;Lanczos&quot;
@@ -75,12 +69,12 @@ J&#39;=-0.5
 <div class="line"><strong>Basic rules for input files</strong></div>
 </div>
 <ul>
-<li><p class="first">In each line, there is a set of a keyword (before an “<code class="docutils literal"><span class="pre">=</span></code>”) and a
-parameter(after an “<code class="docutils literal"><span class="pre">=</span></code>”); they are separated by “<code class="docutils literal"><span class="pre">=</span></code>”.</p>
+<li><p class="first">In each line, there is a set of a keyword (before an “<code class="docutils literal notranslate"><span class="pre">=</span></code>”) and a
+parameter(after an “<code class="docutils literal notranslate"><span class="pre">=</span></code>”); they are separated by “<code class="docutils literal notranslate"><span class="pre">=</span></code>”.</p>
 </li>
 <li><p class="first">You can describe keywords in a random order.</p>
 </li>
-<li><p class="first">Empty lines and lines beginning with a “<code class="docutils literal"><span class="pre">//</span></code>”(comment outs) are
+<li><p class="first">Empty lines and lines beginning with a “<code class="docutils literal notranslate"><span class="pre">//</span></code>”(comment outs) are
 skipped.</p>
 </li>
 <li><p class="first">Upper- and lowercase are not distinguished. Double quotes and blanks
@@ -94,9 +88,9 @@ stop with error messages),</div>
 specified, default values are used),</div>
 <div class="line">3.&nbsp;Parameters that must not be specified&nbsp;(if specified,
 HPhi++ will stop with error messages).</div>
-<div class="line">An example of type 3 is the transfer <span class="math">\(t\)</span> parameter for the
+<div class="line">An example of type 3 is the transfer <span class="math notranslate nohighlight">\(t\)</span> parameter for the
 Heisenberg spin system. If you choose “model=spin”, you should not
-specify “<span class="math">\(t\)</span>”.</div>
+specify “<span class="math notranslate nohighlight">\(t\)</span>”.</div>
 </div>
 </li>
 </ul>
@@ -138,12 +132,14 @@ specify “<span class="math">\(t\)</span>”.</div>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -168,7 +164,7 @@ specify “<span class="math">\(t\)</span>”.</div>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, HPhi++ team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

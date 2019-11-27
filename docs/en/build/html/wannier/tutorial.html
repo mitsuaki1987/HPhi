@@ -4,30 +4,24 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>8.2. Tutorial &#8212; HPhi++ 3.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '3.2.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="8.3. Input parameter for Standard mode" href="parameter.html" />
     <link rel="prev" title="8.1. Overview" href="overview.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -60,8 +54,8 @@ We employ QuantumESPRESSO for the DFT calculation.</p>
 <h2>8.2.1. SCF calculation of charge density<a class="headerlink" href="#scf-calculation-of-charge-density" title="Permalink to this headline">¶</a></h2>
 <p>First, we perform the SCF calculation of the charge density.
 The input file is as follows:</p>
-<p><a class="reference download internal" href="../_downloads/scf.in" download=""><code class="xref download docutils literal"><span class="pre">scf.in</span></code></a></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">CONTROL</span>
+<p><a class="reference download internal" download="" href="../_downloads/a75a339ce1ef40b50995c5cc7d96c7d7/scf.in"><code class="xref download docutils literal notranslate"><span class="pre">scf.in</span></code></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">CONTROL</span>
  <span class="n">calculation</span> <span class="o">=</span> <span class="s1">&#39;scf&#39;</span>
   <span class="n">pseudo_dir</span> <span class="o">=</span> <span class="s1">&#39;../pseudo/&#39;</span>
       <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;sr2vo4&#39;</span>
@@ -100,15 +94,15 @@ The input file is as follows:</p>
 <p>The pseudopotential (UPF file) are downloaded from
 <a class="reference external" href="www.quantum-simulation.org/potentials/sg15_oncv/">The SG15 Optimized Norm-Conserving Vanderbilt (ONCV) pseudopotentials</a>.</p>
 <p><a class="reference external" href="http://www.quantum-simulation.org/potentials/sg15_oncv/sg15_oncv_upf_2015-10-07.tar.gz">http://www.quantum-simulation.org/potentials/sg15_oncv/sg15_oncv_upf_2015-10-07.tar.gz</a></p>
-<p>We use the program <code class="docutils literal"><span class="pre">pw.x</span></code> in QuantumESPRESSO as follows.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pw.x -in scf.in
+<p>We use the program <code class="docutils literal notranslate"><span class="pre">pw.x</span></code> in QuantumESPRESSO as follows.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pw.x -in scf.in
 </pre></div>
 </div>
 </div>
 <div class="section" id="optional-band-structure">
 <h2>8.2.2. (Optional) Band structure<a class="headerlink" href="#optional-band-structure" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference download internal" href="../_downloads/band.in" download=""><code class="xref download docutils literal"><span class="pre">band.in</span></code></a></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">CONTROL</span>
+<p><a class="reference download internal" download="" href="../_downloads/096b326e6e234e5be13627024a824ae2/band.in"><code class="xref download docutils literal notranslate"><span class="pre">band.in</span></code></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">CONTROL</span>
  <span class="n">calculation</span> <span class="o">=</span> <span class="s1">&#39;bands&#39;</span>
   <span class="n">pseudo_dir</span> <span class="o">=</span> <span class="s1">&#39;../pseudo/&#39;</span>
       <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;sr2vo4&#39;</span>
@@ -192,28 +186,28 @@ The input file is as follows:</p>
         <span class="mf">0.0000000000</span>    <span class="mf">0.5000000000</span>   <span class="o">-</span><span class="mf">0.0000000000</span>    <span class="mf">1.0</span>
 </pre></div>
 </div>
-<p>We use <code class="docutils literal"><span class="pre">pw.x</span></code>.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pw.x -in band.in
+<p>We use <code class="docutils literal notranslate"><span class="pre">pw.x</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pw.x -in band.in
 </pre></div>
 </div>
-<p><a class="reference download internal" href="../_downloads/bands.in" download=""><code class="xref download docutils literal"><span class="pre">bands.in</span></code></a></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">BANDS</span>
+<p><a class="reference download internal" download="" href="../_downloads/babbcb3b70e5d9e17bca29d0bfb292d6/bands.in"><code class="xref download docutils literal notranslate"><span class="pre">bands.in</span></code></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">BANDS</span>
       <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;sr2vo4&#39;</span>
        <span class="n">lsym</span> <span class="o">=</span> <span class="o">.</span><span class="n">false</span><span class="o">.</span>
 <span class="o">/</span>
 </pre></div>
 </div>
-<p>We use <code class="docutils literal"><span class="pre">bands.x</span></code> QuantumESPRESSO.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ bands.x -in bands.in
+<p>We use <code class="docutils literal notranslate"><span class="pre">bands.x</span></code> QuantumESPRESSO.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ bands.x -in bands.in
 </pre></div>
 </div>
-<p>We can plot the band structure by reading output <code class="docutils literal"><span class="pre">bands.out.gnu</span></code> from
+<p>We can plot the band structure by reading output <code class="docutils literal notranslate"><span class="pre">bands.out.gnu</span></code> from
 GnuPlot etc.</p>
 </div>
 <div class="section" id="kohn-sham-orbitals-for-wannier">
 <h2>8.2.3. Kohn-Sham orbitals for Wannier<a class="headerlink" href="#kohn-sham-orbitals-for-wannier" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference download internal" href="../_downloads/nscf.in" download=""><code class="xref download docutils literal"><span class="pre">nscf.in</span></code></a></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">CONTROL</span>
+<p><a class="reference download internal" download="" href="../_downloads/05f2af85e119b7864a56f3ba05f034dd/nscf.in"><code class="xref download docutils literal notranslate"><span class="pre">nscf.in</span></code></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="n">CONTROL</span>
  <span class="n">calculation</span> <span class="o">=</span> <span class="s1">&#39;nscf&#39;</span>
   <span class="n">pseudo_dir</span> <span class="o">=</span> <span class="s1">&#39;../pseudo/&#39;</span>
   <span class="n">wf_collect</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
@@ -250,20 +244,20 @@ GnuPlot etc.</p>
  <span class="mi">4</span> <span class="mi">4</span> <span class="mi">4</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
 </pre></div>
 </div>
-<p>We use <code class="docutils literal"><span class="pre">pw.x</span></code> as</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pw.x -in nscf.in
+<p>We use <code class="docutils literal notranslate"><span class="pre">pw.x</span></code> as</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pw.x -in nscf.in
 </pre></div>
 </div>
-<p>Then, we use the utility <code class="docutils literal"><span class="pre">qe2respack.sh</span></code> which is included in the RESPACK package.
-The command-line argument is the name of <code class="docutils literal"><span class="pre">[prefix].save</span></code> directory.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ qe2respack.sh sr2cuo3.save
+<p>Then, we use the utility <code class="docutils literal notranslate"><span class="pre">qe2respack.sh</span></code> which is included in the RESPACK package.
+The command-line argument is the name of <code class="docutils literal notranslate"><span class="pre">[prefix].save</span></code> directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ qe2respack.sh sr2cuo3.save
 </pre></div>
 </div>
 </div>
 <div class="section" id="wannier-function-dielectric-function-effective-interaction">
 <h2>8.2.4. Wannier function, dielectric function, effective interaction<a class="headerlink" href="#wannier-function-dielectric-function-effective-interaction" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference download internal" href="../_downloads/respack.in" download=""><code class="xref download docutils literal"><span class="pre">respack.in</span></code></a></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>&amp;PARAM_CHIQW
+<p><a class="reference download internal" download="" href="../_downloads/7fc2317e61ebf10f0b54c2e814e5955d/respack.in"><code class="xref download docutils literal notranslate"><span class="pre">respack.in</span></code></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&amp;PARAM_CHIQW
 Num_freq_grid = 1
 !Ecut_for_eps = 
 flg_cRPA = 1
@@ -315,9 +309,9 @@ iz_intJ_max = 0
 /
 </pre></div>
 </div>
-<p>We use <code class="docutils literal"><span class="pre">calc_wannier</span></code>, <code class="docutils literal"><span class="pre">calc_chiqw</span></code>, <code class="docutils literal"><span class="pre">calc_j3d</span></code>,
-<code class="docutils literal"><span class="pre">calc_w3d</span></code> in RESPACK.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ calc_wannier &lt; respack.in
+<p>We use <code class="docutils literal notranslate"><span class="pre">calc_wannier</span></code>, <code class="docutils literal notranslate"><span class="pre">calc_chiqw</span></code>, <code class="docutils literal notranslate"><span class="pre">calc_j3d</span></code>,
+<code class="docutils literal notranslate"><span class="pre">calc_w3d</span></code> in RESPACK.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ calc_wannier &lt; respack.in
 $ calc_chiqw &lt; respack.in
 $ calc_w3d &lt; respack.in
 $ calc_j3d &lt; respack.in
@@ -328,16 +322,16 @@ $ calc_j3d &lt; respack.in
 <h2>8.2.5. Quantum lattice mode for HPhi/mVMC<a class="headerlink" href="#quantum-lattice-mode-for-hphi-mvmc" title="Permalink to this headline">¶</a></h2>
 <p>First, we translate the hopping file etc. created by RESPACK
 into the Wannier90 format.
-For this purpose, we use the utility <code class="docutils literal"><span class="pre">respack2wan90.py</span></code> included in HPhi/mVMC.
-The command-line argument should be the same as the input parameter <code class="docutils literal"><span class="pre">CDataFileHead</span></code>
+For this purpose, we use the utility <code class="docutils literal notranslate"><span class="pre">respack2wan90.py</span></code> included in HPhi/mVMC.
+The command-line argument should be the same as the input parameter <code class="docutils literal notranslate"><span class="pre">CDataFileHead</span></code>
 for Standard mode of HPhi/mVMC.
-If we do not specify that argument, the default value <code class="docutils literal"><span class="pre">zvo</span></code> is used.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ respack2wan90.py zvo
+If we do not specify that argument, the default value <code class="docutils literal notranslate"><span class="pre">zvo</span></code> is used.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ respack2wan90.py zvo
 </pre></div>
 </div>
 <p>Then we can run HPhi/mVMC with the standard mode.</p>
-<p><a class="reference download internal" href="../_downloads/stan.in" download=""><code class="xref download docutils literal"><span class="pre">respack.in</span></code></a></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;Hubbard&quot;</span>
+<p><a class="reference download internal" download="" href="../_downloads/dd0b86d1644464562a1775259b49d715/stan.in"><code class="xref download docutils literal notranslate"><span class="pre">respack.in</span></code></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;Hubbard&quot;</span>
 <span class="n">lattice</span> <span class="o">=</span> <span class="s2">&quot;wannier90&quot;</span>
 <span class="n">a0w</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">a0l</span> <span class="o">=</span> <span class="mi">0</span>
@@ -357,7 +351,7 @@ If we do not specify that argument, the default value <code class="docutils lite
 <span class="n">cutoff_j</span> <span class="o">=</span> <span class="mf">0.1</span>
 </pre></div>
 </div>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ vmc.out -s stan.in
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ vmc.out -s stan.in
 </pre></div>
 </div>
 </div>
@@ -372,7 +366,7 @@ If we do not specify that argument, the default value <code class="docutils lite
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/HPhi++.png" alt="Logo"/>
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">8.2. Tutorial</a><ul>
 <li><a class="reference internal" href="#scf-calculation-of-charge-density">8.2.1. SCF calculation of charge density</a></li>
@@ -399,12 +393,14 @@ If we do not specify that argument, the default value <code class="docutils lite
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -429,7 +425,7 @@ If we do not specify that argument, the default value <code class="docutils lite
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, HPhi++ team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

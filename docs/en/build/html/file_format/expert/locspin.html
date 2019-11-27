@@ -4,30 +4,24 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>4.2.4. LocSpin file &#8212; HPhi++ 3.2.0 documentation</title>
     <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '3.2.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="4.2.5. Trans file" href="trans.html" />
     <link rel="prev" title="4.2.3. ModPara file" href="modpara.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -57,7 +51,7 @@
 <div class="line">This file determines sites with localized spins. The file format is as
 follows.</div>
 </div>
-<div class="highlight-none"><div class="highlight"><pre><span></span>================================
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>================================
 NlocalSpin     6
 ================================
 ========i_0LocSpn_1IteElc ======
@@ -101,7 +95,7 @@ spins.</p>
 <li><p class="first">[int02]</p>
 <p><strong>Type :</strong> Int (a blank parameter is not allowed)</p>
 <p><strong>Description :</strong> An integer giving a site index
-(<span class="math">\(0&lt;=\)</span> [int02] <span class="math">\(&lt;\)</span> <code class="docutils literal"><span class="pre">Nsite</span></code>).</p>
+(<span class="math notranslate nohighlight">\(0&lt;=\)</span> [int02] <span class="math notranslate nohighlight">\(&lt;\)</span> <code class="docutils literal notranslate"><span class="pre">Nsite</span></code>).</p>
 </li>
 <li><p class="first">[int03]</p>
 <p><strong>Type :</strong> Int (a blank parameter is not allowed)</p>
@@ -111,7 +105,7 @@ whether the electron state is a localized spin or an itinerant
 electron state:</div>
 <div class="line-block">
 <div class="line">0: Itinerant electron state
-<span class="math">\(n&gt;\)</span>0: Localized spin state with <span class="math">\(2S=n\)</span>.</div>
+<span class="math notranslate nohighlight">\(n&gt;\)</span>0: Localized spin state with <span class="math notranslate nohighlight">\(2S=n\)</span>.</div>
 </div>
 </div>
 </li>
@@ -127,8 +121,8 @@ from the total number of localized spins indicated by
 <li>A program is terminated, when [int02] is
 different from the total number of sites.</li>
 <li>A program is terminated under the condition
-[int02] <span class="math">\(&lt;0\)</span> or
-<code class="docutils literal"><span class="pre">Nsite</span></code> <span class="math">\(&lt;=\)</span> [int02].</li>
+[int02] <span class="math notranslate nohighlight">\(&lt;0\)</span> or
+<code class="docutils literal notranslate"><span class="pre">Nsite</span></code> <span class="math notranslate nohighlight">\(&lt;=\)</span> [int02].</li>
 </ul>
 </div>
 </div>
@@ -142,7 +136,7 @@ different from the total number of sites.</li>
             <p class="logo"><a href="../../index.html">
               <img class="logo" src="../../_static/HPhi++.png" alt="Logo"/>
             </a></p>
-  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">4.2.4. LocSpin file</a><ul>
 <li><a class="reference internal" href="#file-format">File format</a></li>
@@ -167,12 +161,14 @@ different from the total number of sites.</li>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -198,7 +194,7 @@ different from the total number of sites.</li>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, HPhi++ team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

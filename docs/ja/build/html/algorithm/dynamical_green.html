@@ -4,31 +4,25 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>5.4. 動的グリーン関数 &#8212; HPhi++ 3.2.0 ドキュメント</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '3.2.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/translations.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="検索" href="../search.html" />
     <link rel="next" title="5.5. 実時間発展" href="real_time.html" />
     <link rel="prev" title="5.3. 熱的純粋量子状態による有限温度計算" href="tpq.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>ナビゲーション</h3>
       <ul>
@@ -53,17 +47,17 @@
             
   <div class="section" id="id1">
 <h1>5.4. 動的グリーン関数<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h1>
-<p><span class="math">\({\cal H}\Phi\)</span>では励起状態<span class="math">\(|\Phi ' \rangle  = \hat{O} | \Phi _0 \rangle\)</span>に対する動的関数</p>
-<div class="math">
+<p><span class="math notranslate nohighlight">\({\cal H}\Phi\)</span>では励起状態<span class="math notranslate nohighlight">\(|\Phi ' \rangle  = \hat{O} | \Phi _0 \rangle\)</span>に対する動的関数</p>
+<div class="math notranslate nohighlight">
 \[I(z) = \langle \Phi ' | \frac{1}{ {\cal H}- z\hat{I} } | \Phi '\rangle\]</div>
-<p>を計算することができます。 演算子<span class="math">\(\hat{O}\)</span>はシングル励起状態</p>
-<div class="math">
+<p>を計算することができます。 演算子<span class="math notranslate nohighlight">\(\hat{O}\)</span>はシングル励起状態</p>
+<div class="math notranslate nohighlight">
 \[\sum_{i, \sigma_1} A_{i \sigma_1} c_{i \sigma_1} (c_{i\sigma_1}^{\dagger})\]</div>
 <p>およびペア励起状態</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\sum_{i, j, \sigma_1, \sigma_2} A_{i \sigma_1 j \sigma_2} c_{i \sigma_1}c_{j \sigma_2}^{\dagger} (c_{i\sigma_1}^{\dagger}c_{j\sigma_2})\]</div>
 <p>として、それぞれ定義することが出来ます。例えば、動的スピン感受率を計算する場合はペア励起演算子を用い</p>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\hat{O} = \hat{S}({\bf k}) = \sum_{j}\hat{S}_j^z e^{i  {\bf k} \cdot \bf {r}_j} = \sum_{j}\frac{1}{2} (c_{j\uparrow}^{\dagger}c_{j\uparrow}-c_{j\downarrow}^{\dagger}c_{j\downarrow})e^{i  {\bf k} \cdot \bf {r}_j}\]</div>
 <p>のように定義することで計算することができます。
 なお、動的グリーン関数の計算には、Lanczos法を用いた連分数展開による解法&nbsp;<a class="footnote-reference" href="#id4" id="id2">[1]</a> とシフト型クリロフ理論による解法&nbsp;<a class="footnote-reference" href="#id5" id="id3">[2]</a> の2つが実装されています。
@@ -106,12 +100,14 @@
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>クイック検索</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="検索" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -136,7 +132,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, HPhi++ team.
-      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7 で生成しました。
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5 で生成しました。
     </div>
   </body>
 </html>

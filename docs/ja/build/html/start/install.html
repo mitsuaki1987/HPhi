@@ -4,31 +4,25 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>2.2. インストール方法 &#8212; HPhi++ 3.2.0 ドキュメント</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '3.2.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/translations.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="検索" href="../search.html" />
     <link rel="next" title="2.3. ディレクトリ構成" href="directory.html" />
     <link rel="prev" title="2.1. 要件" href="prerequisite.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>ナビゲーション</h3>
       <ul>
@@ -56,41 +50,41 @@
 <p>HPhi++は次の場所からダウンロードできます。</p>
 <p><a class="reference external" href="https://github.com/QLMS/HPhi/releases">https://github.com/QLMS/HPhi/releases</a></p>
 <p>ダウンロードしたファイルを次のように展開してください。</p>
-<p><code class="docutils literal"><span class="pre">$</span> <span class="pre">tar</span> <span class="pre">xzvf</span> <span class="pre">HPhi-xxx.tar.gz</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">tar</span> <span class="pre">xzvf</span> <span class="pre">HPhi-xxx.tar.gz</span></code></p>
 <p>HPhi++はcmakeを利用してインストールできます。</p>
 <div class="admonition tip">
 <p class="first admonition-title">ちなみに</p>
 <div class="last line-block">
 <div class="line">sekirei で cmake を利用するには</div>
-<div class="line"><code class="docutils literal"><span class="pre">source</span> <span class="pre">/home/issp/materiapps/tool/env.sh</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">/home/issp/materiapps/tool/env.sh</span></code></div>
 <div class="line">をあらかじめ実行する必要があります。</div>
 </div>
 </div>
 <p>HPhi++を展開したディレクトリのパスを$PathTohphi
 、ビルドディレクトリを$HOME/build/hphi
 (任意の場所を指定可能)とした場合に、</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>cd $HOME/build/hphi
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cd $HOME/build/hphi
 cmake -DCONFIG=gcc $PathTohphi
 make
 </pre></div>
 </div>
-<p>でコンパイルすることができます。全対角化の計算に<code class="docutils literal"><span class="pre">ScaLAPACK</span></code>を使用する場合には、<code class="docutils literal"><span class="pre">-DUSE_SCALAPACK=ON</span></code>のオプションをcmake時につけてください。
+<p>でコンパイルすることができます。全対角化の計算に<code class="docutils literal notranslate"><span class="pre">ScaLAPACK</span></code>を使用する場合には、<code class="docutils literal notranslate"><span class="pre">-DUSE_SCALAPACK=ON</span></code>のオプションをcmake時につけてください。
 コンパイル後、$HOME/build/hphi直下にsrcフォルダが作成され、
 実行ファイルであるHPhi++がそのフォルダ内に作成されます。
 MPIライブラリがない場合には、MPI非対応の実行ファイルが作成されます。</p>
 <p>なお、上の例ではgccコンパイラを前提としたコンパイルになっていますが、</p>
 <blockquote>
 <div><ul class="simple">
-<li><code class="docutils literal"><span class="pre">sekirei</span></code> : 物性研究所システムB ”sekirei”</li>
-<li><code class="docutils literal"><span class="pre">sekirei_acc</span></code> : 物性研究所システムB ”sekirei” (MAGMAライブラリを使用する場合)</li>
-<li><code class="docutils literal"><span class="pre">fujitsu</span></code> : 富士通コンパイラ</li>
-<li><code class="docutils literal"><span class="pre">intel</span></code> : intelコンパイラ + Linux PC</li>
-<li><code class="docutils literal"><span class="pre">gcc</span></code> : GCC + Linux PC</li>
+<li><code class="docutils literal notranslate"><span class="pre">sekirei</span></code> : 物性研究所システムB ”sekirei”</li>
+<li><code class="docutils literal notranslate"><span class="pre">sekirei_acc</span></code> : 物性研究所システムB ”sekirei” (MAGMAライブラリを使用する場合)</li>
+<li><code class="docutils literal notranslate"><span class="pre">fujitsu</span></code> : 富士通コンパイラ</li>
+<li><code class="docutils literal notranslate"><span class="pre">intel</span></code> : intelコンパイラ + Linux PC</li>
+<li><code class="docutils literal notranslate"><span class="pre">gcc</span></code> : GCC + Linux PC</li>
 </ul>
 </div></blockquote>
 <p>のオプションが用意されています。
 以下、HPhi++を展開したディレクトリでビルドする例を示します(intelコンパイラの場合)。</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">./</span><span class="n">build</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">./</span><span class="n">build</span>
 <span class="n">cd</span> <span class="o">./</span><span class="n">build</span>
 <span class="n">cmake</span> <span class="o">-</span><span class="n">DCONFIG</span><span class="o">=</span><span class="n">intel</span> <span class="o">../</span>
 <span class="n">make</span>
@@ -99,7 +93,7 @@ MPIライブラリがない場合には、MPI非対応の実行ファイルが�
 <p>実行後、buildフォルダ直下にsrcフォルダが作成され、HPhi++がsrcフォルダ内に作成されます。
 なお、コンパイラを変更しコンパイルし直したい場合には、都度buildフォルダごと削除を行った上で、
 新規に上記作業を行うことをお薦めします。
-また、SSE2が使用出来る場合には、cmakeでのコンパイル時<code class="docutils literal"><span class="pre">-DHAVE_SSE2</span></code>を付け加えてください.</p>
+また、SSE2が使用出来る場合には、cmakeでのコンパイル時<code class="docutils literal notranslate"><span class="pre">-DHAVE_SSE2</span></code>を付け加えてください.</p>
 </div>
 
 
@@ -126,12 +120,14 @@ MPIライブラリがない場合には、MPI非対応の実行ファイルが�
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>クイック検索</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="検索" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -156,7 +152,7 @@ MPIライブラリがない場合には、MPI非対応の実行ファイルが�
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, HPhi++ team.
-      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7 で生成しました。
+      このドキュメントは <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5 で生成しました。
     </div>
   </body>
 </html>
