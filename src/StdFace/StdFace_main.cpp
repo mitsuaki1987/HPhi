@@ -1620,7 +1620,7 @@ static void Print1Green()
 {
   FILE *fp;
   int ngreen, igreen, store, xkondo;
-  int isite, jsite, ispin, jspin, SiMax, SjMax;
+  int isite, jsite, ispin, jspin, SiMax, SjMax, isite_k;
   int **greenindx;
   /*
    Set Indices of correlation functions
@@ -1643,10 +1643,11 @@ static void Print1Green()
       if (StdI::ioutputmode == 1) {
         for (isite = 0; isite < StdI::NsiteUC*xkondo; isite++) {
 
-          if (isite >= StdI::NsiteUC) isite += StdI::nsite / 2;
+          if (isite >= StdI::NsiteUC) isite_k = isite + StdI::nsite / 2;
+          else isite_k = isite;
 
-          if (StdI::locspinflag[isite] == 0) SiMax = 1;
-          else SiMax = StdI::locspinflag[isite];
+          if (StdI::locspinflag[isite_k] == 0) SiMax = 1;
+          else SiMax = StdI::locspinflag[isite_k];
 
           for (ispin = 0; ispin <= SiMax; ispin++) {
             for (jsite = 0; jsite < StdI::nsite; jsite++) {
@@ -1656,12 +1657,12 @@ static void Print1Green()
 
               for (jspin = 0; jspin <= SjMax; jspin++) {
 
-                if (isite != jsite &&
-                  (StdI::locspinflag[isite] != 0 && StdI::locspinflag[jsite] != 0)) continue;
+                if (isite_k != jsite &&
+                  (StdI::locspinflag[isite_k] != 0 && StdI::locspinflag[jsite] != 0)) continue;
 
                 if (ispin == jspin){
                   if (store == 1) {
-                    greenindx[ngreen][0] = isite;
+                    greenindx[ngreen][0] = isite_k;
                     greenindx[ngreen][1] = ispin;
                     greenindx[ngreen][2] = jsite;
                     greenindx[ngreen][3] = jspin;
@@ -1735,7 +1736,7 @@ static void Print1Green()
 static void Print2Green() {
   FILE *fp;
   int ngreen, store, igreen, xkondo;
-  int site1, site2, site3, site4;
+  int site1, site2, site3, site4, site1k;
   int spin1, spin2, spin3, spin4;
   int S1Max, S2Max, S3Max, S4Max;
   int **greenindx;
@@ -1758,10 +1759,11 @@ static void Print2Green() {
 
       for (site1 = 0; site1 < StdI::NsiteUC*xkondo; site1++) {
 
-        if (site1 >= StdI::NsiteUC) site1 += StdI::nsite / 2;
+        if (site1 >= StdI::NsiteUC) site1k = site1 + StdI::nsite / 2;
+        else site1k = site1;
 
-        if (StdI::locspinflag[site1] == 0) S1Max = 1;
-        else S1Max = StdI::locspinflag[site1];
+        if (StdI::locspinflag[site1k] == 0) S1Max = 1;
+        else S1Max = StdI::locspinflag[site1k];
         for (spin1 = 0; spin1 <= S1Max; spin1++) {
           for (spin2 = 0; spin2 <= S1Max; spin2++) {
 
@@ -1777,21 +1779,21 @@ static void Print2Green() {
 #if defined(_mVMC)
                       if (spin1 != spin2 || spin3 != spin4)
                       {
-                        greenindx[ngreen][0] = site1;
+                        greenindx[ngreen][0] = site1k;
                         greenindx[ngreen][1] = spin1;
                         greenindx[ngreen][2] = site3;
                         greenindx[ngreen][3] = spin4;
                         greenindx[ngreen][4] = site3;
                         greenindx[ngreen][5] = spin3;
-                        greenindx[ngreen][6] = site1;
+                        greenindx[ngreen][6] = site1k;
                         greenindx[ngreen][7] = spin2;
                       }
                       else
 #endif
                       {
-                        greenindx[ngreen][0] = site1;
+                        greenindx[ngreen][0] = site1k;
                         greenindx[ngreen][1] = spin1;
-                        greenindx[ngreen][2] = site1;
+                        greenindx[ngreen][2] = site1k;
                         greenindx[ngreen][3] = spin2;
                         greenindx[ngreen][4] = site3;
                         greenindx[ngreen][5] = spin3;
