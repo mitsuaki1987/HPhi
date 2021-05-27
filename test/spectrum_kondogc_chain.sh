@@ -138,7 +138,7 @@ OmegaIm = 1.0
 OmegaMax = 72.6776213781762408
 OmegaMin = -42.5223786218237620
 CalcSpec = "Scratch"
-SpectrumType = "Up"
+SpectrumType = "Down"
 EOF
 
 ${MPIRUN} ../../src/HPhi++ -s stan2.in
@@ -177,7 +177,7 @@ OmegaIm = 1.0
 OmegaMax = 72.6776213781762408
 OmegaMin = -42.5223786218237620
 CalcSpec = "Scratch"
-SpectrumType = "Down"
+SpectrumType = "Up"
 EOF
 
 ${MPIRUN} ../../src/HPhi++ -s stan2.in
