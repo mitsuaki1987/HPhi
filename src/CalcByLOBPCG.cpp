@@ -452,7 +452,7 @@ shared(i_max,wxp,hwxp,eig,Def::k_exct)
     /**@brief
     <li>Preconditioning (Point Jacobi): @f${\bf w}={\hat T}^{-1} {\bf w}@f$</li>
     */
-    if (stp /= 1) {
+    if (stp != 1) {
       if (do_precon == 1) {
         for (ie = 0; ie < Def::k_exct; ie++) 
           preshift = calc_preshift(eig[ie], dnorm[ie], eps_LOBPCG);

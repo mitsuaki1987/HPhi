@@ -2310,10 +2310,13 @@ static void PrintInteractions()
   /*
    InterAll
   */
+  //
+  // Merge equivalent terms
+  //
   for (jintr = 0; jintr < StdI::intr.size(); jintr++) {
     for (kintr = jintr + 1; kintr < StdI::intr.size(); kintr++) {
       if (
-        (StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(0)
+        (    StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(0)
           && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(1)
           && StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(kintr).at(2)
           && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(3)
@@ -2322,46 +2325,63 @@ static void PrintInteractions()
           && StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(6)
           && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(7))
         ||
-        (StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(4)
+        (    StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(4)
           && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(5)
           && StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(kintr).at(6)
           && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(7)
           && StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(kintr).at(0)
           && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(kintr).at(1)
           && StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(2)
-          && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(3))
+          && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(3)
+          && !(StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(jintr).at(6)
+            && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(jintr).at(7))
+          && !(StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(jintr).at(4)
+            && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(jintr).at(5)))
         ) {
         StdI::intr.at(jintr) = StdI::intr.at(jintr) + StdI::intr.at(kintr);
         StdI::intr.at(kintr) = 0.0;
       }
       else if (
-        (StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(4)
+        (    StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(4)
           && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(5)
           && StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(kintr).at(2)
           && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(3)
           && StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(kintr).at(0)
           && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(kintr).at(1)
           && StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(6)
-          && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(7))
+          && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(7)
+          && !(StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(jintr).at(0)
+            && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(jintr).at(1))
+          && !(StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(jintr).at(4)
+            && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(jintr).at(5))
+          )
         ||
-        (StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(0)
+        (    StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(0)
           && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(1)
           && StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(kintr).at(6)
           && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(7)
           && StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(kintr).at(4)
           && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(kintr).at(5)
           && StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(2)
-          && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(3))
+          && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(3)
+          && !(StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(jintr).at(2)
+            && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(jintr).at(3))
+          && !(StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(jintr).at(6)
+            && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(jintr).at(7))
+          )
         ) {
         StdI::intr.at(jintr) = StdI::intr.at(jintr) - StdI::intr.at(kintr);
         StdI::intr.at(kintr) = 0.0;
       }
     }/*for (kintr = jintr + 1; kintr < StdI::nintr; kintr++)*/
   }/*for (jintr = 0; jintr < StdI::nintr; jintr++)*/
-
+  //
+  // Force Hermite term as
+  // (c1+ c2 c3+ c4)+ = c4+ c3 c2+ c1
+  //
   for (jintr = 0; jintr < StdI::intr.size(); jintr++) {
     for (kintr = jintr + 1; kintr < StdI::intr.size(); kintr++) {
-      if (StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(4)
+      if ( StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(4)
         && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(5)
         && StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(kintr).at(6)
         && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(kintr).at(7)
@@ -2369,6 +2389,10 @@ static void PrintInteractions()
         && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(1)
         && StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(2)
         && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(3)
+        && !(StdI::intrindx.at(kintr).at(0) == StdI::intrindx.at(kintr).at(6)
+          && StdI::intrindx.at(kintr).at(1) == StdI::intrindx.at(kintr).at(7))
+        && !(StdI::intrindx.at(kintr).at(2) == StdI::intrindx.at(kintr).at(4)
+          && StdI::intrindx.at(kintr).at(3) == StdI::intrindx.at(kintr).at(5))
         ) {
         StdI::intrindx.at(kintr).at(0) = StdI::intrindx.at(jintr).at(6);
         StdI::intrindx.at(kintr).at(1) = StdI::intrindx.at(jintr).at(7);
@@ -2380,23 +2404,31 @@ static void PrintInteractions()
         StdI::intrindx.at(kintr).at(7) = StdI::intrindx.at(jintr).at(1);
       }
       else if (
-        (StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(4)
+        (    StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(4)
           && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(5)
           && StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(kintr).at(2)
           && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(kintr).at(3)
           && StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(kintr).at(0)
           && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(1)
           && StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(6)
-          && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(7))
+          && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(7)
+          && !(StdI::intrindx.at(kintr).at(2) == StdI::intrindx.at(kintr).at(0)
+            && StdI::intrindx.at(kintr).at(3) == StdI::intrindx.at(kintr).at(1))
+          && !(StdI::intrindx.at(kintr).at(2) == StdI::intrindx.at(kintr).at(4)
+            && StdI::intrindx.at(kintr).at(3) == StdI::intrindx.at(kintr).at(5)))
         ||
-        (StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(0)
+        (    StdI::intrindx.at(jintr).at(6) == StdI::intrindx.at(kintr).at(0)
           && StdI::intrindx.at(jintr).at(7) == StdI::intrindx.at(kintr).at(1)
           && StdI::intrindx.at(jintr).at(4) == StdI::intrindx.at(kintr).at(6)
           && StdI::intrindx.at(jintr).at(5) == StdI::intrindx.at(kintr).at(7)
           && StdI::intrindx.at(jintr).at(2) == StdI::intrindx.at(kintr).at(4)
           && StdI::intrindx.at(jintr).at(3) == StdI::intrindx.at(kintr).at(5)
           && StdI::intrindx.at(jintr).at(0) == StdI::intrindx.at(kintr).at(2)
-          && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(3))
+          && StdI::intrindx.at(jintr).at(1) == StdI::intrindx.at(kintr).at(3)
+          && !(StdI::intrindx.at(kintr).at(4) == StdI::intrindx.at(kintr).at(2)
+            && StdI::intrindx.at(kintr).at(5) == StdI::intrindx.at(kintr).at(3))
+          && !(StdI::intrindx.at(kintr).at(4) == StdI::intrindx.at(kintr).at(6)
+            && StdI::intrindx.at(kintr).at(5) == StdI::intrindx.at(kintr).at(7)))
         ) {
         StdI::intrindx.at(kintr).at(0) = StdI::intrindx.at(jintr).at(6);
         StdI::intrindx.at(kintr).at(1) = StdI::intrindx.at(jintr).at(7);

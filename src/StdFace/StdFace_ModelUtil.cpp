@@ -62,6 +62,7 @@ void StdFace::trans(
   int jspin//!<[in] @f$\sigma'@f$ for @f$c_{j \sigma'}@f$
 )
 {
+  if (std::abs(trans0) < 1.0e-12) return;
   StdI::trans.push_back(trans0);
   StdI::transindx.push_back(std::vector<int>{isite, ispin, jsite, jspin});
 }/*void StdFace::trans*/
@@ -196,6 +197,7 @@ void StdFace::intr(
   int spin4//!<[in] @f$sigma1_2@f$ for @f$c_{i_2 \sigma_2}@f$
 )
 {
+  if (std::abs(intr0) < 1.0e-12) return;
   StdI::intr.push_back(intr0);
   StdI::intrindx.push_back(std::vector<int>
   {site1, spin1, site2, spin2, site3, spin3, site4, spin4});
